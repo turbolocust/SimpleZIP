@@ -12,7 +12,7 @@ namespace SimpleZIP_UI
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private MainPageControl _control;
+        private readonly MainPageControl _control;
 
         public MainPage()
         {
@@ -32,7 +32,7 @@ namespace SimpleZIP_UI
 
         private void CompressButton_Tap(object sender, TappedRoutedEventArgs e)
         {
-            
+            _control.CompressButtonAction(MainPageControl.Algorithms.Zip);
         }
 
         private void ExtractButton_Tap(object sender, TappedRoutedEventArgs e)

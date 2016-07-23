@@ -5,11 +5,21 @@ namespace SimpleZIP_UI.Compression
 {
     public class GZipper : ICompressionAlgorithm
     {
+
+        private static GZipper _instance;
+
+        public static GZipper Instance => _instance ?? (_instance = new GZipper());
+
+        private GZipper()
+        {
+            // singleton
+        }
+
         public void Compress(FileInfo[] files, string archiveName, string location)
         {
             using (var inputStream = new FileStream(files[0].FullName, FileMode.Open))
             {
-                var file = files[0]; //as gzip only allows compression of one file
+                var file = files[0]; // as gzip only allows compression of one file
                 var bytes = new byte[file.Length];
                 inputStream.Read(bytes, 0, files.Length); //read file to bytes array
 
@@ -18,7 +28,7 @@ namespace SimpleZIP_UI.Compression
                 using (var outputStream = new FileStream(archive.FullName, FileMode.Create))
                 using (var gzipStream = new GZipStream(outputStream, CompressionLevel.Optimal))
                 {
-                    gzipStream.Write(bytes, 0, bytes.Length); //write bytes to archive
+                    gzipStream.Write(bytes, 0, bytes.Length); // write bytes to archive
                 }
             }
         }
@@ -33,7 +43,7 @@ namespace SimpleZIP_UI.Compression
                 const int size = 4096;
                 var buffer = new byte[size];
 
-                //make new file without file extension of gzip
+                // make new file without file extension of gzip
                 var outputFile = new FileInfo(location + archiveName.Substring(0, archiveName.LastIndexOf('.') - 1));
                 using (var outputStream = new FileStream(outputFile.FullName, FileMode.Create))
                 {

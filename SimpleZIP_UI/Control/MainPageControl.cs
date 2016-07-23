@@ -1,4 +1,6 @@
-﻿using SimpleZIP_UI.Compression;
+﻿using System;
+using Windows.Storage.Pickers;
+using SimpleZIP_UI.Compression;
 
 namespace SimpleZIP_UI.Control
 {
@@ -15,17 +17,48 @@ namespace SimpleZIP_UI.Control
         /// <summary>
         /// 
         /// </summary>
-        public void CompressButtonAction()
+        public enum Algorithms
         {
-
+            Zip, Gzip, Tarball
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public void DecompressButtonAction()
+        public async void CompressButtonAction(Algorithms algo)
         {
+            var picker = new FileOpenPicker
+            {
+                ViewMode = PickerViewMode.List,
+                SuggestedStartLocation = PickerLocationId.ComputerFolder
+            };
+            picker.FileTypeFilter.Add(".zip");
+            picker.FileTypeFilter.Add((".gzip"));
+            picker.FileTypeFilter.Add(".gz");
 
+            var files = await picker.PickMultipleFilesAsync();
+            if (files != null)
+            {
+                _compressionAlgorithm = Zipper.Instance;
+
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public async void DecompressButtonAction(Algorithms algo)
+        {
+            var picker = new FileSavePicker()
+            {
+                SuggestedStartLocation = PickerLocationId.ComputerFolder
+            };
+
+            var file = await picker.PickSaveFileAsync();
+            if (file != null)
+            {
+                _compressionAlgorithm = Zipper.Instance;
+            }
         }
     }
 }
