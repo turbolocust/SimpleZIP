@@ -3,7 +3,7 @@
   <Identity Name="4b951173-35e0-4254-995f-16d95b0dd1af" Publisher="CN=Matthias" Version="1.0.0.0" />
   <mp:PhoneIdentity PhoneProductId="4b951173-35e0-4254-995f-16d95b0dd1af" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>SimpleZIP_UI</DisplayName>
+    <DisplayName>SimpleZIP</DisplayName>
     <PublisherDisplayName>Matthias Fussenegger</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -15,20 +15,31 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="SimpleZIP_UI.App">
-      <uap:VisualElements DisplayName="SimpleZIP_UI" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="SimpleZIP_UI" BackgroundColor="transparent">
+      <uap:VisualElements DisplayName="SimpleZIP" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="SimpleZIP_UI" BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png">
         </uap:DefaultTile>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
         <uap:InitialRotationPreference>
           <uap:Rotation Preference="portrait" />
+          <uap:Rotation Preference="landscape" />
           <uap:Rotation Preference="portraitFlipped" />
+          <uap:Rotation Preference="landscapeFlipped" />
         </uap:InitialRotationPreference>
       </uap:VisualElements>
       <Extensions>
+        <uap:Extension Category="windows.fileSavePicker">
+          <uap:FileSavePicker>
+            <uap:SupportedFileTypes>
+              <uap:SupportsAnyFileType />
+            </uap:SupportedFileTypes>
+          </uap:FileSavePicker>
+        </uap:Extension>
         <uap:Extension Category="windows.fileOpenPicker">
           <uap:FileOpenPicker>
             <uap:SupportedFileTypes>
               <uap:FileType>.zip</uap:FileType>
+              <uap:FileType>.gzip</uap:FileType>
+              <uap:FileType>.gz</uap:FileType>
             </uap:SupportedFileTypes>
           </uap:FileOpenPicker>
         </uap:Extension>
