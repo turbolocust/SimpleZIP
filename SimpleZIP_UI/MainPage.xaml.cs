@@ -27,17 +27,17 @@ namespace SimpleZIP_UI
 
         private void HamburgerButton_Tap(object sender, TappedRoutedEventArgs e)
         {
-            MySplitView.IsPaneOpen = !MySplitView.IsPaneOpen;
+            this.MenuSplitView.IsPaneOpen = !this.MenuSplitView.IsPaneOpen;
         }
 
         private void CompressButton_Tap(object sender, TappedRoutedEventArgs e)
         {
-            _control.CompressButtonAction(MainPageControl.Algorithms.Zip);
+            _control.CompressButtonAction();
         }
 
         private void ExtractButton_Tap(object sender, TappedRoutedEventArgs e)
         {
-
+            _control.DecompressButtonAction();
         }
 
         private void HomeButton_Tapped(object sender, TappedRoutedEventArgs e)
