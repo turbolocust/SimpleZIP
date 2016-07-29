@@ -4,37 +4,50 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
 
-    <SplitView x:Name="MenuSplitView" DisplayMode="CompactOverlay" IsPaneOpen="False" 
-               CompactPaneLength="50" HorizontalAlignment="Stretch">
-        <SplitView.Pane>
-            <StackPanel Background="Black">
-                <Button x:Name="HamburgerButton" Visibility="Visible" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" 
-                    Width="50" Height="50" Background="Transparent" Tapped="HamburgerButton_Tap" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}"/>
-                <StackPanel Orientation="Horizontal">
-                    <Button x:Name="HomeButton" Height="50" Background="Transparent" Tapped="HomeButton_Tapped" Width="270" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="50,0,0,0" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}">
-                        <TextBlock Text="Home" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                    </Button>
+    <Grid Background="Black" Margin="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="7*"/>
+        </Grid.RowDefinitions>
+        <Button x:Name="HamburgerButton" Visibility="Visible" FontFamily="Segoe MDL2 Assets" Content="&#xE700;"  Grid.Row="0"
+                    Width="50" Height="50" Background="Transparent" Tapped="HamburgerButton_Tap" Foreground="White"/>
+        <SplitView x:Name="MenuSplitView" DisplayMode="CompactOverlay" IsPaneOpen="False" Grid.Row="1"
+               CompactPaneLength="0" VerticalContentAlignment="Stretch" VerticalAlignment="Stretch" OpenPaneLength="320">
+            <SplitView.Pane>
+                <StackPanel Background="DarkGray">
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Name="ContributeButton" Height="50" Background="Transparent" Tapped="HomeButton_Tapped" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                            <StackPanel Orientation="Horizontal">
+                                <SymbolIcon Symbol="World"/>
+                                <TextBlock Text="Get The Source!" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Name="AboutMenuButton" Height="50" Background="Transparent" Tapped="AboutMenuButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                            <StackPanel Orientation="Horizontal">
+                                <SymbolIcon Symbol="ContactInfo"/>
+                                <TextBlock Text="About" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <Button x:Name="AboutMenuButton" Height="50" Background="Transparent" Tapped="AboutMenuButton_Tap" Width="270" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="50,0,0,0" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}">
-                        <TextBlock Text="About" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                    </Button>
-                </StackPanel>
-            </StackPanel>
-        </SplitView.Pane>
-        <SplitView.Content>
-            <Grid Background="Black">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="24*"/>
-                    <RowDefinition Height="153*"/>
-                    <RowDefinition Height="463*"/>
-                </Grid.RowDefinitions>
-                <TextBlock Text="SimpleZIP" FontSize="54" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}" VerticalAlignment="Top" Margin="10,10,0,0" Grid.Row="1" HorizontalAlignment="Left"/>
-                <Button x:Name="CompressButton" Content="Compress File(s) . . ." HorizontalAlignment="Stretch" Margin="10,0,63,87" Grid.Row="2" VerticalAlignment="Bottom" Height="67" Tapped="CompressButton_Tap" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}"/>
-                <Button x:Name="DecompressButton" Content="Extract Archive . . ." HorizontalAlignment="Stretch" Height="72" Margin="10,0,63,10" Grid.Row="2" VerticalAlignment="Bottom" Tapped="ExtractButton_Tap" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}"/>
-            </Grid>
-        </SplitView.Content>
-    </SplitView>
+            </SplitView.Pane>
+            <SplitView.Content>
+                <Grid Background="Black" Margin="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="4*"/>
+                        <RowDefinition Height="3*"/>
+                        <RowDefinition Height="3*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="SimpleZIP" FontSize="54"  VerticalAlignment="Top" Margin="32,0,0,0" Grid.Row="0" HorizontalAlignment="Left" Foreground="White"/>
+                    <Button x:Name="CompressButton" Content="Compress File(s) . . ." HorizontalAlignment="Stretch" Grid.Row="1" MinHeight="32" Height="50" MaxHeight="72" VerticalAlignment="Bottom" Margin="32,16,32,16" Tapped="CompressButton_Tap" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}"/>
+                    <Button x:Name="DecompressButton" Content="Extract archive . . ." HorizontalAlignment="Stretch" Grid.Row="2" MinHeight="32" Height="50" MaxHeight="72" VerticalAlignment="Top" Margin="32,16,32,16" Tapped="ExtractButton_Tap" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}"/>
+                </Grid>
+            </SplitView.Content>
+        </SplitView>
+    </Grid>
 </Page>
+
