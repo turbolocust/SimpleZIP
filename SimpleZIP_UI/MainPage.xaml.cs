@@ -1,4 +1,9 @@
-﻿using Windows.UI.Xaml;
+﻿using System;
+using Windows.System;
+using Windows.System.Profile;
+using Windows.UI.Notifications;
+using Windows.UI.Popups;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using SimpleZIP_UI.Control;
@@ -40,19 +45,31 @@ namespace SimpleZIP_UI
             _control.DecompressButtonAction();
         }
 
-        private void HomeButton_Tapped(object sender, TappedRoutedEventArgs e)
+        /// <summary>
+        /// Opens the project webpage in the default browser. 
+        /// Brings up a confirmation dialog to avoid accidential termination of application first. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void GetSourceButton_Tap(object sender, TappedRoutedEventArgs e)
         {
+            var dialog = new MessageDialog("This will redirect you to the Web-Browser.\n\nAre you sure?");
+            dialog.Commands.Add(new UICommand("Yes") { Id = 0 });
+            dialog.Commands.Add(new UICommand("No") { Id = 1 });
+            dialog.DefaultCommandIndex = 0;
+            dialog.CancelCommandIndex = 1;
+
+            var result = await dialog.ShowAsync();
+            if (result.Id.Equals(0)) // launch browser
+            {
+                await Launcher.LaunchUriAsync(new Uri("https://github.com/turbolocust/SimpleZIP"));
+            }
 
         }
 
-        private void SettingsButton_Tap(object sender, TappedRoutedEventArgs e)
+        private async void AboutMenuButton_Tap(object sender, TappedRoutedEventArgs e)
         {
-
-        }
-
-        private void AboutMenuButton_Tap(object sender, TappedRoutedEventArgs e)
-        {
-
+            await new AboutDialog().ShowAsync();
         }
     }
 }

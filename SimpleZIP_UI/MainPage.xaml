@@ -18,7 +18,7 @@
             <SplitView.Pane>
                 <StackPanel Background="DarkGray">
                     <StackPanel Orientation="Horizontal">
-                        <Button x:Name="ContributeButton" Height="50" Background="Transparent" Tapped="HomeButton_Tapped" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                        <Button x:Name="ContributeButton" Height="50" Background="Transparent" Tapped="GetSourceButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                             <StackPanel Orientation="Horizontal">
                                 <SymbolIcon Symbol="World"/>
                                 <TextBlock Text="Get The Source!" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />

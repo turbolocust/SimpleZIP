@@ -42,6 +42,7 @@ namespace SimpleZIP_UI.Control
         public async void CompressButtonAction()
         {
             //TODO
+
         }
 
         /// <summary>
@@ -68,7 +69,7 @@ namespace SimpleZIP_UI.Control
                 // try to get enum type by file type
                 if (!_algorithmFileTypes.TryGetValue(file.FileType, out value))
                 {
-                    InitializeAlgorithm(value);
+                    SetStrategy(value);
                     if (_compressionAlgorithm != null)
                     {
                         // get the parent folder of the archive
@@ -96,7 +97,7 @@ namespace SimpleZIP_UI.Control
         /// 
         /// </summary>
         /// <param name="value"></param>
-        private void InitializeAlgorithm(Algorithm value)
+        private void SetStrategy(Algorithm value)
         {
             switch (value) // assign correct instance to use the right algorithm
             {
