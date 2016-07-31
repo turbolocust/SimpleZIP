@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Windows.Storage.Pickers;
-using SimpleZIP_UI.Compression;
+using SimpleZIP_UI.Appl.Compression;
 using SimpleZIP_UI.Exceptions;
 
 namespace SimpleZIP_UI.Control
@@ -102,7 +102,6 @@ namespace SimpleZIP_UI.Control
             switch (value) // assign correct instance to use the right algorithm
             {
                 case Algorithm.Zip:
-
                     _compressionAlgorithm = Zipper.Instance;
                     break;
 

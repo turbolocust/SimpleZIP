@@ -1,9 +1,6 @@
 ﻿using System;
 using Windows.System;
-using Windows.System.Profile;
-using Windows.UI.Notifications;
 using Windows.UI.Popups;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using SimpleZIP_UI.Control;
@@ -25,11 +22,6 @@ namespace SimpleZIP_UI
             _control = new MainPageControl();
         }
 
-        private void ShowFileExplorer(object sender, RoutedEventArgs e)
-        {
-            //FontFamily="Segoe MDL2 Assets"
-        }
-
         private void HamburgerButton_Tap(object sender, TappedRoutedEventArgs e)
         {
             this.MenuSplitView.IsPaneOpen = !this.MenuSplitView.IsPaneOpen;
@@ -38,6 +30,7 @@ namespace SimpleZIP_UI
         private void CompressButton_Tap(object sender, TappedRoutedEventArgs e)
         {
             _control.CompressButtonAction();
+            this.Frame.Navigate(typeof(SummaryPage)); //test
         }
 
         private void ExtractButton_Tap(object sender, TappedRoutedEventArgs e)
@@ -67,6 +60,11 @@ namespace SimpleZIP_UI
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void AboutMenuButton_Tap(object sender, TappedRoutedEventArgs e)
         {
             await new AboutDialog().ShowAsync();

@@ -7,6 +7,40 @@
     mc:Ignorable="d">
 
     <Grid Background="Black">
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1.2*" />
+            <RowDefinition Height="7.6*" />
+            <RowDefinition Height="1.2*" />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+            <ComboBox x:Name="ArchiveTypeComboBox" Width="150" Margin="16,0,0,0" Header="Archive Type" SelectedIndex="0" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}">
+                <ComboBoxItem Content="ZIP (.zip)" />
+                <ComboBoxItem Content="GZIP (.gzip)" />
+                <ComboBoxItem Content="TARBALL (.tar.gz)" />
+            </ComboBox>
+        </StackPanel>
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="9*" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="File(s) to compress:" Grid.Row="0" FontWeight="Bold" CharacterSpacing="56" Margin="16,0,0,0" VerticalAlignment="Center" Foreground="White" />
+                <ListBox x:Name="ItemsListBox" Grid.Row="1" Background="Black" Height="Auto" Foreground="White" />
+            </Grid>
+        </ScrollViewer>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,16,0" Grid.Row="2">
+            <Button x:Name="AbortButton" Tapped="AbortButton_Tap" Content="Abort" Width="120" MinHeight="48" MaxHeight="72" Margin="0,0,16,0" Foreground="White" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}" />
+            <Button x:Name="StartButton" Tapped="StartButton_Tap" Content="Start" Width="120" MinHeight="48" MaxHeight="72" Foreground="White" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}" />
+        </StackPanel>
     </Grid>
+    <Page.Transitions>
+        <TransitionCollection>
+            <NavigationThemeTransition>
+                <NavigationThemeTransition.DefaultNavigationTransitionInfo>
+                    <ContinuumNavigationTransitionInfo/>
+                </NavigationThemeTransition.DefaultNavigationTransitionInfo>
+            </NavigationThemeTransition>
+        </TransitionCollection>
+    </Page.Transitions>
 </Page>

@@ -103,9 +103,9 @@
     <Compile Include="SummaryPage.xaml.cs">
       <DependentUpon>SummaryPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Compression\ICompressionAlgorithm.cs" />
-    <Compile Include="Compression\GZipper.cs" />
-    <Compile Include="Compression\Zipper.cs" />
+    <Compile Include="Appl\Compression\ICompressionAlgorithm.cs" />
+    <Compile Include="Appl\Compression\GZipper.cs" />
+    <Compile Include="Appl\Compression\Zipper.cs" />
     <Compile Include="Control\MainPageControl.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -146,9 +146,7 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Application\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

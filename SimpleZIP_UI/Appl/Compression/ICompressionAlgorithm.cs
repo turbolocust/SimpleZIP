@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace SimpleZIP_UI.Compression
+namespace SimpleZIP_UI.Appl.Compression
 {
     public interface ICompressionAlgorithm
     {
