@@ -7,7 +7,7 @@ namespace SimpleZIP_UI.Control
     /// </summary>
     internal class SummaryPageControl : Control
     {
-        public SummaryPageControl()
+        public SummaryPageControl(Frame rootFrame) : base(rootFrame)
         {
         }
     }

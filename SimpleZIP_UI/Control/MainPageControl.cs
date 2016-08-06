@@ -16,7 +16,7 @@ namespace SimpleZIP_UI.Control
     internal class MainPageControl : Control
     {
 
-        public MainPageControl()
+        public MainPageControl(Frame rootFrame) : base(rootFrame)
         {
         }
 

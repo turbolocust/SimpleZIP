@@ -37,6 +37,11 @@ namespace SimpleZIP_UI.Control
             AlgorithmFileTypes.Add(".bz2", Algorithm.TarBz2);
         }
 
+        protected Control(Frame rootFrame)
+        {
+            RootFrame = rootFrame;
+        }
+
         /// <summary>
         /// 
         /// </summary>

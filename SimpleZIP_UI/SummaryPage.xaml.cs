@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Windows.Storage;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
@@ -17,14 +18,14 @@ namespace SimpleZIP_UI
     /// </summary>
     public sealed partial class SummaryPage : Page
     {
-        private readonly SummaryPageControl _control;
+        private SummaryPageControl _control;
 
-        private IList<StorageFile> _selectedFiles;
+        private IReadOnlyList<StorageFile> _selectedFiles;
 
         public SummaryPage()
         {
             this.InitializeComponent();
-            _control = new SummaryPageControl(this.Frame);
+            Loaded += OnSummaryPageLoaded;
         }
 
         private void AbortButton_Tap(object sender, TappedRoutedEventArgs e)
@@ -39,16 +40,19 @@ namespace SimpleZIP_UI
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (e.SourcePageType == typeof(MainPage))
-            {
-                var selectedFiles = e.Parameter as IList<StorageFile>;
-                _selectedFiles = selectedFiles;
+            _selectedFiles = e.Parameter as IReadOnlyList<StorageFile>;
 
-                foreach (var f in selectedFiles)
+            if (_selectedFiles != null)
+                foreach (var f in _selectedFiles) // populate list
                 {
-                    this.ItemsListBox.Items.Add(f.Name);
+                    var textBlock = new TextBlock() { Text = f.Name };
+                    this.ItemsListBox.Items?.Add(textBlock);
                 }
-            }
+        }
+
+        private void OnSummaryPageLoaded(object sender, RoutedEventArgs e)
+        {
+            _control = new SummaryPageControl(this.Frame);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using Windows.System;
 using Windows.UI.Popups;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using SimpleZIP_UI.Control;
@@ -15,12 +16,12 @@ namespace SimpleZIP_UI
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private readonly MainPageControl _control;
+        private MainPageControl _control;
 
         public MainPage()
         {
             this.InitializeComponent();
-            _control = new MainPageControl();
+            Loaded += OnMainPageLoaded;
         }
 
         private void HamburgerButton_Tap(object sender, TappedRoutedEventArgs e)
@@ -75,6 +76,11 @@ namespace SimpleZIP_UI
         private async void AboutMenuButton_Tap(object sender, TappedRoutedEventArgs e)
         {
             await new AboutDialog().ShowAsync();
+        }
+
+        private void OnMainPageLoaded(object sender, RoutedEventArgs e)
+        {
+            _control = new MainPageControl(this.Frame);
         }
     }
 }

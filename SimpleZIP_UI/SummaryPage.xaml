@@ -25,8 +25,8 @@
                     <RowDefinition Height="1*" />
                     <RowDefinition Height="9*" />
                 </Grid.RowDefinitions>
-                <TextBlock Text="File(s) to compress:" Grid.Row="0" FontWeight="Bold" CharacterSpacing="56" Margin="16,0,0,0" VerticalAlignment="Center" Foreground="White" />
-                <ListBox x:Name="ItemsListBox" Grid.Row="1" SelectionMode="Multiple" Background="Black" Height="Auto" Foreground="White" />
+                <TextBlock Text="File(s) to compress:" Grid.Row="0" FontWeight="Bold" FontSize="16" CharacterSpacing="56" Margin="16,0,0,0" VerticalAlignment="Center" Foreground="White" />
+                <ListBox x:Name="ItemsListBox" Grid.Row="1" Margin="16,0,0,0" SelectionMode="Single" CanDrag="False" HorizontalContentAlignment="Stretch" Background="Black" Height="Auto" Foreground="White" />
             </Grid>
         </ScrollViewer>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,16,0" Grid.Row="2">
