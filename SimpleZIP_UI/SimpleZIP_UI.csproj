@@ -98,6 +98,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Appl\Compression\Tarball.cs" />
+    <Compile Include="Control\Control.cs" />
     <Compile Include="Exceptions\InvalidFileTypeException.cs" />
     <Compile Include="Control\SummaryPageControl.cs" />
     <Compile Include="SummaryPage.xaml.cs">

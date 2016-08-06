@@ -1,9 +1,14 @@
-﻿namespace SimpleZIP_UI.Control
+﻿using Windows.UI.Xaml.Controls;
+
+namespace SimpleZIP_UI.Control
 {
     /// <summary>
     /// 
     /// </summary>
-    internal class SummaryPageControl
+    internal class SummaryPageControl : Control
     {
+        public SummaryPageControl()
+        {
+        }
     }
 }

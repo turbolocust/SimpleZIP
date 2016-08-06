@@ -4,6 +4,7 @@ using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using SimpleZIP_UI.Control;
+using SimpleZIP_UI.Exceptions;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -30,12 +31,19 @@ namespace SimpleZIP_UI
         private void CompressButton_Tap(object sender, TappedRoutedEventArgs e)
         {
             _control.CompressButtonAction();
-            this.Frame.Navigate(typeof(SummaryPage)); //test
         }
 
-        private void ExtractButton_Tap(object sender, TappedRoutedEventArgs e)
+        private async void ExtractButton_Tap(object sender, TappedRoutedEventArgs e)
         {
-            _control.DecompressButtonAction();
+            try
+            {
+                _control.DecompressButtonAction();
+            }
+            catch (InvalidFileTypeException ex)
+            {
+                var dialog = new MessageDialog(ex.Message);
+                await dialog.ShowAsync();
+            }
         }
 
         /// <summary>
@@ -57,7 +65,6 @@ namespace SimpleZIP_UI
             {
                 await Launcher.LaunchUriAsync(new Uri("https://github.com/turbolocust/SimpleZIP"));
             }
-
         }
 
         /// <summary>

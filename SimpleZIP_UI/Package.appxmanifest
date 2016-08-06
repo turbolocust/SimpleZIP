@@ -33,13 +33,17 @@
               <uap:FileType>.zip</uap:FileType>
               <uap:FileType>.gzip</uap:FileType>
               <uap:FileType>.gz</uap:FileType>
+              <uap:FileType>.bz2</uap:FileType>
             </uap:SupportedFileTypes>
           </uap:FileOpenPicker>
         </uap:Extension>
         <uap:Extension Category="windows.fileSavePicker">
           <uap:FileSavePicker>
             <uap:SupportedFileTypes>
-              <uap:SupportsAnyFileType />
+              <uap:FileType>.zip</uap:FileType>
+              <uap:FileType>.gzip</uap:FileType>
+              <uap:FileType>.gz</uap:FileType>
+              <uap:FileType>.bz2</uap:FileType>
             </uap:SupportedFileTypes>
           </uap:FileSavePicker>
         </uap:Extension>

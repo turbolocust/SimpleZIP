@@ -8,9 +8,9 @@
 
     <Grid Background="Black">
         <Grid.RowDefinitions>
-            <RowDefinition Height="1.2*" />
-            <RowDefinition Height="7.6*" />
-            <RowDefinition Height="1.2*" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="6.5*" />
+            <RowDefinition Height="1.5*" />
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
             <ComboBox x:Name="ArchiveTypeComboBox" Width="150" Margin="16,0,0,0" Header="Archive Type" SelectedIndex="0" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}">
@@ -26,7 +26,7 @@
                     <RowDefinition Height="9*" />
                 </Grid.RowDefinitions>
                 <TextBlock Text="File(s) to compress:" Grid.Row="0" FontWeight="Bold" CharacterSpacing="56" Margin="16,0,0,0" VerticalAlignment="Center" Foreground="White" />
-                <ListBox x:Name="ItemsListBox" Grid.Row="1" Background="Black" Height="Auto" Foreground="White" />
+                <ListBox x:Name="ItemsListBox" Grid.Row="1" SelectionMode="Multiple" Background="Black" Height="Auto" Foreground="White" />
             </Grid>
         </ScrollViewer>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,16,0" Grid.Row="2">

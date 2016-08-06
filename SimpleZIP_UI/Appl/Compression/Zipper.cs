@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.IO.Compression;
 
 namespace SimpleZIP_UI.Appl.Compression
@@ -18,13 +19,11 @@ namespace SimpleZIP_UI.Appl.Compression
         public void Compress(FileInfo[] files, string archiveName, string location)
         {
             using (var memoryStream = new MemoryStream()) // work in memory
+            using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
             {
-                using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+                foreach (var f in files)
                 {
-                    foreach (var t in files)
-                    {
-                        archive.CreateEntryFromFile(t.FullName, t.Name);
-                    }
+                    archive.CreateEntryFromFile(f.FullName, f.Name);
                 }
 
                 // actually write the memory stream to a zip archive
@@ -40,6 +39,5 @@ namespace SimpleZIP_UI.Appl.Compression
         {
             ZipFile.ExtractToDirectory(archiveName, location);
         }
-
     }
 }
