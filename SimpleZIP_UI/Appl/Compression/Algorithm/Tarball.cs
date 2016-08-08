@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using SharpCompress.Archive;
 using SharpCompress.Archive.Tar;
 using SharpCompress.Common;
-using SharpCompress.Writer;
 using SimpleZIP_UI.Exceptions;
 
-namespace SimpleZIP_UI.Appl.Compression
+namespace SimpleZIP_UI.Appl.Compression.Algorithm
 {
     internal class Tarball : ICompressionAlgorithm
     {

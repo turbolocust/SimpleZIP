@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.IO.Compression;
 
-namespace SimpleZIP_UI.Appl.Compression
+namespace SimpleZIP_UI.Appl.Compression.Algorithm
 {
     public class GZipper : ICompressionAlgorithm
     {

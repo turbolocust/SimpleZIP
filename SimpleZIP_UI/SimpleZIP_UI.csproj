@@ -98,16 +98,18 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Appl\Compression\Tarball.cs" />
+    <Compile Include="Appl\Compression\Algorithm\GZipper.cs" />
+    <Compile Include="Appl\Compression\Algorithm\ICompressionAlgorithm.cs" />
+    <Compile Include="Appl\Compression\Algorithm\Tarball.cs" />
+    <Compile Include="Appl\Compression\Algorithm\Zipper.cs" />
+    <Compile Include="Appl\Compression\CompressionHandler.cs" />
     <Compile Include="Control\Control.cs" />
+    <Compile Include="Control\Factory\FilePickerFactory.cs" />
     <Compile Include="Exceptions\InvalidFileTypeException.cs" />
     <Compile Include="Control\SummaryPageControl.cs" />
     <Compile Include="SummaryPage.xaml.cs">
       <DependentUpon>SummaryPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Appl\Compression\ICompressionAlgorithm.cs" />
-    <Compile Include="Appl\Compression\GZipper.cs" />
-    <Compile Include="Appl\Compression\Zipper.cs" />
     <Compile Include="Control\MainPageControl.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
