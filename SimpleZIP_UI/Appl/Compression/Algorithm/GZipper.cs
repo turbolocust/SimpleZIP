@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.IO.Compression;
+using Windows.Storage;
 
 namespace SimpleZIP_UI.Appl.Compression.Algorithm
 {
@@ -15,14 +17,13 @@ namespace SimpleZIP_UI.Appl.Compression.Algorithm
             // singleton
         }
 
-        public void Compress(FileInfo[] files, string archiveName, string location)
+        public void Compress(IReadOnlyList<StorageFile> files, string archiveName, string location)
         {
             using (var fileStream = new FileStream(@location + archiveName, FileMode.Create))
             using (var gzipStream = new GZipStream(fileStream, CompressionLevel.Optimal))
             {
                 var file = files[0]; // as gzip only allows compression of one file
-
-                using (var inputStream = new FileStream(file.FullName, FileMode.Open))
+                using (var inputStream = new FileStream(file.Path, FileMode.Open))
                 {
                     var bytes = new byte[4096];
                     var readBytes = 0;

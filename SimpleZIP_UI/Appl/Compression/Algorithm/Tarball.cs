@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using Windows.Storage;
 using SharpCompress.Common;
 using SharpCompress.Compressor.Deflate;
 using SharpCompress.Reader;
@@ -20,7 +22,7 @@ namespace SimpleZIP_UI.Appl.Compression.Algorithm
             // singleton
         }
 
-        public void Compress(FileInfo[] files, string archiveName, string location)
+        public void Compress(IReadOnlyList<StorageFile> files, string archiveName, string location)
         {
             var compressionInfo = new CompressionInfo()
             {
@@ -33,7 +35,7 @@ namespace SimpleZIP_UI.Appl.Compression.Algorithm
             {
                 foreach (var f in files)
                 {
-                    using (var fileInputStream = new FileStream(f.FullName, FileMode.Open))
+                    using (var fileInputStream = new FileStream(f.Path, FileMode.Open))
                     {
                         archiveStream.Write(f.Name, fileInputStream, DateTime.Now);
                     }

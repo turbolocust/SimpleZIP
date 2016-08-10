@@ -1,5 +1,6 @@
 ﻿{
   "dependencies": {
+    "GoogleAnalyticsSDK": "1.3.0",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",
     "Microsoft.Xaml.Behaviors.Uwp.Managed": "1.1.0",
     "sharpcompress": "0.12.3"

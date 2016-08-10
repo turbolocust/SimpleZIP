@@ -43,11 +43,13 @@ namespace SimpleZIP_UI
             _selectedFiles = e.Parameter as IReadOnlyList<StorageFile>;
 
             if (_selectedFiles != null)
+            {
                 foreach (var f in _selectedFiles) // populate list
                 {
                     var textBlock = new TextBlock() { Text = f.Name };
                     this.ItemsListBox.Items?.Add(textBlock);
                 }
+            }
         }
 
         private void OnSummaryPageLoaded(object sender, RoutedEventArgs e)

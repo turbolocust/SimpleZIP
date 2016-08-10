@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.IO.Compression;
+using Windows.Storage;
 
 namespace SimpleZIP_UI.Appl.Compression.Algorithm
 {
@@ -15,7 +17,7 @@ namespace SimpleZIP_UI.Appl.Compression.Algorithm
             // singleton
         }
 
-        public void Compress(FileInfo[] files, string archiveName, string location)
+        public void Compress(IReadOnlyList<StorageFile> files, string archiveName, string location)
         {
             using (var memoryStream = new MemoryStream()) // work in memory
             {
@@ -23,7 +25,7 @@ namespace SimpleZIP_UI.Appl.Compression.Algorithm
                 {
                     foreach (var f in files)
                     {
-                        archive.CreateEntryFromFile(f.FullName, f.Name);
+                        archive.CreateEntryFromFile(f.Path, f.Name);
                     }
                 }
 

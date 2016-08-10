@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+using Windows.Storage;
 
 namespace SimpleZIP_UI.Appl.Compression.Algorithm
 {
@@ -15,10 +18,10 @@ namespace SimpleZIP_UI.Appl.Compression.Algorithm
         /// <summary>
         /// Compresses an archive to a specified location.
         /// </summary>
-        /// <param name="files">The files to put into the archive</param>
+        /// <param name="files">The files to be put into the archive</param>
         /// <param name="archiveName">The name of the archive to be compressed</param>
         /// <param name="location">Where the archive will be created</param>
         /// <exception cref="IOException">Thrown on any error when reading from or writing to streams</exception>
-        void Compress(FileInfo[] files, string archiveName, string location);
+        void Compress(IReadOnlyList<StorageFile> files, string archiveName, string location);
     }
 }
