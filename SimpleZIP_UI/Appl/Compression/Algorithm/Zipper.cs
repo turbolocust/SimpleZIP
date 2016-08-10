@@ -18,14 +18,16 @@ namespace SimpleZIP_UI.Appl.Compression.Algorithm
         public void Compress(FileInfo[] files, string archiveName, string location)
         {
             using (var memoryStream = new MemoryStream()) // work in memory
-            using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
             {
-                foreach (var f in files)
+                using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
                 {
-                    archive.CreateEntryFromFile(f.FullName, f.Name);
+                    foreach (var f in files)
+                    {
+                        archive.CreateEntryFromFile(f.FullName, f.Name);
+                    }
                 }
 
-                // actually write the memory stream to a zip archive
+                // actually write the memory stream to a file
                 using (var fileStream = new FileStream(@location + archiveName, FileMode.Create))
                 {
                     memoryStream.Seek(0, SeekOrigin.Begin);

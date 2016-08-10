@@ -27,9 +27,9 @@ namespace SimpleZIP_UI.Control
         static Control()
         {
             AlgorithmFileTypes.Add(".zip", Algorithm.Zip);
-            AlgorithmFileTypes.Add(".gzip", Algorithm.Gzip);
-            AlgorithmFileTypes.Add(".gz", Algorithm.TarGz);
-            AlgorithmFileTypes.Add(".bz2", Algorithm.TarBz2);
+            AlgorithmFileTypes.Add(".gz", Algorithm.Gzip);
+            AlgorithmFileTypes.Add(".tgz", Algorithm.TarGz);
+            AlgorithmFileTypes.Add(".tbz2", Algorithm.TarBz2);
         }
 
         protected Control(Frame rootFrame)

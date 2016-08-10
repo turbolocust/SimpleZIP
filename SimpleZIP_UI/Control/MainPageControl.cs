@@ -1,4 +1,5 @@
 ﻿using System;
+using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 using SimpleZIP_UI.Appl.Compression;
 using SimpleZIP_UI.Control.Factory;

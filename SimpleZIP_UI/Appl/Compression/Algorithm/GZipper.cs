@@ -17,45 +17,43 @@ namespace SimpleZIP_UI.Appl.Compression.Algorithm
 
         public void Compress(FileInfo[] files, string archiveName, string location)
         {
-            using (var inputStream = new FileStream(files[0].FullName, FileMode.Open))
+            using (var fileStream = new FileStream(@location + archiveName, FileMode.Create))
+            using (var gzipStream = new GZipStream(fileStream, CompressionLevel.Optimal))
             {
                 var file = files[0]; // as gzip only allows compression of one file
-                var bytes = new byte[file.Length];
-                inputStream.Read(bytes, 0, files.Length); //read file to bytes array
 
-                var archive = new FileInfo(location + archiveName);
-
-                using (var outputStream = new FileStream(archive.FullName, FileMode.Create))
-                using (var gzipStream = new GZipStream(outputStream, CompressionLevel.Optimal))
+                using (var inputStream = new FileStream(file.FullName, FileMode.Open))
                 {
-                    gzipStream.Write(bytes, 0, bytes.Length); // write bytes to archive
+                    var bytes = new byte[4096];
+                    var readBytes = 0;
+
+                    while ((readBytes = inputStream.Read(bytes, 0, bytes.Length)) > 0)
+                    {
+                        gzipStream.Write(bytes, 0, readBytes);
+                    }
                 }
             }
         }
 
         public void Extract(string archiveName, string location)
         {
-            var archive = new FileInfo(archiveName);
+            var archive = new FileInfo(@location + archiveName);
 
-            using (var inputStream = new FileStream(archive.FullName, FileMode.Open))
-            using (var gzipStream = new GZipStream(inputStream, CompressionMode.Decompress))
+            using (var fileStream = new FileStream(archive.FullName, FileMode.Open))
+            using (var gzipStream = new GZipStream(fileStream, CompressionMode.Decompress))
             {
-                const int size = 4096;
-                var buffer = new byte[size];
+                // remove extension from output file name
+                var outputFileName = archive.Name.Substring(0, (archive.Name.Length - archive.Extension.Length));
 
-                // make new file without file extension of gzip
-                var outputFile = new FileInfo(location + archiveName.Substring(0, archiveName.LastIndexOf('.') - 1));
-                using (var outputStream = new FileStream(outputFile.FullName, FileMode.Create))
+                using (var outputStream = new FileStream((@location + outputFileName), FileMode.Create))
                 {
+                    var bytes = new byte[4096];
                     var readBytes = 0;
-                    do
+
+                    while ((readBytes = gzipStream.Read(bytes, 0, bytes.Length)) > 0)
                     {
-                        readBytes = gzipStream.Read(buffer, 0, size);
-                        if (readBytes > 0)
-                        {
-                            outputStream.Write(buffer, 0, readBytes);
-                        }
-                    } while (readBytes > 0);
+                        outputStream.Write(bytes, 0, readBytes);
+                    }
                 }
             }
         }

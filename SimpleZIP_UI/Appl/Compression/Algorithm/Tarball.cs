@@ -1,8 +1,10 @@
-﻿using System.IO;
-using SharpCompress.Archive;
-using SharpCompress.Archive.Tar;
+﻿using System;
+using System.IO;
 using SharpCompress.Common;
-using SimpleZIP_UI.Exceptions;
+using SharpCompress.Compressor.Deflate;
+using SharpCompress.Reader;
+using SharpCompress.Reader.Tar;
+using SharpCompress.Writer.Tar;
 
 namespace SimpleZIP_UI.Appl.Compression.Algorithm
 {
@@ -20,42 +22,31 @@ namespace SimpleZIP_UI.Appl.Compression.Algorithm
 
         public void Compress(FileInfo[] files, string archiveName, string location)
         {
-            using (var archive = TarArchive.Create())
+            var compressionInfo = new CompressionInfo()
+            {
+                DeflateCompressionLevel = CompressionLevel.Default,
+                Type = archiveName.EndsWith("bz2") ? CompressionType.BZip2 : CompressionType.GZip
+            };
+
+            using (var fileOutputStream = new FileStream(@location + archiveName, FileMode.Create))
+            using (var archiveStream = new TarWriter(fileOutputStream, compressionInfo))
             {
                 foreach (var f in files)
                 {
-                    //TODO
-                    archive.AddEntry(f.Name, f.FullName);
+                    using (var fileInputStream = new FileStream(f.FullName, FileMode.Open))
+                    {
+                        archiveStream.Write(f.Name, fileInputStream, DateTime.Now);
+                    }
                 }
-
-                archive.SaveTo(location, CompressionType.GZip);
             }
-
         }
 
         public void Extract(string archiveName, string location)
         {
-            if (TarArchive.IsTarFile(archiveName))
+            using (var fileInputStream = new FileStream(archiveName, FileMode.Open))
+            using (var tarReader = TarReader.Open(fileInputStream))
             {
-                using (var memoryStream = new MemoryStream())
-                using (var archive = TarArchive.Open(archiveName))
-                {
-                    var reader = archive.ExtractAllEntries();
-                    while (reader.MoveToNextEntry())
-                    {
-                        reader.WriteEntryTo(memoryStream);
-                    }
-
-                    using (var fileStream = new FileStream(@location + archiveName, FileMode.Create))
-                    {
-                        memoryStream.Seek(0, SeekOrigin.Begin);
-                        memoryStream.CopyTo(fileStream);
-                    }
-                }
-            }
-            else
-            {
-                throw new InvalidFileTypeException("File is not a TAR archive");
+                tarReader.WriteAllToDirectory(@location, ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
             }
         }
     }
