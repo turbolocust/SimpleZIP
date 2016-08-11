@@ -13,7 +13,7 @@
             <RowDefinition Height="1.5*" />
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-            <ComboBox Width="150" Margin="16,0,0,0" Header="Archive Type" SelectedIndex="0" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}">
+            <ComboBox x:Name="ArchiveTypeComboBox" Width="150" Margin="16,0,0,0" Header="Archive Type" SelectedIndex="0" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}">
                 <ComboBoxItem Content="ZIP (.zip)" />
                 <ComboBoxItem Content="GZIP (.gzip)" />
                 <ComboBoxItem Content="TARBALL (.tar.gz)" />
