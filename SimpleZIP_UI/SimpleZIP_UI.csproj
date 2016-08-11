@@ -104,6 +104,7 @@
     <Compile Include="Appl\Compression\Algorithm\Zipper.cs" />
     <Compile Include="Appl\Compression\CompressionHandler.cs" />
     <Compile Include="Control\Control.cs" />
+    <Compile Include="Control\Factory\MessageDialogFactory.cs" />
     <Compile Include="Control\Factory\FilePickerFactory.cs" />
     <Compile Include="Exceptions\InvalidFileTypeException.cs" />
     <Compile Include="Control\SummaryPageControl.cs" />

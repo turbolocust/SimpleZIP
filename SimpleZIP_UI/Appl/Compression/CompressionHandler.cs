@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.UI.Popups;
 using SimpleZIP_UI.Appl.Compression.Algorithm;
+using SimpleZIP_UI.Control.Factory;
 using SimpleZIP_UI.Exceptions;
 
 namespace SimpleZIP_UI.Appl.Compression
@@ -68,43 +70,37 @@ namespace SimpleZIP_UI.Appl.Compression
                         var parent = await archiveFile.GetParentAsync();
                         if (parent != null)
                         {
-                            StorageFolder outputFolder; // archive content will be copied there
-
                             try
                             {
-                                // try to get the folder, as it may already exist
-                                outputFolder = await parent.GetFolderAsync(archiveFile.DisplayName);
-                            }
-                            catch (FileNotFoundException ex)
-                            {
-                                // create new output folder with display name of archive
-                                outputFolder = await parent.CreateFolderAsync(archiveFile.DisplayName);
-                                GoogleAnalytics.EasyTracker.GetTracker().SendException(ex.Message + "\n" + ex.Source + "\n" + ex.StackTrace, false);
+                                // try to create the folder for extraction
+                                var outputFolder =
+                                    await
+                                        parent.CreateFolderAsync(archiveFile.DisplayName,
+                                            CreationCollisionOption.GenerateUniqueName);
+                                // then extract archive content to newly created folder
+                                _compressionAlgorithm.Extract(archiveFile.Path, outputFolder.Path);
                             }
                             catch (UnauthorizedAccessException ex)
                             {
-                                // create an alternative folder in case of missing rights
-                                outputFolder = await parent.CreateFolderAsync(archiveFile.DisplayName + "_simplezip");
-                                GoogleAnalytics.EasyTracker.GetTracker().SendException(ex.Message + "\n" + ex.Source + "\n" + ex.StackTrace, false);
-                            }
-
-                            if (outputFolder != null)
-                            {
-                                // then extract archive to newly created output folder
-                                _compressionAlgorithm.Extract(archiveFile.Path, outputFolder.Path);
+                                MessageDialogFactory.CreateInformationDialog("Error",
+                                    "Insufficient rights to extract archive here.\nPlease move archive to a different location.");
+                                GoogleAnalytics.EasyTracker.GetTracker()
+                                    .SendException(ex.Message + "\n" + ex.Source + "\n" + ex.StackTrace, false);
                             }
                         }
                     }
                 }
                 catch (ArgumentOutOfRangeException ex)
                 {
-                    GoogleAnalytics.EasyTracker.GetTracker().SendException(ex.Message + "\n" + ex.Source + "\n" + ex.StackTrace, true);
+                    GoogleAnalytics.EasyTracker.GetTracker()
+                        .SendException(ex.Message + "\n" + ex.Source + "\n" + ex.StackTrace, true);
                 }
             }
             else
             {
                 throw new InvalidFileTypeException("The selected file format is not supported.");
             }
+
             return DateTime.Now.Millisecond - currentTime;
         }
 

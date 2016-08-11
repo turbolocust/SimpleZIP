@@ -5,6 +5,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using SimpleZIP_UI.Control;
+using SimpleZIP_UI.Control.Factory;
 using SimpleZIP_UI.Exceptions;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -55,11 +56,8 @@ namespace SimpleZIP_UI
         /// <param name="e"></param>
         private async void GetSourceButton_Tap(object sender, TappedRoutedEventArgs e)
         {
-            var dialog = new MessageDialog("This will redirect you to the Web-Browser.\n\nAre you sure?");
-            dialog.Commands.Add(new UICommand("Yes") { Id = 0 });
-            dialog.Commands.Add(new UICommand("No") { Id = 1 });
-            dialog.DefaultCommandIndex = 0;
-            dialog.CancelCommandIndex = 1;
+            var dialog = MessageDialogFactory.CreateConfirmationDialog("",
+                "This will redirect you to the Web-Browser.\n\nAre you sure?");
 
             var result = await dialog.ShowAsync();
             if (result.Id.Equals(0)) // launch browser
