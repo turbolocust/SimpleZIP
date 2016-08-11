@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Storage.Pickers;
+﻿using Windows.Storage.Pickers;
 
-namespace SimpleZIP_UI.Control.Factory
+namespace SimpleZIP_UI.UI.Factory
 {
     internal class FilePickerFactory
     {
@@ -43,7 +38,7 @@ namespace SimpleZIP_UI.Control.Factory
             };
 
             // add each supported file type to the picker
-            foreach (var fileType in Control.AlgorithmFileTypes)
+            foreach (var fileType in UI.Control.AlgorithmFileTypes)
             {
                 picker.FileTypeFilter.Add(fileType.Key);
             }

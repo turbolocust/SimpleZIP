@@ -8,7 +8,7 @@ using SharpCompress.Reader;
 using SharpCompress.Reader.Tar;
 using SharpCompress.Writer.Tar;
 
-namespace SimpleZIP_UI.Appl.Compression.Algorithm
+namespace SimpleZIP_UI.Common.Compression.Algorithm
 {
     internal class Tarball : ICompressionAlgorithm
     {

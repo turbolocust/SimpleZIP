@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Windows.Storage.Pickers;
+﻿using System.Collections.Generic;
 using Windows.UI.Xaml.Controls;
-using SimpleZIP_UI.Appl.Compression.Algorithm;
-using SimpleZIP_UI.Exceptions;
 
-namespace SimpleZIP_UI.Control
+namespace SimpleZIP_UI.UI
 {
     public abstract class Control
     {

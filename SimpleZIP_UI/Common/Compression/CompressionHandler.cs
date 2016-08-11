@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.UI.Popups;
-using SimpleZIP_UI.Appl.Compression.Algorithm;
-using SimpleZIP_UI.Control.Factory;
+using SimpleZIP_UI.Common.Compression.Algorithm;
 using SimpleZIP_UI.Exceptions;
+using SimpleZIP_UI.UI.Factory;
 
-namespace SimpleZIP_UI.Appl.Compression
+namespace SimpleZIP_UI.Common.Compression
 {
     internal class CompressionHandler
     {
@@ -55,10 +53,10 @@ namespace SimpleZIP_UI.Appl.Compression
         public async Task<int> ExtractFromArchive(StorageFile archiveFile)
         {
             var currentTime = DateTime.Now.Millisecond;
-            Control.Control.Algorithm key;
+            UI.Control.Algorithm key;
 
             // try to get enum type by file extension, which is the key
-            if (!Control.Control.AlgorithmFileTypes.TryGetValue(archiveFile.FileType, out key))
+            if (!UI.Control.AlgorithmFileTypes.TryGetValue(archiveFile.FileType, out key))
             {
                 try
                 {
@@ -109,23 +107,23 @@ namespace SimpleZIP_UI.Appl.Compression
         /// </summary>
         /// <param name="key"></param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private void ChooseStrategy(Control.Control.Algorithm key)
+        private void ChooseStrategy(UI.Control.Algorithm key)
         {
             switch (key)
             {
-                case Control.Control.Algorithm.Zip:
+                case UI.Control.Algorithm.Zip:
                     _compressionAlgorithm = Zipper.Instance;
                     break;
 
-                case Control.Control.Algorithm.Gzip:
+                case UI.Control.Algorithm.Gzip:
                     _compressionAlgorithm = GZipper.Instance;
                     break;
 
-                case Control.Control.Algorithm.TarGz:
+                case UI.Control.Algorithm.TarGz:
                     _compressionAlgorithm = Tarball.Instance;
                     break;
 
-                case Control.Control.Algorithm.TarBz2:
+                case UI.Control.Algorithm.TarBz2:
                     _compressionAlgorithm = Tarball.Instance;
                     break;
 

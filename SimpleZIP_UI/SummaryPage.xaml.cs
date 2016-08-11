@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-using SimpleZIP_UI.Control;
+using SimpleZIP_UI.UI;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -46,8 +43,7 @@ namespace SimpleZIP_UI
             {
                 foreach (var f in _selectedFiles) // populate list
                 {
-                    var textBlock = new TextBlock() { Text = f.Name };
-                    this.ItemsListBox.Items?.Add(textBlock);
+                    this.ItemsListBox.Items?.Add(new TextBlock() { Text = f.Name });
                 }
             }
         }

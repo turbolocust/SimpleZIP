@@ -13,7 +13,7 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <RichTextBlock Grid.Row="0" Margin="0,32,0,0" TextWrapping="Wrap"  IsTextSelectionEnabled="False" TextAlignment="Left">

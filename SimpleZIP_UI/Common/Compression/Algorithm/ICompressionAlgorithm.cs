@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 using Windows.Storage;
 
-namespace SimpleZIP_UI.Appl.Compression.Algorithm
+namespace SimpleZIP_UI.Common.Compression.Algorithm
 {
     public interface ICompressionAlgorithm
     {

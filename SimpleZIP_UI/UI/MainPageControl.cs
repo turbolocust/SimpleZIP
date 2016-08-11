@@ -1,10 +1,9 @@
 ﻿using System;
-using Windows.Storage;
 using Windows.UI.Xaml.Controls;
-using SimpleZIP_UI.Appl.Compression;
-using SimpleZIP_UI.Control.Factory;
+using SimpleZIP_UI.Common.Compression;
+using SimpleZIP_UI.UI.Factory;
 
-namespace SimpleZIP_UI.Control
+namespace SimpleZIP_UI.UI
 {
     /// <summary>
     /// Handles complex operations for the GUI controller and delegates them to the application layer.
@@ -41,7 +40,13 @@ namespace SimpleZIP_UI.Control
             if (file != null) // system has now access to file
             {
                 var compressionHandler = CompressionHandler.Instance;
-                compressionHandler.ExtractFromArchive(file);
+                var duration = await compressionHandler.ExtractFromArchive(file);
+                if (duration > 0)
+                {
+                    MessageDialogFactory.CreateInformationDialog("Success",
+                        "The operation succeeded.\n\tFiles have been extracted to a subfolder at the archive's location.\n\tTotal duration: " +
+                        duration);
+                }
             }
         }
     }

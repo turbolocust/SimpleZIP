@@ -1,11 +1,11 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace SimpleZIP_UI.Control
+namespace SimpleZIP_UI.UI
 {
     /// <summary>
     /// 
     /// </summary>
-    internal class SummaryPageControl : Control
+    internal class SummaryPageControl : UI.Control
     {
         public SummaryPageControl(Frame rootFrame) : base(rootFrame)
         {

@@ -98,20 +98,23 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Appl\Compression\Algorithm\GZipper.cs" />
-    <Compile Include="Appl\Compression\Algorithm\ICompressionAlgorithm.cs" />
-    <Compile Include="Appl\Compression\Algorithm\Tarball.cs" />
-    <Compile Include="Appl\Compression\Algorithm\Zipper.cs" />
-    <Compile Include="Appl\Compression\CompressionHandler.cs" />
-    <Compile Include="Control\Control.cs" />
-    <Compile Include="Control\Factory\MessageDialogFactory.cs" />
-    <Compile Include="Control\Factory\FilePickerFactory.cs" />
+    <Compile Include="BusyIndicator.xaml.cs">
+      <DependentUpon>BusyIndicator.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Common\Compression\Algorithm\GZipper.cs" />
+    <Compile Include="Common\Compression\Algorithm\ICompressionAlgorithm.cs" />
+    <Compile Include="Common\Compression\Algorithm\Tarball.cs" />
+    <Compile Include="Common\Compression\Algorithm\Zipper.cs" />
+    <Compile Include="Common\Compression\CompressionHandler.cs" />
+    <Compile Include="UI\Control.cs" />
+    <Compile Include="UI\Factory\MessageDialogFactory.cs" />
+    <Compile Include="UI\Factory\FilePickerFactory.cs" />
     <Compile Include="Exceptions\InvalidFileTypeException.cs" />
-    <Compile Include="Control\SummaryPageControl.cs" />
+    <Compile Include="UI\SummaryPageControl.cs" />
     <Compile Include="SummaryPage.xaml.cs">
       <DependentUpon>SummaryPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Control\MainPageControl.cs" />
+    <Compile Include="UI\MainPageControl.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -139,6 +142,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="AboutDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="BusyIndicator.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
