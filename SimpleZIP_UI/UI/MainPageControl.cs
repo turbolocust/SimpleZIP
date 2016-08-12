@@ -11,7 +11,7 @@ namespace SimpleZIP_UI.UI
     internal class MainPageControl : Control
     {
 
-        public MainPageControl(Frame rootFrame) : base(rootFrame)
+        public MainPageControl(Page parent) : base(parent)
         {
         }
 
@@ -25,7 +25,7 @@ namespace SimpleZIP_UI.UI
             var files = await picker.PickMultipleFilesAsync();
             if (files?.Count > 0) // must not be null and empty
             {
-                RootFrame.Navigate(typeof(SummaryPage), files);
+                ParentPage.Frame.Navigate(typeof(SummaryPage), files);
             }
         }
 
@@ -43,12 +43,12 @@ namespace SimpleZIP_UI.UI
                 // show busy indicator while operation is in progress
                 var indicator = BusyIndicator.Start("Operation in progress. Please wait . . .");
                 var duration = await compressionHandler.ExtractFromArchive(file);
-                // close the busy indicator
+                // close the busy indicator after completion
                 indicator.Close();
                 if (duration > 0)
                 {
                     MessageDialogFactory.CreateInformationDialog("Success",
-                        "The operation succeeded.\n\nFiles have been extracted to a subfolder at the archive's location.\n\nTotal duration: " +
+                        "The operation succeeded.\n\nFiles have been extracted to the specified subfolder at the archive's location.\n\nTotal duration: " +
                         duration);
                 }
             }

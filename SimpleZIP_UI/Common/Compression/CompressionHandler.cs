@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
 using SimpleZIP_UI.Common.Compression.Algorithm;
 using SimpleZIP_UI.Exceptions;
 using SimpleZIP_UI.UI.Factory;
+using Control = SimpleZIP_UI.UI.Control;
 
 namespace SimpleZIP_UI.Common.Compression
 {
@@ -30,17 +33,37 @@ namespace SimpleZIP_UI.Common.Compression
         /// <param name="files"></param>
         /// <param name="archiveName"></param>
         /// <param name="location"></param>
-        public async Task<int> CreateArchive(IReadOnlyList<StorageFile> files, string archiveName, string location)
+        public async Task<int> CreateArchive(IReadOnlyList<StorageFile> files, string archiveName, CancellationToken ct)
         {
             var task = new Task<int>(() =>
             {
                 var currentTime = DateTime.Now.Millisecond;
+                var archive = new FileInfo(archiveName);
+
                 if (files.Count > 0)
                 {
-                    _compressionAlgorithm.Compress(files, archiveName, location);
+                    var fileInfo = new FileInfo(archiveName);
+                    Control.Algorithm key;
+
+                    // try to get enum type by file extension, which is the key
+                    if (!Control.AlgorithmFileTypes.TryGetValue(fileInfo.Extension, out key))
+                    {
+                        try
+                        {
+                            ChooseStrategy(key); // determines the algorithm to be used
+                            _compressionAlgorithm.Compress(files, archive.FullName, archive.DirectoryName);
+                        }
+                        catch (ArgumentOutOfRangeException ex)
+                        {
+                            GoogleAnalytics.EasyTracker.GetTracker()
+                                .SendException(ex.Message + "\n" + ex.Source + "\n" + ex.StackTrace, true);
+                        }
+                    }
                 }
+
                 return DateTime.Now.Millisecond - currentTime;
             });
+
             task.Start();
             return await task;
         }
@@ -78,12 +101,10 @@ namespace SimpleZIP_UI.Common.Compression
                                 // then extract archive content to newly created folder
                                 _compressionAlgorithm.Extract(archiveFile.Path, outputFolder.Path);
                             }
-                            catch (UnauthorizedAccessException ex)
+                            catch (UnauthorizedAccessException)
                             {
                                 MessageDialogFactory.CreateInformationDialog("Error",
                                     "Insufficient rights to extract archive here.\nPlease move archive to a different location.");
-                                GoogleAnalytics.EasyTracker.GetTracker()
-                                    .SendException(ex.Message + "\n" + ex.Source + "\n" + ex.StackTrace, false);
                             }
                         }
                     }
@@ -111,19 +132,19 @@ namespace SimpleZIP_UI.Common.Compression
         {
             switch (key)
             {
-                case UI.Control.Algorithm.Zip:
+                case Control.Algorithm.Zip:
                     _compressionAlgorithm = Zipper.Instance;
                     break;
 
-                case UI.Control.Algorithm.Gzip:
+                case Control.Algorithm.Gzip:
                     _compressionAlgorithm = GZipper.Instance;
                     break;
 
-                case UI.Control.Algorithm.TarGz:
+                case Control.Algorithm.TarGz:
                     _compressionAlgorithm = Tarball.Instance;
                     break;
 
-                case UI.Control.Algorithm.TarBz2:
+                case Control.Algorithm.TarBz2:
                     _compressionAlgorithm = Tarball.Instance;
                     break;
 

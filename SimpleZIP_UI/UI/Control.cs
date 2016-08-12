@@ -5,7 +5,7 @@ namespace SimpleZIP_UI.UI
 {
     public abstract class Control
     {
-        protected Frame RootFrame { get; set; }
+        protected Page ParentPage { get; }
 
         /// <summary>
         /// Enumeration type to identify the specific algorithm.
@@ -30,9 +30,9 @@ namespace SimpleZIP_UI.UI
             AlgorithmFileTypes.Add(".tbz2", Algorithm.TarBz2);
         }
 
-        protected Control(Frame rootFrame)
+        protected Control(Page parent)
         {
-            RootFrame = rootFrame;
+            ParentPage = parent;
         }
     }
 }

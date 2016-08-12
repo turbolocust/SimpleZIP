@@ -6,22 +6,20 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    d:DesignHeight="300"
+    d:DesignHeight="200"
     d:DesignWidth="400">
 
     <Grid>
-        <Grid Background="Black" Opacity="0.4"/>
-
-        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Background="White" Width="470" Height="120">
+        <Grid Background="Black" Opacity="0.2"/>
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Background="{ThemeResource AutoSuggestBackgroundThemeBrush}" Width="Auto" Height="Auto">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-
             <StackPanel Grid.Row="1" Margin="15,5,15,5" Orientation="Horizontal" HorizontalAlignment="Center" Background="{ThemeResource AutoSuggestBackgroundThemeBrush}">
                 <ProgressRing Height="40" Width="40" IsActive="True" Foreground="CornflowerBlue"/>
-                <TextBlock x:Name="TitleTextBlock" Text="Performing Operation"/>
+                <TextBlock x:Name="TitleTextBlock" Text="Extraction in progress . . ."/>
             </StackPanel>
         </Grid>
     </Grid>

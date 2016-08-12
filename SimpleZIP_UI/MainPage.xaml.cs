@@ -17,12 +17,12 @@ namespace SimpleZIP_UI
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private MainPageControl _control;
+        private readonly MainPageControl _control;
 
         public MainPage()
         {
             this.InitializeComponent();
-            Loaded += OnMainPageLoaded;
+            _control = new MainPageControl(this);
         }
 
         private void HamburgerButton_Tap(object sender, TappedRoutedEventArgs e)
@@ -74,11 +74,6 @@ namespace SimpleZIP_UI
         private async void AboutMenuButton_Tap(object sender, TappedRoutedEventArgs e)
         {
             await new AboutDialog().ShowAsync();
-        }
-
-        private void OnMainPageLoaded(object sender, RoutedEventArgs e)
-        {
-            _control = new MainPageControl(this.Frame);
         }
     }
 }
