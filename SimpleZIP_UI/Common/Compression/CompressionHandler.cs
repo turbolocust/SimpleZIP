@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using SimpleZIP_UI.Common.Compression.Algorithm;
 using SimpleZIP_UI.Exceptions;
-using SimpleZIP_UI.UI.Factory;
-using Control = SimpleZIP_UI.UI.Control;
+using SimpleZIP_UI.UI;
 
 namespace SimpleZIP_UI.Common.Compression
 {
@@ -31,38 +30,33 @@ namespace SimpleZIP_UI.Common.Compression
         /// 
         /// </summary>
         /// <param name="files"></param>
-        /// <param name="archiveName"></param>
-        /// <param name="location"></param>
-        public async Task<int> CreateArchive(IReadOnlyList<StorageFile> files, string archiveName, CancellationToken ct)
+        /// <param name="archive"></param>
+        /// <param name="key"></param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
+        public async Task<int> CreateArchive(IReadOnlyList<StorageFile> files, FileInfo archive, Control.Algorithm key, CancellationToken ct)
         {
             var task = new Task<int>(() =>
             {
                 var currentTime = DateTime.Now.Millisecond;
-                var archive = new FileInfo(archiveName);
 
                 if (files.Count > 0)
                 {
-                    var fileInfo = new FileInfo(archiveName);
-                    Control.Algorithm key;
-
-                    // try to get enum type by file extension, which is the key
-                    if (!Control.AlgorithmFileTypes.TryGetValue(fileInfo.Extension, out key))
+                    try
                     {
-                        try
-                        {
-                            ChooseStrategy(key); // determines the algorithm to be used
-                            _compressionAlgorithm.Compress(files, archive.FullName, archive.DirectoryName);
-                        }
-                        catch (ArgumentOutOfRangeException ex)
-                        {
-                            GoogleAnalytics.EasyTracker.GetTracker()
-                                .SendException(ex.Message + "\n" + ex.Source + "\n" + ex.StackTrace, true);
-                        }
+                        ChooseStrategy(key); // determines the algorithm to be used
+                        _compressionAlgorithm.Compress(files, archive.FullName, archive.DirectoryName);
+                    }
+                    catch (ArgumentOutOfRangeException ex)
+                    {
+                        GoogleAnalytics.EasyTracker.GetTracker()
+                            .SendException(ex.Message + "\n" + ex.Source + "\n" + ex.StackTrace, true);
                     }
                 }
 
                 return DateTime.Now.Millisecond - currentTime;
-            });
+
+            }, ct);
 
             task.Start();
             return await task;
@@ -72,14 +66,15 @@ namespace SimpleZIP_UI.Common.Compression
         /// 
         /// </summary>
         /// <param name="archiveFile"></param>
-        /// <exception cref="InvalidFileTypeException"></exception>
+        /// <exception cref="InvalidFileTypeException">If the file type of the selected file is not supported or unknown.</exception>
+        /// <exception cref="UnauthorizedAccessException">If extraction at the archive's path is not allowed.</exception>
         public async Task<int> ExtractFromArchive(StorageFile archiveFile)
         {
             var currentTime = DateTime.Now.Millisecond;
-            UI.Control.Algorithm key;
+            Control.Algorithm key; // the file type of the archive
 
             // try to get enum type by file extension, which is the key
-            if (!UI.Control.AlgorithmFileTypes.TryGetValue(archiveFile.FileType, out key))
+            if (!Control.AlgorithmFileTypes.TryGetValue(archiveFile.FileType, out key))
             {
                 try
                 {
@@ -91,21 +86,12 @@ namespace SimpleZIP_UI.Common.Compression
                         var parent = await archiveFile.GetParentAsync();
                         if (parent != null)
                         {
-                            try
-                            {
-                                // try to create the folder for extraction
-                                var outputFolder =
-                                    await
-                                        parent.CreateFolderAsync(archiveFile.DisplayName,
-                                            CreationCollisionOption.GenerateUniqueName);
-                                // then extract archive content to newly created folder
-                                _compressionAlgorithm.Extract(archiveFile.Path, outputFolder.Path);
-                            }
-                            catch (UnauthorizedAccessException)
-                            {
-                                MessageDialogFactory.CreateInformationDialog("Error",
-                                    "Insufficient rights to extract archive here.\nPlease move archive to a different location.");
-                            }
+                            // try to create the folder for extraction
+                            var outputFolder = await
+                                    parent.CreateFolderAsync(archiveFile.DisplayName,
+                                        CreationCollisionOption.GenerateUniqueName);
+                            // then extract archive content to newly created folder
+                            _compressionAlgorithm.Extract(archiveFile.Path, outputFolder.Path);
                         }
                     }
                 }
@@ -127,8 +113,8 @@ namespace SimpleZIP_UI.Common.Compression
         /// Assigns the correct algorithm instance to be used by the archive's file extension.
         /// </summary>
         /// <param name="key"></param>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private void ChooseStrategy(UI.Control.Algorithm key)
+        /// <exception cref="ArgumentOutOfRangeException">May only be thrown on fatal error.</exception>
+        private void ChooseStrategy(Control.Algorithm key)
         {
             switch (key)
             {

@@ -45,5 +45,20 @@ namespace SimpleZIP_UI.UI.Factory
 
             return picker;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static FolderPicker CreateFolderPicker()
+        {
+            var picker = new FolderPicker()
+            {
+                ViewMode = PickerViewMode.List,
+                SuggestedStartLocation = PickerLocationId.DocumentsLibrary
+            };
+
+            return picker;
+        }
     }
 }

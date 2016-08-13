@@ -6,7 +6,7 @@ using SimpleZIP_UI.UI.Factory;
 namespace SimpleZIP_UI.UI
 {
     /// <summary>
-    /// Handles complex operations for the GUI controller and delegates them to the application layer.
+    /// Handles complex operations for the corresponding GUI controller.
     /// </summary>
     internal class MainPageControl : Control
     {
@@ -40,16 +40,30 @@ namespace SimpleZIP_UI.UI
             if (file != null) // system has now access to file
             {
                 var compressionHandler = CompressionHandler.Instance;
-                // show busy indicator while operation is in progress
-                var indicator = BusyIndicator.Start("Operation in progress. Please wait . . .");
-                var duration = await compressionHandler.ExtractFromArchive(file);
-                // close the busy indicator after completion
-                indicator.Close();
+                var busyIndicator = BusyIndicator.Start("Operation in progress. Please wait . . .");
+                var duration = 0; // to measure the time of the extraction operation
+
+                try
+                {
+                    duration = await compressionHandler.ExtractFromArchive(file);
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    MessageDialogFactory.CreateInformationDialog("Error",
+                        "Insufficient rights to extract archive here.\n\n" +
+                        "Please move archive to a different location and try again.");
+                }
+                finally
+                {
+                    busyIndicator.Close();
+                }
+
                 if (duration > 0)
                 {
                     MessageDialogFactory.CreateInformationDialog("Success",
-                        "The operation succeeded.\n\nFiles have been extracted to the specified subfolder at the archive's location.\n\nTotal duration: " +
-                        duration);
+                        "The operation succeeded.\n\n" +
+                        "Files have been extracted to the specified subfolder at the archive's location.\n\n" +
+                        "Total duration: " + duration);
                 }
             }
         }

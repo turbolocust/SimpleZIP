@@ -8,7 +8,7 @@ namespace SimpleZIP_UI.UI
         protected Page ParentPage { get; }
 
         /// <summary>
-        /// Enumeration type to identify the specific algorithm.
+        /// Enumeration type to identify algorithms.
         /// </summary>
         public enum Algorithm
         {
