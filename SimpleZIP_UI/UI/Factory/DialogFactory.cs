@@ -10,11 +10,12 @@ namespace SimpleZIP_UI.UI.Factory
         }
 
         /// <summary>
-        /// 
+        /// Creates a new message dialog with two buttons for confirmation.
+        /// One labeled "Yes" with index 0. The other labeled "No" with index 1.
         /// </summary>
-        /// <param name="title"></param>
-        /// <param name="message"></param>
-        /// <returns></returns>
+        /// <param name="title">The title of the dialog.</param>
+        /// <param name="message">The message to be displayed in the dialog.</param>
+        /// <returns>The newly created message dialog.</returns>
         public static MessageDialog CreateConfirmationDialog(string title, string message)
         {
             var dialog = new MessageDialog(message, title);
@@ -26,11 +27,11 @@ namespace SimpleZIP_UI.UI.Factory
         }
 
         /// <summary>
-        /// 
+        /// Creates a new message dialog that simply shows a title and message.
         /// </summary>
-        /// <param name="title"></param>
-        /// <param name="message"></param>
-        /// <returns></returns>
+        /// <param name="title">The title of the dialog.</param>
+        /// <param name="message">The message to be displayed in the dialog.</param>
+        /// <returns>The newly created message dialog.</returns>
         public static MessageDialog CreateInformationDialog(string title, string message)
         {
             return new MessageDialog(message, title);

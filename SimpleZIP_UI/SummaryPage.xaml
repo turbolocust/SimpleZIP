@@ -16,7 +16,7 @@
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Center">
             <ComboBox x:Name="ArchiveTypeComboBox" DropDownClosed="ArchiveTypeComboBox_DropDownClosed" Width="120" Margin="8,0,16,0" Header="Archive Type" SelectedIndex="0" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}">
                 <ComboBoxItem Content=".zip" />
-                <ComboBoxItem Content=".gzip" />
+                <ComboBoxItem Content=".gzip" Visibility="Collapsed" />
                 <ComboBoxItem Content=".tar.gz" />
                 <ComboBoxItem Content=".tar.bz2" />
                 <ToolTipService.ToolTip>
@@ -39,7 +39,7 @@
                     <RowDefinition Height="9*" />
                 </Grid.RowDefinitions>
                 <TextBlock Text="File(s) to compress:" Grid.Row="0" FontWeight="Bold" FontSize="16" CharacterSpacing="56" Margin="8,0,0,0" VerticalAlignment="Center" Foreground="White" />
-                <ListBox x:Name="ItemsListBox" Grid.Row="1" Margin="8,0,8,0" SelectionMode="Single" CanDrag="False" HorizontalContentAlignment="Stretch" Background="Transparent" Height="Auto" Foreground="White" BorderThickness="0.5" />
+                <ListBox x:Name="ItemsListBox" Grid.Row="1" Margin="8,0,8,0" SelectionMode="Single" CanDrag="False" HorizontalContentAlignment="Stretch" Background="Transparent" Height="Auto" Foreground="White" />
             </Grid>
         </ScrollViewer>
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,16,0">
