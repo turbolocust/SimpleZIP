@@ -62,7 +62,7 @@ namespace SimpleZIP_UI.UI
             {
                 if (duration > 0 && !_isCancelRequest)
                 {
-                    await MessageDialogFactory.
+                    await DialogFactory.
                         CreateInformationDialog("Success", "Total duration: " + duration).ShowAsync();
                 }
 
@@ -76,7 +76,7 @@ namespace SimpleZIP_UI.UI
         /// </summary>
         public async void AbortButtonAction()
         {
-            var dialog = MessageDialogFactory.CreateConfirmationDialog("Are you sure?",
+            var dialog = DialogFactory.CreateConfirmationDialog("Are you sure?",
                 "This will cancel the operation.");
 
             var result = await dialog.ShowAsync();
@@ -102,7 +102,7 @@ namespace SimpleZIP_UI.UI
         /// </summary>
         public async Task<StorageFolder> OutputPathPanelAction()
         {
-            var picker = FilePickerFactory.CreateFolderPicker();
+            var picker = PickerFactory.CreateFolderPicker();
 
             var folder = await picker.PickSingleFolderAsync();
             if (folder != null) // system has now access to folder

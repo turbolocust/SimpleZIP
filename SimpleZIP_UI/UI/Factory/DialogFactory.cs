@@ -2,9 +2,9 @@
 
 namespace SimpleZIP_UI.UI.Factory
 {
-    internal class MessageDialogFactory
+    internal class DialogFactory
     {
-        private MessageDialogFactory()
+        private DialogFactory()
         {
             // currently holds static members only
         }

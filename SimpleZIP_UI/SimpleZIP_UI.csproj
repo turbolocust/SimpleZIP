@@ -107,8 +107,8 @@
     <Compile Include="Common\Compression\Algorithm\Zipper.cs" />
     <Compile Include="Common\Compression\CompressionHandler.cs" />
     <Compile Include="UI\Control.cs" />
-    <Compile Include="UI\Factory\MessageDialogFactory.cs" />
-    <Compile Include="UI\Factory\FilePickerFactory.cs" />
+    <Compile Include="UI\Factory\DialogFactory.cs" />
+    <Compile Include="UI\Factory\PickerFactory.cs" />
     <Compile Include="Exceptions\InvalidFileTypeException.cs" />
     <Compile Include="UI\SummaryPageControl.cs" />
     <Compile Include="SummaryPage.xaml.cs">

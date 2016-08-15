@@ -20,7 +20,7 @@ namespace SimpleZIP_UI.UI
         /// </summary>
         public async void CompressButtonAction()
         {
-            var picker = FilePickerFactory.CreateCompressFileOpenPicker();
+            var picker = PickerFactory.CreateCompressFileOpenPicker();
 
             var files = await picker.PickMultipleFilesAsync();
             if (files?.Count > 0) // must not be null and empty
@@ -34,7 +34,7 @@ namespace SimpleZIP_UI.UI
         /// </summary>
         public async void DecompressButtonAction()
         {
-            var picker = FilePickerFactory.CreateDecompressFileOpenPicker();
+            var picker = PickerFactory.CreateDecompressFileOpenPicker();
 
             var file = await picker.PickSingleFileAsync();
             if (file != null) // system has now access to file
@@ -49,7 +49,7 @@ namespace SimpleZIP_UI.UI
                 }
                 catch (UnauthorizedAccessException)
                 {
-                    MessageDialogFactory.CreateInformationDialog("Error",
+                    DialogFactory.CreateInformationDialog("Error",
                         "Insufficient rights to extract archive here.\n\n" +
                         "Please move archive to a different location and try again.");
                 }
@@ -60,7 +60,7 @@ namespace SimpleZIP_UI.UI
 
                 if (duration > 0)
                 {
-                    MessageDialogFactory.CreateInformationDialog("Success",
+                    DialogFactory.CreateInformationDialog("Success",
                         "The operation succeeded.\n\n" +
                         "Files have been extracted to the specified subfolder at the archive's location.\n\n" +
                         "Total duration: " + duration);

@@ -56,7 +56,7 @@ namespace SimpleZIP_UI
         /// <param name="e"></param>
         private async void GetSourceButton_Tap(object sender, TappedRoutedEventArgs e)
         {
-            var dialog = MessageDialogFactory.CreateConfirmationDialog("",
+            var dialog = DialogFactory.CreateConfirmationDialog("",
                 "This will redirect you to the Browser.\n\nAre you sure?");
 
             var result = await dialog.ShowAsync();

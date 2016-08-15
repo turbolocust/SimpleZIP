@@ -2,9 +2,9 @@
 
 namespace SimpleZIP_UI.UI.Factory
 {
-    internal class FilePickerFactory
+    internal class PickerFactory
     {
-        private FilePickerFactory()
+        private PickerFactory()
         {
             // currently holds static members only
         }
