@@ -49,7 +49,7 @@ namespace SimpleZIP_UI.UI
                 }
                 catch (UnauthorizedAccessException)
                 {
-                    DialogFactory.CreateInformationDialog("Error",
+                    DialogFactory.CreateInformationDialog("Oops!",
                         "Insufficient rights to extract archive here.\n\n" +
                         "Please move archive to a different location and try again.");
                 }

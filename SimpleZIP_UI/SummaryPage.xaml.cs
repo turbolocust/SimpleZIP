@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using Windows.Media.Devices;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -26,6 +26,7 @@ namespace SimpleZIP_UI
         public SummaryPage()
         {
             this.InitializeComponent();
+            this.ArchiveNameTextBox.Focus(FocusState.Programmatic);
             _control = new SummaryPageControl(this);
         }
 
@@ -46,12 +47,12 @@ namespace SimpleZIP_UI
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// <exception cref="ArgumentOutOfRangeException">May only be thrown on fatal error.</exception>
-        private void StartButton_Tap(object sender, TappedRoutedEventArgs e)
+        private async void StartButton_Tap(object sender, TappedRoutedEventArgs e)
         {
             var selectedIndex = this.ArchiveTypeComboBox.SelectedIndex;
             var archiveName = this.ArchiveNameTextBox.Text;
 
-            if (archiveName.Length > 0)
+            if (archiveName.Length > 0 && !ContainsIllegalChars(archiveName))
             {
                 Algorithm key; // the file type of the archive
 
@@ -81,8 +82,30 @@ namespace SimpleZIP_UI
                 }
 
                 SetOperationActive(true);
-                _control.StartButtonAction(_selectedFiles, archiveName, key);
+
+                var duration = await _control.StartButtonAction(_selectedFiles, archiveName, key);
+                if (duration > 0) // success
+                {
+                    await DialogFactory.CreateInformationDialog("Success", "Total duration: " + duration).ShowAsync();
+                }
+                else switch (duration)
+                    {
+                        case -1:
+                            await DialogFactory.CreateInformationDialog("Oops!",
+                                 "Operation successfully canceled.").ShowAsync();
+                            break;
+                        case -2:
+                            await DialogFactory.CreateInformationDialog("Oops!",
+                                "Looks like we do not have access to those files.").ShowAsync();
+                            break;
+                        default:
+                            await DialogFactory.CreateInformationDialog("Oops!",
+                                "Looks like something went wrong.").ShowAsync();
+                            break;
+                    }
+
                 SetOperationActive(false);
+                this.Frame.Navigate(typeof(MainPage));
             }
         }
 
@@ -92,11 +115,23 @@ namespace SimpleZIP_UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void OutputPathPanel_Tap(object sender, TappedRoutedEventArgs e)
+        private void OutputPathPanel_Tap(object sender, TappedRoutedEventArgs e)
         {
-            var folder = await _control.OutputPathPanelAction();
-            this.OutputPathTextBlock.Text = folder?.Name ?? "";
-            this.StartButton.IsEnabled = this.OutputPathTextBlock.Text.Length > 0;
+            PickOutputFolder();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OutputPathTextBlock_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (!this.ProgressRing.IsActive)
+            {
+                PickOutputFolder();
+                FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
+            }
         }
 
         /// <summary>
@@ -128,15 +163,35 @@ namespace SimpleZIP_UI
             {
                 this.ArchiveNameTextBox.Text = "myArchive";
             }
-            // check for illegal characters in file name
-            else if (fileName.Contains("<") || fileName.Contains(">") || fileName.Contains("/") ||
-                fileName.Contains("\\") || fileName.Contains("|") || fileName.Contains(":") ||
-                fileName.Contains("*") || fileName.Contains("\"") || fileName.Contains("?"))
+            else if (ContainsIllegalChars(fileName)) // check for illegal characters in file name
             {
-                this.ArchiveNameToolTip.Content = "Illegal characters found in file name.\n" +
-                                                  "Characters not allowed: " + "\\ / | : * \" ? < >\n";
+                this.ArchiveNameToolTip.Content = "These characters are not allowed:\n" +
+                                                  "\\ / | : * \" ? < >\n";
                 this.ArchiveNameToolTip.IsOpen = true;
             }
+            else
+            {
+                this.ArchiveNameToolTip.IsOpen = false;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ToolTip_Opened(object sender, RoutedEventArgs e)
+        {
+            var toolTip = (ToolTip)sender;
+
+            // use timer to close tool tip after 8 seconds
+            var timer = new DispatcherTimer { Interval = new TimeSpan(0, 0, 8) };
+            timer.Tick += (s, evt) =>
+            {
+                toolTip.IsOpen = false;
+                timer.Stop();
+            };
+            timer.Start();
         }
 
         /// <summary>
@@ -154,6 +209,16 @@ namespace SimpleZIP_UI
                     this.ItemsListBox.Items?.Add(new TextBlock() { Text = f.Name });
                 }
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private async void PickOutputFolder()
+        {
+            var folder = await _control.OutputPathPanelAction();
+            this.OutputPathTextBlock.Text = folder?.Name ?? "";
+            this.StartButton.IsEnabled = this.OutputPathTextBlock.Text.Length > 0;
         }
 
         /// <summary>

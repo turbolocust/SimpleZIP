@@ -40,34 +40,25 @@ namespace SimpleZIP_UI.UI
         /// <param name="selectedFiles"></param>
         /// <param name="archiveName"></param>
         /// <param name="key"></param>
-        public async void StartButtonAction(IReadOnlyList<StorageFile> selectedFiles, string archiveName, Algorithm key)
+        public async Task<int> StartButtonAction(IReadOnlyList<StorageFile> selectedFiles, string archiveName, Algorithm key)
         {
-            var duration = 0; // holds the time of the operation
             var archive = new FileInfo(_outputFolder.Path + "\\" + archiveName);
             _cancellationToken = new CancellationTokenSource();
 
             try
             {
                 var handler = CompressionHandler.Instance;
-                duration = await handler.CreateArchive(selectedFiles, archive, key, _cancellationToken.Token);
+                return await handler.CreateArchive(selectedFiles, archive, key, _cancellationToken.Token);
             }
             catch (OperationCanceledException)
             {
-                if (archive.Exists)
+                if (archive.Exists && _isCancelRequest)
                 {
                     archive.Delete();
-                }
-            }
-            finally
-            {
-                if (duration > 0 && !_isCancelRequest)
-                {
-                    await DialogFactory.
-                        CreateInformationDialog("Success", "Total duration: " + duration).ShowAsync();
+                    _isCancelRequest = false;
                 }
 
-                _isCancelRequest = false;
-                ParentPage.Frame.Navigate(typeof(MainPage));
+                return -1;
             }
         }
 

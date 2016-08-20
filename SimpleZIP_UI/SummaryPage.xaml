@@ -20,17 +20,17 @@
                 <ComboBoxItem Content=".tar.gz" />
                 <ComboBoxItem Content=".tar.bz2" />
                 <ToolTipService.ToolTip>
-                    <ToolTip x:Name="ArchiveTypeToolTip" HorizontalOffset="20" VerticalOffset="30" />
+                    <ToolTip x:Name="ArchiveTypeToolTip" HorizontalOffset="20" VerticalOffset="10" Opened="ToolTip_Opened" />
                 </ToolTipService.ToolTip>
             </ComboBox>
-            <TextBox x:Name="ArchiveNameTextBox" TextChanged="ArchiveNameTextBox_TextChanged" AcceptsReturn="False" Text="myArchive" Width="125" Header="Archive Name" IsReadOnly="False" TextWrapping="NoWrap" MaxLength="16" >
+            <TextBox x:Name="ArchiveNameTextBox" TextChanged="ArchiveNameTextBox_TextChanged" AcceptsReturn="False" Text="myArchive" Width="125" Header="Archive Name" IsReadOnly="False" TextWrapping="NoWrap" MaxLength="16" IsSpellCheckEnabled="False" InputScope="Url" >
                 <ToolTipService.ToolTip>
-                    <ToolTip x:Name="ArchiveNameToolTip" Content="Please check file name" HorizontalOffset="20" VerticalOffset="30" />
+                    <ToolTip x:Name="ArchiveNameToolTip" HorizontalOffset="20" VerticalOffset="10" />
                 </ToolTipService.ToolTip>
             </TextBox>
         </StackPanel>
         <StackPanel Grid.Row="1" IsTapEnabled="True" Tapped="OutputPathPanel_Tap" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Transparent">
-            <TextBox x:Name="OutputPathTextBlock" Margin="8,0,24,0" PlaceholderText="tap to choose" Header="Output Folder" Width="Auto" FontWeight="Light" IsReadOnly="True" AcceptsReturn="False"  TextWrapping="NoWrap" BorderThickness="0" />
+            <TextBox x:Name="OutputPathTextBlock" GotFocus="OutputPathTextBlock_GotFocus" Margin="8,0,24,0" PlaceholderText="tap to choose" Header="Output Folder" Width="Auto" FontWeight="Light" IsReadOnly="True" AcceptsReturn="False" TextWrapping="NoWrap" BorderThickness="0" IsTapEnabled="False" SelectionHighlightColor="Transparent" Background="Transparent" InputScope="Text" IsSpellCheckEnabled="False" IsTextPredictionEnabled="False" IsHoldingEnabled="False" IsDoubleTapEnabled="False" />
         </StackPanel>
         <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
             <Grid>

@@ -7,6 +7,7 @@ using Windows.Storage;
 using SimpleZIP_UI.Common.Compression.Algorithm;
 using SimpleZIP_UI.Exceptions;
 using SimpleZIP_UI.UI;
+using SimpleZIP_UI.UI.Factory;
 
 namespace SimpleZIP_UI.Common.Compression
 {
@@ -39,6 +40,7 @@ namespace SimpleZIP_UI.Common.Compression
             var task = new Task<int>(() =>
             {
                 var currentTime = DateTime.Now.Millisecond;
+                var totalDuration = 0;
 
                 if (files.Count > 0)
                 {
@@ -46,6 +48,11 @@ namespace SimpleZIP_UI.Common.Compression
                     {
                         ChooseStrategy(key); // determines the algorithm to be used
                         _compressionAlgorithm.Compress(files, archive.FullName, archive.DirectoryName);
+                        totalDuration = DateTime.Now.Millisecond - currentTime;
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        totalDuration = -2;
                     }
                     catch (ArgumentOutOfRangeException ex)
                     {
@@ -54,7 +61,7 @@ namespace SimpleZIP_UI.Common.Compression
                     }
                 }
 
-                return DateTime.Now.Millisecond - currentTime;
+                return totalDuration;
 
             }, ct);
 
