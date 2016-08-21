@@ -34,18 +34,5 @@ namespace SimpleZIP_UI.UI
         {
             ParentPage = parent;
         }
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <returns></returns>
-        public static bool ContainsIllegalChars(string fileName)
-        {
-            return fileName.Contains("<") || fileName.Contains(">") || fileName.Contains("/") || fileName.Contains("\\") ||
-                   fileName.Contains("|") || fileName.Contains(":") || fileName.Contains("*") || fileName.Contains("\"") ||
-                   fileName.Contains("?");
-        }
     }
 }

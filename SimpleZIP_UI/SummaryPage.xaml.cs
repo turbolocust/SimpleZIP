@@ -6,6 +6,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using SimpleZIP_UI.Common.Validator;
 using SimpleZIP_UI.UI;
 using SimpleZIP_UI.UI.Factory;
 using static SimpleZIP_UI.UI.Control;
@@ -52,7 +53,7 @@ namespace SimpleZIP_UI
             var selectedIndex = this.ArchiveTypeComboBox.SelectedIndex;
             var archiveName = this.ArchiveNameTextBox.Text;
 
-            if (archiveName.Length > 0 && !ContainsIllegalChars(archiveName))
+            if (archiveName.Length > 0 && !FileValidator.ContainsIllegalChars(archiveName))
             {
                 Algorithm key; // the file type of the archive
 
@@ -81,14 +82,17 @@ namespace SimpleZIP_UI
                         throw new ArgumentOutOfRangeException(nameof(selectedIndex), selectedIndex, null);
                 }
 
+                // start the operation
                 SetOperationActive(true);
-
                 var duration = await _control.StartButtonAction(_selectedFiles, archiveName, key);
+                // move focus to avoid accidential focus event on text block
+                FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
+
                 if (duration > 0) // success
                 {
                     await DialogFactory.CreateInformationDialog("Success", "Total duration: " + duration).ShowAsync();
                 }
-                else switch (duration)
+                else switch (duration) // an error occurred
                     {
                         case -1:
                             await DialogFactory.CreateInformationDialog("Oops!",
@@ -163,7 +167,7 @@ namespace SimpleZIP_UI
             {
                 this.ArchiveNameTextBox.Text = "myArchive";
             }
-            else if (ContainsIllegalChars(fileName)) // check for illegal characters in file name
+            else if (FileValidator.ContainsIllegalChars(fileName)) // check for illegal characters in file name
             {
                 this.ArchiveNameToolTip.Content = "These characters are not allowed:\n" +
                                                   "\\ / | : * \" ? < >\n";

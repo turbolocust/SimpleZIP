@@ -21,16 +21,25 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <StackPanel Orientation="Horizontal" Grid.Row="0">
-                            <Button x:Name="ContributeButton" Height="50" Background="Transparent" Tapped="GetSourceButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                            <Button x:Name="OpenArchiveButton" Height="50" Background="Transparent" Tapped="OpenArchiveButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                                 <StackPanel Orientation="Horizontal">
-                                    <SymbolIcon Symbol="World"/>
-                                    <TextBlock Text="Get The Source!" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
+                                    <SymbolIcon Symbol="OpenFile"/>
+                                    <TextBlock Text="Open Archive . . ." FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
                                 </StackPanel>
                             </Button>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Grid.Row="1">
+                            <Button x:Name="ContributeButton" Height="50" Background="Transparent" Tapped="GetSourceButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                <StackPanel Orientation="Horizontal">
+                                    <SymbolIcon Symbol="World"/>
+                                    <TextBlock Text="Get Source Code!" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Grid.Row="2">
                             <Button x:Name="AboutMenuButton" Height="50" Background="Transparent" Tapped="AboutMenuButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                                 <StackPanel Orientation="Horizontal">
                                     <SymbolIcon Symbol="ContactInfo"/>

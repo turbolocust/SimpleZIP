@@ -49,10 +49,20 @@ namespace SimpleZIP_UI
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender">The sender that invoked this event.</param>
+        /// <param name="e"></param>
+        private void OpenArchiveButton_Tap(object sender, TappedRoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Opens the project webpage in the default browser. 
         /// Brings up a confirmation dialog to avoid accidential termination of application first. 
         /// </summary>
-        /// <param name="sender"></param>
+        /// <param name="sender">The sender that invoked this event.</param>
         /// <param name="e"></param>
         private async void GetSourceButton_Tap(object sender, TappedRoutedEventArgs e)
         {
@@ -69,7 +79,7 @@ namespace SimpleZIP_UI
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="sender"></param>
+        /// <param name="sender">The sender that invoked this event.</param>
         /// <param name="e"></param>
         private async void AboutMenuButton_Tap(object sender, TappedRoutedEventArgs e)
         {

@@ -106,6 +106,7 @@
     <Compile Include="Common\Compression\Algorithm\Tarball.cs" />
     <Compile Include="Common\Compression\Algorithm\Zipper.cs" />
     <Compile Include="Common\Compression\CompressionHandler.cs" />
+    <Compile Include="Common\Validator\FileValidator.cs" />
     <Compile Include="UI\Control.cs" />
     <Compile Include="UI\Factory\DialogFactory.cs" />
     <Compile Include="UI\Factory\PickerFactory.cs" />
