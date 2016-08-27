@@ -32,10 +32,10 @@ namespace SimpleZIP_UI
         }
 
         /// <summary>
-        /// 
+        /// Triggered when the abort button has been tapped.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="e">The event that invoked this method.</param>
         private void AbortButton_Tap(object sender, TappedRoutedEventArgs e)
         {
             _control.AbortButtonAction();
@@ -43,12 +43,12 @@ namespace SimpleZIP_UI
         }
 
         /// <summary>
-        /// 
+        /// Triggered when the start button has been tapped.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="e">The event that invoked this method.</param>
         /// <exception cref="ArgumentOutOfRangeException">May only be thrown on fatal error.</exception>
-        private async void StartButton_Tap(object sender, TappedRoutedEventArgs e)
+        private void StartButton_Tap(object sender, TappedRoutedEventArgs e)
         {
             var selectedIndex = this.ArchiveTypeComboBox.SelectedIndex;
             var archiveName = this.ArchiveNameTextBox.Text;
@@ -82,53 +82,28 @@ namespace SimpleZIP_UI
                         throw new ArgumentOutOfRangeException(nameof(selectedIndex), selectedIndex, null);
                 }
 
-                // start the operation
-                SetOperationActive(true);
-                var duration = await _control.StartButtonAction(_selectedFiles, archiveName, key);
-                // move focus to avoid accidential focus event on text block
-                FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
-
-                if (duration > 0) // success
-                {
-                    await DialogFactory.CreateInformationDialog("Success", "Total duration: " + duration).ShowAsync();
-                }
-                else switch (duration) // an error occurred
-                    {
-                        case -1:
-                            await DialogFactory.CreateInformationDialog("Oops!",
-                                 "Operation successfully canceled.").ShowAsync();
-                            break;
-                        case -2:
-                            await DialogFactory.CreateInformationDialog("Oops!",
-                                "Looks like we do not have access to those files.").ShowAsync();
-                            break;
-                        default:
-                            await DialogFactory.CreateInformationDialog("Oops!",
-                                "Looks like something went wrong.").ShowAsync();
-                            break;
-                    }
-
-                SetOperationActive(false);
-                this.Frame.Navigate(typeof(MainPage));
+                InitializeOperation(key, archiveName);
             }
         }
 
 
         /// <summary>
-        /// 
+        /// Triggered when the panel containing the output path has been tapped.
+        /// Lets the user then pick an output folder for the archive.
         /// </summary>
         /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="e">The event that invoked this method.</param>
         private void OutputPathPanel_Tap(object sender, TappedRoutedEventArgs e)
         {
             PickOutputFolder();
         }
 
         /// <summary>
-        /// 
+        /// Triggered when output path text block got focus.
+        /// Lets the user then pick an output folder for the archive.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="e">The event that invoked this method.</param>
         private void OutputPathTextBlock_GotFocus(object sender, RoutedEventArgs e)
         {
             if (!this.ProgressRing.IsActive)
@@ -139,10 +114,10 @@ namespace SimpleZIP_UI
         }
 
         /// <summary>
-        /// 
+        /// Triggered when combo box for choosing the archive type has been closed.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="e">The event that invoked this method.</param>
         private void ArchiveTypeComboBox_DropDownClosed(object sender, object e)
         {
             if (_selectedFiles.Count > 1 && this.ArchiveTypeComboBox.SelectedIndex == 1)
@@ -155,11 +130,11 @@ namespace SimpleZIP_UI
         }
 
         /// <summary>
-        /// 
+        /// Triggered when the text of the archive name input has beend modified.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="textChangedEventArgs"></param>
-        private void ArchiveNameTextBox_TextChanged(object sender, TextChangedEventArgs textChangedEventArgs)
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="e">The event that invoked this method.</param>
+        private void ArchiveNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             var fileName = this.ArchiveNameTextBox.Text;
 
@@ -180,10 +155,10 @@ namespace SimpleZIP_UI
         }
 
         /// <summary>
-        /// 
+        /// Triggered when any tooltip has been opened.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="e">The event that invoked this method.</param>
         private void ToolTip_Opened(object sender, RoutedEventArgs e)
         {
             var toolTip = (ToolTip)sender;
@@ -199,9 +174,9 @@ namespace SimpleZIP_UI
         }
 
         /// <summary>
-        /// 
+        /// Triggered after navigating to this page.
         /// </summary>
-        /// <param name="e"></param>
+        /// <param name="e">The event that invoked this method.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             _selectedFiles = e.Parameter as IReadOnlyList<StorageFile>;
@@ -216,7 +191,45 @@ namespace SimpleZIP_UI
         }
 
         /// <summary>
-        /// 
+        /// Initializes the archiving operation and waits for the result of it.
+        /// </summary>
+        /// <param name="key">The type of the archive.</param>
+        /// <param name="archiveName">The name of the archive.</param>
+        private async void InitializeOperation(Algorithm key, string archiveName)
+        {
+            SetOperationActive(true);
+            var duration = await _control.StartButtonAction(_selectedFiles, archiveName, key);
+
+            // move focus to avoid accidential focus event on text block
+            FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
+
+            if (duration > 0) // success
+            {
+                await DialogFactory.CreateInformationDialog("Success", "Total duration: " + duration).ShowAsync();
+            }
+            else switch (duration) // an error occurred
+                {
+                    case -1:
+                        await DialogFactory.CreateInformationDialog("Oops!",
+                             "Operation successfully canceled.").ShowAsync();
+                        break;
+                    case -2:
+                        await DialogFactory.CreateInformationDialog("Oops!",
+                            "Looks like we do not have access to those files.").ShowAsync();
+                        break;
+                    default:
+                        await DialogFactory.CreateInformationDialog("Oops!",
+                            "Looks like something went wrong.").ShowAsync();
+                        break;
+                }
+
+            SetOperationActive(false);
+            this.Frame.Navigate(typeof(MainPage));
+        }
+
+        /// <summary>
+        /// Delegates the action to pick an output folder.
+        /// Shows the name of the output folder in the UI after successful selection.
         /// </summary>
         private async void PickOutputFolder()
         {
@@ -226,9 +239,9 @@ namespace SimpleZIP_UI
         }
 
         /// <summary>
-        /// 
+        /// Sets the archiving operation as active. This means that the UI is in busy state.
         /// </summary>
-        /// <param name="isActive"></param>
+        /// <param name="isActive">True to set operation as active.</param>
         private void SetOperationActive(bool isActive)
         {
             if (isActive)
