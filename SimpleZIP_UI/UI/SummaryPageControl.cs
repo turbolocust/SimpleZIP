@@ -42,7 +42,7 @@ namespace SimpleZIP_UI.UI
         /// <param name="key"></param>
         public async Task<int> StartButtonAction(IReadOnlyList<StorageFile> selectedFiles, string archiveName, Algorithm key)
         {
-            var archive = new FileInfo(_outputFolder.Path + "\\" + archiveName);
+            var archive = new FileInfo(Path.Combine(_outputFolder.Path, archiveName));
             _cancellationToken = new CancellationTokenSource();
 
             try

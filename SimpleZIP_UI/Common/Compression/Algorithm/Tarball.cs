@@ -12,7 +12,6 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
 {
     internal class Tarball : ICompressionAlgorithm
     {
-
         private static Tarball _instance;
 
         public static Tarball Instance => _instance ?? (_instance = new Tarball());
@@ -30,7 +29,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
                 Type = archiveName.EndsWith("bz2") ? CompressionType.BZip2 : CompressionType.GZip
             };
 
-            using (var fileOutputStream = new FileStream(@location + archiveName, FileMode.Create))
+            using (var fileOutputStream = new FileStream(Path.Combine(location, archiveName), FileMode.CreateNew))
             using (var archiveStream = new TarWriter(fileOutputStream, compressionInfo))
             {
                 foreach (var f in files)
@@ -48,7 +47,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
             using (var fileInputStream = new FileStream(archiveName, FileMode.Open))
             using (var tarReader = TarReader.Open(fileInputStream))
             {
-                tarReader.WriteAllToDirectory(@location, ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
+                tarReader.WriteAllToDirectory(location, ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
             }
         }
     }

@@ -7,7 +7,6 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
 {
     public class GZipper : ICompressionAlgorithm
     {
-
         private static GZipper _instance;
 
         public static GZipper Instance => _instance ?? (_instance = new GZipper());
@@ -19,7 +18,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
 
         public void Compress(IReadOnlyList<StorageFile> files, string archiveName, string location)
         {
-            using (var fileStream = new FileStream(@location + archiveName, FileMode.Create))
+            using (var fileStream = new FileStream(Path.Combine(location, archiveName), FileMode.CreateNew))
             using (var gzipStream = new GZipStream(fileStream, CompressionLevel.Optimal))
             {
                 var file = files[0]; // as gzip only allows compression of one file
@@ -38,7 +37,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
 
         public void Extract(string archiveName, string location)
         {
-            var archive = new FileInfo(@location + archiveName);
+            var archive = new FileInfo(Path.Combine(location, archiveName));
 
             using (var fileStream = new FileStream(archive.FullName, FileMode.Open))
             using (var gzipStream = new GZipStream(fileStream, CompressionMode.Decompress))
@@ -46,7 +45,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
                 // remove extension from output file name
                 var outputFileName = archive.Name.Substring(0, (archive.Name.Length - archive.Extension.Length));
 
-                using (var outputStream = new FileStream((@location + outputFileName), FileMode.Create))
+                using (var outputStream = new FileStream(Path.Combine(location, outputFileName), FileMode.Create))
                 {
                     var bytes = new byte[4096];
                     var readBytes = 0;

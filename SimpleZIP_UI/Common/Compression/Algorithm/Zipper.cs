@@ -7,7 +7,6 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
 {
     public class Zipper : ICompressionAlgorithm
     {
-
         private static Zipper _instance;
 
         public static Zipper Instance => _instance ?? (_instance = new Zipper());
@@ -30,7 +29,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
                 }
 
                 // actually write the memory stream to a file
-                using (var fileStream = new FileStream(@location + archiveName, FileMode.Create))
+                using (var fileStream = new FileStream(Path.Combine(location, archiveName), FileMode.CreateNew))
                 {
                     memoryStream.Seek(0, SeekOrigin.Begin);
                     memoryStream.CopyTo(fileStream);

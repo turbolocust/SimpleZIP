@@ -1,6 +1,7 @@
 ﻿using System;
 using Windows.UI.Xaml.Controls;
 using SimpleZIP_UI.Common.Compression;
+using SimpleZIP_UI.Exceptions;
 using SimpleZIP_UI.UI.Factory;
 
 namespace SimpleZIP_UI.UI
@@ -52,6 +53,10 @@ namespace SimpleZIP_UI.UI
                     DialogFactory.CreateInformationDialog("Oops!",
                         "Insufficient rights to extract archive here.\n\n" +
                         "Please move archive to a different location and try again.");
+                }
+                catch (InvalidFileTypeException)
+                {
+                    DialogFactory.CreateInformationDialog("Oops!", "The chosen file format is not supported.");
                 }
                 finally
                 {

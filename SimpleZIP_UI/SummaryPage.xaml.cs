@@ -50,39 +50,21 @@ namespace SimpleZIP_UI
         /// <exception cref="ArgumentOutOfRangeException">May only be thrown on fatal error.</exception>
         private void StartButton_Tap(object sender, TappedRoutedEventArgs e)
         {
-            var selectedIndex = this.ArchiveTypeComboBox.SelectedIndex;
+            var selectedItem = (ComboBoxItem)this.ArchiveTypeComboBox.SelectedItem;
             var archiveName = this.ArchiveNameTextBox.Text;
+            var archiveType = selectedItem?.Content?.ToString();
 
-            if (archiveName.Length > 0 && !FileValidator.ContainsIllegalChars(archiveName))
+            if (archiveType != null)
             {
-                Algorithm key; // the file type of the archive
-
-                switch (selectedIndex) // check selected algorithm
+                if (archiveName.Length > 0 && !FileValidator.ContainsIllegalChars(archiveName))
                 {
-                    case 0: // zip
-                        archiveName += ".zip";
-                        key = Algorithm.Zip;
-                        break;
+                    Algorithm key; // the file type of the archive
 
-                    case 1: // gzip
-                        archiveName += ".gz";
-                        key = Algorithm.Gzip;
-                        break;
+                    AlgorithmFileTypes.TryGetValue(archiveType, out key);
+                    archiveName += archiveType;
 
-                    case 2: // tar.gz
-                        archiveName += ".tar.gz";
-                        key = Algorithm.TarGz;
-                        break;
-
-                    case 3: // tar.bz2
-                        archiveName += ".tar.bz2";
-                        key = Algorithm.TarBz2;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(selectedIndex), selectedIndex, null);
+                    InitializeOperation(key, archiveName);
                 }
-
-                InitializeOperation(key, archiveName);
             }
         }
 

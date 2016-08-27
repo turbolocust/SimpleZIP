@@ -17,8 +17,8 @@
             <ComboBox x:Name="ArchiveTypeComboBox" DropDownClosed="ArchiveTypeComboBox_DropDownClosed" Width="120" Margin="8,0,16,0" Header="Archive Type" SelectedIndex="0" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}">
                 <ComboBoxItem Content=".zip" />
                 <ComboBoxItem Content=".gzip" Visibility="Collapsed" />
-                <ComboBoxItem Content=".tar.gz" />
-                <ComboBoxItem Content=".tar.bz2" />
+                <ComboBoxItem Content=".tgz" />
+                <ComboBoxItem Content=".tbz2" />
                 <ToolTipService.ToolTip>
                     <ToolTip x:Name="ArchiveTypeToolTip" HorizontalOffset="20" VerticalOffset="10" Opened="ToolTip_Opened" />
                 </ToolTipService.ToolTip>
