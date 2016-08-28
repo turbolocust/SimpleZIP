@@ -1,6 +1,7 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Input;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -8,6 +9,15 @@ namespace SimpleZIP_UI
 {
     public sealed partial class BusyIndicator : UserControl
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        private static UI.Control _control;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="title"></param>
         private BusyIndicator(string title)
         {
             this.InitializeComponent();
@@ -26,9 +36,12 @@ namespace SimpleZIP_UI
         /// Locks the screen and starts the BusyIndicator by creating a popup.
         /// </summary>
         /// <param name="title">The title to be displayed by the BusyIndicator</param>
+        /// <param name="controlAggregation">The aggregated Control instance for operation cancellation.</param>
         /// <returns>The BusyIndicator</returns>
-        public static BusyIndicator Start(string title)
+        public static BusyIndicator Start(string title, UI.Control control)
         {
+            _control = control;
+
             // create a popup with the size of the app's window
             var popup = new Popup()
             {
@@ -54,6 +67,16 @@ namespace SimpleZIP_UI
             popup.IsOpen = true;
 
             return (busyIndicator);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AbortButton_Tap(object sender, TappedRoutedEventArgs e)
+        {
+            _control.AbortButtonAction();
         }
     }
 }

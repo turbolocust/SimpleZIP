@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Windows.UI.Xaml.Controls;
 using SimpleZIP_UI.Common.Compression;
 using SimpleZIP_UI.Exceptions;
@@ -11,7 +12,6 @@ namespace SimpleZIP_UI.UI
     /// </summary>
     internal class MainPageControl : Control
     {
-
         public MainPageControl(Page parent) : base(parent)
         {
         }
@@ -46,7 +46,8 @@ namespace SimpleZIP_UI.UI
 
                 try
                 {
-                    duration = await compressionHandler.ExtractFromArchive(file);
+                    CancellationToken = new CancellationTokenSource();
+                    duration = await compressionHandler.ExtractFromArchive(file, CancellationToken.Token);
                 }
                 catch (UnauthorizedAccessException)
                 {

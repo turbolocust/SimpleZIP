@@ -75,18 +75,17 @@ namespace SimpleZIP_UI.Common.Compression
         /// <param name="archiveFile"></param>
         /// <exception cref="InvalidFileTypeException">If the file type of the selected file is not supported or unknown.</exception>
         /// <exception cref="UnauthorizedAccessException">If extraction at the archive's path is not allowed.</exception>
-        public async Task<int> ExtractFromArchive(StorageFile archiveFile)
+        public async Task<int> ExtractFromArchive(StorageFile archiveFile, CancellationToken ct)
         {
-            var currentTime = DateTime.Now.Millisecond;
             Control.Algorithm key; // the file type of the archive
+            StorageFolder outputFolder = null;
 
             // try to get enum type by file extension, which is the key
-            if (!Control.AlgorithmFileTypes.TryGetValue(archiveFile.FileType, out key))
+            if (Control.AlgorithmFileTypes.TryGetValue(archiveFile.FileType, out key))
             {
                 try
                 {
                     ChooseStrategy(key); // determines the algorithm to be used
-
                     if (_compressionAlgorithm != null)
                     {
                         // get the parent folder of the archive
@@ -94,11 +93,8 @@ namespace SimpleZIP_UI.Common.Compression
                         if (parent != null)
                         {
                             // try to create the folder for extraction
-                            var outputFolder = await
-                                    parent.CreateFolderAsync(archiveFile.DisplayName,
+                            outputFolder = await parent.CreateFolderAsync(archiveFile.DisplayName,
                                         CreationCollisionOption.GenerateUniqueName);
-                            // then extract archive content to newly created folder
-                            _compressionAlgorithm.Extract(archiveFile.Path, outputFolder.Path);
                         }
                     }
                 }
@@ -113,7 +109,22 @@ namespace SimpleZIP_UI.Common.Compression
                 throw new InvalidFileTypeException("The selected file format is not supported.");
             }
 
-            return DateTime.Now.Millisecond - currentTime;
+            var task = new Task<int>(() => // execute extraction in task
+            {
+                var currentTime = DateTime.Now.Millisecond;
+                var totalDuration = 0;
+
+                if (outputFolder != null)
+                {
+                    _compressionAlgorithm.Extract(archiveFile.Path, outputFolder.Path);
+                    totalDuration = DateTime.Now.Millisecond - currentTime;
+                }
+
+                return totalDuration;
+            }, ct);
+
+            task.Start();
+            return await task;
         }
 
         /// <summary>

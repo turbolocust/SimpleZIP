@@ -21,7 +21,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
             // singleton
         }
 
-        public void Compress(IReadOnlyList<StorageFile> files, string archiveName, string location)
+        public async void Compress(IReadOnlyList<StorageFile> files, string archiveName, string location)
         {
             var compressionInfo = new CompressionInfo()
             {

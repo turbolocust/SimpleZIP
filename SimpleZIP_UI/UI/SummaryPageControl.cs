@@ -20,16 +20,6 @@ namespace SimpleZIP_UI.UI
         /// </summary>
         private StorageFolder _outputFolder = ApplicationData.Current.LocalFolder;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        private bool _isCancelRequest = false;
-
-        /// <summary>
-        /// Token used to cancel the packing task.
-        /// </summary>
-        private CancellationTokenSource _cancellationToken;
-
         public SummaryPageControl(Page parent) : base(parent)
         {
         }
@@ -43,48 +33,22 @@ namespace SimpleZIP_UI.UI
         public async Task<int> StartButtonAction(IReadOnlyList<StorageFile> selectedFiles, string archiveName, Algorithm key)
         {
             var archive = new FileInfo(Path.Combine(_outputFolder.Path, archiveName));
-            _cancellationToken = new CancellationTokenSource();
+            CancellationToken = new CancellationTokenSource();
 
             try
             {
                 var handler = CompressionHandler.Instance;
-                return await handler.CreateArchive(selectedFiles, archive, key, _cancellationToken.Token);
+                return await handler.CreateArchive(selectedFiles, archive, key, CancellationToken.Token);
             }
             catch (OperationCanceledException)
             {
-                if (archive.Exists && _isCancelRequest)
+                if (archive.Exists && IsCancelRequest)
                 {
                     archive.Delete();
-                    _isCancelRequest = false;
+                    IsCancelRequest = false;
                 }
 
                 return -1;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public async void AbortButtonAction()
-        {
-            var dialog = DialogFactory.CreateConfirmationDialog("Are you sure?",
-                "This will cancel the operation.");
-
-            var result = await dialog.ShowAsync();
-            if (result.Id.Equals(0)) // cancel operation
-            {
-                try
-                {
-                    _cancellationToken?.Cancel();
-                }
-                catch (ObjectDisposedException)
-                {
-                    _isCancelRequest = true;
-                }
-                finally
-                {
-                    ParentPage.Frame.Navigate(typeof(MainPage));
-                }
             }
         }
 

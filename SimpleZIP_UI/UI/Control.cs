@@ -1,11 +1,27 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
 using Windows.UI.Xaml.Controls;
+using SimpleZIP_UI.UI.Factory;
 
 namespace SimpleZIP_UI.UI
 {
     public abstract class Control
     {
+        /// <summary>
+        /// 
+        /// </summary>
         protected Page ParentPage { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected bool IsCancelRequest = false;
+
+        /// <summary>
+        /// Token used to cancel the packing task.
+        /// </summary>
+        protected CancellationTokenSource CancellationToken;
 
         /// <summary>
         /// Enumeration type to identify algorithms.
@@ -33,6 +49,32 @@ namespace SimpleZIP_UI.UI
         protected Control(Page parent)
         {
             ParentPage = parent;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public async void AbortButtonAction()
+        {
+            var dialog = DialogFactory.CreateConfirmationDialog("Are you sure?",
+                "This will cancel the operation.");
+
+            var result = await dialog.ShowAsync();
+            if (result.Id.Equals(0)) // cancel operation
+            {
+                try
+                {
+                    CancellationToken?.Cancel();
+                }
+                catch (ObjectDisposedException)
+                {
+                    IsCancelRequest = true;
+                }
+                finally
+                {
+                    ParentPage.Frame.Navigate(typeof(MainPage));
+                }
+            }
         }
     }
 }

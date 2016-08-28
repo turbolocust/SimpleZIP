@@ -16,7 +16,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <RichTextBlock Grid.Row="0" Margin="0,32,0,0" TextWrapping="Wrap"  IsTextSelectionEnabled="False" TextAlignment="Left">
+        <RichTextBlock Grid.Row="0" Margin="0,32,0,0" TextWrapping="Wrap" IsTextSelectionEnabled="False" TextAlignment="Left">
             <Paragraph FontStretch="Normal">
                 <Run Text="Developed by Matthias Fussenegger" />
                 <LineBreak />
