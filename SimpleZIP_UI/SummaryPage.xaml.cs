@@ -186,7 +186,9 @@ namespace SimpleZIP_UI
 
             if (duration > 0) // success
             {
-                await DialogFactory.CreateInformationDialog("Success", "Total duration: " + duration).ShowAsync();
+                await
+                    DialogFactory.CreateInformationDialog("Success", "Total duration: " + duration + " seconds.")
+                        .ShowAsync();
             }
             else switch (duration) // an error occurred
                 {

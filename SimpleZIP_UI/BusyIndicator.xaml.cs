@@ -36,7 +36,7 @@ namespace SimpleZIP_UI
         /// Locks the screen and starts the BusyIndicator by creating a popup.
         /// </summary>
         /// <param name="title">The title to be displayed by the BusyIndicator</param>
-        /// <param name="controlAggregation">The aggregated Control instance for operation cancellation.</param>
+        /// <param name="control">The aggregated Control instance for operation cancellation.</param>
         /// <returns>The BusyIndicator</returns>
         public static BusyIndicator Start(string title, UI.Control control)
         {

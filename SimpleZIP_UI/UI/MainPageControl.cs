@@ -41,7 +41,7 @@ namespace SimpleZIP_UI.UI
             if (file != null) // system has now access to file
             {
                 var compressionHandler = CompressionHandler.Instance;
-                var busyIndicator = BusyIndicator.Start("Operation in progress. Please wait . . .");
+                var busyIndicator = BusyIndicator.Start("Operation in progress. Please wait . . .", this);
                 var duration = 0; // to measure the time of the extraction operation
 
                 try
@@ -69,7 +69,7 @@ namespace SimpleZIP_UI.UI
                     DialogFactory.CreateInformationDialog("Success",
                         "The operation succeeded.\n\n" +
                         "Files have been extracted to the specified subfolder at the archive's location.\n\n" +
-                        "Total duration: " + duration);
+                        "Total duration: " + duration + " seconds.");
                 }
             }
         }
