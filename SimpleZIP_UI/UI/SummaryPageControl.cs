@@ -18,7 +18,7 @@ namespace SimpleZIP_UI.UI
         /// <summary>
         /// Where the archive will be saved to.
         /// </summary>
-        private StorageFolder _outputFolder = ApplicationData.Current.LocalFolder;
+        private StorageFolder _outputFolder;
 
         public SummaryPageControl(Page parent) : base(parent)
         {
@@ -30,21 +30,25 @@ namespace SimpleZIP_UI.UI
         /// <param name="selectedFiles"></param>
         /// <param name="archiveName"></param>
         /// <param name="key"></param>
+        /// <exception cref="NullReferenceException"></exception>
         public async Task<int> StartButtonAction(IReadOnlyList<StorageFile> selectedFiles, string archiveName, Algorithm key)
         {
-            var archive = new FileInfo(Path.Combine(_outputFolder.Path, archiveName));
             CancellationToken = new CancellationTokenSource();
+
+            if (_outputFolder == null)
+            {
+                throw new NullReferenceException("No valid output folder selected.");
+            }
 
             try
             {
                 var handler = CompressionHandler.Instance;
-                return await handler.CreateArchive(selectedFiles, archive, key, CancellationToken.Token);
+                return await handler.CreateArchive(selectedFiles, archiveName, _outputFolder, key, CancellationToken.Token);
             }
             catch (OperationCanceledException)
             {
-                if (archive.Exists && IsCancelRequest)
+                if (IsCancelRequest)
                 {
-                    archive.Delete();
                     IsCancelRequest = false;
                 }
 

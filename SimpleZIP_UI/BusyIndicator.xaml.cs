@@ -10,14 +10,14 @@ namespace SimpleZIP_UI
     public sealed partial class BusyIndicator : UserControl
     {
         /// <summary>
-        /// 
+        /// The aggregated controller instance.
         /// </summary>
         private static UI.Control _control;
 
         /// <summary>
-        /// 
+        /// Constructor that can only be called by static members.
         /// </summary>
-        /// <param name="title"></param>
+        /// <param name="title">The title to display.</param>
         private BusyIndicator(string title)
         {
             this.InitializeComponent();
@@ -35,7 +35,7 @@ namespace SimpleZIP_UI
         /// <summary>
         /// Locks the screen and starts the BusyIndicator by creating a popup.
         /// </summary>
-        /// <param name="title">The title to be displayed by the BusyIndicator</param>
+        /// <param name="title">The title to be displayed by the BusyIndicator.</param>
         /// <param name="control">The aggregated Control instance for operation cancellation.</param>
         /// <returns>The BusyIndicator</returns>
         public static BusyIndicator Start(string title, UI.Control control)
@@ -70,10 +70,10 @@ namespace SimpleZIP_UI
         }
 
         /// <summary>
-        /// 
+        /// Tries to abort the current operation of the controller.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="e">The event that invoked this method.</param>
         private void AbortButton_Tap(object sender, TappedRoutedEventArgs e)
         {
             _control.AbortButtonAction();

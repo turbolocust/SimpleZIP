@@ -76,7 +76,7 @@ namespace SimpleZIP_UI
         /// <param name="e">The event that invoked this method.</param>
         private void OutputPathPanel_Tap(object sender, TappedRoutedEventArgs e)
         {
-            PickOutputFolder();
+            PickOutputPath();
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace SimpleZIP_UI
         {
             if (!this.ProgressRing.IsActive)
             {
-                PickOutputFolder();
+                PickOutputPath();
                 FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
             }
         }
@@ -214,7 +214,7 @@ namespace SimpleZIP_UI
         /// Delegates the action to pick an output folder.
         /// Shows the name of the output folder in the UI after successful selection.
         /// </summary>
-        private async void PickOutputFolder()
+        private async void PickOutputPath()
         {
             var folder = await _control.OutputPathPanelAction();
             this.OutputPathTextBlock.Text = folder?.Name ?? "";

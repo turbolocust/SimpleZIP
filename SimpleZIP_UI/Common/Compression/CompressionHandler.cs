@@ -31,11 +31,12 @@ namespace SimpleZIP_UI.Common.Compression
         /// 
         /// </summary>
         /// <param name="files"></param>
-        /// <param name="archive"></param>
+        /// <param name="archiveName"></param>
+        /// <param name="location"></param>
         /// <param name="key"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        public async Task<int> CreateArchive(IReadOnlyList<StorageFile> files, FileInfo archive, Control.Algorithm key, CancellationToken ct)
+        public async Task<int> CreateArchive(IReadOnlyList<StorageFile> files, string archiveName, StorageFolder location, Control.Algorithm key, CancellationToken ct)
         {
             var task = new Task<int>(() =>
             {
@@ -47,7 +48,7 @@ namespace SimpleZIP_UI.Common.Compression
                     try
                     {
                         ChooseStrategy(key); // determines the algorithm to be used
-                        _compressionAlgorithm.Compress(files, archive.FullName, archive.DirectoryName);
+                        _compressionAlgorithm.Compress(files, archiveName, location);
                         totalDuration = DateTime.Now.Millisecond - currentTime;
                     }
                     catch (UnauthorizedAccessException)
@@ -78,7 +79,6 @@ namespace SimpleZIP_UI.Common.Compression
         public async Task<int> ExtractFromArchive(StorageFile archiveFile, CancellationToken ct)
         {
             Control.Algorithm key; // the file type of the archive
-            StorageFolder outputFolder = null;
 
             // try to get enum type by file extension, which is the key
             if (Control.AlgorithmFileTypes.TryGetValue(archiveFile.FileType, out key))
@@ -86,17 +86,6 @@ namespace SimpleZIP_UI.Common.Compression
                 try
                 {
                     ChooseStrategy(key); // determines the algorithm to be used
-                    if (_compressionAlgorithm != null)
-                    {
-                        // get the parent folder of the archive
-                        var parent = await archiveFile.GetParentAsync();
-                        if (parent != null)
-                        {
-                            // try to create the folder for extraction
-                            outputFolder = await parent.CreateFolderAsync(archiveFile.DisplayName,
-                                        CreationCollisionOption.GenerateUniqueName);
-                        }
-                    }
                 }
                 catch (ArgumentOutOfRangeException ex)
                 {
@@ -114,11 +103,8 @@ namespace SimpleZIP_UI.Common.Compression
                 var currentTime = DateTime.Now.Millisecond;
                 var totalDuration = 0;
 
-                if (outputFolder != null)
-                {
-                    _compressionAlgorithm.Extract(archiveFile.Path, outputFolder.Path);
-                    totalDuration = DateTime.Now.Millisecond - currentTime;
-                }
+                _compressionAlgorithm.Extract(archiveFile);
+                totalDuration = DateTime.Now.Millisecond - currentTime;
 
                 return totalDuration;
             }, ct);

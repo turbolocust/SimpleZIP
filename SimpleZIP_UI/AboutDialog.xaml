@@ -28,7 +28,7 @@
         </RichTextBlock>
         <StackPanel Grid.Row="1">
             <TextBlock Text="Any Feedback?" Margin="0,32,0,0" IsTextSelectionEnabled="False" TextAlignment="Left" />
-            <HyperlinkButton NavigateUri="mailto:me@me.com">Send Me An Email</HyperlinkButton>
+            <HyperlinkButton NavigateUri="mailto:me@me.com">Send me an Email</HyperlinkButton>
         </StackPanel>
     </Grid>
 </ContentDialog>

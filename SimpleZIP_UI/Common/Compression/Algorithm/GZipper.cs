@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using Windows.Storage;
@@ -16,43 +17,55 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
             // singleton
         }
 
-        public void Compress(IReadOnlyList<StorageFile> files, string archiveName, string location)
+        public async void Compress(IReadOnlyList<StorageFile> files, string archiveName, StorageFolder location)
         {
-            using (var fileStream = new FileStream(Path.Combine(location, archiveName), FileMode.CreateNew))
-            using (var gzipStream = new GZipStream(fileStream, CompressionLevel.Optimal))
+            var outputFile = await location.CreateFileAsync(archiveName);
+            if (outputFile != null) // file created
             {
-                var file = files[0]; // as gzip only allows compression of one file
-                using (var inputStream = new FileStream(file.Path, FileMode.Open))
+                using (var outputFileStream = await outputFile.OpenAsync(FileAccessMode.ReadWrite))
+                using (var gzipStream = new GZipStream(outputFileStream.AsStreamForWrite(), CompressionLevel.Optimal))
                 {
-                    var bytes = new byte[4096];
-                    var readBytes = 0;
+                    var file = files[0]; // as gzip only allows compression of one file
 
-                    while ((readBytes = inputStream.Read(bytes, 0, bytes.Length)) > 0)
+                    using (var inputStream = (await file.OpenReadAsync()).AsStreamForRead())
                     {
-                        gzipStream.Write(bytes, 0, readBytes);
+                        var bytes = new byte[4096];
+                        var readBytes = 0;
+
+                        while ((readBytes = await inputStream.ReadAsync(bytes, 0, bytes.Length)) > 0)
+                        {
+                            await gzipStream.WriteAsync(bytes, 0, readBytes);
+                        }
                     }
                 }
             }
         }
 
-        public void Extract(string archiveName, string location)
+        public async void Extract(StorageFile archive)
         {
-            var archive = new FileInfo(Path.Combine(location, archiveName));
-
-            using (var fileStream = new FileStream(archive.FullName, FileMode.Open))
-            using (var gzipStream = new GZipStream(fileStream, CompressionMode.Decompress))
+            using (var fileStream = await archive.OpenReadAsync())
+            using (var gzipStream = new GZipStream(fileStream.AsStreamForRead(), CompressionMode.Decompress))
             {
                 // remove extension from output file name
-                var outputFileName = archive.Name.Substring(0, (archive.Name.Length - archive.Extension.Length));
+                var outputFileName = archive.Name.Substring(0, (archive.Name.Length - archive.FileType.Length));
 
-                using (var outputStream = new FileStream(Path.Combine(location, outputFileName), FileMode.Create))
+                var outputFolder = await archive.GetParentAsync();
+                if (outputFolder != null) // system has now access to folder
                 {
-                    var bytes = new byte[4096];
-                    var readBytes = 0;
-
-                    while ((readBytes = gzipStream.Read(bytes, 0, bytes.Length)) > 0)
+                    var outputFile =
+                        await outputFolder.CreateFileAsync(outputFileName, CreationCollisionOption.GenerateUniqueName);
+                    if (outputFile != null) // file created
                     {
-                        outputStream.Write(bytes, 0, readBytes);
+                        using (var outputStream = (await outputFile.OpenAsync(FileAccessMode.ReadWrite)).AsStreamForWrite())
+                        {
+                            var bytes = new byte[4096];
+                            var readBytes = 0;
+
+                            while ((readBytes = gzipStream.Read(bytes, 0, bytes.Length)) > 0)
+                            {
+                                await outputStream.WriteAsync(bytes, 0, readBytes);
+                            }
+                        }
                     }
                 }
             }

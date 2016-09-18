@@ -41,7 +41,6 @@
   </Applications>
   <Capabilities>
     <uap:Capability Name="removableStorage" />
-    <uap:Capability Name="documentsLibrary" />
     <uap:Capability Name="videosLibrary" />
     <uap:Capability Name="picturesLibrary" />
     <uap:Capability Name="musicLibrary" />
