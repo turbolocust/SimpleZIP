@@ -98,9 +98,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BusyIndicator.xaml.cs">
-      <DependentUpon>BusyIndicator.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Common\Compression\Algorithm\GZipper.cs" />
     <Compile Include="Common\Compression\Algorithm\ICompressionAlgorithm.cs" />
     <Compile Include="Common\Compression\Algorithm\Tarball.cs" />
@@ -143,10 +140,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="AboutDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="BusyIndicator.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

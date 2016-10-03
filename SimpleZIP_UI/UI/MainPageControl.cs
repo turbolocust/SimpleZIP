@@ -41,13 +41,12 @@ namespace SimpleZIP_UI.UI
             if (file != null) // system has now access to file
             {
                 var compressionHandler = CompressionHandler.Instance;
-                var busyIndicator = BusyIndicator.Start("Operation in progress. Please wait . . .", this);
                 var duration = 0; // to measure the time of the extraction operation
 
                 try
                 {
                     CancellationToken = new CancellationTokenSource();
-                    duration = await compressionHandler.ExtractFromArchive(file, CancellationToken.Token);
+                    duration = await compressionHandler.ExtractFromArchive(file, null, CancellationToken.Token); //TODO
                 }
                 catch (UnauthorizedAccessException)
                 {
@@ -58,10 +57,6 @@ namespace SimpleZIP_UI.UI
                 catch (InvalidFileTypeException)
                 {
                     DialogFactory.CreateInformationDialog("Oops!", "The chosen file format is not supported.");
-                }
-                finally
-                {
-                    busyIndicator.Close();
                 }
 
                 if (duration > 0)

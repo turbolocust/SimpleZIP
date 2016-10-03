@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using Windows.Storage;
 using SharpCompress.Common;
 using SharpCompress.Compressor.Deflate;
@@ -20,7 +21,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
             // singleton
         }
 
-        public async void Compress(IReadOnlyList<StorageFile> files, string archiveName, StorageFolder location)
+        public async Task<bool> Compress(IReadOnlyList<StorageFile> files, string archiveName, StorageFolder location)
         {
 
             var compressionInfo = new CompressionInfo()
@@ -44,32 +45,38 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
                     }
                 }
             }
+            else
+            {
+                return false;
+            }
+            return true;
         }
 
-        public async void Extract(StorageFile archive)
+        public async Task<bool> Extract(StorageFile archive, StorageFolder location)
         {
             using (var fileInputStream = await archive.OpenReadAsync())
             {
-                if (fileInputStream != null) // system has now access to file
+                using (var zipReader = ZipReader.Open(fileInputStream.AsStreamForRead()))
                 {
-                    using (var zipReader = ZipReader.Open(fileInputStream.AsStreamForRead()))
+                    while (zipReader.MoveToNextEntry()) // write each entry to file
                     {
-                        var outputFolder = await archive.GetParentAsync();
-                        if (outputFolder != null) // system has now access to parent
+                        var file = await location.CreateFileAsync(zipReader.Entry.Key,
+                                    CreationCollisionOption.GenerateUniqueName);
+                        if (file != null)
                         {
-                            while (zipReader.MoveToNextEntry()) // write each entry to file
+                            using (var outputFileStream = await file.OpenAsync(FileAccessMode.ReadWrite))
                             {
-                                var outputFile = await outputFolder.CreateFileAsync(zipReader.Entry.Key);
-                                // write archive entry to output file
-                                using (var outputFileStream = await outputFile.OpenAsync(FileAccessMode.ReadWrite))
-                                {
-                                    zipReader.WriteEntryTo(outputFileStream.AsStreamForWrite());
-                                }
+                                zipReader.WriteEntryTo(outputFileStream.AsStreamForWrite());
                             }
+                        }
+                        else
+                        {
+                            return false;
                         }
                     }
                 }
             }
+            return true;
         }
     }
 }

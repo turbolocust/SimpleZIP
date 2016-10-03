@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using Windows.Storage;
 
 namespace SimpleZIP_UI.Common.Compression.Algorithm
@@ -11,9 +12,10 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
         /// Extracts an archive to a specified location.
         /// </summary>
         /// <param name="archive">The archive to be extracted.</param>
+        /// <param name="location">The location where to extract the archive to.</param>
         /// <exception cref="IOException">Thrown on any error when reading from or writing to streams.</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not allowed.</exception>
-        void Extract(StorageFile archive);
+        Task<bool> Extract(StorageFile archive, StorageFolder location);
 
         /// <summary>
         /// Compresses an archive to a specified location.
@@ -23,6 +25,6 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
         /// <param name="location">Where the archive will be created.</param>
         /// <exception cref="IOException">Thrown on any error when reading from or writing to streams.</exception>
         ///<exception cref="UnauthorizedAccessException">Thrown when access to file is not allowed.</exception>
-        void Compress(IReadOnlyList<StorageFile> files, string archiveName, StorageFolder location);
+        Task<bool> Compress(IReadOnlyList<StorageFile> files, string archiveName, StorageFolder location);
     }
 }

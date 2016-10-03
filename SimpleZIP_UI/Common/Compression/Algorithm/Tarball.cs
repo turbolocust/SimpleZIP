@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using SharpCompress.Common;
@@ -22,7 +23,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
             // singleton
         }
 
-        public async void Compress(IReadOnlyList<StorageFile> files, string archiveName, StorageFolder location)
+        public async Task<bool> Compress(IReadOnlyList<StorageFile> files, string archiveName, StorageFolder location)
         {
             var compressionInfo = new CompressionInfo()
             {
@@ -45,34 +46,38 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
                     }
                 }
             }
+            else
+            {
+                return false;
+            }
+            return true;
         }
 
-        public async void Extract(StorageFile archive)
+        public async Task<bool> Extract(StorageFile archive, StorageFolder location)
         {
             using (var fileInputStream = await archive.OpenReadAsync())
             {
-                if (fileInputStream != null) // system has now access to file
+                using (var tarReader = TarReader.Open(fileInputStream.AsStreamForRead()))
                 {
-                    using (var tarReader = TarReader.Open(fileInputStream.AsStreamForRead()))
+                    while (tarReader.MoveToNextEntry()) // write each entry to file
                     {
-                        var outputFolder = await archive.GetParentAsync();
-                        if (outputFolder != null) // system has now access to folder
+                        var file = await location.CreateFileAsync(tarReader.Entry.Key,
+                                    CreationCollisionOption.GenerateUniqueName);
+                        if (file != null)
                         {
-                            while (tarReader.MoveToNextEntry()) // write each entry to file
+                            using (var outputFileStream = await file.OpenAsync(FileAccessMode.ReadWrite))
                             {
-                                var outputFile =
-                                    await outputFolder.CreateFileAsync(tarReader.Entry.Key,
-                                            CreationCollisionOption.GenerateUniqueName);
-                                // write archive entry to output file
-                                using (var outputFileStream = await outputFile.OpenAsync(FileAccessMode.ReadWrite))
-                                {
-                                    tarReader.WriteEntryTo(outputFileStream.AsStreamForWrite());
-                                }
+                                tarReader.WriteEntryTo(outputFileStream.AsStreamForWrite());
                             }
+                        }
+                        else
+                        {
+                            return false;
                         }
                     }
                 }
             }
+            return true;
         }
     }
 }
