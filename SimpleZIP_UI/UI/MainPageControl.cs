@@ -26,7 +26,7 @@ namespace SimpleZIP_UI.UI
             var files = await picker.PickMultipleFilesAsync();
             if (files?.Count > 0) // must not be null and empty
             {
-                ParentPage.Frame.Navigate(typeof(SummaryPage), files);
+                ParentPage.Frame.Navigate(typeof(CompressionSummaryPage), files);
             }
         }
 

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
+using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 using SimpleZIP_UI.UI.Factory;
 
@@ -22,6 +24,11 @@ namespace SimpleZIP_UI.UI
         /// Token used to cancel the packing task.
         /// </summary>
         protected CancellationTokenSource CancellationToken;
+
+        /// <summary>
+        /// Where the archive will be saved to.
+        /// </summary>
+        protected StorageFolder OutputFolder;
 
         /// <summary>
         /// Enumeration type to identify algorithms.
@@ -75,6 +82,21 @@ namespace SimpleZIP_UI.UI
                     ParentPage.Frame.Navigate(typeof(MainPage));
                 }
             }
+        }
+
+        /// <summary>
+        /// Opens a picker to select a folder and returns it.
+        /// </summary>
+        public async Task<StorageFolder> OutputPathPanelAction()
+        {
+            var picker = PickerFactory.CreateFolderPicker();
+
+            var folder = await picker.PickSingleFolderAsync();
+            if (folder != null) // system has now access to folder
+            {
+                OutputFolder = folder;
+            }
+            return folder;
         }
     }
 }

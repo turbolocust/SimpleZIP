@@ -17,17 +17,17 @@ namespace SimpleZIP_UI
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class SummaryPage : Page
+    public sealed partial class CompressionSummaryPage : Page
     {
-        private readonly SummaryPageControl _control;
+        private readonly CompressionSummaryPageControl _control;
 
         private IReadOnlyList<StorageFile> _selectedFiles;
 
-        public SummaryPage()
+        public CompressionSummaryPage()
         {
             this.InitializeComponent();
             this.ArchiveNameTextBox.Focus(FocusState.Programmatic);
-            _control = new SummaryPageControl(this);
+            _control = new CompressionSummaryPageControl(this);
         }
 
         /// <summary>

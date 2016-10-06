@@ -104,13 +104,17 @@
     <Compile Include="Common\Compression\Algorithm\Zipper.cs" />
     <Compile Include="Common\Compression\CompressionHandler.cs" />
     <Compile Include="Common\Validator\FileValidator.cs" />
+    <Compile Include="ExtractionSummaryPage.xaml.cs">
+      <DependentUpon>ExtractionSummaryPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Control.cs" />
+    <Compile Include="UI\ExtractionSummaryPageControl.cs" />
     <Compile Include="UI\Factory\DialogFactory.cs" />
     <Compile Include="UI\Factory\PickerFactory.cs" />
     <Compile Include="Exceptions\InvalidFileTypeException.cs" />
-    <Compile Include="UI\SummaryPageControl.cs" />
-    <Compile Include="SummaryPage.xaml.cs">
-      <DependentUpon>SummaryPage.xaml</DependentUpon>
+    <Compile Include="UI\CompressionSummaryPageControl.cs" />
+    <Compile Include="CompressionSummaryPage.xaml.cs">
+      <DependentUpon>CompressionSummaryPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\MainPageControl.cs" />
     <Compile Include="MainPage.xaml.cs">
@@ -143,7 +147,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SummaryPage.xaml">
+    <Page Include="CompressionSummaryPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ExtractionSummaryPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
