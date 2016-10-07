@@ -39,7 +39,7 @@ namespace SimpleZIP_UI.UI.Factory
             };
 
             // add each supported file type to the picker
-            foreach (var fileType in Control.AlgorithmFileTypes)
+            foreach (var fileType in BaseControl.AlgorithmFileTypes)
             {
                 picker.FileTypeFilter.Add(fileType.Key);
             }

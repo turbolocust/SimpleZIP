@@ -6,13 +6,11 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using SimpleZIP_UI.Common.Validator;
-using SimpleZIP_UI.UI;
 using SimpleZIP_UI.UI.Factory;
-using static SimpleZIP_UI.UI.Control;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace SimpleZIP_UI
+namespace SimpleZIP_UI.UI.View
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -57,9 +55,9 @@ namespace SimpleZIP_UI
             {
                 if (archiveName.Length > 0 && !FileValidator.ContainsIllegalChars(archiveName))
                 {
-                    Algorithm key; // the file type of the archive
+                    BaseControl.Algorithm key; // the file type of the archive
 
-                    AlgorithmFileTypes.TryGetValue(archiveType, out key);
+                    BaseControl.AlgorithmFileTypes.TryGetValue(archiveType, out key);
                     archiveName += archiveType;
 
                     InitializeOperation(key, archiveName);
@@ -164,9 +162,9 @@ namespace SimpleZIP_UI
 
             if (_selectedFiles != null)
             {
-                foreach (var f in _selectedFiles) // populate list
+                foreach (var file in _selectedFiles) // populate list
                 {
-                    this.ItemsListBox.Items?.Add(new TextBlock() { Text = f.Name });
+                    this.ItemsListBox.Items?.Add(new TextBlock() { Text = file.Name });
                 }
             }
         }
@@ -176,35 +174,27 @@ namespace SimpleZIP_UI
         /// </summary>
         /// <param name="key">The type of the archive.</param>
         /// <param name="archiveName">The name of the archive.</param>
-        private async void InitializeOperation(Algorithm key, string archiveName)
+        private async void InitializeOperation(BaseControl.Algorithm key, string archiveName)
         {
             SetOperationActive(true);
-            var duration = await _control.StartButtonAction(_selectedFiles, archiveName, key);
+            var result = await _control.StartButtonAction(_selectedFiles, archiveName, key);
+            var duration = 0d;
 
             // move focus to avoid accidential focus event on text block
             FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
 
-            if (duration > 0) // success
+            if (double.TryParse(result[0], out duration)) // operation succeeded
             {
+                duration = Math.Round(Math.Pow(duration, -6), 2); // calculate seconds
+
                 await
                     DialogFactory.CreateInformationDialog("Success", "Total duration: " + duration + " seconds.")
                         .ShowAsync();
             }
-            else switch (duration) // an error occurred
-                {
-                    case -1:
-                        await DialogFactory.CreateInformationDialog("Oops!",
-                             "Operation successfully canceled.").ShowAsync();
-                        break;
-                    case -2:
-                        await DialogFactory.CreateInformationDialog("Oops!",
-                            "Looks like we do not have access to those files.").ShowAsync();
-                        break;
-                    default:
-                        await DialogFactory.CreateInformationDialog("Oops!",
-                            "Looks like something went wrong.").ShowAsync();
-                        break;
-                }
+            else // operation failed
+            {
+                await DialogFactory.CreateInformationDialog("Error", result[1]).ShowAsync();
+            }
 
             SetOperationActive(false);
             this.Frame.Navigate(typeof(MainPage));

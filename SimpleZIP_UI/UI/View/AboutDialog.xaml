@@ -1,8 +1,7 @@
 ﻿<ContentDialog
-    x:Class="SimpleZIP_UI.AboutDialog"
+    x:Class="SimpleZIP_UI.UI.View.AboutDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:SimpleZIP_UI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"

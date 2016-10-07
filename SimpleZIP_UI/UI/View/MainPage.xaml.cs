@@ -1,16 +1,14 @@
 ﻿using System;
 using Windows.System;
 using Windows.UI.Popups;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using SimpleZIP_UI.Exceptions;
-using SimpleZIP_UI.UI;
 using SimpleZIP_UI.UI.Factory;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
-namespace SimpleZIP_UI
+namespace SimpleZIP_UI.UI.View
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.

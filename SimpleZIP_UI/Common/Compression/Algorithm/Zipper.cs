@@ -4,9 +4,8 @@ using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
 using SharpCompress.Common;
-using SharpCompress.Compressor.Deflate;
-using SharpCompress.Reader.Zip;
-using SharpCompress.Writer.Zip;
+using SharpCompress.Readers.Zip;
+using SharpCompress.Writers.Zip;
 
 namespace SimpleZIP_UI.Common.Compression.Algorithm
 {
@@ -24,17 +23,13 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
         public async Task<bool> Compress(IReadOnlyList<StorageFile> files, string archiveName, StorageFolder location)
         {
 
-            var compressionInfo = new CompressionInfo()
-            {
-                DeflateCompressionLevel = CompressionLevel.Default,
-                Type = CompressionType.Deflate
-            };
+            var options = new ZipWriterOptions(CompressionType.Deflate);
 
             var archive = await location.CreateFileAsync(archiveName);
             if (archive != null) // archive created
             {
                 using (var fileOutputStream = await archive.OpenAsync(FileAccessMode.ReadWrite))
-                using (var archiveStream = new ZipWriter(fileOutputStream.AsStreamForWrite(), compressionInfo, ""))
+                using (var archiveStream = new ZipWriter(fileOutputStream.AsStreamForWrite(), options))
                 {
                     foreach (var f in files)
                     {

@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.Storage.Streams;
 using SharpCompress.Common;
-using SharpCompress.Compressor.Deflate;
-using SharpCompress.Reader;
-using SharpCompress.Reader.Tar;
-using SharpCompress.Writer.Tar;
+using SharpCompress.Readers.Tar;
+using SharpCompress.Writers;
+using SharpCompress.Writers.Tar;
 
 namespace SimpleZIP_UI.Common.Compression.Algorithm
 {
@@ -25,17 +23,13 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
 
         public async Task<bool> Compress(IReadOnlyList<StorageFile> files, string archiveName, StorageFolder location)
         {
-            var compressionInfo = new CompressionInfo()
-            {
-                DeflateCompressionLevel = CompressionLevel.Default,
-                Type = archiveName.EndsWith("bz2") ? CompressionType.BZip2 : CompressionType.GZip
-            };
+            var options = new WriterOptions(archiveName.EndsWith("bz2") ? CompressionType.BZip2 : CompressionType.GZip);
 
             var archive = await location.CreateFileAsync(archiveName);
             if (archive != null) // archive created
             {
                 using (var fileOutputStream = await archive.OpenAsync(FileAccessMode.ReadWrite))
-                using (var archiveStream = new TarWriter(fileOutputStream.AsStreamForWrite(), compressionInfo))
+                using (var archiveStream = new TarWriter(fileOutputStream.AsStreamForWrite(), options))
                 {
                     foreach (var f in files)
                     {

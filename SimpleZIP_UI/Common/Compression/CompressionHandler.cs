@@ -36,12 +36,13 @@ namespace SimpleZIP_UI.Common.Compression
         /// <param name="key"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        public async Task<int> CreateArchive(IReadOnlyList<StorageFile> files, string archiveName, StorageFolder location, Control.Algorithm key, CancellationToken ct)
+        public async Task<string[]> CreateArchive(IReadOnlyList<StorageFile> files, string archiveName, StorageFolder location, BaseControl.Algorithm key, CancellationToken ct)
         {
             return await Task.Run(async () =>
             {
                 var currentTime = DateTime.Now.Millisecond;
-                var totalDuration = 0;
+                var totalDuration = -1;
+                var message = "";
 
                 if (files.Count > 0)
                 {
@@ -53,18 +54,19 @@ namespace SimpleZIP_UI.Common.Compression
                             totalDuration = DateTime.Now.Millisecond - currentTime;
                         }
                     }
-                    catch (UnauthorizedAccessException)
+                    catch (UnauthorizedAccessException ex)
                     {
-                        totalDuration = -2;
+                        message = ex.Message;
                     }
                     catch (ArgumentOutOfRangeException ex)
                     {
                         GoogleAnalytics.EasyTracker.GetTracker()
                             .SendException(ex.Message + "\n" + ex.Source + "\n" + ex.StackTrace, true);
+                        message = ex.Message;
                     }
                 }
 
-                return totalDuration;
+                return new[] { totalDuration.ToString(), message };
 
             }, ct);
         }
@@ -77,12 +79,13 @@ namespace SimpleZIP_UI.Common.Compression
         /// <param name="ct"></param>
         /// <exception cref="InvalidFileTypeException">If the file type of the selected file is not supported or unknown.</exception>
         /// <exception cref="UnauthorizedAccessException">If extraction at the archive's path is not allowed.</exception>
-        public async Task<int> ExtractFromArchive(StorageFile archiveFile, StorageFolder location, CancellationToken ct)
+        public async Task<string[]> ExtractFromArchive(StorageFile archiveFile, StorageFolder location, CancellationToken ct)
         {
-            Control.Algorithm key; // the file type of the archive
+            BaseControl.Algorithm key; // the file type of the archive
+            var message = "";
 
             // try to get enum type by file extension, which is the key
-            if (Control.AlgorithmFileTypes.TryGetValue(archiveFile.FileType, out key))
+            if (BaseControl.AlgorithmFileTypes.TryGetValue(archiveFile.FileType, out key))
             {
                 try
                 {
@@ -92,6 +95,7 @@ namespace SimpleZIP_UI.Common.Compression
                 {
                     GoogleAnalytics.EasyTracker.GetTracker()
                         .SendException(ex.Message + "\n" + ex.Source + "\n" + ex.StackTrace, true);
+                    message = ex.Message;
                 }
             }
             else
@@ -102,14 +106,14 @@ namespace SimpleZIP_UI.Common.Compression
             return await Task.Run(async () => // execute extraction asynchronously
             {
                 var currentTime = DateTime.Now.Millisecond;
-                var totalDuration = 0;
+                var totalDuration = -1;
 
                 if (await _compressionAlgorithm.Extract(archiveFile, location))
                 {
                     totalDuration = DateTime.Now.Millisecond - currentTime;
                 }
 
-                return totalDuration;
+                return new[] { totalDuration.ToString(), message };
 
             }, ct);
         }
@@ -119,23 +123,23 @@ namespace SimpleZIP_UI.Common.Compression
         /// </summary>
         /// <param name="key"></param>
         /// <exception cref="ArgumentOutOfRangeException">May only be thrown on fatal error.</exception>
-        private void ChooseStrategy(Control.Algorithm key)
+        private void ChooseStrategy(BaseControl.Algorithm key)
         {
             switch (key)
             {
-                case Control.Algorithm.Zip:
+                case BaseControl.Algorithm.Zip:
                     _compressionAlgorithm = Zipper.Instance;
                     break;
 
-                case Control.Algorithm.Gzip:
+                case BaseControl.Algorithm.Gzip:
                     _compressionAlgorithm = GZipper.Instance;
                     break;
 
-                case Control.Algorithm.TarGz:
+                case BaseControl.Algorithm.TarGz:
                     _compressionAlgorithm = Tarball.Instance;
                     break;
 
-                case Control.Algorithm.TarBz2:
+                case BaseControl.Algorithm.TarBz2:
                     _compressionAlgorithm = Tarball.Instance;
                     break;
 

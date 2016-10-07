@@ -8,7 +8,7 @@ using SimpleZIP_UI.UI.Factory;
 
 namespace SimpleZIP_UI.UI
 {
-    public abstract class Control
+    public abstract class BaseControl
     {
         /// <summary>
         /// 
@@ -26,7 +26,7 @@ namespace SimpleZIP_UI.UI
         protected CancellationTokenSource CancellationToken;
 
         /// <summary>
-        /// Where the archive will be saved to.
+        /// Where the archive or its content will be saved to.
         /// </summary>
         protected StorageFolder OutputFolder;
 
@@ -43,7 +43,7 @@ namespace SimpleZIP_UI.UI
         /// </summary>
         public static readonly Dictionary<string, Algorithm> AlgorithmFileTypes = new Dictionary<string, Algorithm>();
 
-        static Control()
+        static BaseControl()
         {
             AlgorithmFileTypes.Add(".zip", Algorithm.Zip);
             AlgorithmFileTypes.Add(".z", Algorithm.Gzip);
@@ -53,9 +53,22 @@ namespace SimpleZIP_UI.UI
             AlgorithmFileTypes.Add(".tbz2", Algorithm.TarBz2);
         }
 
-        protected Control(Page parent)
+        protected BaseControl(Page parent)
         {
             ParentPage = parent;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        protected void InitOperation()
+        {
+            if (OutputFolder == null)
+            {
+                throw new NullReferenceException("No valid output folder selected.");
+            }
+
+            CancellationToken = new CancellationTokenSource();
         }
 
         /// <summary>
@@ -79,7 +92,7 @@ namespace SimpleZIP_UI.UI
                 }
                 finally
                 {
-                    ParentPage.Frame.Navigate(typeof(MainPage));
+                    ParentPage.Frame.Navigate(typeof(View.MainPage));
                 }
             }
         }

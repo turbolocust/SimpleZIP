@@ -10,7 +10,7 @@ namespace SimpleZIP_UI.UI
     /// <summary>
     /// Handles complex operations for the corresponding GUI controller.
     /// </summary>
-    internal class MainPageControl : Control
+    internal class MainPageControl : BaseControl
     {
         public MainPageControl(Page parent) : base(parent)
         {
@@ -26,7 +26,7 @@ namespace SimpleZIP_UI.UI
             var files = await picker.PickMultipleFilesAsync();
             if (files?.Count > 0) // must not be null and empty
             {
-                ParentPage.Frame.Navigate(typeof(CompressionSummaryPage), files);
+                ParentPage.Frame.Navigate(typeof(View.CompressionSummaryPage), files);
             }
         }
 
@@ -46,7 +46,8 @@ namespace SimpleZIP_UI.UI
                 try
                 {
                     CancellationToken = new CancellationTokenSource();
-                    duration = await compressionHandler.ExtractFromArchive(file, null, CancellationToken.Token); //TODO
+                    var result = await compressionHandler.ExtractFromArchive(file, null, CancellationToken.Token);
+                    //TODO
                 }
                 catch (UnauthorizedAccessException)
                 {
