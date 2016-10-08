@@ -48,7 +48,7 @@ namespace SimpleZIP_UI.UI
         {
             AlgorithmFileTypes.Add(".zip", Algorithm.Zip);
             AlgorithmFileTypes.Add(".z", Algorithm.Gzip);
-            AlgorithmFileTypes.Add(".gz", Algorithm.Gzip);
+            AlgorithmFileTypes.Add(".gz", Algorithm.TarGz);
             AlgorithmFileTypes.Add(".tgz", Algorithm.TarGz);
             AlgorithmFileTypes.Add(".bz2", Algorithm.TarBz2);
             AlgorithmFileTypes.Add(".tbz2", Algorithm.TarBz2);

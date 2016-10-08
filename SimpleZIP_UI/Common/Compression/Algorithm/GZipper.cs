@@ -20,7 +20,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
 
         public async Task<bool> Compress(IReadOnlyList<StorageFile> files, string archiveName, StorageFolder location)
         {
-            var outputFile = await location.CreateFileAsync(archiveName);
+            var outputFile = await location.CreateFileAsync(archiveName, CreationCollisionOption.GenerateUniqueName);
             if (outputFile != null) // file created
             {
                 using (var outputFileStream = await outputFile.OpenAsync(FileAccessMode.ReadWrite))

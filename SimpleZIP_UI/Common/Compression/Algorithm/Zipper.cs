@@ -25,7 +25,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
 
             var options = new ZipWriterOptions(CompressionType.Deflate);
 
-            var archive = await location.CreateFileAsync(archiveName);
+            var archive = await location.CreateFileAsync(archiveName, CreationCollisionOption.GenerateUniqueName);
             if (archive != null) // archive created
             {
                 using (var fileOutputStream = await archive.OpenAsync(FileAccessMode.ReadWrite))

@@ -30,7 +30,7 @@
             </TextBox>
         </StackPanel>
         <StackPanel Grid.Row="1" IsTapEnabled="True" Tapped="OutputPathPanel_Tap" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Transparent">
-            <TextBox x:Name="OutputPathTextBlock" GotFocus="OutputPathTextBlock_GotFocus" Margin="8,0,24,0" PlaceholderText="tap to choose" Header="Output Path" Width="Auto" FontWeight="Light" IsReadOnly="True" AcceptsReturn="False" TextWrapping="NoWrap" BorderThickness="0" IsTapEnabled="False" SelectionHighlightColor="Transparent" Background="Transparent" InputScope="Text" IsSpellCheckEnabled="False" IsTextPredictionEnabled="False" IsHoldingEnabled="False" IsDoubleTapEnabled="False" />
+            <TextBox x:Name="OutputPathTextBlock" GotFocus="OutputPathTextBlock_GotFocus" Margin="8,0,24,0" PlaceholderText="TAP TO CHOOSE" Header="Output Path" Width="Auto" FontWeight="Light" IsReadOnly="True" AcceptsReturn="False" TextWrapping="NoWrap" BorderThickness="0" IsTapEnabled="False" SelectionHighlightColor="Transparent" Background="Transparent" InputScope="Text" IsSpellCheckEnabled="False" IsTextPredictionEnabled="False" IsHoldingEnabled="False" IsDoubleTapEnabled="False" />
         </StackPanel>
         <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
             <Grid>

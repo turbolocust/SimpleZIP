@@ -13,7 +13,7 @@
             <RowDefinition Height="1.5*" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" IsTapEnabled="True" Tapped="OutputPathPanel_Tap" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Transparent">
-            <TextBox x:Name="OutputPathTextBlock" GotFocus="OutputPathTextBlock_GotFocus" Margin="8,0,24,0" PlaceholderText="tap to choose" Header="Output Path" Width="Auto" FontWeight="Light" IsReadOnly="True" AcceptsReturn="False" TextWrapping="NoWrap" BorderThickness="0" IsTapEnabled="False" SelectionHighlightColor="Transparent" Background="Transparent" InputScope="Text" IsSpellCheckEnabled="False" IsTextPredictionEnabled="False" IsHoldingEnabled="False" IsDoubleTapEnabled="False" />
+            <TextBox x:Name="OutputPathTextBlock" GotFocus="OutputPathTextBlock_GotFocus" Margin="8,0,24,0" PlaceholderText="TAP TO CHOOSE" Header="Output Path" Width="Auto" FontWeight="Light" IsReadOnly="True" AcceptsReturn="False" TextWrapping="NoWrap" BorderThickness="0" IsTapEnabled="False" SelectionHighlightColor="Transparent" Background="Transparent" InputScope="Text" IsSpellCheckEnabled="False" IsTextPredictionEnabled="False" IsHoldingEnabled="False" IsDoubleTapEnabled="False" />
         </StackPanel>
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
             <Grid>
@@ -21,7 +21,7 @@
                     <RowDefinition Height="1*" />
                     <RowDefinition Height="9*" />
                 </Grid.RowDefinitions>
-                <TextBlock Text="File to decompress:" Grid.Row="0" FontWeight="Bold" FontSize="16" CharacterSpacing="56" Margin="8,0,0,0" VerticalAlignment="Center" Foreground="White" />
+                <TextBlock Text="File(s) to decompress:" Grid.Row="0" FontWeight="Bold" FontSize="16" CharacterSpacing="56" Margin="8,0,0,0" VerticalAlignment="Center" Foreground="White" />
                 <ListBox x:Name="ItemsListBox" Grid.Row="1" Margin="8,0,8,0" SelectionMode="Single" CanDrag="False" HorizontalContentAlignment="Stretch" Background="Transparent" Height="Auto" Foreground="White" />
             </Grid>
         </ScrollViewer>

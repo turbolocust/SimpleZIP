@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -54,7 +55,7 @@ namespace SimpleZIP_UI.Common.Compression
                             duration = DateTime.Now.Millisecond - currentTime;
                         }
                     }
-                    catch (UnauthorizedAccessException ex)
+                    catch (IOException ex)
                     {
                         message = ex.Message;
                     }
@@ -66,7 +67,8 @@ namespace SimpleZIP_UI.Common.Compression
                     }
                 }
 
-                return new Result {
+                return new Result
+                {
                     StatusCode = message.Length > 0 ? (short)-1 : (short)0,
                     Message = message,
                     ElapsedTime = duration
@@ -118,7 +120,8 @@ namespace SimpleZIP_UI.Common.Compression
                     duration = DateTime.Now.Millisecond - currentTime;
                 }
 
-                return new Result {
+                return new Result
+                {
                     StatusCode = message.Length > 0 ? (short)-1 : (short)0,
                     Message = message,
                     ElapsedTime = duration

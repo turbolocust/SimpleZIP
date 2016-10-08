@@ -35,10 +35,10 @@ namespace SimpleZIP_UI.UI
         {
             var picker = PickerFactory.CreateDecompressFileOpenPicker();
 
-            var file = await picker.PickSingleFileAsync();
-            if (file != null) // must not be null
+            var files = await picker.PickMultipleFilesAsync();
+            if (files != null) // must not be null
             {
-                ParentPage.Frame.Navigate(typeof(ExtractionSummaryPage), file);
+                ParentPage.Frame.Navigate(typeof(ExtractionSummaryPage), files);
             }
         }
     }

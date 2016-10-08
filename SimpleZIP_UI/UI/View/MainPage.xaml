@@ -23,11 +23,11 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <StackPanel Orientation="Horizontal" Grid.Row="0">
+                        <StackPanel Visibility="Collapsed" Orientation="Horizontal" Grid.Row="0">
                             <Button Height="50" Background="Transparent" Tapped="OpenArchiveButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                                 <StackPanel Orientation="Horizontal">
                                     <SymbolIcon Symbol="OpenFile"/>
-                                    <TextBlock Text="Open Archive . . ." FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
+                                    <TextBlock Text="Open Archive. . ." FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
                                 </StackPanel>
                             </Button>
                         </StackPanel>

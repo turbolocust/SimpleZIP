@@ -8,8 +8,6 @@ using Windows.UI.Xaml.Navigation;
 using SimpleZIP_UI.Common.Util;
 using SimpleZIP_UI.UI.Factory;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace SimpleZIP_UI.UI.View
 {
     /// <summary>
@@ -55,16 +53,28 @@ namespace SimpleZIP_UI.UI.View
 
             if (result.StatusCode >= 0) // success
             {
-                duration = Converter.ConvertMillisecondsToSeconds(duration);
+                duration = Converter.ConvertMillisecondsToSeconds(duration, 3);
+                var durationText = "Total duration: ";
 
+                if (duration < 1)
+                {
+                    durationText += "Less than one second.";
+                }
+                else
+                {
+                    durationText += duration + " seconds.";
+                }
                 await
-                    DialogFactory.CreateInformationDialog("Success", "Total duration: " + duration + " seconds.")
+                    DialogFactory.CreateInformationDialog("Success", durationText)
                         .ShowAsync();
             }
             else // error
             {
                 await DialogFactory.CreateErrorDialog(result.Message).ShowAsync();
             }
+
+            SetOperationActive(false);
+            Frame.Navigate(typeof(MainPage));
         }
 
         /// <summary>
