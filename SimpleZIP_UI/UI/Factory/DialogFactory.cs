@@ -14,7 +14,7 @@ namespace SimpleZIP_UI.UI.Factory
         /// One labeled "Yes" with index 0. The other labeled "No" with index 1.
         /// </summary>
         /// <param name="title">The title of the dialog.</param>
-        /// <param name="message">The message to be displayed in the dialog.</param>
+        /// <param name="message">The message to be displayed by the dialog.</param>
         /// <returns>The newly created message dialog.</returns>
         public static MessageDialog CreateConfirmationDialog(string title, string message)
         {
@@ -27,10 +27,20 @@ namespace SimpleZIP_UI.UI.Factory
         }
 
         /// <summary>
-        /// Creates a new message dialog that simply shows a title and message.
+        /// Creates a new message dialog titled "Error" that displays the specified message.
+        /// </summary>
+        /// <param name="message">The message to be displayed by the dialog.</param>
+        /// <returns>The newly created message dialog.</returns>
+        public static MessageDialog CreateErrorDialog(string message)
+        {
+            return new MessageDialog(message, "Error");
+        }
+
+        /// <summary>
+        /// Creates a new message dialog that displays the specified title and message.
         /// </summary>
         /// <param name="title">The title of the dialog.</param>
-        /// <param name="message">The message to be displayed in the dialog.</param>
+        /// <param name="message">The message to be displayed by the dialog.</param>
         /// <returns>The newly created message dialog.</returns>
         public static MessageDialog CreateInformationDialog(string title, string message)
         {

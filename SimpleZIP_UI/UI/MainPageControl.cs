@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Threading;
 using Windows.UI.Xaml.Controls;
-using SimpleZIP_UI.Common.Compression;
-using SimpleZIP_UI.Exceptions;
 using SimpleZIP_UI.UI.Factory;
 using SimpleZIP_UI.UI.View;
 
@@ -39,35 +36,9 @@ namespace SimpleZIP_UI.UI
             var picker = PickerFactory.CreateDecompressFileOpenPicker();
 
             var file = await picker.PickSingleFileAsync();
-            if (file != null) // system has now access to file
+            if (file != null) // must not be null
             {
-                var compressionHandler = CompressionHandler.Instance;
-                var duration = 0; // to measure the time of the extraction operation
-
-                try
-                {
-                    CancellationToken = new CancellationTokenSource();
-                    var result = await compressionHandler.ExtractFromArchive(file, null, CancellationToken.Token);
-                    //TODO
-                }
-                catch (UnauthorizedAccessException)
-                {
-                    DialogFactory.CreateInformationDialog("Oops!",
-                        "Insufficient rights to extract archive here.\n\n" +
-                        "Please move archive to a different location and try again.");
-                }
-                catch (InvalidFileTypeException)
-                {
-                    DialogFactory.CreateInformationDialog("Oops!", "The chosen file format is not supported.");
-                }
-
-                if (duration > 0)
-                {
-                    DialogFactory.CreateInformationDialog("Success",
-                        "The operation succeeded.\n\n" +
-                        "Files have been extracted to the specified subfolder at the archive's location.\n\n" +
-                        "Total duration: " + duration + " seconds.");
-                }
+                ParentPage.Frame.Navigate(typeof(ExtractionSummaryPage), file);
             }
         }
     }

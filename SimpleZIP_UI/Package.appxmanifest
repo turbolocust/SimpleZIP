@@ -15,7 +15,7 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="SimpleZIP_UI.App">
-      <uap:VisualElements DisplayName="SimpleZIP" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="Create, open and extract archives using ZIP, GZIP or TAR algorithm." BackgroundColor="transparent">
+      <uap:VisualElements DisplayName="SimpleZIP" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="Create and extract archives using ZIP, GZIP or TAR algorithm." BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png">
         </uap:DefaultTile>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
@@ -24,19 +24,6 @@
           <uap:Rotation Preference="portraitFlipped" />
         </uap:InitialRotationPreference>
       </uap:VisualElements>
-      <Extensions>
-        <uap:Extension Category="windows.fileOpenPicker">
-          <uap:FileOpenPicker>
-            <uap:SupportedFileTypes>
-              <uap:FileType>.zip</uap:FileType>
-              <uap:FileType>.gz</uap:FileType>
-              <uap:FileType>.bz2</uap:FileType>
-              <uap:FileType>.tgz</uap:FileType>
-              <uap:FileType>.tbz2</uap:FileType>
-            </uap:SupportedFileTypes>
-          </uap:FileOpenPicker>
-        </uap:Extension>
-      </Extensions>
     </Application>
   </Applications>
   <Capabilities>

@@ -5,6 +5,8 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using SimpleZIP_UI.Common.Util;
+using SimpleZIP_UI.UI.Factory;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -26,7 +28,7 @@ namespace SimpleZIP_UI.UI.View
         }
 
         /// <summary>
-        /// Triggered when the abort button has been tapped.
+        /// Invoked when the abort button has been tapped.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
         /// <param name="e">The event that invoked this method.</param>
@@ -37,19 +39,36 @@ namespace SimpleZIP_UI.UI.View
         }
 
         /// <summary>
-        /// Triggered when the start button has been tapped.
+        /// Invoked when the start button has been tapped.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
         /// <param name="e">The event that invoked this method.</param>
         /// <exception cref="ArgumentOutOfRangeException">May only be thrown on fatal error.</exception>
-        private void StartButton_Tap(object sender, TappedRoutedEventArgs e)
+        private async void StartButton_Tap(object sender, TappedRoutedEventArgs e)
         {
             SetOperationActive(true);
-            //TODO
+            var result = await _control.StartButtonAction(_selectedFiles);
+            var duration = result.ElapsedTime;
+
+            // move focus to avoid accidential focus event on text block
+            FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
+
+            if (result.StatusCode >= 0) // success
+            {
+                duration = Converter.ConvertMillisecondsToSeconds(duration);
+
+                await
+                    DialogFactory.CreateInformationDialog("Success", "Total duration: " + duration + " seconds.")
+                        .ShowAsync();
+            }
+            else // error
+            {
+                await DialogFactory.CreateErrorDialog(result.Message).ShowAsync();
+            }
         }
 
         /// <summary>
-        /// Triggered when the panel containing the output path has been tapped.
+        /// Invoked when the panel containing the output path has been tapped.
         /// Lets the user then pick an output folder for the archive.
         /// </summary>
         /// <param name="sender"></param>
@@ -60,7 +79,7 @@ namespace SimpleZIP_UI.UI.View
         }
 
         /// <summary>
-        /// Triggered when output path text block got focus.
+        /// Invoked when output path text block got focus.
         /// Lets the user then pick an output folder for the archive.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
@@ -75,7 +94,7 @@ namespace SimpleZIP_UI.UI.View
         }
 
         /// <summary>
-        /// Triggered after navigating to this page.
+        /// Invoked after navigating to this page.
         /// </summary>
         /// <param name="e">The event that invoked this method.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)

@@ -93,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Model\Result.cs" />
+    <Compile Include="Common\Util\Converter.cs" />
     <Compile Include="UI\View\AboutDialog.xaml.cs">
       <DependentUpon>AboutDialog.xaml</DependentUpon>
     </Compile>

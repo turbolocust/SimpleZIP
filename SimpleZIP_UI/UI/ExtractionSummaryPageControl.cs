@@ -19,12 +19,11 @@ namespace SimpleZIP_UI.UI
         }
 
         /// <summary>
-        /// 
+        /// Handles the action that needs to be performed when the start button has been pressed.
         /// </summary>
         /// <param name="selectedFiles"></param>
-        /// <param name="key"></param>
         /// <returns></returns>
-        public async Task<Result> StartButtonAction(IReadOnlyList<StorageFile> selectedFiles, Algorithm key)
+        public async Task<Result> StartButtonAction(IReadOnlyList<StorageFile> selectedFiles)
         {
             string message;
 
@@ -54,7 +53,8 @@ namespace SimpleZIP_UI.UI
                             }
                         }
 
-                        return new Result {
+                        return new Result
+                        {
                             Message = messageResult,
                             ElapsedTime = totalDuration
                         };
@@ -80,7 +80,8 @@ namespace SimpleZIP_UI.UI
                 message = ex.Message;
             }
 
-            return new Result {
+            return new Result
+            {
                 Message = message,
                 StatusCode = -1 // exception was thrown
             };

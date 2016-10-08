@@ -12,12 +12,12 @@ namespace SimpleZIP_UI.UI
     public abstract class BaseControl
     {
         /// <summary>
-        /// 
+        /// The parent page to whom this control belongs to.
         /// </summary>
         protected Page ParentPage { get; }
 
         /// <summary>
-        /// 
+        /// True if a cancel request has been made.
         /// </summary>
         protected bool IsCancelRequest;
 
@@ -60,7 +60,8 @@ namespace SimpleZIP_UI.UI
         }
 
         /// <summary>
-        /// 
+        /// Initializes any operation by checking if an output folder was selected
+        /// and also creates a new token for cancellation.
         /// </summary>
         protected void InitOperation()
         {
@@ -68,12 +69,11 @@ namespace SimpleZIP_UI.UI
             {
                 throw new NullReferenceException("No valid output folder selected.");
             }
-
             CancellationToken = new CancellationTokenSource();
         }
 
         /// <summary>
-        /// 
+        /// Handles the action that needs to be performed after the abort button has been pressed.
         /// </summary>
         public async void AbortButtonAction()
         {
@@ -99,7 +99,7 @@ namespace SimpleZIP_UI.UI
         }
 
         /// <summary>
-        /// Opens a picker to select a folder and returns it.
+        /// Opens a picker to select a folder and returns it. May be null if the user cancels.
         /// </summary>
         public async Task<StorageFolder> OutputPathPanelAction()
         {

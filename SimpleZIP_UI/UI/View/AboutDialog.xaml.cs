@@ -1,7 +1,5 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-// The Content Dialog item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace SimpleZIP_UI.UI.View
 {
     public sealed partial class AboutDialog
@@ -11,6 +9,11 @@ namespace SimpleZIP_UI.UI.View
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Invoked when the primary button of this dialog has been pressed. This will simply hide the dialog.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="args">Arguments that may have been passed.</param>
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             sender.Hide();

@@ -5,6 +5,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using SimpleZIP_UI.Common.Util;
 using SimpleZIP_UI.Common.Validator;
 using SimpleZIP_UI.UI.Factory;
 
@@ -29,7 +30,7 @@ namespace SimpleZIP_UI.UI.View
         }
 
         /// <summary>
-        /// Triggered when the abort button has been tapped.
+        /// Invoked when the abort button has been tapped.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
         /// <param name="e">The event that invoked this method.</param>
@@ -40,7 +41,7 @@ namespace SimpleZIP_UI.UI.View
         }
 
         /// <summary>
-        /// Triggered when the start button has been tapped.
+        /// Invoked when the start button has been tapped.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
         /// <param name="e">The event that invoked this method.</param>
@@ -60,14 +61,14 @@ namespace SimpleZIP_UI.UI.View
                     BaseControl.AlgorithmFileTypes.TryGetValue(archiveType, out key);
                     archiveName += archiveType;
 
-                    InitializeOperation(key, archiveName);
+                    InitOperation(key, archiveName);
                 }
             }
         }
 
 
         /// <summary>
-        /// Triggered when the panel containing the output path has been tapped.
+        /// Invoked when the panel containing the output path has been tapped.
         /// Lets the user then pick an output folder for the archive.
         /// </summary>
         /// <param name="sender"></param>
@@ -78,7 +79,7 @@ namespace SimpleZIP_UI.UI.View
         }
 
         /// <summary>
-        /// Triggered when output path text block got focus.
+        /// Invoked when output path text block got focus.
         /// Lets the user then pick an output folder for the archive.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
@@ -93,7 +94,7 @@ namespace SimpleZIP_UI.UI.View
         }
 
         /// <summary>
-        /// Triggered when combo box for choosing the archive type has been closed.
+        /// Invoked when combo box for choosing the archive type has been closed.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
         /// <param name="e">The event that invoked this method.</param>
@@ -109,7 +110,7 @@ namespace SimpleZIP_UI.UI.View
         }
 
         /// <summary>
-        /// Triggered when the text of the archive name input has beend modified.
+        /// Invoked when the text of the archive name input has beend modified.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
         /// <param name="e">The event that invoked this method.</param>
@@ -134,7 +135,7 @@ namespace SimpleZIP_UI.UI.View
         }
 
         /// <summary>
-        /// Triggered when any tooltip has been opened.
+        /// Invoked when any tooltip has been opened.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
         /// <param name="e">The event that invoked this method.</param>
@@ -153,7 +154,7 @@ namespace SimpleZIP_UI.UI.View
         }
 
         /// <summary>
-        /// Triggered after navigating to this page.
+        /// Invoked after navigating to this page.
         /// </summary>
         /// <param name="e">The event that invoked this method.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -170,11 +171,11 @@ namespace SimpleZIP_UI.UI.View
         }
 
         /// <summary>
-        /// Initializes the archiving operation and waits for the result of it.
+        /// Initializes the archiving operation and waits for the result.
         /// </summary>
         /// <param name="key">The type of the archive.</param>
         /// <param name="archiveName">The name of the archive.</param>
-        private async void InitializeOperation(BaseControl.Algorithm key, string archiveName)
+        private async void InitOperation(BaseControl.Algorithm key, string archiveName)
         {
             SetOperationActive(true);
             var result = await _control.StartButtonAction(_selectedFiles, archiveName, key);
@@ -183,17 +184,17 @@ namespace SimpleZIP_UI.UI.View
             // move focus to avoid accidential focus event on text block
             FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
 
-            if (result.StatusCode >= 0) // operation succeeded
+            if (result.StatusCode >= 0) // success
             {
-                duration = Math.Round(Math.Pow(duration, -6), 2); // calculate seconds
+                duration = Converter.ConvertMillisecondsToSeconds(duration);
 
                 await
                     DialogFactory.CreateInformationDialog("Success", "Total duration: " + duration + " seconds.")
                         .ShowAsync();
             }
-            else // operation failed
+            else // error
             {
-                await DialogFactory.CreateInformationDialog("Error", result.Message).ShowAsync();
+                await DialogFactory.CreateErrorDialog(result.Message).ShowAsync();
             }
 
             SetOperationActive(false);
@@ -202,7 +203,7 @@ namespace SimpleZIP_UI.UI.View
 
         /// <summary>
         /// Delegates the action to pick an output folder.
-        /// Shows the name of the output folder in the UI after successful selection.
+        /// Displays the name of the output folder afterwards.
         /// </summary>
         private async void PickOutputPath()
         {
@@ -212,7 +213,7 @@ namespace SimpleZIP_UI.UI.View
         }
 
         /// <summary>
-        /// Sets the archiving operation as active. This means that the UI is in busy state.
+        /// Sets the archiving operation as active. This results in the UI being busy.
         /// </summary>
         /// <param name="isActive">True to set operation as active.</param>
         private void SetOperationActive(bool isActive)
