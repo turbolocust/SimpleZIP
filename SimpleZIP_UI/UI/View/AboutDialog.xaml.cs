@@ -4,11 +4,11 @@
 
 namespace SimpleZIP_UI.UI.View
 {
-    public sealed partial class AboutDialog : ContentDialog
+    public sealed partial class AboutDialog
     {
         public AboutDialog()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)

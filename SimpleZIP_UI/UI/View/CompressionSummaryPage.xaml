@@ -45,7 +45,7 @@
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,16,0">
             <ProgressRing x:Name="ProgressRing" Margin="0, 0, 24, 0" IsActive="False" />
             <Button x:Name="StartButton" Tapped="StartButton_Tap" IsEnabled="False" Content="Start" Width="100" MinHeight="44" Height="50" MaxHeight="60" Margin="0,0,16,0" Foreground="White" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}" />
-            <Button x:Name="AbortButton" Tapped="AbortButton_Tap" Content="Abort" Width="100" MinHeight="44" Height="50" MaxHeight="60" Foreground="White" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}" />
+            <Button Tapped="AbortButton_Tap" Content="Abort" Width="100" MinHeight="44" Height="50" MaxHeight="60" Foreground="White" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}" />
         </StackPanel>
     </Grid>
     <Page.Transitions>

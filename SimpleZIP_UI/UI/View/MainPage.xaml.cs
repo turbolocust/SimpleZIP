@@ -1,31 +1,28 @@
 ﻿using System;
 using Windows.System;
 using Windows.UI.Popups;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using SimpleZIP_UI.Exceptions;
 using SimpleZIP_UI.UI.Factory;
-
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
 namespace SimpleZIP_UI.UI.View
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage
     {
         private readonly MainPageControl _control;
 
         public MainPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             _control = new MainPageControl(this);
         }
 
         private void HamburgerButton_Tap(object sender, TappedRoutedEventArgs e)
         {
-            this.MenuSplitView.IsPaneOpen = !this.MenuSplitView.IsPaneOpen;
+            MenuSplitView.IsPaneOpen = !MenuSplitView.IsPaneOpen;
         }
 
         private void CompressButton_Tap(object sender, TappedRoutedEventArgs e)

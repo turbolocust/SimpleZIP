@@ -13,7 +13,7 @@ namespace SimpleZIP_UI.UI.View
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ExtractionSummaryPage : Page
+    public sealed partial class ExtractionSummaryPage
     {
         private readonly ExtractionSummaryPageControl _control;
 
@@ -21,7 +21,7 @@ namespace SimpleZIP_UI.UI.View
 
         public ExtractionSummaryPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             _control = new ExtractionSummaryPageControl(this);
         }
 
@@ -67,7 +67,7 @@ namespace SimpleZIP_UI.UI.View
         /// <param name="e">The event that invoked this method.</param>
         private void OutputPathTextBlock_GotFocus(object sender, RoutedEventArgs e)
         {
-            if (!this.ProgressRing.IsActive)
+            if (!ProgressRing.IsActive)
             {
                 PickOutputPath();
                 FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
@@ -86,7 +86,7 @@ namespace SimpleZIP_UI.UI.View
             {
                 foreach (var f in _selectedFiles) // populate list
                 {
-                    this.ItemsListBox.Items?.Add(new TextBlock() { Text = f.Name });
+                    ItemsListBox.Items?.Add(new TextBlock { Text = f.Name });
                 }
             }
         }
@@ -98,8 +98,8 @@ namespace SimpleZIP_UI.UI.View
         private async void PickOutputPath()
         {
             var folder = await _control.OutputPathPanelAction();
-            this.OutputPathTextBlock.Text = folder?.Name ?? "";
-            this.StartButton.IsEnabled = this.OutputPathTextBlock.Text.Length > 0;
+            OutputPathTextBlock.Text = folder?.Name ?? "";
+            StartButton.IsEnabled = OutputPathTextBlock.Text.Length > 0;
         }
 
         /// <summary>
@@ -110,17 +110,17 @@ namespace SimpleZIP_UI.UI.View
         {
             if (isActive)
             {
-                this.ProgressRing.IsActive = true;
-                this.ProgressRing.Visibility = Visibility.Visible;
-                this.StartButton.IsEnabled = false;
-                this.OutputPathTextBlock.IsTapEnabled = false;
+                ProgressRing.IsActive = true;
+                ProgressRing.Visibility = Visibility.Visible;
+                StartButton.IsEnabled = false;
+                OutputPathTextBlock.IsTapEnabled = false;
             }
             else
             {
-                this.ProgressRing.IsActive = false;
-                this.ProgressRing.Visibility = Visibility.Collapsed;
-                this.StartButton.IsEnabled = true;
-                this.OutputPathTextBlock.IsTapEnabled = true;
+                ProgressRing.IsActive = false;
+                ProgressRing.Visibility = Visibility.Collapsed;
+                StartButton.IsEnabled = true;
+                OutputPathTextBlock.IsTapEnabled = true;
             }
         }
     }

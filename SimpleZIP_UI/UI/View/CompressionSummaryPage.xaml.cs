@@ -15,7 +15,7 @@ namespace SimpleZIP_UI.UI.View
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class CompressionSummaryPage : Page
+    public sealed partial class CompressionSummaryPage
     {
         private readonly CompressionSummaryPageControl _control;
 
@@ -23,8 +23,8 @@ namespace SimpleZIP_UI.UI.View
 
         public CompressionSummaryPage()
         {
-            this.InitializeComponent();
-            this.ArchiveNameTextBox.Focus(FocusState.Programmatic);
+            InitializeComponent();
+            ArchiveNameTextBox.Focus(FocusState.Programmatic);
             _control = new CompressionSummaryPageControl(this);
         }
 
@@ -47,8 +47,8 @@ namespace SimpleZIP_UI.UI.View
         /// <exception cref="ArgumentOutOfRangeException">May only be thrown on fatal error.</exception>
         private void StartButton_Tap(object sender, TappedRoutedEventArgs e)
         {
-            var selectedItem = (ComboBoxItem)this.ArchiveTypeComboBox.SelectedItem;
-            var archiveName = this.ArchiveNameTextBox.Text;
+            var selectedItem = (ComboBoxItem)ArchiveTypeComboBox.SelectedItem;
+            var archiveName = ArchiveNameTextBox.Text;
             var archiveType = selectedItem?.Content?.ToString();
 
             if (archiveType != null)
@@ -85,7 +85,7 @@ namespace SimpleZIP_UI.UI.View
         /// <param name="e">The event that invoked this method.</param>
         private void OutputPathTextBlock_GotFocus(object sender, RoutedEventArgs e)
         {
-            if (!this.ProgressRing.IsActive)
+            if (!ProgressRing.IsActive)
             {
                 PickOutputPath();
                 FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
@@ -99,12 +99,12 @@ namespace SimpleZIP_UI.UI.View
         /// <param name="e">The event that invoked this method.</param>
         private void ArchiveTypeComboBox_DropDownClosed(object sender, object e)
         {
-            if (_selectedFiles.Count > 1 && this.ArchiveTypeComboBox.SelectedIndex == 1)
+            if (_selectedFiles.Count > 1 && ArchiveTypeComboBox.SelectedIndex == 1)
             {
-                this.ArchiveTypeToolTip.Content = "GZIP only allows the compression of one file.\n\n" +
+                ArchiveTypeToolTip.Content = "GZIP only allows the compression of one file.\n\n" +
                     "Please choose another algorithm, otherwise only the first file in the list will be packed.";
-                this.ArchiveTypeToolTip.IsOpen = true;
-                this.ArchiveTypeComboBox.SelectedIndex = 0; // reset selection
+                ArchiveTypeToolTip.IsOpen = true;
+                ArchiveTypeComboBox.SelectedIndex = 0; // reset selection
             }
         }
 
@@ -115,21 +115,21 @@ namespace SimpleZIP_UI.UI.View
         /// <param name="e">The event that invoked this method.</param>
         private void ArchiveNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            var fileName = this.ArchiveNameTextBox.Text;
+            var fileName = ArchiveNameTextBox.Text;
 
             if (fileName.Length < 1) // reset if empty
             {
-                this.ArchiveNameTextBox.Text = "myArchive";
+                ArchiveNameTextBox.Text = "myArchive";
             }
             else if (FileValidator.ContainsIllegalChars(fileName)) // check for illegal characters in file name
             {
-                this.ArchiveNameToolTip.Content = "These characters are not allowed:\n" +
+                ArchiveNameToolTip.Content = "These characters are not allowed:\n" +
                                                   "\\ / | : * \" ? < >\n";
-                this.ArchiveNameToolTip.IsOpen = true;
+                ArchiveNameToolTip.IsOpen = true;
             }
             else
             {
-                this.ArchiveNameToolTip.IsOpen = false;
+                ArchiveNameToolTip.IsOpen = false;
             }
         }
 
@@ -164,7 +164,7 @@ namespace SimpleZIP_UI.UI.View
             {
                 foreach (var file in _selectedFiles) // populate list
                 {
-                    this.ItemsListBox.Items?.Add(new TextBlock() { Text = file.Name });
+                    ItemsListBox.Items?.Add(new TextBlock { Text = file.Name });
                 }
             }
         }
@@ -178,12 +178,12 @@ namespace SimpleZIP_UI.UI.View
         {
             SetOperationActive(true);
             var result = await _control.StartButtonAction(_selectedFiles, archiveName, key);
-            var duration = 0d;
+            var duration = result.ElapsedTime;
 
             // move focus to avoid accidential focus event on text block
             FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
 
-            if (double.TryParse(result[0], out duration)) // operation succeeded
+            if (result.StatusCode >= 0) // operation succeeded
             {
                 duration = Math.Round(Math.Pow(duration, -6), 2); // calculate seconds
 
@@ -193,11 +193,11 @@ namespace SimpleZIP_UI.UI.View
             }
             else // operation failed
             {
-                await DialogFactory.CreateInformationDialog("Error", result[1]).ShowAsync();
+                await DialogFactory.CreateInformationDialog("Error", result.Message).ShowAsync();
             }
 
             SetOperationActive(false);
-            this.Frame.Navigate(typeof(MainPage));
+            Frame.Navigate(typeof(MainPage));
         }
 
         /// <summary>
@@ -207,8 +207,8 @@ namespace SimpleZIP_UI.UI.View
         private async void PickOutputPath()
         {
             var folder = await _control.OutputPathPanelAction();
-            this.OutputPathTextBlock.Text = folder?.Name ?? "";
-            this.StartButton.IsEnabled = this.OutputPathTextBlock.Text.Length > 0;
+            OutputPathTextBlock.Text = folder?.Name ?? "";
+            StartButton.IsEnabled = OutputPathTextBlock.Text.Length > 0;
         }
 
         /// <summary>
@@ -219,21 +219,21 @@ namespace SimpleZIP_UI.UI.View
         {
             if (isActive)
             {
-                this.ProgressRing.IsActive = true;
-                this.ProgressRing.Visibility = Visibility.Visible;
-                this.StartButton.IsEnabled = false;
-                this.OutputPathTextBlock.IsTapEnabled = false;
-                this.ArchiveNameTextBox.IsEnabled = false;
-                this.ArchiveTypeComboBox.IsEnabled = false;
+                ProgressRing.IsActive = true;
+                ProgressRing.Visibility = Visibility.Visible;
+                StartButton.IsEnabled = false;
+                OutputPathTextBlock.IsTapEnabled = false;
+                ArchiveNameTextBox.IsEnabled = false;
+                ArchiveTypeComboBox.IsEnabled = false;
             }
             else
             {
-                this.ProgressRing.IsActive = false;
-                this.ProgressRing.Visibility = Visibility.Collapsed;
-                this.StartButton.IsEnabled = true;
-                this.OutputPathTextBlock.IsTapEnabled = true;
-                this.ArchiveNameTextBox.IsEnabled = true;
-                this.ArchiveTypeComboBox.IsEnabled = true;
+                ProgressRing.IsActive = false;
+                ProgressRing.Visibility = Visibility.Collapsed;
+                StartButton.IsEnabled = true;
+                OutputPathTextBlock.IsTapEnabled = true;
+                ArchiveNameTextBox.IsEnabled = true;
+                ArchiveTypeComboBox.IsEnabled = true;
             }
         }
     }

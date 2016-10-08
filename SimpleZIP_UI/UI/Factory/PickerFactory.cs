@@ -15,8 +15,7 @@ namespace SimpleZIP_UI.UI.Factory
         /// <returns>The newly created file picker.</returns>
         public static FileOpenPicker CreateCompressFileOpenPicker()
         {
-            var picker = new FileOpenPicker()
-            {
+            var picker = new FileOpenPicker {
                 ViewMode = PickerViewMode.List,
                 SuggestedStartLocation = PickerLocationId.ComputerFolder,
                 FileTypeFilter = { "*" }
@@ -32,8 +31,7 @@ namespace SimpleZIP_UI.UI.Factory
         /// <returns>The newly created file picker.</returns>
         public static FileOpenPicker CreateDecompressFileOpenPicker()
         {
-            var picker = new FileOpenPicker()
-            {
+            var picker = new FileOpenPicker {
                 ViewMode = PickerViewMode.List,
                 SuggestedStartLocation = PickerLocationId.ComputerFolder
             };
@@ -53,8 +51,7 @@ namespace SimpleZIP_UI.UI.Factory
         /// <returns>The newly created folder picker.</returns>
         public static FolderPicker CreateFolderPicker()
         {
-            var picker = new FolderPicker()
-            {
+            var picker = new FolderPicker {
                 ViewMode = PickerViewMode.List,
                 SuggestedStartLocation = PickerLocationId.DocumentsLibrary
             };

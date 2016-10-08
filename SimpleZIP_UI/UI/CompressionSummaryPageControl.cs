@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 using SimpleZIP_UI.Common.Compression;
+using SimpleZIP_UI.Common.Model;
 using SimpleZIP_UI.Exceptions;
 
 namespace SimpleZIP_UI.UI
@@ -24,17 +24,20 @@ namespace SimpleZIP_UI.UI
         /// <param name="selectedFiles"></param>
         /// <param name="archiveName"></param>
         /// <param name="key"></param>
+        /// <returns></returns>
         /// <exception cref="NullReferenceException"></exception>
-        public async Task<string[]> StartButtonAction(IReadOnlyList<StorageFile> selectedFiles, string archiveName, Algorithm key)
+        public async Task<Result> StartButtonAction(IReadOnlyList<StorageFile> selectedFiles, string archiveName, Algorithm key)
         {
+            string message;
+
             try
             {
                 InitOperation();
+
                 try
                 {
                     var handler = CompressionHandler.Instance;
                     return await handler.CreateArchive(selectedFiles, archiveName, OutputFolder, key, CancellationToken.Token);
-
                 }
                 catch (OperationCanceledException ex)
                 {
@@ -42,18 +45,22 @@ namespace SimpleZIP_UI.UI
                     {
                         IsCancelRequest = false; // reset
                     }
-
-                    return new[] { "-1", ex.Message };
+                    message = ex.Message;
                 }
                 catch (InvalidFileTypeException ex)
                 {
-                    return new[] { "-1", ex.Message };
+                    message = ex.Message;
                 }
             }
             catch (NullReferenceException ex)
             {
-                return new[] { "-1", ex.Message };
+                message = ex.Message;
             }
+
+            return new Result {
+                Message = message,
+                StatusCode = -1 // exception was thrown
+            };
         }
     }
 }

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
+using GoogleAnalytics;
 using SimpleZIP_UI.Common.Compression.Algorithm;
+using SimpleZIP_UI.Common.Model;
 using SimpleZIP_UI.Exceptions;
 using SimpleZIP_UI.UI;
-using SimpleZIP_UI.UI.Factory;
 
 namespace SimpleZIP_UI.Common.Compression
 {
@@ -36,12 +36,12 @@ namespace SimpleZIP_UI.Common.Compression
         /// <param name="key"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        public async Task<string[]> CreateArchive(IReadOnlyList<StorageFile> files, string archiveName, StorageFolder location, BaseControl.Algorithm key, CancellationToken ct)
+        public async Task<Result> CreateArchive(IReadOnlyList<StorageFile> files, string archiveName, StorageFolder location, BaseControl.Algorithm key, CancellationToken ct)
         {
             return await Task.Run(async () =>
             {
                 var currentTime = DateTime.Now.Millisecond;
-                var totalDuration = -1;
+                var duration = 0;
                 var message = "";
 
                 if (files.Count > 0)
@@ -51,7 +51,7 @@ namespace SimpleZIP_UI.Common.Compression
                         ChooseStrategy(key); // determines the algorithm to be used
                         if (await _compressionAlgorithm.Compress(files, archiveName, location))
                         {
-                            totalDuration = DateTime.Now.Millisecond - currentTime;
+                            duration = DateTime.Now.Millisecond - currentTime;
                         }
                     }
                     catch (UnauthorizedAccessException ex)
@@ -60,13 +60,17 @@ namespace SimpleZIP_UI.Common.Compression
                     }
                     catch (ArgumentOutOfRangeException ex)
                     {
-                        GoogleAnalytics.EasyTracker.GetTracker()
+                        EasyTracker.GetTracker()
                             .SendException(ex.Message + "\n" + ex.Source + "\n" + ex.StackTrace, true);
                         message = ex.Message;
                     }
                 }
 
-                return new[] { totalDuration.ToString(), message };
+                return new Result {
+                    StatusCode = message.Length > 0 ? (short)-1 : (short)0,
+                    Message = message,
+                    ElapsedTime = duration
+                };
 
             }, ct);
         }
@@ -77,9 +81,10 @@ namespace SimpleZIP_UI.Common.Compression
         /// <param name="archiveFile"></param>
         /// <param name="location"></param>
         /// <param name="ct"></param>
+        /// <returns></returns>
         /// <exception cref="InvalidFileTypeException">If the file type of the selected file is not supported or unknown.</exception>
         /// <exception cref="UnauthorizedAccessException">If extraction at the archive's path is not allowed.</exception>
-        public async Task<string[]> ExtractFromArchive(StorageFile archiveFile, StorageFolder location, CancellationToken ct)
+        public async Task<Result> ExtractFromArchive(StorageFile archiveFile, StorageFolder location, CancellationToken ct)
         {
             BaseControl.Algorithm key; // the file type of the archive
             var message = "";
@@ -93,7 +98,7 @@ namespace SimpleZIP_UI.Common.Compression
                 }
                 catch (ArgumentOutOfRangeException ex)
                 {
-                    GoogleAnalytics.EasyTracker.GetTracker()
+                    EasyTracker.GetTracker()
                         .SendException(ex.Message + "\n" + ex.Source + "\n" + ex.StackTrace, true);
                     message = ex.Message;
                 }
@@ -106,14 +111,18 @@ namespace SimpleZIP_UI.Common.Compression
             return await Task.Run(async () => // execute extraction asynchronously
             {
                 var currentTime = DateTime.Now.Millisecond;
-                var totalDuration = -1;
+                var duration = -1;
 
                 if (await _compressionAlgorithm.Extract(archiveFile, location))
                 {
-                    totalDuration = DateTime.Now.Millisecond - currentTime;
+                    duration = DateTime.Now.Millisecond - currentTime;
                 }
 
-                return new[] { totalDuration.ToString(), message };
+                return new Result {
+                    StatusCode = message.Length > 0 ? (short)-1 : (short)0,
+                    Message = message,
+                    ElapsedTime = duration
+                };
 
             }, ct);
         }

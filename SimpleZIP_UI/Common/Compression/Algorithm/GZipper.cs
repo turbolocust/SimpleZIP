@@ -31,7 +31,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
                     using (var inputStream = (await file.OpenReadAsync()).AsStreamForRead())
                     {
                         var bytes = new byte[4096];
-                        var readBytes = 0;
+                        int readBytes;
 
                         while ((readBytes = await inputStream.ReadAsync(bytes, 0, bytes.Length)) > 0)
                         {
@@ -61,7 +61,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
                     using (var outputStream = (await file.OpenAsync(FileAccessMode.ReadWrite)).AsStreamForWrite())
                     {
                         var bytes = new byte[4096];
-                        var readBytes = 0;
+                        int readBytes;
 
                         while ((readBytes = gzipStream.Read(bytes, 0, bytes.Length)) > 0)
                         {

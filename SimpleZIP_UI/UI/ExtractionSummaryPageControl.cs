@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 using SimpleZIP_UI.Common.Compression;
+using SimpleZIP_UI.Common.Model;
 using SimpleZIP_UI.Exceptions;
 
 namespace SimpleZIP_UI.UI
@@ -19,8 +18,16 @@ namespace SimpleZIP_UI.UI
         {
         }
 
-        public async Task<string[]> StartButtonAction(IReadOnlyList<StorageFile> selectedFiles, Algorithm key)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="selectedFiles"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public async Task<Result> StartButtonAction(IReadOnlyList<StorageFile> selectedFiles, Algorithm key)
         {
+            string message;
+
             try
             {
                 InitOperation();
@@ -31,24 +38,26 @@ namespace SimpleZIP_UI.UI
                     if (selectedFiles.Count > 1) // multiple files selected
                     {
                         var totalDuration = 0d;
-                        var message = "";
+                        var messageResult = "";
 
-                        foreach(var file in selectedFiles)
+                        foreach (var file in selectedFiles)
                         {
                             var result = await handler.ExtractFromArchive(file, OutputFolder, CancellationToken.Token);
 
-                            var duration = 0d;
-                            if (double.TryParse(result[0], out duration))
+                            if (result.StatusCode < 0)
                             {
-                                totalDuration += duration;
+                                totalDuration += result.ElapsedTime;
                             }
                             else
                             {
-                                message += "\nArchive named " + file.DisplayName + " could not be extracted.";
+                                messageResult += "\nArchive " + file.DisplayName + " could not be extracted.";
                             }
                         }
 
-                        return new[] { totalDuration.ToString(CultureInfo.InvariantCulture), message };
+                        return new Result {
+                            Message = messageResult,
+                            ElapsedTime = totalDuration
+                        };
                     }
 
                     return await handler.ExtractFromArchive(selectedFiles[0], OutputFolder, CancellationToken.Token);
@@ -59,18 +68,22 @@ namespace SimpleZIP_UI.UI
                     {
                         IsCancelRequest = false; // reset
                     }
-
-                    return new[] { "-1", ex.Message };
+                    message = ex.Message;
                 }
                 catch (InvalidFileTypeException ex)
                 {
-                    return new[] { "-1", ex.Message };
+                    message = ex.Message;
                 }
             }
             catch (NullReferenceException ex)
             {
-                return new[] { "-1", ex.Message };
+                message = ex.Message;
             }
+
+            return new Result {
+                Message = message,
+                StatusCode = -1 // exception was thrown
+            };
         }
     }
 }

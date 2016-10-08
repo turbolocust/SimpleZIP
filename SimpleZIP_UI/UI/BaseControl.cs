@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 using SimpleZIP_UI.UI.Factory;
+using SimpleZIP_UI.UI.View;
 
 namespace SimpleZIP_UI.UI
 {
@@ -18,7 +19,7 @@ namespace SimpleZIP_UI.UI
         /// <summary>
         /// 
         /// </summary>
-        protected bool IsCancelRequest = false;
+        protected bool IsCancelRequest;
 
         /// <summary>
         /// Token used to cancel the packing task.
@@ -92,7 +93,7 @@ namespace SimpleZIP_UI.UI
                 }
                 finally
                 {
-                    ParentPage.Frame.Navigate(typeof(View.MainPage));
+                    ParentPage.Frame.Navigate(typeof(MainPage));
                 }
             }
         }

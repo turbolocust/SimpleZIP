@@ -4,6 +4,7 @@ using Windows.UI.Xaml.Controls;
 using SimpleZIP_UI.Common.Compression;
 using SimpleZIP_UI.Exceptions;
 using SimpleZIP_UI.UI.Factory;
+using SimpleZIP_UI.UI.View;
 
 namespace SimpleZIP_UI.UI
 {
@@ -26,7 +27,7 @@ namespace SimpleZIP_UI.UI
             var files = await picker.PickMultipleFilesAsync();
             if (files?.Count > 0) // must not be null and empty
             {
-                ParentPage.Frame.Navigate(typeof(View.CompressionSummaryPage), files);
+                ParentPage.Frame.Navigate(typeof(CompressionSummaryPage), files);
             }
         }
 
