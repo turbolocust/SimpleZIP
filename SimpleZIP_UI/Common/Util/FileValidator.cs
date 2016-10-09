@@ -1,4 +1,4 @@
-﻿namespace SimpleZIP_UI.Common.Validator
+﻿namespace SimpleZIP_UI.Common.Util
 {
     internal class FileValidator
     {

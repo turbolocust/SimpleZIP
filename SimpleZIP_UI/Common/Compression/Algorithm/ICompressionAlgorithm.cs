@@ -21,10 +21,10 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
         /// Compresses an archive to a specified location.
         /// </summary>
         /// <param name="files">The files to be put into the archive.</param>
-        /// <param name="archiveName">The name of the archive to be compressed.</param>
+        /// <param name="archive">The archive to write compressed bytes to.</param>
         /// <param name="location">Where the archive will be created.</param>
         /// <exception cref="IOException">Thrown on any error when reading from or writing to streams.</exception>
-        ///<exception cref="UnauthorizedAccessException">Thrown when access to file is not allowed.</exception>
-        Task<bool> Compress(IReadOnlyList<StorageFile> files, string archiveName, StorageFolder location);
+        /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not allowed.</exception>
+        Task<bool> Compress(IReadOnlyList<StorageFile> files, StorageFile archive, StorageFolder location);
     }
 }

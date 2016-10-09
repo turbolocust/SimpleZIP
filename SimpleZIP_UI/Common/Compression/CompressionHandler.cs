@@ -4,7 +4,6 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
-using GoogleAnalytics;
 using SimpleZIP_UI.Common.Compression.Algorithm;
 using SimpleZIP_UI.Common.Model;
 using SimpleZIP_UI.Exceptions;
@@ -24,7 +23,7 @@ namespace SimpleZIP_UI.Common.Compression
         }
 
         /// <summary>
-        /// The algorithm that is used for compressing and decompressing operations.
+        /// The algorithm that is used for compressing and decompressing.
         /// </summary>
         private ICompressionAlgorithm _compressionAlgorithm;
 
@@ -37,7 +36,8 @@ namespace SimpleZIP_UI.Common.Compression
         /// <param name="key"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        public async Task<Result> CreateArchive(IReadOnlyList<StorageFile> files, string archiveName, StorageFolder location, BaseControl.Algorithm key, CancellationToken ct)
+        public async Task<Result> CreateArchive(IReadOnlyList<StorageFile> files, string archiveName,
+            StorageFolder location, BaseControl.Algorithm key, CancellationToken ct)
         {
             return await Task.Run(async () =>
             {
@@ -49,10 +49,15 @@ namespace SimpleZIP_UI.Common.Compression
                 {
                     try
                     {
-                        ChooseStrategy(key); // determines the algorithm to be used
-                        if (await _compressionAlgorithm.Compress(files, archiveName, location))
+                        var archive = await location.CreateFileAsync(archiveName,
+                            CreationCollisionOption.GenerateUniqueName);
+                        if (archive != null)
                         {
-                            duration = DateTime.Now.Millisecond - currentTime;
+                            ChooseStrategy(key); // determines the algorithm to be used
+                            if (await _compressionAlgorithm.Compress(files, archive, location))
+                            {
+                                duration = DateTime.Now.Millisecond - currentTime;
+                            }
                         }
                     }
                     catch (IOException ex)
@@ -61,8 +66,6 @@ namespace SimpleZIP_UI.Common.Compression
                     }
                     catch (ArgumentOutOfRangeException ex)
                     {
-                        EasyTracker.GetTracker()
-                            .SendException(ex.Message + "\n" + ex.Source + "\n" + ex.StackTrace, true);
                         message = ex.Message;
                     }
                 }
@@ -100,8 +103,6 @@ namespace SimpleZIP_UI.Common.Compression
                 }
                 catch (ArgumentOutOfRangeException ex)
                 {
-                    EasyTracker.GetTracker()
-                        .SendException(ex.Message + "\n" + ex.Source + "\n" + ex.StackTrace, true);
                     message = ex.Message;
                 }
             }
@@ -140,19 +141,19 @@ namespace SimpleZIP_UI.Common.Compression
             switch (key)
             {
                 case BaseControl.Algorithm.Zip:
-                    _compressionAlgorithm = Zipper.Instance;
+                    _compressionAlgorithm = Zip.Instance;
                     break;
 
                 case BaseControl.Algorithm.Gzip:
-                    _compressionAlgorithm = GZipper.Instance;
+                    _compressionAlgorithm = GZip.Instance;
                     break;
 
                 case BaseControl.Algorithm.TarGz:
-                    _compressionAlgorithm = Tarball.Instance;
+                    _compressionAlgorithm = Tar.Instance;
                     break;
 
                 case BaseControl.Algorithm.TarBz2:
-                    _compressionAlgorithm = Tarball.Instance;
+                    _compressionAlgorithm = Tar.Instance;
                     break;
 
                 default:

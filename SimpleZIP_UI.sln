@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleZIP_UI", "SimpleZIP_UI\SimpleZIP_UI.csproj", "{FD8BF4A8-C908-4A91-94EF-A5F4DBF01F92}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleZIP_UI_TEST", "SimpleZIP_UI_TEST\SimpleZIP_UI_TEST.csproj", "{C8986C8B-1835-43D2-84BE-2DD54D7AD12A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,26 @@ Global
 		{FD8BF4A8-C908-4A91-94EF-A5F4DBF01F92}.Release|x86.ActiveCfg = Release|x86
 		{FD8BF4A8-C908-4A91-94EF-A5F4DBF01F92}.Release|x86.Build.0 = Release|x86
 		{FD8BF4A8-C908-4A91-94EF-A5F4DBF01F92}.Release|x86.Deploy.0 = Release|x86
+		{C8986C8B-1835-43D2-84BE-2DD54D7AD12A}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{C8986C8B-1835-43D2-84BE-2DD54D7AD12A}.Debug|ARM.ActiveCfg = Debug|ARM
+		{C8986C8B-1835-43D2-84BE-2DD54D7AD12A}.Debug|ARM.Build.0 = Debug|ARM
+		{C8986C8B-1835-43D2-84BE-2DD54D7AD12A}.Debug|ARM.Deploy.0 = Debug|ARM
+		{C8986C8B-1835-43D2-84BE-2DD54D7AD12A}.Debug|x64.ActiveCfg = Debug|x64
+		{C8986C8B-1835-43D2-84BE-2DD54D7AD12A}.Debug|x64.Build.0 = Debug|x64
+		{C8986C8B-1835-43D2-84BE-2DD54D7AD12A}.Debug|x64.Deploy.0 = Debug|x64
+		{C8986C8B-1835-43D2-84BE-2DD54D7AD12A}.Debug|x86.ActiveCfg = Debug|x86
+		{C8986C8B-1835-43D2-84BE-2DD54D7AD12A}.Debug|x86.Build.0 = Debug|x86
+		{C8986C8B-1835-43D2-84BE-2DD54D7AD12A}.Debug|x86.Deploy.0 = Debug|x86
+		{C8986C8B-1835-43D2-84BE-2DD54D7AD12A}.Release|Any CPU.ActiveCfg = Release|x86
+		{C8986C8B-1835-43D2-84BE-2DD54D7AD12A}.Release|ARM.ActiveCfg = Release|ARM
+		{C8986C8B-1835-43D2-84BE-2DD54D7AD12A}.Release|ARM.Build.0 = Release|ARM
+		{C8986C8B-1835-43D2-84BE-2DD54D7AD12A}.Release|ARM.Deploy.0 = Release|ARM
+		{C8986C8B-1835-43D2-84BE-2DD54D7AD12A}.Release|x64.ActiveCfg = Release|x64
+		{C8986C8B-1835-43D2-84BE-2DD54D7AD12A}.Release|x64.Build.0 = Release|x64
+		{C8986C8B-1835-43D2-84BE-2DD54D7AD12A}.Release|x64.Deploy.0 = Release|x64
+		{C8986C8B-1835-43D2-84BE-2DD54D7AD12A}.Release|x86.ActiveCfg = Release|x86
+		{C8986C8B-1835-43D2-84BE-2DD54D7AD12A}.Release|x86.Build.0 = Release|x86
+		{C8986C8B-1835-43D2-84BE-2DD54D7AD12A}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

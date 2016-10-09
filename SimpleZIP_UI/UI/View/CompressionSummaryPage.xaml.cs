@@ -6,7 +6,6 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using SimpleZIP_UI.Common.Util;
-using SimpleZIP_UI.Common.Validator;
 using SimpleZIP_UI.UI.Factory;
 
 namespace SimpleZIP_UI.UI.View

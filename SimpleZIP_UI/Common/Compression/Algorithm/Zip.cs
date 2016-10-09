@@ -9,45 +9,38 @@ using SharpCompress.Writers.Zip;
 
 namespace SimpleZIP_UI.Common.Compression.Algorithm
 {
-    public class Zipper : ICompressionAlgorithm
+    public class Zip : AbstractAlgorithm
     {
-        private static Zipper _instance;
+        private static Zip _instance;
 
-        public static Zipper Instance => _instance ?? (_instance = new Zipper());
+        public static Zip Instance => _instance ?? (_instance = new Zip());
 
-        private Zipper()
+        private Zip()
         {
             // singleton
         }
 
-        public async Task<bool> Compress(IReadOnlyList<StorageFile> files, string archiveName, StorageFolder location)
+        public override async Task<bool> Compress(IReadOnlyList<StorageFile> files, StorageFile archive, StorageFolder location)
         {
+            if (files == null || archive == null || location == null) return false;
 
             var options = new ZipWriterOptions(CompressionType.Deflate);
 
-            var archive = await location.CreateFileAsync(archiveName, CreationCollisionOption.GenerateUniqueName);
-            if (archive != null) // archive created
+            using (var fileOutputStream = await archive.OpenAsync(FileAccessMode.ReadWrite))
+            using (var archiveStream = new ZipWriter(fileOutputStream.AsStreamForWrite(), options))
             {
-                using (var fileOutputStream = await archive.OpenAsync(FileAccessMode.ReadWrite))
-                using (var archiveStream = new ZipWriter(fileOutputStream.AsStreamForWrite(), options))
+                foreach (var file in files)
                 {
-                    foreach (var f in files)
+                    using (var fileStream = await file.OpenStreamForReadAsync())
                     {
-                        using (var fileInputStream = await f.OpenReadAsync())
-                        {
-                            archiveStream.Write(f.Name, fileInputStream.AsStreamForRead(), DateTime.Now);
-                        }
+                        archiveStream.Write(file.Name, fileStream, DateTime.Now);
                     }
                 }
-            }
-            else
-            {
-                return false;
             }
             return true;
         }
 
-        public async Task<bool> Extract(StorageFile archive, StorageFolder location)
+        public override async Task<bool> Extract(StorageFile archive, StorageFolder location)
         {
             using (var fileInputStream = await archive.OpenReadAsync())
             {
@@ -59,9 +52,9 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
                                     CreationCollisionOption.GenerateUniqueName);
                         if (file != null)
                         {
-                            using (var outputFileStream = await file.OpenAsync(FileAccessMode.ReadWrite))
+                            using (var fileStream = await file.OpenStreamForWriteAsync())
                             {
-                                zipReader.WriteEntryTo(outputFileStream.AsStreamForWrite());
+                                zipReader.WriteEntryTo(fileStream);
                             }
                         }
                         else
