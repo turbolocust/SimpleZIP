@@ -10,14 +10,14 @@ namespace SimpleZIP_UI.UI
     /// </summary>
     internal class MainPageControl : BaseControl
     {
-        public MainPageControl(Page parent) : base(parent)
+        internal MainPageControl(Page parent) : base(parent)
         {
         }
 
         /// <summary>
         /// Handles complex logic for the compress button.
         /// </summary>
-        public async void CompressButtonAction()
+        internal async void CompressButtonAction()
         {
             var picker = PickerFactory.CreateCompressFileOpenPicker();
 
@@ -31,7 +31,7 @@ namespace SimpleZIP_UI.UI
         /// <summary>
         /// Handles complex logic for the decompress button.
         /// </summary>
-        public async void DecompressButtonAction()
+        internal async void DecompressButtonAction()
         {
             var picker = PickerFactory.CreateDecompressFileOpenPicker();
 

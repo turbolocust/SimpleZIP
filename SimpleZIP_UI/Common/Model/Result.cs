@@ -2,10 +2,10 @@
 {
     internal class Result
     {
-        public short StatusCode { get; set; }
+        internal short StatusCode { get; set; }
 
-        public string Message { get; set; }
+        internal string Message { get; set; }
 
-        public double ElapsedTime { get; set; }
+        internal double ElapsedTime { get; set; }
     }
 }

@@ -33,7 +33,7 @@ namespace SimpleZIP_UI.UI.View
             {
                 _control.DecompressButtonAction();
             }
-            catch (InvalidFileTypeException ex)
+            catch (InvalidArchiveTypeException ex)
             {
                 var dialog = new MessageDialog(ex.Message);
                 await dialog.ShowAsync();

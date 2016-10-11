@@ -4,7 +4,10 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
+using SharpCompress.Common;
+using SharpCompress.Writers;
 using SimpleZIP_UI.Common.Compression.Algorithm;
+using SimpleZIP_UI.Common.Compression.Algorithm.Type;
 using SimpleZIP_UI.Common.Model;
 using SimpleZIP_UI.Exceptions;
 using SimpleZIP_UI.UI;
@@ -28,6 +31,11 @@ namespace SimpleZIP_UI.Common.Compression
         private ICompressionAlgorithm _compressionAlgorithm;
 
         /// <summary>
+        /// Optional writer options for compression.
+        /// </summary>
+        private WriterOptions _writerOptions;
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="files"></param>
@@ -39,6 +47,8 @@ namespace SimpleZIP_UI.Common.Compression
         public async Task<Result> CreateArchive(IReadOnlyList<StorageFile> files, string archiveName,
             StorageFolder location, BaseControl.Algorithm key, CancellationToken ct)
         {
+            _writerOptions = null; // reset writer options
+
             return await Task.Run(async () =>
             {
                 var currentTime = DateTime.Now.Millisecond;
@@ -54,7 +64,8 @@ namespace SimpleZIP_UI.Common.Compression
                         if (archive != null)
                         {
                             ChooseStrategy(key); // determines the algorithm to be used
-                            if (await _compressionAlgorithm.Compress(files, archive, location))
+
+                            if (await _compressionAlgorithm.Compress(files, archive, location, _writerOptions))
                             {
                                 duration = DateTime.Now.Millisecond - currentTime;
                             }
@@ -87,7 +98,7 @@ namespace SimpleZIP_UI.Common.Compression
         /// <param name="location"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        /// <exception cref="InvalidFileTypeException">If the file type of the selected file is not supported or unknown.</exception>
+        /// <exception cref="InvalidArchiveTypeException">If the file type of the selected file is not supported or unknown.</exception>
         /// <exception cref="UnauthorizedAccessException">If extraction at the archive's path is not allowed.</exception>
         public async Task<Result> ExtractFromArchive(StorageFile archiveFile, StorageFolder location, CancellationToken ct)
         {
@@ -108,7 +119,7 @@ namespace SimpleZIP_UI.Common.Compression
             }
             else
             {
-                throw new InvalidFileTypeException("The selected file format is not supported.");
+                throw new InvalidArchiveTypeException("The selected file format is not supported.");
             }
 
             return await Task.Run(async () => // execute extraction asynchronously
@@ -132,9 +143,9 @@ namespace SimpleZIP_UI.Common.Compression
         }
 
         /// <summary>
-        /// Assigns the correct algorithm instance to be used by the archive's file extension.
+        /// Assigns the correct algorithm instance to be used by checking its key.
         /// </summary>
-        /// <param name="key"></param>
+        /// <param name="key">The key of the algorithm.</param>
         /// <exception cref="ArgumentOutOfRangeException">May only be thrown on fatal error.</exception>
         private void ChooseStrategy(BaseControl.Algorithm key)
         {
@@ -144,12 +155,17 @@ namespace SimpleZIP_UI.Common.Compression
                     _compressionAlgorithm = Zip.Instance;
                     break;
 
-                case BaseControl.Algorithm.Gzip:
+                case BaseControl.Algorithm.SevenZip:
+                    _compressionAlgorithm = SevenZip.Instance;
+                    break;
+
+                case BaseControl.Algorithm.GZip:
                     _compressionAlgorithm = GZip.Instance;
                     break;
 
                 case BaseControl.Algorithm.TarGz:
                     _compressionAlgorithm = Tar.Instance;
+                    _writerOptions = new WriterOptions(CompressionType.GZip);
                     break;
 
                 case BaseControl.Algorithm.TarBz2:

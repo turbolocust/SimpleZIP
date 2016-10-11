@@ -4,12 +4,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
+using SimpleZIP_UI.Common.Util;
 using SimpleZIP_UI.UI.Factory;
 using SimpleZIP_UI.UI.View;
 
 namespace SimpleZIP_UI.UI
 {
-    public abstract class BaseControl
+    internal abstract class BaseControl
     {
         /// <summary>
         /// The parent page to whom this control belongs to.
@@ -36,18 +37,20 @@ namespace SimpleZIP_UI.UI
         /// </summary>
         public enum Algorithm
         {
-            Zip, Gzip, TarGz, TarBz2
+            Zip, SevenZip, GZip, TarGz, TarBz2
         }
 
         /// <summary>
         /// Stores the file type for each enum type.
         /// </summary>
-        public static readonly Dictionary<string, Algorithm> AlgorithmFileTypes = new Dictionary<string, Algorithm>();
+        internal static readonly Dictionary<string, Algorithm> AlgorithmFileTypes = new Dictionary<string, Algorithm>();
 
         static BaseControl()
         {
             AlgorithmFileTypes.Add(".zip", Algorithm.Zip);
-            AlgorithmFileTypes.Add(".z", Algorithm.Gzip);
+            AlgorithmFileTypes.Add(".7z", Algorithm.SevenZip);
+            AlgorithmFileTypes.Add(".z", Algorithm.GZip);
+            AlgorithmFileTypes.Add(".gzip", Algorithm.GZip);
             AlgorithmFileTypes.Add(".gz", Algorithm.TarGz);
             AlgorithmFileTypes.Add(".tgz", Algorithm.TarGz);
             AlgorithmFileTypes.Add(".bz2", Algorithm.TarBz2);
@@ -75,7 +78,7 @@ namespace SimpleZIP_UI.UI
         /// <summary>
         /// Handles the action that needs to be performed after the abort button has been pressed.
         /// </summary>
-        public async void AbortButtonAction()
+        internal async void AbortButtonAction()
         {
             var dialog = DialogFactory.CreateConfirmationDialog("Are you sure?",
                 "This will cancel the operation.");
@@ -93,7 +96,7 @@ namespace SimpleZIP_UI.UI
                 }
                 finally
                 {
-                    ParentPage.Frame.Navigate(typeof(MainPage));
+                    NavigateBackToHome();
                 }
             }
         }
@@ -101,7 +104,7 @@ namespace SimpleZIP_UI.UI
         /// <summary>
         /// Opens a picker to select a folder and returns it. May be null if the user cancels.
         /// </summary>
-        public async Task<StorageFolder> OutputPathPanelAction()
+        internal async Task<StorageFolder> OutputPathPanelAction()
         {
             var picker = PickerFactory.CreateFolderPicker();
 
@@ -111,6 +114,36 @@ namespace SimpleZIP_UI.UI
                 OutputFolder = folder;
             }
             return folder;
+        }
+
+        /// <summary>
+        /// Builds the text that shows the total duration converted in seconds.
+        /// </summary>
+        /// <param name="durationMillis">The duration in milliseconds.</param>
+        /// <returns>A friendly string that shows the total duration in seconds.
+        /// If the duration is less than one second it will not contain a number.</returns>
+        internal string BuildDurationText(double durationMillis)
+        {
+            var durationSecs = Converter.ConvertMillisToSeconds(durationMillis, 3);
+            var durationText = "Total duration: ";
+
+            if (durationSecs < 1)
+            {
+                durationText += "Less than one second.";
+            }
+            else
+            {
+                durationText += durationSecs + " seconds.";
+            }
+            return durationText;
+        }
+
+        /// <summary>
+        /// Navigates back to the main page.
+        /// </summary>
+        protected void NavigateBackToHome()
+        {
+            ParentPage.Frame.Navigate(typeof(MainPage));
         }
     }
 }

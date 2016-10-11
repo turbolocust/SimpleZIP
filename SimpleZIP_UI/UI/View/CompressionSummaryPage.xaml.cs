@@ -10,9 +10,6 @@ using SimpleZIP_UI.UI.Factory;
 
 namespace SimpleZIP_UI.UI.View
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class CompressionSummaryPage
     {
         private readonly CompressionSummaryPageControl _control;
@@ -34,7 +31,6 @@ namespace SimpleZIP_UI.UI.View
         private void AbortButton_Tap(object sender, TappedRoutedEventArgs e)
         {
             _control.AbortButtonAction();
-            SetOperationActive(false);
         }
 
         /// <summary>
@@ -42,8 +38,7 @@ namespace SimpleZIP_UI.UI.View
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
         /// <param name="e">The event that invoked this method.</param>
-        /// <exception cref="ArgumentOutOfRangeException">May only be thrown on fatal error.</exception>
-        private void StartButton_Tap(object sender, TappedRoutedEventArgs e)
+        private async void StartButton_Tap(object sender, TappedRoutedEventArgs e)
         {
             var selectedItem = (ComboBoxItem)ArchiveTypeComboBox.SelectedItem;
             var archiveName = ArchiveNameTextBox.Text;
@@ -53,12 +48,21 @@ namespace SimpleZIP_UI.UI.View
             {
                 if (archiveName.Length > 0 && !FileValidator.ContainsIllegalChars(archiveName))
                 {
-                    BaseControl.Algorithm key; // the file type of the archive
+                    archiveType = ParseArchiveType(archiveType); // parse actual type of selection
 
-                    BaseControl.AlgorithmFileTypes.TryGetValue(archiveType, out key);
-                    archiveName += archiveType;
+                    try
+                    {
+                        BaseControl.Algorithm key; // set the algorithm by archive type
+                        BaseControl.AlgorithmFileTypes.TryGetValue(archiveType, out key);
 
-                    InitOperation(key, archiveName);
+                        archiveName += archiveType;
+                        InitOperation(key, archiveName);
+                    }
+                    catch (ArgumentNullException)
+                    {
+                        await DialogFactory.CreateErrorDialog("Archive type not recognized.").ShowAsync();
+                        Frame.Navigate(typeof(MainPage));
+                    }
                 }
             }
         }
@@ -140,7 +144,7 @@ namespace SimpleZIP_UI.UI.View
         {
             var toolTip = (ToolTip)sender;
 
-            // use timer to close tool tip after 8 seconds
+            // use timer to close tooltip after 8 seconds
             var timer = new DispatcherTimer { Interval = new TimeSpan(0, 0, 8) };
             timer.Tick += (s, evt) =>
             {
@@ -153,10 +157,10 @@ namespace SimpleZIP_UI.UI.View
         /// <summary>
         /// Invoked after navigating to this page.
         /// </summary>
-        /// <param name="e">The event that invoked this method.</param>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        /// <param name="args">The arguments of the navigation event.</param>
+        protected override void OnNavigatedTo(NavigationEventArgs args)
         {
-            _selectedFiles = e.Parameter as IReadOnlyList<StorageFile>;
+            _selectedFiles = args.Parameter as IReadOnlyList<StorageFile>;
 
             if (_selectedFiles != null)
             {
@@ -168,6 +172,15 @@ namespace SimpleZIP_UI.UI.View
         }
 
         /// <summary>
+        /// Invoked after navigating from this page.
+        /// </summary>
+        /// <param name="args">The arguments of the navigation event.</param>
+        protected override void OnNavigatedFrom(NavigationEventArgs args)
+        {
+            SetOperationActive(false);
+        }
+
+        /// <summary>
         /// Initializes the archiving operation and waits for the result.
         /// </summary>
         /// <param name="key">The type of the archive.</param>
@@ -176,34 +189,22 @@ namespace SimpleZIP_UI.UI.View
         {
             SetOperationActive(true);
             var result = await _control.StartButtonAction(_selectedFiles, archiveName, key);
-            var duration = result.ElapsedTime;
 
             // move focus to avoid accidential focus event on text block
             FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
 
             if (result.StatusCode >= 0) // success
             {
-                duration = Converter.ConvertMillisecondsToSeconds(duration, 3);
-                var durationText = "Total duration: ";
+                var durationText = _control.BuildDurationText(result.ElapsedTime);
 
-                if (duration < 1)
-                {
-                    durationText += "Less than one second.";
-                }
-                else
-                {
-                    durationText += duration + " seconds.";
-                }
-                await
-                    DialogFactory.CreateInformationDialog("Success", durationText)
-                        .ShowAsync();
+                await DialogFactory.CreateInformationDialog(
+                    "Success", durationText).ShowAsync();
             }
             else // error
             {
                 await DialogFactory.CreateErrorDialog(result.Message).ShowAsync();
             }
 
-            SetOperationActive(false);
             Frame.Navigate(typeof(MainPage));
         }
 
@@ -216,6 +217,18 @@ namespace SimpleZIP_UI.UI.View
             var folder = await _control.OutputPathPanelAction();
             OutputPathTextBlock.Text = folder?.Name ?? "";
             StartButton.IsEnabled = OutputPathTextBlock.Text.Length > 0;
+        }
+
+        /// <summary>
+        /// Parses the file type of the specified string.
+        /// </summary>
+        /// <param name="s">The string to parse.</param>
+        /// <returns>The parsed string.</returns>
+        private static string ParseArchiveType(string s)
+        {
+            int startIndex = s.IndexOf('(') + 1,
+                length = (s.Length - 2) - startIndex;
+            return s.Substring(startIndex, length);
         }
 
         /// <summary>

@@ -14,7 +14,7 @@ namespace SimpleZIP_UI.UI
     /// </summary>
     internal class CompressionSummaryPageControl : BaseControl
     {
-        public CompressionSummaryPageControl(Page parent) : base(parent)
+        internal CompressionSummaryPageControl(Page parent) : base(parent)
         {
         }
 
@@ -26,10 +26,9 @@ namespace SimpleZIP_UI.UI
         /// <param name="key"></param>
         /// <returns></returns>
         /// <exception cref="NullReferenceException"></exception>
-        public async Task<Result> StartButtonAction(IReadOnlyList<StorageFile> selectedFiles, string archiveName, Algorithm key)
+        internal async Task<Result> StartButtonAction(IReadOnlyList<StorageFile> selectedFiles, string archiveName, Algorithm key)
         {
             string message;
-
             try
             {
                 InitOperation();
@@ -47,7 +46,7 @@ namespace SimpleZIP_UI.UI
                     }
                     message = ex.Message;
                 }
-                catch (InvalidFileTypeException ex)
+                catch (InvalidArchiveTypeException ex)
                 {
                     message = ex.Message;
                 }

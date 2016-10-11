@@ -15,10 +15,11 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Center">
             <ComboBox x:Name="ArchiveTypeComboBox" DropDownClosed="ArchiveTypeComboBox_DropDownClosed" Width="120" Margin="8,0,16,0" Header="Archive Type" SelectedIndex="0" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}">
-                <ComboBoxItem Content=".zip" />
-                <ComboBoxItem Content=".gzip" Visibility="Collapsed" />
-                <ComboBoxItem Content=".tgz" />
-                <ComboBoxItem Content=".tbz2" />
+                <ComboBoxItem Content="Zip (.zip)" />
+                <ComboBoxItem Content="7zip (.7z)" Visibility="Collapsed" />
+                <ComboBoxItem Content="GZip (.gzip)" />
+                <ComboBoxItem Content="Tar + Gzip (.tgz)" />
+                <ComboBoxItem Content="Tar + Bz2 (.tbz2)" />
                 <ToolTipService.ToolTip>
                     <ToolTip x:Name="ArchiveTypeToolTip" HorizontalOffset="20" VerticalOffset="10" Opened="ToolTip_Opened" />
                 </ToolTipService.ToolTip>

@@ -4,21 +4,23 @@ using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
 using Windows.Storage;
+using SharpCompress.Common;
+using SharpCompress.Writers;
 
-namespace SimpleZIP_UI.Common.Compression.Algorithm
+namespace SimpleZIP_UI.Common.Compression.Algorithm.Type
 {
-    public class GZip : AbstractAlgorithm
+    public class GZip : AbstractAlgorithm, IArchiveType
     {
         private static GZip _instance;
 
         public static GZip Instance => _instance ?? (_instance = new GZip());
 
-        private GZip()
+        private GZip() : base(ArchiveType.GZip)
         {
             // singleton
         }
 
-        public override async Task<bool> Compress(IReadOnlyList<StorageFile> files, StorageFile archive, StorageFolder location)
+        public new async Task<bool> Compress(IReadOnlyList<StorageFile> files, StorageFile archive, StorageFolder location, WriterOptions options = null)
         {
             if (files == null || archive == null || location == null) return false;
 
@@ -41,7 +43,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
             return true;
         }
 
-        public override async Task<bool> Extract(StorageFile archive, StorageFolder location)
+        public new async Task<bool> Extract(StorageFile archive, StorageFolder location)
         {
             using (var fileStream = await archive.OpenReadAsync())
             using (var gzipStream = new GZipStream(fileStream.AsStreamForRead(), CompressionMode.Decompress))

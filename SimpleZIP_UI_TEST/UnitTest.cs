@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using SimpleZIP_UI.Common.Compression.Algorithm;
+using SimpleZIP_UI.Common.Compression.Algorithm.Type;
 
 namespace SimpleZIP_UI_TEST
 {
@@ -25,8 +26,7 @@ namespace SimpleZIP_UI_TEST
         [TestMethod]
         public void CompressionExtractionTest()
         {
-            ArchiveCompression(Zip.Instance, ".zip");
-            ArchiveCompression(Tar.Instance, ".tgz");
+            //ArchiveCompression(Zip.Instance, ".zip");
             ArchiveCompression(Tar.Instance, ".tbz2");
         }
 

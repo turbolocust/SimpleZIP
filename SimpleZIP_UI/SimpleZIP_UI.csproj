@@ -93,6 +93,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Compression\Algorithm\AbstractAlgorithm.cs" />
+    <Compile Include="Common\Compression\Algorithm\Type\IArchiveType.cs" />
+    <Compile Include="Common\Compression\Algorithm\Type\SevenZip.cs" />
     <Compile Include="Common\Model\Result.cs" />
     <Compile Include="Common\Util\Converter.cs" />
     <Compile Include="UI\View\AboutDialog.xaml.cs">
@@ -101,10 +103,10 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Common\Compression\Algorithm\GZip.cs" />
+    <Compile Include="Common\Compression\Algorithm\Type\GZip.cs" />
     <Compile Include="Common\Compression\Algorithm\ICompressionAlgorithm.cs" />
-    <Compile Include="Common\Compression\Algorithm\Tar.cs" />
-    <Compile Include="Common\Compression\Algorithm\Zip.cs" />
+    <Compile Include="Common\Compression\Algorithm\Type\Tar.cs" />
+    <Compile Include="Common\Compression\Algorithm\Type\Zip.cs" />
     <Compile Include="Common\Compression\CompressionHandler.cs" />
     <Compile Include="Common\Util\FileValidator.cs" />
     <Compile Include="UI\View\ExtractionSummaryPage.xaml.cs">
@@ -114,7 +116,7 @@
     <Compile Include="UI\ExtractionSummaryPageControl.cs" />
     <Compile Include="UI\Factory\DialogFactory.cs" />
     <Compile Include="UI\Factory\PickerFactory.cs" />
-    <Compile Include="Exceptions\InvalidFileTypeException.cs" />
+    <Compile Include="Exceptions\InvalidArchiveTypeException.cs" />
     <Compile Include="UI\CompressionSummaryPageControl.cs" />
     <Compile Include="UI\View\CompressionSummaryPage.xaml.cs">
       <DependentUpon>CompressionSummaryPage.xaml</DependentUpon>

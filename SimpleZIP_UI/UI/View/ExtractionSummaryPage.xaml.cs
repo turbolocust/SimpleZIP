@@ -5,14 +5,10 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-using SimpleZIP_UI.Common.Util;
 using SimpleZIP_UI.UI.Factory;
 
 namespace SimpleZIP_UI.UI.View
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class ExtractionSummaryPage
     {
         private readonly ExtractionSummaryPageControl _control;
@@ -33,7 +29,6 @@ namespace SimpleZIP_UI.UI.View
         private void AbortButton_Tap(object sender, TappedRoutedEventArgs e)
         {
             _control.AbortButtonAction();
-            SetOperationActive(false);
         }
 
         /// <summary>
@@ -46,34 +41,22 @@ namespace SimpleZIP_UI.UI.View
         {
             SetOperationActive(true);
             var result = await _control.StartButtonAction(_selectedFiles);
-            var duration = result.ElapsedTime;
 
             // move focus to avoid accidential focus event on text block
             FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
 
             if (result.StatusCode >= 0) // success
             {
-                duration = Converter.ConvertMillisecondsToSeconds(duration, 3);
-                var durationText = "Total duration: ";
+                var durationText = _control.BuildDurationText(result.ElapsedTime);
 
-                if (duration < 1)
-                {
-                    durationText += "Less than one second.";
-                }
-                else
-                {
-                    durationText += duration + " seconds.";
-                }
-                await
-                    DialogFactory.CreateInformationDialog("Success", durationText)
-                        .ShowAsync();
+                await DialogFactory.CreateInformationDialog(
+                    "Success", durationText).ShowAsync();
             }
             else // error
             {
                 await DialogFactory.CreateErrorDialog(result.Message).ShowAsync();
             }
 
-            SetOperationActive(false);
             Frame.Navigate(typeof(MainPage));
         }
 
@@ -118,6 +101,15 @@ namespace SimpleZIP_UI.UI.View
                     ItemsListBox.Items?.Add(new TextBlock { Text = f.Name });
                 }
             }
+        }
+
+        /// <summary>
+        /// Invoked after navigating from this page.
+        /// </summary>
+        /// <param name="args">The arguments of the navigation event.</param>
+        protected override void OnNavigatedFrom(NavigationEventArgs args)
+        {
+            SetOperationActive(false);
         }
 
         /// <summary>
