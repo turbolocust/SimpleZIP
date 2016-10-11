@@ -13,20 +13,28 @@ namespace SimpleZIP_UI_TEST
     {
         private IReadOnlyList<StorageFile> _files;
 
-        private readonly StorageFolder _localFolder = ApplicationData.Current.LocalFolder;
+        private readonly StorageFolder _workingDir = ApplicationData.Current.LocalFolder;
 
         private const string ArchiveName = "testArchive";
 
         private const string FileText = "This is a testfile, for testing compression and extraction.";
 
+        /// <summary>
+        /// Tests the compression and extraction of each algorithm.
+        /// </summary>
         [TestMethod]
-        public void Tbz2Test()
+        public void CompressionExtractionTest()
+        {
+            ArchiveCompression(Zip.Instance, ".zip");
+            ArchiveCompression(Tar.Instance, ".tgz");
+            ArchiveCompression(Tar.Instance, ".tbz2");
+        }
+
+        private void ArchiveCompression(ICompressionAlgorithm compressionAlgorithm, string fileType)
         {
             Task.Run(async () =>
             {
-                var compressionAlgorithm = Tar.Instance;
-
-                var tempFile = await _localFolder.CreateFileAsync("tempFile");
+                var tempFile = await _workingDir.CreateFileAsync("tempFile");
                 using (var fileStream = await tempFile.OpenAsync(FileAccessMode.ReadWrite))
                 using (var streamWriter = new StreamWriter(fileStream.AsStreamForWrite()))
                 {
@@ -34,25 +42,26 @@ namespace SimpleZIP_UI_TEST
                     streamWriter.WriteLine(FileText);
                 }
 
-                _files = await _localFolder.GetFilesAsync();
+                _files = await _workingDir.GetFilesAsync();
                 Assert.IsNotNull(_files);
                 Assert.AreEqual(_files.Count, 1); // check if file exists
 
-                var archive = await _localFolder.CreateFileAsync(ArchiveName + ".tbz2");
-                Assert.IsTrue(await compressionAlgorithm.Compress(_files, archive, _localFolder));
+                var archive = await _workingDir.CreateFileAsync(ArchiveName + fileType);
+                Assert.IsTrue(await compressionAlgorithm.Compress(_files, archive, _workingDir));
 
-                ArchiveExtraction(".tbz2", compressionAlgorithm);
+                ArchiveExtraction(compressionAlgorithm, fileType); // extract archive after creation
+
             }).GetAwaiter().GetResult();
         }
 
-        public void ArchiveExtraction(string fileType, ICompressionAlgorithm compressionAlgorithm)
+        private void ArchiveExtraction(ICompressionAlgorithm compressionAlgorithm, string fileType)
         {
             Task.Run(async () =>
             {
-                var archive = await _localFolder.GetFileAsync(ArchiveName + fileType);
+                var archive = await _workingDir.GetFileAsync(ArchiveName + fileType);
                 Assert.IsNotNull(archive);
 
-                var outputFolder = await _localFolder.CreateFolderAsync("Output");
+                var outputFolder = await _workingDir.CreateFolderAsync("Output");
                 Assert.IsNotNull(outputFolder);
 
                 // extract archive
@@ -83,9 +92,23 @@ namespace SimpleZIP_UI_TEST
                     Assert.Fail("Archive not properly created.");
                 }
 
+                // clean up when done
                 await outputFolder.DeleteAsync();
+                await PurgeWorkingDir();
 
             }).GetAwaiter().GetResult();
+        }
+
+        private async Task<bool> PurgeWorkingDir()
+        {
+            var files = await _workingDir.GetFilesAsync();
+
+            foreach (var file in files)
+            {
+                await file.DeleteAsync();
+            }
+
+            return true;
         }
     }
 }
