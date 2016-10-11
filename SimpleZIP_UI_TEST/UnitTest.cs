@@ -26,7 +26,7 @@ namespace SimpleZIP_UI_TEST
         [TestMethod]
         public void CompressionExtractionTest()
         {
-            //ArchiveCompression(Zip.Instance, ".zip");
+            ArchiveCompression(Zip.Instance, ".zip");
             ArchiveCompression(Tar.Instance, ".tbz2");
         }
 
@@ -35,8 +35,8 @@ namespace SimpleZIP_UI_TEST
             Task.Run(async () =>
             {
                 var tempFile = await _workingDir.CreateFileAsync("tempFile");
-                using (var fileStream = await tempFile.OpenAsync(FileAccessMode.ReadWrite))
-                using (var streamWriter = new StreamWriter(fileStream.AsStreamForWrite()))
+
+                using (var streamWriter = new StreamWriter(await tempFile.OpenStreamForWriteAsync()))
                 {
                     streamWriter.AutoFlush = true;
                     streamWriter.WriteLine(FileText);
@@ -74,8 +74,7 @@ namespace SimpleZIP_UI_TEST
                 {
                     foreach (var file in files)
                     {
-                        using (var fileStream = await file.OpenAsync(FileAccessMode.Read))
-                        using (var streamReader = new StreamReader(fileStream.AsStreamForRead()))
+                        using (var streamReader = new StreamReader(await file.OpenStreamForReadAsync()))
                         {
                             var line = streamReader.ReadLine();
                             Assert.IsNotNull(line);

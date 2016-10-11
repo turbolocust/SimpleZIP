@@ -22,39 +22,36 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
 
         public async Task<bool> Extract(StorageFile archive, StorageFolder location)
         {
-            using (var fileInputStream = await archive.OpenReadAsync())
+            if (archive == null || location == null) return false;
+
+            using (var inputStream = await archive.OpenSequentialReadAsync())
+            using (var reader = ReaderFactory.Open(inputStream.AsStreamForRead()))
             {
-                using (var reader = ReaderFactory.Open(fileInputStream.AsStreamForRead()))
+                while (reader.MoveToNextEntry()) // write each entry to file
                 {
-                    while (reader.MoveToNextEntry()) // write each entry to file
+                    var file = await location.CreateFileAsync(reader.Entry.Key,
+                                CreationCollisionOption.GenerateUniqueName);
+
+                    if (file == null) return false;
+
+                    using (var fileStream = await file.OpenStreamForWriteAsync())
                     {
-                        var file = await location.CreateFileAsync(reader.Entry.Key,
-                                    CreationCollisionOption.GenerateUniqueName);
-                        if (file != null)
-                        {
-                            using (var fileStream = await file.OpenStreamForWriteAsync())
-                            {
-                                reader.WriteEntryTo(fileStream);
-                            }
-                        }
-                        else
-                        {
-                            return false;
-                        }
+                        reader.WriteEntryTo(fileStream);
                     }
                 }
             }
             return true;
         }
 
-        public async Task<bool> Compress(IReadOnlyList<StorageFile> files, StorageFile archive, StorageFolder location, WriterOptions options = null)
+        public async Task<bool> Compress(IReadOnlyList<StorageFile> files, StorageFile archive,
+            StorageFolder location, WriterOptions options = null)
         {
             if (files == null || archive == null || location == null) return false;
 
             options = options ?? SetWriterOptions(); // set options if null
 
-            using (var fileOutputStream = await archive.OpenAsync(FileAccessMode.ReadWrite))
-            using (var archiveStream = WriterFactory.Open(fileOutputStream.AsStreamForWrite(), Type, options))
+            using (var outputStream = await archive.OpenAsync(FileAccessMode.ReadWrite))
+            using (var archiveStream = WriterFactory.Open(outputStream.AsStreamForWrite(), Type, options))
             {
                 foreach (var file in files)
                 {
