@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Storage;
 using SharpCompress.Common;
+using SharpCompress.Readers;
 using SharpCompress.Writers;
 
 namespace SimpleZIP_UI.Common.Compression.Algorithm.Type
@@ -17,7 +18,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm.Type
         {
         }
 
-        public new Task<bool> Extract(StorageFile archive, StorageFolder location)
+        public new Task<bool> Extract(StorageFile archive, StorageFolder location, ReaderOptions options = null)
         {
             throw new NotImplementedException();
         }

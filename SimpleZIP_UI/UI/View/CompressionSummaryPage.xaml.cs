@@ -101,12 +101,16 @@ namespace SimpleZIP_UI.UI.View
         /// <param name="e">The event that invoked this method.</param>
         private void ArchiveTypeComboBox_DropDownClosed(object sender, object e)
         {
-            if (_selectedFiles.Count > 1 && ArchiveTypeComboBox.SelectedIndex == 1)
+            if (_selectedFiles.Count > 1)
             {
-                ArchiveTypeToolTip.Content = "GZIP only allows the compression of one file.\n\n" +
-                    "Please choose another algorithm, otherwise only the first file in the list will be packed.";
-                ArchiveTypeToolTip.IsOpen = true;
-                ArchiveTypeComboBox.SelectedIndex = 0; // reset selection
+                var selectedItem = (ComboBoxItem)ArchiveTypeComboBox.SelectedItem;
+                var archiveType = selectedItem?.Content?.ToString();
+                if (archiveType != null && archiveType.Contains("gzip"))
+                {
+                    ArchiveTypeToolTip.Content = "GZIP only allows the compression of a single file.\r\n" +
+                    "Therefore, each file will be put into a separate archive.";
+                    ArchiveTypeToolTip.IsOpen = true;
+                }
             }
         }
 
@@ -226,7 +230,7 @@ namespace SimpleZIP_UI.UI.View
         /// <returns>The parsed string.</returns>
         private static string ParseArchiveType(string s)
         {
-            int startIndex = s.IndexOf('(') + 1,
+            int startIndex = s.IndexOf('.'),
                 length = (s.Length - 2) - startIndex;
             return s.Substring(startIndex, length);
         }

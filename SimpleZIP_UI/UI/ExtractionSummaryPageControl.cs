@@ -31,35 +31,36 @@ namespace SimpleZIP_UI.UI
                 InitOperation();
                 try
                 {
-                    var handler = CompressionHandler.Instance;
+                    var handler = CompressionFacade.Instance;
+                    var token = CancellationToken.Token;
 
                     if (selectedFiles.Count > 1) // multiple files selected
                     {
                         var totalDuration = 0d;
-                        var messageResult = "";
+                        var resultMessage = "";
 
                         foreach (var file in selectedFiles)
                         {
-                            var result = await handler.ExtractFromArchive(file, OutputFolder, CancellationToken.Token);
+                            if (token.IsCancellationRequested) break;
 
+                            var result = await handler.ExtractFromArchive(file, OutputFolder, token);
                             if (result.StatusCode < 0)
                             {
                                 totalDuration += result.ElapsedTime;
                             }
                             else
                             {
-                                messageResult += "\nArchive " + file.DisplayName + " could not be extracted.";
+                                resultMessage += "\nArchive " + file.DisplayName + " could not be extracted.";
                             }
                         }
 
                         return new Result
                         {
-                            Message = messageResult,
+                            Message = resultMessage,
                             ElapsedTime = totalDuration
                         };
                     }
-
-                    return await handler.ExtractFromArchive(selectedFiles[0], OutputFolder, CancellationToken.Token);
+                    return await handler.ExtractFromArchive(selectedFiles[0], OutputFolder, token);
                 }
                 catch (OperationCanceledException ex)
                 {

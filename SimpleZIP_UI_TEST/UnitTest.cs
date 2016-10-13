@@ -27,6 +27,7 @@ namespace SimpleZIP_UI_TEST
         public void CompressionExtractionTest()
         {
             ArchiveCompression(Zip.Instance, ".zip");
+            ArchiveCompression(Tar.Instance, ".tgz");
             ArchiveCompression(Tar.Instance, ".tbz2");
         }
 

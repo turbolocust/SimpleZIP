@@ -124,7 +124,7 @@ namespace SimpleZIP_UI.UI
         /// If the duration is less than one second it will not contain a number.</returns>
         internal string BuildDurationText(double durationMillis)
         {
-            var durationSecs = Converter.ConvertMillisToSeconds(durationMillis, 3);
+            var durationSecs = Calculator.ConvertMillisToSeconds(durationMillis, 3);
             var durationText = "Total duration: ";
 
             if (durationSecs < 1)

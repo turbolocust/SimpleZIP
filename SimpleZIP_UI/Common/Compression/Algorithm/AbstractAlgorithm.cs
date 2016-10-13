@@ -20,12 +20,17 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
             Type = type;
         }
 
-        public async Task<bool> Extract(StorageFile archive, StorageFolder location)
+        public async Task<bool> Extract(StorageFile archive, StorageFolder location, ReaderOptions options = null)
         {
             if (archive == null || location == null) return false;
 
+            options = options ?? new ReaderOptions()
+            {
+                LeaveStreamOpen = true
+            };
+
             using (var inputStream = await archive.OpenSequentialReadAsync())
-            using (var reader = ReaderFactory.Open(inputStream.AsStreamForRead()))
+            using (var reader = ReaderFactory.Open(inputStream.AsStreamForRead(), options))
             {
                 while (reader.MoveToNextEntry()) // write each entry to file
                 {
@@ -38,6 +43,23 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
                     {
                         reader.WriteEntryTo(fileStream);
                     }
+                }
+            }
+            return true;
+        }
+
+        public async Task<bool> Compress(StorageFile file, StorageFile archive, StorageFolder location, WriterOptions options = null)
+        {
+            if (file == null || archive == null || location == null) return false;
+
+            options = options ?? SetWriterOptions(); // set options if null
+
+            using (var outputStream = await archive.OpenAsync(FileAccessMode.ReadWrite))
+            using (var archiveStream = WriterFactory.Open(outputStream.AsStreamForWrite(), Type, options))
+            {
+                using (var fileStream = await file.OpenStreamForReadAsync())
+                {
+                    archiveStream.Write(file.Name, fileStream, DateTime.Now);
                 }
             }
             return true;
@@ -68,7 +90,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
         /// Returns the writer instance with the default fallback compression type.
         /// </summary>
         /// <returns>The writer options instance for the corresponding algorithm.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if archive type is not supported.</exception>
+        /// <exception cref="InvalidArchiveTypeException">Thrown if archive type is not supported.</exception>
         private WriterOptions SetWriterOptions()
         {
             WriterOptions options;

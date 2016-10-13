@@ -5,6 +5,7 @@ using System.IO.Compression;
 using System.Threading.Tasks;
 using Windows.Storage;
 using SharpCompress.Common;
+using SharpCompress.Readers;
 using SharpCompress.Writers;
 
 namespace SimpleZIP_UI.Common.Compression.Algorithm.Type
@@ -20,31 +21,10 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm.Type
             // singleton
         }
 
-        public new async Task<bool> Compress(IReadOnlyList<StorageFile> files, StorageFile archive, StorageFolder location, WriterOptions options = null)
+        public new async Task<bool> Extract(StorageFile archive, StorageFolder location, ReaderOptions options = null)
         {
-            if (files == null || archive == null || location == null) return false;
+            if (archive == null || location == null) return false;
 
-            using (var outputFileStream = await archive.OpenAsync(FileAccessMode.ReadWrite))
-            using (var gzipStream = new GZipStream(outputFileStream.AsStreamForWrite(), CompressionLevel.Optimal))
-            {
-                var file = files[0]; // as gzip only allows compression of one file
-
-                using (var inputStream = await file.OpenStreamForReadAsync())
-                {
-                    var bytes = new byte[4096];
-                    int readBytes;
-
-                    while ((readBytes = await inputStream.ReadAsync(bytes, 0, bytes.Length)) > 0)
-                    {
-                        await gzipStream.WriteAsync(bytes, 0, readBytes);
-                    }
-                }
-            }
-            return true;
-        }
-
-        public new async Task<bool> Extract(StorageFile archive, StorageFolder location)
-        {
             using (var fileStream = await archive.OpenReadAsync())
             using (var gzipStream = new GZipStream(fileStream.AsStreamForRead(), CompressionMode.Decompress))
             {
@@ -71,6 +51,32 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm.Type
                 }
             }
             return true;
+        }
+
+        public new async Task<bool> Compress(StorageFile file, StorageFile archive, StorageFolder location, WriterOptions options = null)
+        {
+            if (file == null || archive == null || location == null) return false;
+
+            using (var outputFileStream = await archive.OpenAsync(FileAccessMode.ReadWrite))
+            using (var gzipStream = new GZipStream(outputFileStream.AsStreamForWrite(), CompressionLevel.Optimal))
+            {
+                using (var inputStream = await file.OpenStreamForReadAsync())
+                {
+                    var bytes = new byte[4096];
+                    int readBytes;
+
+                    while ((readBytes = await inputStream.ReadAsync(bytes, 0, bytes.Length)) > 0)
+                    {
+                        await gzipStream.WriteAsync(bytes, 0, readBytes);
+                    }
+                }
+            }
+            return true;
+        }
+
+        public new Task<bool> Compress(IReadOnlyList<StorageFile> files, StorageFile archive, StorageFolder location, WriterOptions options = null)
+        {
+            throw new NotSupportedException("Compression of multiple files not supported by Gzip.");
         }
     }
 }
