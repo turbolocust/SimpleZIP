@@ -60,8 +60,8 @@ namespace SimpleZIP_UI.UI.View
                     }
                     catch (ArgumentNullException)
                     {
-                        await DialogFactory.CreateErrorDialog("Archive type not recognized.").ShowAsync();
                         Frame.Navigate(typeof(MainPage));
+                        await DialogFactory.CreateErrorDialog("Archive type not recognized.").ShowAsync();
                     }
                 }
             }
@@ -231,7 +231,7 @@ namespace SimpleZIP_UI.UI.View
         private static string ParseArchiveType(string s)
         {
             int startIndex = s.IndexOf('.'),
-                length = (s.Length - 2) - startIndex;
+                length = (s.Length - 1) - startIndex;
             return s.Substring(startIndex, length);
         }
 

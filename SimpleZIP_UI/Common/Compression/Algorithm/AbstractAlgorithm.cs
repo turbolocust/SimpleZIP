@@ -11,7 +11,7 @@ using SimpleZIP_UI.Exceptions;
 
 namespace SimpleZIP_UI.Common.Compression.Algorithm
 {
-    public abstract class AbstractAlgorithm : ICompressionAlgorithm
+    public abstract class AbstractAlgorithm : IArchivingAlgorithm
     {
         protected readonly ArchiveType Type;
 

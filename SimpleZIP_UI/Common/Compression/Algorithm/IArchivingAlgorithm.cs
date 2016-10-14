@@ -12,7 +12,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
     /// Any implementing class offers methods for archiving operations,
     /// like compressing and decompressing of files.
     /// </summary>
-    public interface ICompressionAlgorithm
+    public interface IArchivingAlgorithm
     {
         /// <summary>
         /// Extracts an archive to a specified location.

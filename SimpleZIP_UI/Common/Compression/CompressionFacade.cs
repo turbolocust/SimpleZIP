@@ -39,7 +39,7 @@ namespace SimpleZIP_UI.Common.Compression
         /// <summary>
         /// The algorithm that is used for compressing and decompressing.
         /// </summary>
-        private ICompressionAlgorithm _compressionAlgorithm;
+        private IArchivingAlgorithm _compressionAlgorithm;
 
         /// <summary>
         /// Optional writer options for compression.

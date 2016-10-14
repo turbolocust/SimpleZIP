@@ -18,8 +18,8 @@
                 <ComboBoxItem Content="Zip (.zip)" />
                 <ComboBoxItem Content="7zip (.7z)" Visibility="Collapsed" />
                 <ComboBoxItem Content="GZip (.gzip)" />
-                <ComboBoxItem Content="Tar + Gzip (.tgz)" />
-                <ComboBoxItem Content="Tar + Bz2 (.tbz2)" />
+                <ComboBoxItem Content="Tar+Gzip (.tgz)" />
+                <ComboBoxItem Content="Tar+Bz2 (.tbz2)" />
                 <ToolTipService.ToolTip>
                     <ToolTip x:Name="ArchiveTypeToolTip" HorizontalOffset="20" VerticalOffset="10" Opened="ToolTip_Opened" />
                 </ToolTipService.ToolTip>

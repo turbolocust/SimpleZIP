@@ -52,7 +52,7 @@ namespace SimpleZIP_UI_TEST
             ArchiveCompression(Tar.Instance, ".tbz2", options);
         }
 
-        private async void ArchiveCompression(ICompressionAlgorithm compressionAlgorithm, string fileType, WriterOptions options)
+        private async void ArchiveCompression(IArchivingAlgorithm compressionAlgorithm, string fileType, WriterOptions options)
         {
             await Task.Run(async () =>
             {
@@ -76,7 +76,7 @@ namespace SimpleZIP_UI_TEST
             });
         }
 
-        private async Task<bool> ArchiveExtraction(ICompressionAlgorithm compressionAlgorithm, string fileType)
+        private async Task<bool> ArchiveExtraction(IArchivingAlgorithm compressionAlgorithm, string fileType)
         {
             var archive = await _workingDir.GetFileAsync(ArchiveName + fileType);
             Assert.IsNotNull(archive);
