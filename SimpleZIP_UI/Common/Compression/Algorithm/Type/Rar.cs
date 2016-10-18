@@ -8,14 +8,15 @@ using SharpCompress.Writers;
 
 namespace SimpleZIP_UI.Common.Compression.Algorithm.Type
 {
-    public class SevenZip : AbstractAlgorithm, IArchiveType
+    internal class Rar : AbstractAlgorithm, IArchiveType
     {
-        private static SevenZip _instance;
+        private static Rar _instance;
 
-        public static SevenZip Instance => _instance ?? (_instance = new SevenZip());
+        public static Rar Instance => _instance ?? (_instance = new Rar());
 
-        public SevenZip() : base(ArchiveType.SevenZip)
+        private Rar() : base(ArchiveType.Rar)
         {
+            // singleton
         }
 
         public new Task<bool> Extract(StorageFile archive, StorageFolder location, ReaderOptions options = null)
@@ -30,7 +31,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm.Type
 
         protected override WriterOptions GetWriterOptions()
         {
-            return new WriterOptions(CompressionType.LZMA);
+            return new WriterOptions(CompressionType.Rar);
         }
     }
 }

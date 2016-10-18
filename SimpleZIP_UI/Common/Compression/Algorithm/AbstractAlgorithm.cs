@@ -6,8 +6,6 @@ using Windows.Storage;
 using SharpCompress.Common;
 using SharpCompress.Readers;
 using SharpCompress.Writers;
-using SharpCompress.Writers.Zip;
-using SimpleZIP_UI.Exceptions;
 
 namespace SimpleZIP_UI.Common.Compression.Algorithm
 {
@@ -52,7 +50,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
         {
             if (file == null || archive == null || location == null) return false;
 
-            options = options ?? SetWriterOptions(); // set options if null
+            options = options ?? GetWriterOptions(); // set options if null
 
             using (var outputStream = await archive.OpenAsync(FileAccessMode.ReadWrite))
             using (var archiveStream = WriterFactory.Open(outputStream.AsStreamForWrite(), Type, options))
@@ -70,7 +68,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
         {
             if (files == null || archive == null || location == null) return false;
 
-            options = options ?? SetWriterOptions(); // set options if null
+            options = options ?? GetWriterOptions(); // set options if null
 
             using (var outputStream = await archive.OpenAsync(FileAccessMode.ReadWrite))
             using (var archiveStream = WriterFactory.Open(outputStream.AsStreamForWrite(), Type, options))
@@ -90,37 +88,6 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
         /// Returns the writer instance with the default fallback compression type.
         /// </summary>
         /// <returns>The writer options instance for the corresponding algorithm.</returns>
-        /// <exception cref="InvalidArchiveTypeException">Thrown if archive type is not supported.</exception>
-        private WriterOptions SetWriterOptions()
-        {
-            WriterOptions options;
-
-            switch (Type)
-            {
-                case ArchiveType.Zip:
-                    options = new ZipWriterOptions(CompressionType.Deflate);
-                    break;
-
-                case ArchiveType.GZip:
-                    options = new WriterOptions(CompressionType.GZip);
-                    break;
-
-                case ArchiveType.Tar:
-                    options = new WriterOptions(CompressionType.BZip2);
-                    break;
-
-                case ArchiveType.Rar:
-                    options = new WriterOptions(CompressionType.Rar);
-                    break;
-
-                case ArchiveType.SevenZip:
-                    options = new WriterOptions(CompressionType.LZMA);
-                    break;
-
-                default:
-                    throw new InvalidArchiveTypeException("Writer options could not be set.");
-            }
-            return options;
-        }
+        protected abstract WriterOptions GetWriterOptions();
     }
 }

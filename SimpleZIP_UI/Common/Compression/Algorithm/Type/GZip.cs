@@ -78,5 +78,10 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm.Type
         {
             throw new NotSupportedException("Compression of multiple files not supported by Gzip.");
         }
+
+        protected override WriterOptions GetWriterOptions()
+        {
+            return new WriterOptions(CompressionType.GZip);
+        }
     }
 }

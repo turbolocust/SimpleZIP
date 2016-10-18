@@ -94,6 +94,7 @@
   <ItemGroup>
     <Compile Include="Common\Compression\Algorithm\AbstractAlgorithm.cs" />
     <Compile Include="Common\Compression\Algorithm\Type\IArchiveType.cs" />
+    <Compile Include="Common\Compression\Algorithm\Type\Rar.cs" />
     <Compile Include="Common\Compression\Algorithm\Type\SevenZip.cs" />
     <Compile Include="Common\Model\Result.cs" />
     <Compile Include="Common\Util\Calculator.cs" />

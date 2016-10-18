@@ -1,4 +1,5 @@
 ﻿using SharpCompress.Common;
+using SharpCompress.Writers;
 
 namespace SimpleZIP_UI.Common.Compression.Algorithm.Type
 {
@@ -11,6 +12,11 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm.Type
         private Tar() : base(ArchiveType.Tar)
         {
             // singleton
+        }
+
+        protected override WriterOptions GetWriterOptions()
+        {
+            return new WriterOptions(CompressionType.BZip2);
         }
     }
 }

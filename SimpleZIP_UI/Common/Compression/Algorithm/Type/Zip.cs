@@ -1,4 +1,6 @@
 ﻿using SharpCompress.Common;
+using SharpCompress.Writers;
+using SharpCompress.Writers.Zip;
 
 namespace SimpleZIP_UI.Common.Compression.Algorithm.Type
 {
@@ -11,6 +13,11 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm.Type
         private Zip() : base(ArchiveType.Zip)
         {
             // singleton
+        }
+
+        protected override WriterOptions GetWriterOptions()
+        {
+            return new ZipWriterOptions(CompressionType.Deflate);
         }
     }
 }
