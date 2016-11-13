@@ -9,13 +9,13 @@ using SharpCompress.Writers;
 
 namespace SimpleZIP_UI.Common.Compression.Algorithm
 {
-    public abstract class AbstractAlgorithm : IArchivingAlgorithm
+    public abstract class ArchivingAlgorithm : IArchivingAlgorithm
     {
-        protected readonly ArchiveType Type;
+        private readonly ArchiveType _type;
 
-        protected AbstractAlgorithm(ArchiveType type)
+        protected ArchivingAlgorithm(ArchiveType type)
         {
-            Type = type;
+            _type = type;
         }
 
         public async Task<bool> Extract(StorageFile archive, StorageFolder location, ReaderOptions options = null)
@@ -53,7 +53,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
             options = options ?? GetWriterOptions(); // set options if null
 
             using (var outputStream = await archive.OpenAsync(FileAccessMode.ReadWrite))
-            using (var archiveStream = WriterFactory.Open(outputStream.AsStreamForWrite(), Type, options))
+            using (var archiveStream = WriterFactory.Open(outputStream.AsStreamForWrite(), _type, options))
             {
                 using (var fileStream = await file.OpenStreamForReadAsync())
                 {
@@ -71,7 +71,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
             options = options ?? GetWriterOptions(); // set options if null
 
             using (var outputStream = await archive.OpenAsync(FileAccessMode.ReadWrite))
-            using (var archiveStream = WriterFactory.Open(outputStream.AsStreamForWrite(), Type, options))
+            using (var archiveStream = WriterFactory.Open(outputStream.AsStreamForWrite(), _type, options))
             {
                 foreach (var file in files)
                 {

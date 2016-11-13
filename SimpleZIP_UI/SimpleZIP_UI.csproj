@@ -92,7 +92,7 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\Compression\Algorithm\AbstractAlgorithm.cs" />
+    <Compile Include="Common\Compression\Algorithm\ArchivingAlgorithm.cs" />
     <Compile Include="Common\Compression\Algorithm\Type\IArchiveType.cs" />
     <Compile Include="Common\Compression\Algorithm\Type\Rar.cs" />
     <Compile Include="Common\Compression\Algorithm\Type\SevenZip.cs" />

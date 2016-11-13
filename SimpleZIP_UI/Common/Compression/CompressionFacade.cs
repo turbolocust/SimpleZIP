@@ -230,7 +230,10 @@ namespace SimpleZIP_UI.Common.Compression
 
                 case BaseControl.Algorithm.TarGz:
                     _compressionAlgorithm = Tar.Instance;
-                    _writerOptions = new WriterOptions(CompressionType.GZip);
+                    _writerOptions = new WriterOptions(CompressionType.GZip)
+                    {
+                        LeaveStreamOpen = true
+                    };
                     break;
 
                 case BaseControl.Algorithm.TarBz2:
