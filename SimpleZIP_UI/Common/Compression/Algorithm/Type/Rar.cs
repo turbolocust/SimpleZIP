@@ -8,7 +8,7 @@ using SharpCompress.Writers;
 
 namespace SimpleZIP_UI.Common.Compression.Algorithm.Type
 {
-    internal class Rar : AbstractAlgorithm, IArchiveType
+    internal class Rar : ArchivingAlgorithm, IArchiveType
     {
         private static Rar _instance;
 
