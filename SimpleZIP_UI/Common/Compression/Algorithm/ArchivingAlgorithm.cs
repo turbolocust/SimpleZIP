@@ -11,6 +11,14 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
 {
     public abstract class ArchivingAlgorithm : IArchivingAlgorithm
     {
+        /// <summary>
+        /// Default buffer size for streams.
+        /// </summary>
+        protected const int DefaultBufferSize = 8192;
+
+        /// <summary>
+        /// The concrete algorithm to be used.
+        /// </summary>
         private readonly ArchiveType _type;
 
         protected ArchivingAlgorithm(ArchiveType type)
@@ -24,16 +32,16 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
 
             options = options ?? new ReaderOptions()
             {
-                LeaveStreamOpen = true
+                LeaveStreamOpen = false
             };
 
-            using (var inputStream = await archive.OpenSequentialReadAsync())
+            using (var inputStream = await archive.OpenReadAsync())
             using (var reader = ReaderFactory.Open(inputStream.AsStreamForRead(), options))
             {
                 while (reader.MoveToNextEntry()) // write each entry to file
                 {
                     var file = await location.CreateFileAsync(reader.Entry.Key,
-                                CreationCollisionOption.GenerateUniqueName);
+                        CreationCollisionOption.GenerateUniqueName);
 
                     if (file == null) return false;
 

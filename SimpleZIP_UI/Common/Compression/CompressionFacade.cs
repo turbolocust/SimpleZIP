@@ -219,27 +219,25 @@ namespace SimpleZIP_UI.Common.Compression
                 case BaseControl.Algorithm.Zip:
                     _compressionAlgorithm = Zip.Instance;
                     break;
-
-                case BaseControl.Algorithm.SevenZip:
-                    _compressionAlgorithm = SevenZip.Instance;
-                    break;
-
                 case BaseControl.Algorithm.GZip:
                     _compressionAlgorithm = GZip.Instance;
                     break;
-
+                case BaseControl.Algorithm.Rar:
+                    _compressionAlgorithm = Rar.Instance;
+                    break;
+                case BaseControl.Algorithm.SevenZip:
+                    _compressionAlgorithm = SevenZip.Instance;
+                    break;
                 case BaseControl.Algorithm.TarGz:
                     _compressionAlgorithm = Tar.Instance;
                     _writerOptions = new WriterOptions(CompressionType.GZip)
                     {
-                        LeaveStreamOpen = true
+                        LeaveStreamOpen = false
                     };
                     break;
-
                 case BaseControl.Algorithm.TarBz2:
                     _compressionAlgorithm = Tar.Instance;
                     break;
-
                 default:
                     throw new ArgumentOutOfRangeException(nameof(key), key, null);
             }

@@ -36,7 +36,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm.Type
                 {
                     using (var outputStream = await file.OpenStreamForWriteAsync())
                     {
-                        var bytes = new byte[4096];
+                        var bytes = new byte[DefaultBufferSize];
                         int readBytes;
 
                         while ((readBytes = gzipStream.Read(bytes, 0, bytes.Length)) > 0)
@@ -62,7 +62,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm.Type
             {
                 using (var inputStream = await file.OpenStreamForReadAsync())
                 {
-                    var bytes = new byte[4096];
+                    var bytes = new byte[DefaultBufferSize];
                     int readBytes;
 
                     while ((readBytes = await inputStream.ReadAsync(bytes, 0, bytes.Length)) > 0)
@@ -76,7 +76,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm.Type
 
         public new Task<bool> Compress(IReadOnlyList<StorageFile> files, StorageFile archive, StorageFolder location, WriterOptions options = null)
         {
-            throw new NotSupportedException("Compression of multiple files not supported by Gzip.");
+            throw new NotSupportedException("Gzip only allows the compression of a single file.");
         }
 
         protected override WriterOptions GetWriterOptions()
