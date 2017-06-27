@@ -80,10 +80,23 @@ namespace SimpleZIP_UI
         }
 
         /// <summary>
+        /// Invoked when file has been opened from a file explorer.
+        /// </summary>
+        /// <param name="args">The arguments of the navigation event.</param>
+        protected override void OnFileActivated(FileActivatedEventArgs args)
+        {
+            base.OnFileActivated(args);
+            var rootFrame = new Frame();
+            rootFrame.Navigate(typeof(ExtractionSummaryPage), args);
+            Window.Current.Content = rootFrame;
+            Window.Current.Activate();
+        }
+
+        /// <summary>
         /// Each time a navigation event occurs, update the Back button's visibility.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The sender of the request.</param>
+        /// <param name="e">The event of the request.</param>
         private static void OnNavigated(object sender, NavigationEventArgs e)
         {
             SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
@@ -93,10 +106,10 @@ namespace SimpleZIP_UI
         }
 
         /// <summary>
-        /// Invoked when Navigation to a certain page fails
+        /// Invoked when navigation to a certain page fails.
         /// </summary>
-        /// <param name="sender">The Frame which failed navigation</param>
-        /// <param name="e">Details about the navigation failure</param>
+        /// <param name="sender">The sender of the request.</param>
+        /// <param name="e">The event of the request.</param>
         private static void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
             throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
@@ -105,8 +118,8 @@ namespace SimpleZIP_UI
         /// <summary>
         /// Navigates back from the previous frame.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The sender of the request.</param>
+        /// <param name="e">The event of the request.</param>
         private static void OnBackRequested(object sender, BackRequestedEventArgs e)
         {
             var rootFrame = Window.Current.Content as Frame;
@@ -118,13 +131,14 @@ namespace SimpleZIP_UI
             }
         }
 
+
         /// <summary>
-        /// Invoked when application execution is being suspended.  Application state is saved
+        /// Invoked when application execution is being suspended. Application state is saved
         /// without knowing whether the application will be terminated or resumed with the contents
         /// of memory still intact.
         /// </summary>
-        /// <param name="sender">The source of the suspend request.</param>
-        /// <param name="e">Details about the suspend request.</param>
+        /// <param name="sender">The sender of the request.</param>
+        /// <param name="e">The event of the request.</param>
         private static void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();

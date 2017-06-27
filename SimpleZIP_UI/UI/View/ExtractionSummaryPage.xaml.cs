@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -92,13 +93,32 @@ namespace SimpleZIP_UI.UI.View
         /// <param name="e">The event that invoked this method.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            _selectedFiles = e.Parameter as IReadOnlyList<StorageFile>;
-
-            if (_selectedFiles == null) return;
-
-            foreach (var f in _selectedFiles) // populate list
+            var list = e.Parameter as IReadOnlyList<StorageFile>;
+            if (list != null)
             {
-                ItemsListBox.Items?.Add(new TextBlock { Text = f.Name });
+                _selectedFiles = list;
+            }
+            else // file opened from file explorer
+            {
+                var args = e.Parameter as Windows.ApplicationModel.Activation.IActivatedEventArgs;
+                if (args?.Kind == Windows.ApplicationModel.Activation.ActivationKind.File)
+                {
+                    var fileArgs = args as Windows.ApplicationModel.Activation.FileActivatedEventArgs;
+                    var files = fileArgs?.Files;
+                    if (files != null)
+                    {
+                        list = files.Where(file => file != null).Cast<StorageFile>().ToList();
+                    }
+                }
+            }
+
+            if (list != null)
+            {
+                _selectedFiles = list;
+                foreach (var f in _selectedFiles) // populate list
+                {
+                    ItemsListBox.Items?.Add(new TextBlock { Text = f.Name });
+                }
             }
         }
 

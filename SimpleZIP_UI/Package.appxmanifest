@@ -25,25 +25,20 @@
         </uap:InitialRotationPreference>
       </uap:VisualElements>
       <Extensions>
-        <uap:Extension Category="windows.fileSavePicker">
-          <uap:FileSavePicker>
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="szip">
+            <uap:DisplayName>SimpleZIP</uap:DisplayName>
+            <uap:InfoTip>Open archive to extract</uap:InfoTip>
+            <uap:EditFlags OpenIsSafe="true" />
             <uap:SupportedFileTypes>
-              <uap:SupportsAnyFileType />
+              <uap:FileType ContentType="application/zip">.zip</uap:FileType>
+              <uap:FileType ContentType="application/x-gzip">.gzip</uap:FileType>
+              <uap:FileType ContentType="application/x-gzip">.gz</uap:FileType>
+              <uap:FileType ContentType="application/x-bzip">.bz2</uap:FileType>
+              <uap:FileType ContentType="application/x-compressed">.tgz</uap:FileType>
+              <uap:FileType ContentType="application/x-bzip">.tbz2</uap:FileType>
             </uap:SupportedFileTypes>
-          </uap:FileSavePicker>
-        </uap:Extension>
-        <uap:Extension Category="windows.fileOpenPicker">
-          <uap:FileOpenPicker>
-            <uap:SupportedFileTypes>
-              <uap:FileType>.zip</uap:FileType>
-              <uap:FileType>.z</uap:FileType>
-              <uap:FileType>.gzip</uap:FileType>
-              <uap:FileType>.gz</uap:FileType>
-              <uap:FileType>.tgz</uap:FileType>
-              <uap:FileType>.bz2</uap:FileType>
-              <uap:FileType>.tbz2</uap:FileType>
-            </uap:SupportedFileTypes>
-          </uap:FileOpenPicker>
+          </uap:FileTypeAssociation>
         </uap:Extension>
       </Extensions>
     </Application>

@@ -85,8 +85,8 @@ namespace SimpleZIP_UI.UI.View
         /// <summary>
         /// Invoked after navigating to this page.
         /// </summary>
-        /// <param name="args">The arguments of the navigation event.</param>
-        protected override async void OnNavigatedTo(NavigationEventArgs args)
+        /// <param name="e">The arguments of the navigation event.</param>
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             var frame = Window.Current.Content as Frame;
             frame?.BackStack.Clear(); // going back is prohibited after aborting operation
