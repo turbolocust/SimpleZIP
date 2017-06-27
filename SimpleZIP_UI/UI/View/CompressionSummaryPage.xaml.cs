@@ -44,25 +44,24 @@ namespace SimpleZIP_UI.UI.View
             var archiveName = ArchiveNameTextBox.Text;
             var archiveType = selectedItem?.Content?.ToString();
 
-            if (archiveType != null)
+            if (archiveType == null) return;
+
+            if (archiveName.Length > 0 && !FileValidator.ContainsIllegalChars(archiveName))
             {
-                if (archiveName.Length > 0 && !FileValidator.ContainsIllegalChars(archiveName))
+                archiveType = ParseArchiveType(archiveType); // parse actual type of selection
+
+                try
                 {
-                    archiveType = ParseArchiveType(archiveType); // parse actual type of selection
+                    BaseControl.Algorithm key; // set the algorithm by archive type
+                    BaseControl.AlgorithmFileTypes.TryGetValue(archiveType, out key);
 
-                    try
-                    {
-                        BaseControl.Algorithm key; // set the algorithm by archive type
-                        BaseControl.AlgorithmFileTypes.TryGetValue(archiveType, out key);
-
-                        archiveName += archiveType;
-                        InitOperation(key, archiveName);
-                    }
-                    catch (ArgumentNullException)
-                    {
-                        Frame.Navigate(typeof(MainPage));
-                        await DialogFactory.CreateErrorDialog("Archive type not recognized.").ShowAsync();
-                    }
+                    archiveName += archiveType;
+                    InitOperation(key, archiveName);
+                }
+                catch (ArgumentNullException)
+                {
+                    Frame.Navigate(typeof(MainPage));
+                    await DialogFactory.CreateErrorDialog("Archive type not recognized.").ShowAsync();
                 }
             }
         }
@@ -105,6 +104,7 @@ namespace SimpleZIP_UI.UI.View
             {
                 var selectedItem = (ComboBoxItem)ArchiveTypeComboBox.SelectedItem;
                 var archiveType = selectedItem?.Content?.ToString();
+
                 if (archiveType != null && archiveType.Contains("gzip"))
                 {
                     ArchiveTypeToolTip.Content = "GZIP only allows the compression of a single file.\r\n" +
@@ -166,12 +166,11 @@ namespace SimpleZIP_UI.UI.View
         {
             _selectedFiles = args.Parameter as IReadOnlyList<StorageFile>;
 
-            if (_selectedFiles != null)
+            if (_selectedFiles == null) return;
+
+            foreach (var file in _selectedFiles) // populate list
             {
-                foreach (var file in _selectedFiles) // populate list
-                {
-                    ItemsListBox.Items?.Add(new TextBlock { Text = file.Name });
-                }
+                ItemsListBox.Items?.Add(new TextBlock { Text = file.Name });
             }
         }
 

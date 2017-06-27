@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI.Popups;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Navigation;
 using SimpleZIP_UI.Exceptions;
 using SimpleZIP_UI.UI.Factory;
 
@@ -41,7 +45,7 @@ namespace SimpleZIP_UI.UI.View
         }
 
         /// <summary>
-        /// 
+        /// TODO
         /// </summary>
         /// <param name="sender">The sender that invoked this event.</param>
         /// <param name="e"></param>
@@ -59,7 +63,7 @@ namespace SimpleZIP_UI.UI.View
         private async void GetSourceButton_Tap(object sender, TappedRoutedEventArgs e)
         {
             var dialog = DialogFactory.CreateConfirmationDialog("",
-                "This will redirect you to the Browser.\n\nAre you sure?");
+                "This will redirect you to the web browser.\n\nDo you want to proceed?");
 
             var result = await dialog.ShowAsync();
             if (result.Id.Equals(0)) // launch browser
@@ -69,13 +73,24 @@ namespace SimpleZIP_UI.UI.View
         }
 
         /// <summary>
-        /// 
+        /// Shows a dialog with information about the application.
         /// </summary>
         /// <param name="sender">The sender that invoked this event.</param>
         /// <param name="e"></param>
         private async void AboutMenuButton_Tap(object sender, TappedRoutedEventArgs e)
         {
             await new AboutDialog().ShowAsync();
+        }
+
+        /// <summary>
+        /// Invoked after navigating to this page.
+        /// </summary>
+        /// <param name="args">The arguments of the navigation event.</param>
+        protected override async void OnNavigatedTo(NavigationEventArgs args)
+        {
+            var frame = Window.Current.Content as Frame;
+            frame?.BackStack.Clear(); // going back is prohibited after aborting operation
+            await Task.Delay(200); // avoid triggering of another tap event
         }
     }
 }

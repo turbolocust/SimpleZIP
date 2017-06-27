@@ -94,12 +94,11 @@ namespace SimpleZIP_UI.UI.View
         {
             _selectedFiles = e.Parameter as IReadOnlyList<StorageFile>;
 
-            if (_selectedFiles != null)
+            if (_selectedFiles == null) return;
+
+            foreach (var f in _selectedFiles) // populate list
             {
-                foreach (var f in _selectedFiles) // populate list
-                {
-                    ItemsListBox.Items?.Add(new TextBlock { Text = f.Name });
-                }
+                ItemsListBox.Items?.Add(new TextBlock { Text = f.Name });
             }
         }
 

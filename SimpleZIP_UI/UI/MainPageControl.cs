@@ -36,7 +36,7 @@ namespace SimpleZIP_UI.UI
             var picker = PickerFactory.CreateDecompressFileOpenPicker();
 
             var files = await picker.PickMultipleFilesAsync();
-            if (files != null) // must not be null
+            if (files?.Count > 0) // must not be null and empty
             {
                 ParentPage.Frame.Navigate(typeof(ExtractionSummaryPage), files);
             }
