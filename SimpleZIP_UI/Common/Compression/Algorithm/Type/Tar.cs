@@ -3,7 +3,7 @@ using SharpCompress.Writers;
 
 namespace SimpleZIP_UI.Common.Compression.Algorithm.Type
 {
-    public class Tar : ArchivingAlgorithm, IArchiveType
+    public class Tar : ArchivingAlgorithm
     {
         private static Tar _instance;
 

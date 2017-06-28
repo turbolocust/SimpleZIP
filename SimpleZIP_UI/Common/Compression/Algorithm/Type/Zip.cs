@@ -4,7 +4,7 @@ using SharpCompress.Writers.Zip;
 
 namespace SimpleZIP_UI.Common.Compression.Algorithm.Type
 {
-    public class Zip : ArchivingAlgorithm, IArchiveType
+    public class Zip : ArchivingAlgorithm
     {
         private static Zip _instance;
 

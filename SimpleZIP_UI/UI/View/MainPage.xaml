@@ -16,7 +16,7 @@
         <SplitView x:Name="MenuSplitView" DisplayMode="CompactOverlay" IsPaneOpen="False" Grid.Row="1"
                CompactPaneLength="0" VerticalContentAlignment="Stretch" VerticalAlignment="Stretch" OpenPaneLength="320">
             <SplitView.Pane>
-                <StackPanel Background="DarkGray">
+                <StackPanel Background="Transparent">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -57,7 +57,7 @@
                         <RowDefinition Height="3*"/>
                         <RowDefinition Height="3*"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Text="SimpleZIP" FontSize="54"  VerticalAlignment="Top" Margin="32,0,0,0" Grid.Row="0" HorizontalAlignment="Left" Foreground="White"/>
+                    <TextBlock Text="SimpleZIP" FontSize="54"  VerticalAlignment="Top" Margin="32,16,0,0" Grid.Row="0" HorizontalAlignment="Left" Foreground="White"/>
                     <Button Content="Compress File(s) . . ." HorizontalAlignment="Stretch" Grid.Row="1" MinHeight="32" Height="50" MaxHeight="72" VerticalAlignment="Bottom" Margin="32,16,32,16" Tapped="CompressButton_Tap" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}"/>
                     <Button Content="Extract archive . . ." HorizontalAlignment="Stretch" Grid.Row="2" MinHeight="32" Height="50" MaxHeight="72" VerticalAlignment="Top" Margin="32,16,32,16" Tapped="ExtractButton_Tap" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}"/>
                 </Grid>

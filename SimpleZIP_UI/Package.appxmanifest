@@ -27,7 +27,7 @@
       <Extensions>
         <uap:Extension Category="windows.fileTypeAssociation">
           <uap:FileTypeAssociation Name="szip">
-            <uap:DisplayName>SimpleZIP</uap:DisplayName>
+            <uap:Logo>Assets\simplezip_asset.png</uap:Logo>
             <uap:InfoTip>Open archive to extract</uap:InfoTip>
             <uap:EditFlags OpenIsSafe="true" />
             <uap:SupportedFileTypes>

@@ -38,16 +38,25 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
             using (var inputStream = await archive.OpenReadAsync())
             using (var reader = ReaderFactory.Open(inputStream.AsStreamForRead(), options))
             {
+                var size = inputStream.Size;
                 while (reader.MoveToNextEntry()) // write each entry to file
                 {
-                    var file = await location.CreateFileAsync(reader.Entry.Key,
-                        CreationCollisionOption.GenerateUniqueName);
-
-                    if (file == null) return false;
-
-                    using (var fileStream = await file.OpenStreamForWriteAsync())
+                    if (!reader.Entry.IsDirectory)
                     {
-                        reader.WriteEntryTo(fileStream);
+                        var file = await location.CreateFileAsync(reader.Entry.Key,
+                            CreationCollisionOption.GenerateUniqueName);
+
+                        if (file == null) return false;
+
+                        using (var fileStream = await file.OpenStreamForWriteAsync())
+                        {
+                            reader.WriteEntryTo(fileStream);
+                        }
+                    }
+
+                    if (inputStream.Position == size) // to be extra sure that the end of stream has been reached
+                    {
+                        break;
                     }
                 }
             }

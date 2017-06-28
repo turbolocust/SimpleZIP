@@ -10,7 +10,7 @@ using SharpCompress.Writers;
 
 namespace SimpleZIP_UI.Common.Compression.Algorithm.Type
 {
-    public class GZip : ArchivingAlgorithm, IArchiveType
+    public class GZip : ArchivingAlgorithm
     {
         private static GZip _instance;
 
