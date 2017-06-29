@@ -96,7 +96,6 @@
     <Compile Include="Common\Compression\Algorithm\Type\Rar.cs" />
     <Compile Include="Common\Compression\Algorithm\Type\SevenZip.cs" />
     <Compile Include="Common\Model\Result.cs" />
-    <Compile Include="Common\Util\Calculator.cs" />
     <Compile Include="UI\View\AboutDialog.xaml.cs">
       <DependentUpon>AboutDialog.xaml</DependentUpon>
     </Compile>
@@ -108,7 +107,7 @@
     <Compile Include="Common\Compression\Algorithm\Type\Tar.cs" />
     <Compile Include="Common\Compression\Algorithm\Type\Zip.cs" />
     <Compile Include="Common\Compression\CompressionFacade.cs" />
-    <Compile Include="Common\Util\FileValidator.cs" />
+    <Compile Include="Common\Util\FileUtils.cs" />
     <Compile Include="UI\View\ExtractionSummaryPage.xaml.cs">
       <DependentUpon>ExtractionSummaryPage.xaml</DependentUpon>
     </Compile>

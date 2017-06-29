@@ -19,7 +19,7 @@ namespace SimpleZIP_UI.UI
         /// </summary>
         internal async void CompressButtonAction()
         {
-            var picker = PickerFactory.CreateCompressFileOpenPicker();
+            var picker = PickerFactory.CreateCompressFilesOpenPicker();
 
             var files = await picker.PickMultipleFilesAsync();
             if (files?.Count > 0) // must not be null and empty

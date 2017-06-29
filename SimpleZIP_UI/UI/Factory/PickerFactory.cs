@@ -6,16 +6,17 @@ namespace SimpleZIP_UI.UI.Factory
     {
         private PickerFactory()
         {
-            // currently holds static members only
+            // holds static members only
         }
 
         /// <summary>
-        /// Creates a new file picker to select any file that may be compressed.
+        /// Creates a new file open picker to select any file(s) that may be compressed.
         /// </summary>
         /// <returns>The newly created file picker.</returns>
-        public static FileOpenPicker CreateCompressFileOpenPicker()
+        public static FileOpenPicker CreateCompressFilesOpenPicker()
         {
-            var picker = new FileOpenPicker {
+            var picker = new FileOpenPicker
+            {
                 ViewMode = PickerViewMode.List,
                 SuggestedStartLocation = PickerLocationId.ComputerFolder,
                 FileTypeFilter = { "*" }
@@ -26,12 +27,13 @@ namespace SimpleZIP_UI.UI.Factory
 
         /// <summary>
         /// Creates a new file picker to select any archive that may be decompressed.
-        /// Only files can be picked, that are supported by the application (see AlgorithmFileTypes enum).
+        /// Only those files can be picked that are supported by the application (see <code>AlgorithmFileTypes</code> enum).
         /// </summary>
         /// <returns>The newly created file picker.</returns>
         public static FileOpenPicker CreateDecompressFileOpenPicker()
         {
-            var picker = new FileOpenPicker {
+            var picker = new FileOpenPicker
+            {
                 ViewMode = PickerViewMode.List,
                 SuggestedStartLocation = PickerLocationId.ComputerFolder
             };
@@ -51,7 +53,8 @@ namespace SimpleZIP_UI.UI.Factory
         /// <returns>The newly created folder picker.</returns>
         public static FolderPicker CreateFolderPicker()
         {
-            var picker = new FolderPicker {
+            var picker = new FolderPicker
+            {
                 ViewMode = PickerViewMode.List,
                 SuggestedStartLocation = PickerLocationId.DocumentsLibrary
             };

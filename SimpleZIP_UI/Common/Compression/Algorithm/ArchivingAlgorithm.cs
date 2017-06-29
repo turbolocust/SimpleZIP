@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
 using SharpCompress.Common;
@@ -21,9 +22,15 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
         /// </summary>
         private readonly ArchiveType _type;
 
+        /// <summary>
+        /// The token which can be used to interrupt the operation.
+        /// </summary>
+        private CancellationToken _token;
+
         protected ArchivingAlgorithm(ArchiveType type)
         {
             _type = type;
+            _token = CancellationToken.None;
         }
 
         public async Task<bool> Extract(StorageFile archive, StorageFolder location, ReaderOptions options = null)
@@ -39,7 +46,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
             using (var reader = ReaderFactory.Open(inputStream.AsStreamForRead(), options))
             {
                 var size = inputStream.Size;
-                while (reader.MoveToNextEntry()) // write each entry to file
+                while (!IsInterrupted() && reader.MoveToNextEntry())
                 {
                     if (!reader.Entry.IsDirectory)
                     {
@@ -50,7 +57,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
 
                         using (var fileStream = await file.OpenStreamForWriteAsync())
                         {
-                            reader.WriteEntryTo(fileStream);
+                            reader.WriteEntryTo(fileStream); // write entry to file
                         }
                     }
 
@@ -92,6 +99,8 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
             {
                 foreach (var file in files)
                 {
+                    if (IsInterrupted()) break;
+
                     using (var fileStream = await file.OpenStreamForReadAsync())
                     {
                         archiveStream.Write(file.Name, fileStream, DateTime.Now);
@@ -99,6 +108,20 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
                 }
             }
             return true;
+        }
+
+        public void SetCancellationToken(CancellationToken token)
+        {
+            _token = token;
+        }
+
+        /// <summary>
+        /// Checks if this operation should be canceled.
+        /// </summary>
+        /// <returns>True if cancellation request has been made, false otherwise.</returns>
+        protected bool IsInterrupted()
+        {
+            return _token.IsCancellationRequested;
         }
 
         /// <summary>

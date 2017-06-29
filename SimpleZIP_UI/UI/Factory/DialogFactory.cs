@@ -6,7 +6,7 @@ namespace SimpleZIP_UI.UI.Factory
     {
         private DialogFactory()
         {
-            // currently holds static members only
+            // holds static members only
         }
 
         /// <summary>

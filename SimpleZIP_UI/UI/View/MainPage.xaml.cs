@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -47,20 +46,20 @@ namespace SimpleZIP_UI.UI.View
         /// <summary>
         /// TODO
         /// </summary>
-        /// <param name="sender">The sender that invoked this event.</param>
-        /// <param name="e"></param>
-        private void OpenArchiveButton_Tap(object sender, TappedRoutedEventArgs e)
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="args">Arguments that may have been passed.</param>
+        private void OpenArchiveButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Opens the project webpage in the default browser. 
-        /// Brings up a confirmation dialog to avoid accidential termination of application first. 
+        /// Opens the project's homepage in the web browser. 
+        /// Brings up a confirmation dialog first to avoid accidential redirection. 
         /// </summary>
-        /// <param name="sender">The sender that invoked this event.</param>
-        /// <param name="e"></param>
-        private async void GetSourceButton_Tap(object sender, TappedRoutedEventArgs e)
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="args">Arguments that may have been passed.</param>
+        private async void GetSourceButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             var dialog = DialogFactory.CreateConfirmationDialog("",
                 "This will redirect you to the web browser.\n\nDo you want to proceed?");
@@ -75,9 +74,9 @@ namespace SimpleZIP_UI.UI.View
         /// <summary>
         /// Shows a dialog with information about the application.
         /// </summary>
-        /// <param name="sender">The sender that invoked this event.</param>
-        /// <param name="e"></param>
-        private async void AboutMenuButton_Tap(object sender, TappedRoutedEventArgs e)
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="args">Arguments that may have been passed.</param>
+        private async void AboutMenuButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             await new AboutDialog().ShowAsync();
         }
@@ -85,12 +84,11 @@ namespace SimpleZIP_UI.UI.View
         /// <summary>
         /// Invoked after navigating to this page.
         /// </summary>
-        /// <param name="e">The arguments of the navigation event.</param>
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        /// <param name="args">Arguments that may have been passed.</param>
+        protected override void OnNavigatedTo(NavigationEventArgs args)
         {
             var frame = Window.Current.Content as Frame;
             frame?.BackStack.Clear(); // going back is prohibited after aborting operation
-            await Task.Delay(200); // avoid triggering of another tap event
         }
     }
 }

@@ -19,13 +19,12 @@ namespace SimpleZIP_UI.UI
         }
 
         /// <summary>
-        /// 
+        /// Performs an action after the start button has been tapped.
         /// </summary>
-        /// <param name="selectedFiles"></param>
-        /// <param name="archiveName"></param>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        /// <exception cref="NullReferenceException"></exception>
+        /// <param name="selectedFiles">A list of selected files.</param>
+        /// <param name="archiveName">The name of the archive to be created.</param>
+        /// <param name="key">The key of the algorithm to be used.</param>
+        /// <returns>An object that consists of result parameters.</returns>
         internal async Task<Result> StartButtonAction(IReadOnlyList<StorageFile> selectedFiles, string archiveName, Algorithm key)
         {
             string message;
@@ -35,12 +34,12 @@ namespace SimpleZIP_UI.UI
 
                 try
                 {
-                    var handler = CompressionFacade.Instance;
+                    var handler = new CompressionFacade();
                     var token = CancellationToken.Token;
 
                     if (key.Equals(Algorithm.GZip)) // requires special treatment
                     {
-                        var totalDuration = 0d;
+                        var totalDuration = new TimeSpan(0);
                         var resultMessage = "";
 
                         foreach (var file in selectedFiles)
@@ -48,13 +47,13 @@ namespace SimpleZIP_UI.UI
                             if (token.IsCancellationRequested) break;
 
                             var result = await handler.CreateArchive(file, archiveName, OutputFolder, key, token);
-                            if (result.StatusCode < 0)
+                            if (result.StatusCode == Result.Status.Success)
                             {
-                                totalDuration += result.ElapsedTime;
+                                totalDuration = totalDuration.Add(result.ElapsedTime);
                             }
                             else
                             {
-                                resultMessage += "\nFile " + file.DisplayName + " could not be compressed.";
+                                resultMessage += "\nFile " + file.DisplayName + " was not compressed.";
                             }
                         }
 
@@ -86,8 +85,8 @@ namespace SimpleZIP_UI.UI
 
             return new Result
             {
-                Message = message,
-                StatusCode = -1 // exception was thrown
+                StatusCode = Result.Status.Fail,
+                Message = message
             };
         }
     }

@@ -8,13 +8,14 @@
 
     <Grid Background="Transparent" Padding="0,0,0,8">
         <Grid.RowDefinitions>
+            <RowDefinition Height="2.5*" />
             <RowDefinition Height="1.5*" />
-            <RowDefinition Height="1.5*" />
-            <RowDefinition Height="5.5*" />
+            <RowDefinition Height="0.5*" />
+            <RowDefinition Height="4.0*" />
             <RowDefinition Height="1.5*" />
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-            <ComboBox x:Name="ArchiveTypeComboBox" DropDownClosed="ArchiveTypeComboBox_DropDownClosed" Width="120" Margin="8,0,16,0" Header="Archive Type" SelectedIndex="0" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}">
+        <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center">
+            <ComboBox x:Name="ArchiveTypeComboBox" DropDownClosed="ArchiveTypeComboBox_DropDownClosed" Width="180" Margin="8,0,16,12" Header="Archive Type" SelectedIndex="0" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}">
                 <ComboBoxItem Content="Zip (.zip)" />
                 <ComboBoxItem Content="7zip (.7z)" Visibility="Collapsed" />
                 <ComboBoxItem Content="GZip (.gzip)" />
@@ -24,29 +25,25 @@
                     <ToolTip x:Name="ArchiveTypeToolTip" HorizontalOffset="20" VerticalOffset="10" Opened="ToolTip_Opened" />
                 </ToolTipService.ToolTip>
             </ComboBox>
-            <TextBox x:Name="ArchiveNameTextBox" TextChanged="ArchiveNameTextBox_TextChanged" AcceptsReturn="False" Text="myArchive" Width="125" Header="Archive Name" IsReadOnly="False" TextWrapping="NoWrap" MaxLength="16" IsSpellCheckEnabled="False" InputScope="Url" >
+            <TextBox x:Name="ArchiveNameTextBox" TextChanged="ArchiveNameTextBox_TextChanged" AcceptsReturn="False" Text="myArchive" Width="180" Header="Archive Name" IsReadOnly="False" TextWrapping="NoWrap" MaxLength="16" IsSpellCheckEnabled="False" InputScope="Url" >
                 <ToolTipService.ToolTip>
                     <ToolTip x:Name="ArchiveNameToolTip" HorizontalOffset="20" VerticalOffset="10" />
                 </ToolTipService.ToolTip>
             </TextBox>
         </StackPanel>
         <StackPanel Grid.Row="1" IsTapEnabled="True" Tapped="OutputPathPanel_Tap" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Transparent">
-            <TextBox x:Name="OutputPathTextBlock" GotFocus="OutputPathTextBlock_GotFocus" Margin="8,0,24,0" PlaceholderText="TAP TO CHOOSE" Header="Output Path" Width="Auto" FontWeight="Light" IsReadOnly="True" AcceptsReturn="False" TextWrapping="NoWrap" BorderThickness="0" IsTapEnabled="False" SelectionHighlightColor="Transparent" Background="Transparent" InputScope="Text" IsSpellCheckEnabled="False" IsTextPredictionEnabled="False" IsHoldingEnabled="False" IsDoubleTapEnabled="False" />
+            <TextBox x:Name="OutputPathTextBlock" GotFocus="OutputPathTextBlock_GotFocus" AllowFocusWhenDisabled="False" Margin="8,0,24,0" PlaceholderText="TAP TO CHOOSE" Header="Output Path" Width="Auto" FontWeight="Light" 
+                     IsReadOnly="True" AcceptsReturn="False" TextWrapping="NoWrap" BorderThickness="0" IsTapEnabled="False" SelectionHighlightColor="Transparent" Background="Transparent" InputScope="Text" IsSpellCheckEnabled="False" 
+                     IsTextPredictionEnabled="False" IsHoldingEnabled="False" IsDoubleTapEnabled="False" />
         </StackPanel>
-        <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="1*" />
-                    <RowDefinition Height="9*" />
-                </Grid.RowDefinitions>
-                <TextBlock Text="File(s) to compress:" Grid.Row="0" FontWeight="Bold" FontSize="16" CharacterSpacing="56" Margin="8,0,0,0" VerticalAlignment="Center" Foreground="White" />
-                <ListBox x:Name="ItemsListBox" Grid.Row="1" Margin="8,0,8,0" SelectionMode="Single" CanDrag="False" HorizontalContentAlignment="Stretch" Background="Transparent" Height="Auto" Foreground="White" />
-            </Grid>
+        <TextBlock Text="File(s) to compress:" Grid.Row="2" FontWeight="Bold" FontSize="16" CharacterSpacing="56" Margin="8,0,0,0" VerticalAlignment="Center" Foreground="White" />
+        <ScrollViewer Grid.Row="3" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <ListBox x:Name="ItemsListBox"  Margin="8,0,8,0" SelectionMode="Single" CanDrag="False" HorizontalContentAlignment="Stretch" Background="Transparent" Height="Auto" Foreground="White" />
         </ScrollViewer>
-        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,16,0">
-            <ProgressRing x:Name="ProgressRing" Margin="0, 0, 24, 0" IsActive="False" />
-            <Button x:Name="StartButton" Tapped="StartButton_Tap" IsEnabled="False" Content="Start" Width="100" MinHeight="44" Height="50" MaxHeight="60" Margin="0,0,16,0" Foreground="White" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}" />
-            <Button Tapped="AbortButton_Tap" Content="Abort" Width="100" MinHeight="44" Height="50" MaxHeight="60" Foreground="White" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}" />
+        <StackPanel Grid.Row="4" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,16,0">
+            <ProgressRing x:Name="ProgressRing" Margin="0, 0, 32, 0" IsActive="False" />
+            <Button x:Name="StartButton" Tapped="StartButton_Tap" IsEnabled="False" Content="Start" Width="120" MinHeight="44" Height="50" MaxHeight="60" Margin="0,0,16,0" Foreground="White" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}" />
+            <Button Tapped="AbortButton_Tap" Content="Abort" Width="120" MinHeight="44" Height="50" MaxHeight="60" Foreground="White" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}" />
         </StackPanel>
     </Grid>
     <Page.Transitions>

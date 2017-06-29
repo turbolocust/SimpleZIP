@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-using SimpleZIP_UI.UI.Factory;
+using SimpleZIP_UI.Common.Model;
 
 namespace SimpleZIP_UI.UI.View
 {
@@ -26,8 +27,8 @@ namespace SimpleZIP_UI.UI.View
         /// Invoked when the abort button has been tapped.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
-        /// <param name="e">The event that invoked this method.</param>
-        private void AbortButton_Tap(object sender, TappedRoutedEventArgs e)
+        /// <param name="args">Arguments that may have been passed.</param>
+        private void AbortButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             _control.AbortButtonAction();
         }
@@ -36,49 +37,32 @@ namespace SimpleZIP_UI.UI.View
         /// Invoked when the start button has been tapped.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
-        /// <param name="e">The event that invoked this method.</param>
-        /// <exception cref="ArgumentOutOfRangeException">May only be thrown on fatal error.</exception>
-        private async void StartButton_Tap(object sender, TappedRoutedEventArgs e)
+        /// <param name="args">Arguments that may have been passed.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown on fatal error.</exception>
+        private async void StartButton_Tap(object sender, TappedRoutedEventArgs args)
         {
-            SetOperationActive(true);
-            var result = await _control.StartButtonAction(_selectedFiles);
-
-            // move focus to avoid accidential focus event on text block
-            FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
-
-            if (result.StatusCode >= 0) // success
-            {
-                var durationText = _control.BuildDurationText(result.ElapsedTime);
-
-                await DialogFactory.CreateInformationDialog(
-                    "Success", durationText).ShowAsync();
-            }
-            else // error
-            {
-                await DialogFactory.CreateErrorDialog(result.Message).ShowAsync();
-            }
-
+            await InitOperation();
             Frame.Navigate(typeof(MainPage));
         }
 
         /// <summary>
-        /// Invoked when the panel containing the output path has been tapped.
-        /// Lets the user then pick an output folder for the archive.
+        /// Invoked when the panel that holds the output path has been tapped.
+        /// As a result, the user can pick an output folder for the archive.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e">The event that invoked this method.</param>
-        private void OutputPathPanel_Tap(object sender, TappedRoutedEventArgs e)
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="args">Arguments that may have been passed.</param>
+        private void OutputPathPanel_Tap(object sender, TappedRoutedEventArgs args)
         {
             PickOutputPath();
         }
 
         /// <summary>
         /// Invoked when output path text block got focus.
-        /// Lets the user then pick an output folder for the archive.
+        /// As a result, the user can pick an output folder for the archive.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
-        /// <param name="e">The event that invoked this method.</param>
-        private void OutputPathTextBlock_GotFocus(object sender, RoutedEventArgs e)
+        /// <param name="args">Arguments that may have been passed.</param>
+        private void OutputPathTextBlock_GotFocus(object sender, RoutedEventArgs args)
         {
             if (!ProgressRing.IsActive)
             {
@@ -90,20 +74,20 @@ namespace SimpleZIP_UI.UI.View
         /// <summary>
         /// Invoked after navigating to this page.
         /// </summary>
-        /// <param name="e">The event that invoked this method.</param>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        /// <param name="args">Arguments that may have been passed.</param>
+        protected override void OnNavigatedTo(NavigationEventArgs args)
         {
-            var list = e.Parameter as IReadOnlyList<StorageFile>;
+            var list = args.Parameter as IReadOnlyList<StorageFile>;
             if (list != null)
             {
                 _selectedFiles = list;
             }
             else // file opened from file explorer
             {
-                var args = e.Parameter as Windows.ApplicationModel.Activation.IActivatedEventArgs;
-                if (args?.Kind == Windows.ApplicationModel.Activation.ActivationKind.File)
+                var eventArgs = args.Parameter as Windows.ApplicationModel.Activation.IActivatedEventArgs;
+                if (eventArgs?.Kind == Windows.ApplicationModel.Activation.ActivationKind.File)
                 {
-                    var fileArgs = args as Windows.ApplicationModel.Activation.FileActivatedEventArgs;
+                    var fileArgs = eventArgs as Windows.ApplicationModel.Activation.FileActivatedEventArgs;
                     var files = fileArgs?.Files;
                     if (files != null)
                     {
@@ -123,12 +107,27 @@ namespace SimpleZIP_UI.UI.View
         }
 
         /// <summary>
-        /// Invoked after navigating from this page.
+        /// Invoked after navigating away from this page.
         /// </summary>
         /// <param name="args">The arguments of the navigation event.</param>
         protected override void OnNavigatedFrom(NavigationEventArgs args)
         {
             SetOperationActive(false);
+        }
+
+        /// <summary>
+        /// Initializes the archiving operation and waits for the result.
+        /// </summary>
+        private async Task<bool> InitOperation()
+        {
+            SetOperationActive(true);
+            var result = await _control.StartButtonAction(_selectedFiles);
+
+            // move focus to avoid accidential focus event on text block
+            FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
+
+            await _control.CreateResultDialog(result).ShowAsync();
+            return result.StatusCode == Result.Status.Success;
         }
 
         /// <summary>
@@ -143,9 +142,9 @@ namespace SimpleZIP_UI.UI.View
         }
 
         /// <summary>
-        /// Sets the archiving operation as active. This means that the UI is in busy state.
+        /// Sets the archiving operation as active. This results in the UI being busy.
         /// </summary>
-        /// <param name="isActive">True to set operation as active.</param>
+        /// <param name="isActive">True to set operation as active, false to set it as inactive.</param>
         private void SetOperationActive(bool isActive)
         {
             if (isActive)
@@ -153,14 +152,14 @@ namespace SimpleZIP_UI.UI.View
                 ProgressRing.IsActive = true;
                 ProgressRing.Visibility = Visibility.Visible;
                 StartButton.IsEnabled = false;
-                OutputPathTextBlock.IsTapEnabled = false;
+                OutputPathTextBlock.IsEnabled = false;
             }
             else
             {
                 ProgressRing.IsActive = false;
                 ProgressRing.Visibility = Visibility.Collapsed;
                 StartButton.IsEnabled = true;
-                OutputPathTextBlock.IsTapEnabled = true;
+                OutputPathTextBlock.IsEnabled = true;
             }
         }
     }

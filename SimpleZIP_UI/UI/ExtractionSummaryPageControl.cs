@@ -19,10 +19,10 @@ namespace SimpleZIP_UI.UI
         }
 
         /// <summary>
-        /// Handles the action that needs to be performed when the start button has been pressed.
+        /// Performs an action after the start button has been pressed.
         /// </summary>
-        /// <param name="selectedFiles"></param>
-        /// <returns></returns>
+        /// <param name="selectedFiles">A list of selected files.</param>
+        /// <returns>An object that consists of result parameters.</returns>
         internal async Task<Result> StartButtonAction(IReadOnlyList<StorageFile> selectedFiles)
         {
             string message;
@@ -31,12 +31,12 @@ namespace SimpleZIP_UI.UI
                 InitOperation();
                 try
                 {
-                    var handler = CompressionFacade.Instance;
+                    var handler = new CompressionFacade();
                     var token = CancellationToken.Token;
 
                     if (selectedFiles.Count > 1) // multiple files selected
                     {
-                        var totalDuration = 0d;
+                        var totalDuration = new TimeSpan();
                         var resultMessage = "";
 
                         foreach (var file in selectedFiles)
@@ -46,7 +46,7 @@ namespace SimpleZIP_UI.UI
                             var result = await handler.ExtractFromArchive(file, OutputFolder, token);
                             if (result.StatusCode < 0)
                             {
-                                totalDuration += result.ElapsedTime;
+                                totalDuration = totalDuration.Add(result.ElapsedTime);
                             }
                             else
                             {
@@ -83,7 +83,7 @@ namespace SimpleZIP_UI.UI
             return new Result
             {
                 Message = message,
-                StatusCode = -1 // exception was thrown
+                StatusCode = Result.Status.Fail
             };
         }
     }

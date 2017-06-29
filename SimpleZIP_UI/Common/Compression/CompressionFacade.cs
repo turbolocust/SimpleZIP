@@ -17,19 +17,10 @@ namespace SimpleZIP_UI.Common.Compression
 {
     internal class CompressionFacade
     {
-        private static CompressionFacade _instance;
-
-        public static CompressionFacade Instance => _instance ?? (_instance = new CompressionFacade());
-
-        private CompressionFacade()
-        {
-            // singleton
-        }
-
         /// <summary>
         /// Stores the current time when initializing a new operation.
         /// </summary>
-        private int _startTime;
+        private DateTime _startTime;
 
         /// <summary>
         /// Stores the result of the operation.
@@ -37,7 +28,7 @@ namespace SimpleZIP_UI.Common.Compression
         private bool _isSuccess;
 
         /// <summary>
-        /// The algorithm that is used for compressing and decompressing.
+        /// The algorithm that is used for compression or decompression.
         /// </summary>
         private IArchivingAlgorithm _compressionAlgorithm;
 
@@ -49,12 +40,12 @@ namespace SimpleZIP_UI.Common.Compression
         /// <summary>
         /// Creates a new archive with a compressed version of the specified file.
         /// </summary>
-        /// <param name="file">The file to compress.</param>
-        /// <param name="archiveName">The name of the archive to create.</param>
+        /// <param name="file">The file to be compressed.</param>
+        /// <param name="archiveName">The name of the archive to be created.</param>
         /// <param name="location">Where to store the archive.</param>
-        /// <param name="key">The key of the algorithm to use.</param>
+        /// <param name="key">The key of the algorithm to be used.</param>
         /// <param name="ct">The token that is used to cancel the operation.</param>
-        /// <returns>An object that contains result parameters.</returns>
+        /// <returns>An object that consists of result parameters.</returns>
         public async Task<Result> CreateArchive(StorageFile file, string archiveName,
             StorageFolder location, BaseControl.Algorithm key, CancellationToken ct)
         {
@@ -69,19 +60,19 @@ namespace SimpleZIP_UI.Common.Compression
                     var archive = await location.CreateFileAsync(archiveName,
                         CreationCollisionOption.GenerateUniqueName);
 
-                    _isSuccess = archive != null
-                        && await _compressionAlgorithm.Compress(file, archive, location, _writerOptions);
+                    _isSuccess = await _compressionAlgorithm.Compress(file, archive, location, _writerOptions);
+
+                    if (ct.IsCancellationRequested)
+                    {
+                        FileUtils.Cleanup(archive);
+                    }
                 }
-                catch (IOException ex)
-                {
-                    message = ex.Message;
-                }
-                catch (ArgumentOutOfRangeException ex)
+                catch (Exception ex)
                 {
                     message = ex.Message;
                 }
 
-                return EvaluateResult(message);
+                return EvaluateResult(message, ct);
 
             }, ct);
         }
@@ -89,12 +80,12 @@ namespace SimpleZIP_UI.Common.Compression
         /// <summary>
         /// Creates a new archive with compressed versions of the specified files.
         /// </summary>
-        /// <param name="files">The files to compress.</param>
-        /// <param name="archiveName">The name of the archive to create.</param>
+        /// <param name="files">The files to be compressed.</param>
+        /// <param name="archiveName">The name of the archive to be created.</param>
         /// <param name="location">Where to store the archive.</param>
-        /// <param name="key">The key of the algorithm to use.</param>
+        /// <param name="key">The key of the algorithm to be used.</param>
         /// <param name="ct">The token that is used to cancel the operation.</param>
-        /// <returns>An object that contains result parameters.</returns>
+        /// <returns>An object that consists of result parameters.</returns>
         public async Task<Result> CreateArchive(IReadOnlyList<StorageFile> files, string archiveName,
             StorageFolder location, BaseControl.Algorithm key, CancellationToken ct)
         {
@@ -111,35 +102,35 @@ namespace SimpleZIP_UI.Common.Compression
                         var archive = await location.CreateFileAsync(archiveName,
                             CreationCollisionOption.GenerateUniqueName);
 
-                        _isSuccess = archive != null
-                            && await _compressionAlgorithm.Compress(files, archive, location, _writerOptions);
+                        _isSuccess = await _compressionAlgorithm.Compress(files, archive, location, _writerOptions);
+
+                        if (ct.IsCancellationRequested)
+                        {
+                            FileUtils.Cleanup(archive);
+                        }
                     }
-                    catch (IOException ex)
-                    {
-                        message = ex.Message;
-                    }
-                    catch (InvalidArchiveTypeException ex)
+                    catch (Exception ex)
                     {
                         message = ex.Message;
                     }
                 }
 
-                return EvaluateResult(message);
+                return EvaluateResult(message, ct);
 
             }, ct);
         }
 
         /// <summary>
-        /// 
+        /// Extracts files from an archive to the specified location.
         /// </summary>
-        /// <param name="archiveFile"></param>
-        /// <param name="location"></param>
+        /// <param name="archiveFile">The archive to be extracted.</param>
+        /// <param name="location">The location where to extract the archive's content.</param>
         /// <param name="ct">The token that is used to cancel the operation.</param>
-        /// <returns></returns>
+        /// <returns>An object that consists of result parameters.</returns>
         /// <exception cref="InvalidArchiveTypeException">If the file type of the selected 
         /// file is not supported or unknown.</exception>
         /// <exception cref="UnauthorizedAccessException">If extraction at the archive's 
-        /// path is not allowed.</exception>
+        /// location is not allowed.</exception>
         public async Task<Result> ExtractFromArchive(StorageFile archiveFile, StorageFolder location, CancellationToken ct)
         {
             BaseControl.Algorithm key; // the file type of the archive
@@ -166,52 +157,57 @@ namespace SimpleZIP_UI.Common.Compression
                     message = ex.Message;
                 }
 
-                return EvaluateResult(message);
+                return EvaluateResult(message, ct);
 
             }, ct);
         }
 
         /// <summary>
-        /// Initializes the compression or extraction operation
-        /// and chooses the strategy by the specified key.
+        /// Initializes the compression or decompression operation
+        /// and chooses the strategy by using the specified key.
         /// </summary>
         /// <param name="key">The key of the algorithm.</param>
         private void InitOperation(BaseControl.Algorithm key)
         {
             _writerOptions = null;
-            _startTime = DateTime.Now.Millisecond;
-
+            _startTime = DateTime.Now;
             ChooseStrategy(key); // determines the right algorithm
         }
 
         /// <summary>
         /// Evaluates the operation and returns the result.
         /// </summary>
-        /// <param name="message">The message to evaluate.</param>
-        /// <returns>An object consisting of result parameters.</returns>
-        private Result EvaluateResult(string message)
+        /// <param name="message">The message to be evaluated.</param>
+        /// <param name="ct">The token to be considered on evaluation.</param>
+        /// <returns>An object that consists of result parameters.</returns>
+        private Result EvaluateResult(string message, CancellationToken ct)
         {
-            var statusCode = message.Length > 0 ? (short)-1 : (short)0;
-            var duration = 0;
+            Result.Status status;
+            TimeSpan duration;
 
-            if (_isSuccess) // calculate time on success
+            if (ct.IsCancellationRequested)
             {
-                duration = Calculator.CalculateElapsedTime(_startTime);
+                status = Result.Status.Interrupt;
+            }
+            else
+            {
+                status = _isSuccess ? Result.Status.Success : Result.Status.Fail;
+                duration = DateTime.Now - _startTime;
             }
 
             return new Result
             {
-                StatusCode = statusCode,
+                StatusCode = status,
                 Message = message,
                 ElapsedTime = duration
             };
         }
 
         /// <summary>
-        /// Assigns the correct algorithm instance to be used by checking its key.
+        /// Assigns the correct algorithm instance to be used by evaluating its key.
         /// </summary>
         /// <param name="key">The key of the algorithm.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown when key matches no algorithm.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when key matched no algorithm.</exception>
         private void ChooseStrategy(BaseControl.Algorithm key)
         {
             switch (key)

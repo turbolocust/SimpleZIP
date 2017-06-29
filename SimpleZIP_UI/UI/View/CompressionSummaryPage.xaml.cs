@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using SimpleZIP_UI.Common.Model;
 using SimpleZIP_UI.Common.Util;
 using SimpleZIP_UI.UI.Factory;
 
@@ -27,8 +29,8 @@ namespace SimpleZIP_UI.UI.View
         /// Invoked when the abort button has been tapped.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
-        /// <param name="e">The event that invoked this method.</param>
-        private void AbortButton_Tap(object sender, TappedRoutedEventArgs e)
+        /// <param name="args">Arguments that may have been passed.</param>
+        private void AbortButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             _control.AbortButtonAction();
         }
@@ -37,16 +39,14 @@ namespace SimpleZIP_UI.UI.View
         /// Invoked when the start button has been tapped.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
-        /// <param name="e">The event that invoked this method.</param>
-        private async void StartButton_Tap(object sender, TappedRoutedEventArgs e)
+        /// <param name="args">Arguments that may have been passed.</param>
+        private async void StartButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             var selectedItem = (ComboBoxItem)ArchiveTypeComboBox.SelectedItem;
             var archiveName = ArchiveNameTextBox.Text;
             var archiveType = selectedItem?.Content?.ToString();
 
-            if (archiveType == null) return;
-
-            if (archiveName.Length > 0 && !FileValidator.ContainsIllegalChars(archiveName))
+            if (archiveType != null && archiveName.Length > 0 && !FileUtils.ContainsIllegalChars(archiveName))
             {
                 archiveType = ParseArchiveType(archiveType); // parse actual type of selection
 
@@ -56,12 +56,15 @@ namespace SimpleZIP_UI.UI.View
                     BaseControl.AlgorithmFileTypes.TryGetValue(archiveType, out key);
 
                     archiveName += archiveType;
-                    InitOperation(key, archiveName);
+                    await InitOperation(key, archiveName);
                 }
                 catch (ArgumentNullException)
                 {
-                    Frame.Navigate(typeof(MainPage));
                     await DialogFactory.CreateErrorDialog("Archive type not recognized.").ShowAsync();
+                }
+                finally
+                {
+                    Frame.Navigate(typeof(MainPage));
                 }
             }
         }
@@ -69,22 +72,22 @@ namespace SimpleZIP_UI.UI.View
 
         /// <summary>
         /// Invoked when the panel containing the output path has been tapped.
-        /// Lets the user then pick an output folder for the archive.
+        /// As a result, the user can pick an output folder for the archive.
         /// </summary>
         /// <param name="sender"></param>
-        /// <param name="e">The event that invoked this method.</param>
-        private void OutputPathPanel_Tap(object sender, TappedRoutedEventArgs e)
+        /// <param name="args">Arguments that may have been passed.</param>
+        private void OutputPathPanel_Tap(object sender, TappedRoutedEventArgs args)
         {
             PickOutputPath();
         }
 
         /// <summary>
         /// Invoked when output path text block got focus.
-        /// Lets the user then pick an output folder for the archive.
+        /// As a result, the user can pick an output folder for the archive.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
-        /// <param name="e">The event that invoked this method.</param>
-        private void OutputPathTextBlock_GotFocus(object sender, RoutedEventArgs e)
+        /// <param name="args">Arguments that may have been passed.</param>
+        private void OutputPathTextBlock_GotFocus(object sender, RoutedEventArgs args)
         {
             if (!ProgressRing.IsActive)
             {
@@ -97,7 +100,7 @@ namespace SimpleZIP_UI.UI.View
         /// Invoked when combo box for choosing the archive type has been closed.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
-        /// <param name="e">The event that invoked this method.</param>
+        /// <param name="e">The event object.</param>
         private void ArchiveTypeComboBox_DropDownClosed(object sender, object e)
         {
             if (_selectedFiles.Count > 1)
@@ -118,8 +121,8 @@ namespace SimpleZIP_UI.UI.View
         /// Invoked when the text of the archive name input has beend modified.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
-        /// <param name="e">The event that invoked this method.</param>
-        private void ArchiveNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        /// <param name="args">Arguments that may have been passed.</param>
+        private void ArchiveNameTextBox_TextChanged(object sender, TextChangedEventArgs args)
         {
             var fileName = ArchiveNameTextBox.Text;
 
@@ -127,7 +130,7 @@ namespace SimpleZIP_UI.UI.View
             {
                 ArchiveNameTextBox.Text = "myArchive";
             }
-            else if (FileValidator.ContainsIllegalChars(fileName)) // check for illegal characters in file name
+            else if (FileUtils.ContainsIllegalChars(fileName)) // check for illegal characters in file name
             {
                 ArchiveNameToolTip.Content = "These characters are not allowed:\n" +
                                                   "\\ / | : * \" ? < >\n";
@@ -143,8 +146,8 @@ namespace SimpleZIP_UI.UI.View
         /// Invoked when any tooltip has been opened.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
-        /// <param name="e">The event that invoked this method.</param>
-        private void ToolTip_Opened(object sender, RoutedEventArgs e)
+        /// <param name="args">Arguments that may have been passed.</param>
+        private void ToolTip_Opened(object sender, RoutedEventArgs args)
         {
             var toolTip = (ToolTip)sender;
 
@@ -161,7 +164,7 @@ namespace SimpleZIP_UI.UI.View
         /// <summary>
         /// Invoked after navigating to this page.
         /// </summary>
-        /// <param name="args">The arguments of the navigation event.</param>
+        /// <param name="args">Arguments that may have been passed.</param>
         protected override void OnNavigatedTo(NavigationEventArgs args)
         {
             _selectedFiles = args.Parameter as IReadOnlyList<StorageFile>;
@@ -175,9 +178,9 @@ namespace SimpleZIP_UI.UI.View
         }
 
         /// <summary>
-        /// Invoked after navigating from this page.
+        /// Invoked after navigating away from this page.
         /// </summary>
-        /// <param name="args">The arguments of the navigation event.</param>
+        /// <param name="args">Arguments that may have been passed.</param>
         protected override void OnNavigatedFrom(NavigationEventArgs args)
         {
             SetOperationActive(false);
@@ -188,7 +191,7 @@ namespace SimpleZIP_UI.UI.View
         /// </summary>
         /// <param name="key">The type of the archive.</param>
         /// <param name="archiveName">The name of the archive.</param>
-        private async void InitOperation(BaseControl.Algorithm key, string archiveName)
+        private async Task<bool> InitOperation(BaseControl.Algorithm key, string archiveName)
         {
             SetOperationActive(true);
             var result = await _control.StartButtonAction(_selectedFiles, archiveName, key);
@@ -196,23 +199,12 @@ namespace SimpleZIP_UI.UI.View
             // move focus to avoid accidential focus event on text block
             FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
 
-            if (result.StatusCode >= 0) // success
-            {
-                var durationText = _control.BuildDurationText(result.ElapsedTime);
-
-                await DialogFactory.CreateInformationDialog(
-                    "Success", durationText).ShowAsync();
-            }
-            else // error
-            {
-                await DialogFactory.CreateErrorDialog(result.Message).ShowAsync();
-            }
-
-            Frame.Navigate(typeof(MainPage));
+            await _control.CreateResultDialog(result).ShowAsync();
+            return result.StatusCode == Result.Status.Success;
         }
 
         /// <summary>
-        /// Delegates the action to pick an output folder.
+        /// Delegates the action to pick an output folder. 
         /// Displays the name of the output folder afterwards.
         /// </summary>
         private async void PickOutputPath()
@@ -225,7 +217,7 @@ namespace SimpleZIP_UI.UI.View
         /// <summary>
         /// Parses the file type of the specified string.
         /// </summary>
-        /// <param name="s">The string to parse.</param>
+        /// <param name="s">The string to be parsed.</param>
         /// <returns>The parsed string.</returns>
         private static string ParseArchiveType(string s)
         {
@@ -237,7 +229,7 @@ namespace SimpleZIP_UI.UI.View
         /// <summary>
         /// Sets the archiving operation as active. This results in the UI being busy.
         /// </summary>
-        /// <param name="isActive">True to set operation as active.</param>
+        /// <param name="isActive">True to set operation as active, false to set it as inactive.</param>
         private void SetOperationActive(bool isActive)
         {
             if (isActive)
@@ -245,7 +237,7 @@ namespace SimpleZIP_UI.UI.View
                 ProgressRing.IsActive = true;
                 ProgressRing.Visibility = Visibility.Visible;
                 StartButton.IsEnabled = false;
-                OutputPathTextBlock.IsTapEnabled = false;
+                OutputPathTextBlock.IsEnabled = false;
                 ArchiveNameTextBox.IsEnabled = false;
                 ArchiveTypeComboBox.IsEnabled = false;
             }
@@ -254,7 +246,7 @@ namespace SimpleZIP_UI.UI.View
                 ProgressRing.IsActive = false;
                 ProgressRing.Visibility = Visibility.Collapsed;
                 StartButton.IsEnabled = true;
-                OutputPathTextBlock.IsTapEnabled = true;
+                OutputPathTextBlock.IsEnabled = true;
                 ArchiveNameTextBox.IsEnabled = true;
                 ArchiveTypeComboBox.IsEnabled = true;
             }

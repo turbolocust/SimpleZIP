@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
-using SimpleZIP_UI.Common.Util;
+using SimpleZIP_UI.Common.Model;
 using SimpleZIP_UI.UI.Factory;
 using SimpleZIP_UI.UI.View;
 
@@ -23,7 +25,7 @@ namespace SimpleZIP_UI.UI
         protected bool IsCancelRequest;
 
         /// <summary>
-        /// Token used to cancel the packing task.
+        /// Token used to cancel an archiving operation.
         /// </summary>
         protected CancellationTokenSource CancellationToken;
 
@@ -41,7 +43,7 @@ namespace SimpleZIP_UI.UI
         }
 
         /// <summary>
-        /// Stores the file type for each enum type.
+        /// Stores the file type for each algorithm type.
         /// </summary>
         internal static readonly Dictionary<string, Algorithm> AlgorithmFileTypes = new Dictionary<string, Algorithm>();
 
@@ -61,6 +63,7 @@ namespace SimpleZIP_UI.UI
         protected BaseControl(Page parent)
         {
             ParentPage = parent;
+            CancellationToken = null;
         }
 
         /// <summary>
@@ -73,37 +76,54 @@ namespace SimpleZIP_UI.UI
             {
                 throw new NullReferenceException("No valid output folder selected.");
             }
+            CancellationToken?.Dispose();
             CancellationToken = new CancellationTokenSource();
         }
 
         /// <summary>
-        /// Handles the action that needs to be performed after the abort button has been pressed.
+        /// Evaluates the specified result and shows a dialog depending on the status.
         /// </summary>
-        internal async void AbortButtonAction()
+        /// <param name="result">The result to be evaluated.</param>
+        /// <returns>True on successful evaluation, false otherwise.</returns>
+        internal MessageDialog CreateResultDialog(Result result)
         {
-            var dialog = DialogFactory.CreateConfirmationDialog("Are you sure?",
-                "This will cancel the operation.");
-
-            var result = await dialog.ShowAsync();
-            if (result.Id.Equals(0)) // cancel operation
+            MessageDialog dialog;
+            switch (result.StatusCode)
             {
-                try
-                {
-                    CancellationToken?.Cancel();
-                }
-                catch (ObjectDisposedException)
-                {
-                    IsCancelRequest = true;
-                }
-                finally
-                {
-                    NavigateBackToHome();
-                }
+                case Result.Status.Success:
+                    var durationText = BuildDurationText(result.ElapsedTime);
+                    dialog = DialogFactory.CreateInformationDialog(
+                        "Success", durationText);
+                    break;
+                case Result.Status.Fail:
+                    dialog = DialogFactory.CreateErrorDialog(result.Message);
+                    break;
+                case Result.Status.Interrupt:
+                    dialog = DialogFactory.CreateInformationDialog("Interrupted",
+                        "Operation has been canceled.");
+                    break;
+                default: throw new ArgumentOutOfRangeException();
+            }
+            return dialog;
+        }
+
+        /// <summary>
+        /// Performs an action after the abort button has been pressed.
+        /// </summary>
+        internal void AbortButtonAction()
+        {
+            try
+            {
+                CancellationToken?.Cancel();
+            }
+            catch (ObjectDisposedException)
+            {
+                IsCancelRequest = true;
             }
         }
 
         /// <summary>
-        /// Opens a picker to select a folder and returns it. May be null if the user cancels.
+        /// Opens a picker to select a folder and returns it. May be <code>null</code> on cancellation.
         /// </summary>
         internal async Task<StorageFolder> OutputPathPanelAction()
         {
@@ -118,33 +138,36 @@ namespace SimpleZIP_UI.UI
         }
 
         /// <summary>
-        /// Builds the text that shows the total duration converted in seconds.
+        /// Builds the text that shows the total duration converted into minutes.
         /// </summary>
-        /// <param name="durationMillis">The duration in milliseconds.</param>
-        /// <returns>A friendly string that shows the total duration in seconds.
+        /// <param name="timeSpan">The duration as time span.</param>
+        /// <returns>A friendly string that shows the total duration in minutes.
         /// If the duration is less than one second it will not contain a number.</returns>
-        internal string BuildDurationText(double durationMillis)
+        private static string BuildDurationText(TimeSpan timeSpan)
         {
-            var durationSecs = Calculator.ConvertMillisToSeconds(durationMillis, 3);
-            var durationText = "Total duration: ";
+            var durationText = new StringBuilder("Total duration: ");
 
-            if (durationSecs < 1)
+            if (timeSpan.Seconds < 1)
             {
-                durationText += "Less than one second.";
+                durationText.Append("Less than one second.");
             }
             else
             {
-                durationText += durationSecs + " seconds.";
+                durationText.Append(timeSpan.ToString(@"hh\:mm\:ss"));
+                if (timeSpan.Minutes < 1)
+                {
+                    durationText.Append(" seconds.");
+                }
+                else if (timeSpan.Hours < 1)
+                {
+                    durationText.Append(" minutes.");
+                }
+                else
+                {
+                    durationText.Append(" hours.");
+                }
             }
-            return durationText;
-        }
-
-        /// <summary>
-        /// Navigates back to the main page.
-        /// </summary>
-        protected void NavigateBackToHome()
-        {
-            ParentPage.Frame.Navigate(typeof(MainPage));
+            return durationText.ToString();
         }
     }
 }
