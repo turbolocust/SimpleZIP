@@ -41,7 +41,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm.Type
 
                         while (!IsInterrupted() && (readBytes = gzipStream.Read(bytes, 0, bytes.Length)) > 0)
                         {
-                            await outputStream.WriteAsync(bytes, 0, readBytes);
+                            await outputStream.WriteAsync(bytes, 0, readBytes, Token);
                         }
                     }
                 }
@@ -67,7 +67,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm.Type
 
                     while (!IsInterrupted() && (readBytes = await inputStream.ReadAsync(bytes, 0, bytes.Length)) > 0)
                     {
-                        await gzipStream.WriteAsync(bytes, 0, readBytes);
+                        await gzipStream.WriteAsync(bytes, 0, readBytes, Token);
                     }
                 }
             }

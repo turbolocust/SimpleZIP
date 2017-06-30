@@ -21,7 +21,7 @@ namespace SimpleZIP_UI.UI
         /// </summary>
         public enum Algorithm
         {
-            Zip, GZip, SevenZip, Rar, TarGz, TarBz2
+            Zip, GZip, SevenZip, Rar, Tar, TarGz, TarBz2
         }
 
         /// <summary>
@@ -34,11 +34,13 @@ namespace SimpleZIP_UI.UI
             AlgorithmFileTypes.Add(".zip", Algorithm.Zip);
             AlgorithmFileTypes.Add(".7z", Algorithm.SevenZip);
             AlgorithmFileTypes.Add(".rar", Algorithm.Rar);
-            AlgorithmFileTypes.Add(".z", Algorithm.GZip);
+            AlgorithmFileTypes.Add(".tar", Algorithm.Tar);
             AlgorithmFileTypes.Add(".gzip", Algorithm.GZip);
-            AlgorithmFileTypes.Add(".gz", Algorithm.TarGz);
+            AlgorithmFileTypes.Add(".gz", Algorithm.GZip);
+            AlgorithmFileTypes.Add(".tar.gz", Algorithm.TarGz);
             AlgorithmFileTypes.Add(".tgz", Algorithm.TarGz);
             AlgorithmFileTypes.Add(".bz2", Algorithm.TarBz2);
+            AlgorithmFileTypes.Add(".tar.bz2", Algorithm.TarBz2);
             AlgorithmFileTypes.Add(".tbz2", Algorithm.TarBz2);
         }
 

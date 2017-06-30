@@ -49,7 +49,6 @@ namespace SimpleZIP_UI.UI.View
             if (archiveType != null && archiveName.Length > 0 && !FileUtils.ContainsIllegalChars(archiveName))
             {
                 archiveType = ParseArchiveType(archiveType); // parse actual type of selection
-
                 try
                 {
                     BaseControl.Algorithm key; // set the algorithm by archive type
@@ -176,7 +175,7 @@ namespace SimpleZIP_UI.UI.View
             };
             var result = await _control.StartButtonAction(archiveInfo);
 
-            // move focus to avoid accidential focus event on text block
+            // move focus to avoid accidental focus event on text block
             FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
 
             await _control.CreateResultDialog(result).ShowAsync();

@@ -115,7 +115,7 @@ namespace SimpleZIP_UI.UI.View
             var archiveInfo = new ArchiveInfo(_selectedFiles, ArchiveInfo.CompressionMode.Decompress);
             var result = await _control.StartButtonAction(archiveInfo);
 
-            // move focus to avoid accidential focus event on text block
+            // move focus to avoid accidental focus event on text block
             FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
 
             await _control.CreateResultDialog(result).ShowAsync();

@@ -39,7 +39,7 @@ namespace SimpleZIP_UI_TEST
         public void TarGzipCompressionExtractionTest()
         {
             var options = new WriterOptions(CompressionType.GZip);
-            ArchiveCompression(Tar.Instance, ".tgz", options);
+            ArchiveCompression(Tarball.Instance, ".tgz", options);
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace SimpleZIP_UI_TEST
         public void TarBzip2CompressionExtractionTest()
         {
             var options = new WriterOptions(CompressionType.BZip2);
-            ArchiveCompression(Tar.Instance, ".tbz2", options);
+            ArchiveCompression(Tarball.Instance, ".tbz2", options);
         }
 
         private async void ArchiveCompression(IArchivingAlgorithm compressionAlgorithm, string fileType, WriterOptions options)

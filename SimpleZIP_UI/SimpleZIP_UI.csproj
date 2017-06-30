@@ -95,6 +95,7 @@
     <Compile Include="Common\Compression\Algorithm\ArchivingAlgorithm.cs" />
     <Compile Include="Common\Compression\Algorithm\Type\Rar.cs" />
     <Compile Include="Common\Compression\Algorithm\Type\SevenZip.cs" />
+    <Compile Include="Common\Compression\Algorithm\Type\Tar.cs" />
     <Compile Include="Common\Model\ArchiveInfo.cs" />
     <Compile Include="Common\Model\Result.cs" />
     <Compile Include="UI\SummaryPageControl.cs" />
@@ -106,7 +107,7 @@
     </Compile>
     <Compile Include="Common\Compression\Algorithm\Type\GZip.cs" />
     <Compile Include="Common\Compression\Algorithm\IArchivingAlgorithm.cs" />
-    <Compile Include="Common\Compression\Algorithm\Type\Tar.cs" />
+    <Compile Include="Common\Compression\Algorithm\Type\Tarball.cs" />
     <Compile Include="Common\Compression\Algorithm\Type\Zip.cs" />
     <Compile Include="Common\Compression\CompressionFacade.cs" />
     <Compile Include="Common\Util\FileUtils.cs" />

@@ -18,19 +18,19 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
         protected const int DefaultBufferSize = 8192;
 
         /// <summary>
+        /// The token which can be used to interrupt the operation.
+        /// </summary>
+        protected CancellationToken Token;
+
+        /// <summary>
         /// The concrete algorithm to be used.
         /// </summary>
         private readonly ArchiveType _type;
 
-        /// <summary>
-        /// The token which can be used to interrupt the operation.
-        /// </summary>
-        private CancellationToken _token;
-
         protected ArchivingAlgorithm(ArchiveType type)
         {
             _type = type;
-            _token = CancellationToken.None;
+            Token = CancellationToken.None;
         }
 
         public async Task<bool> Extract(StorageFile archive, StorageFolder location, ReaderOptions options = null)
@@ -46,6 +46,8 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
             using (var reader = ReaderFactory.Open(inputStream.AsStreamForRead(), options))
             {
                 var size = inputStream.Size;
+                var bytes = new byte[DefaultBufferSize];
+
                 while (!IsInterrupted() && reader.MoveToNextEntry())
                 {
                     if (!reader.Entry.IsDirectory)
@@ -55,12 +57,19 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
 
                         if (file == null) return false;
 
-                        using (var fileStream = await file.OpenStreamForWriteAsync())
+                        using (var entryStream = reader.OpenEntryStream())
                         {
-                            reader.WriteEntryTo(fileStream); // write entry to file
+                            using (var outputStream = await file.OpenStreamForWriteAsync())
+                            {
+                                int readBytes;
+                                while (!IsInterrupted() && (readBytes = entryStream.Read(bytes, 0, bytes.Length)) > 0)
+                                {
+                                    await outputStream.WriteAsync(bytes, 0, readBytes, Token);
+                                }
+                            }
+
                         }
                     }
-
                     if (inputStream.Position == size) // to be extra sure that the end of stream has been reached
                     {
                         break;
@@ -79,9 +88,9 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
             using (var outputStream = await archive.OpenAsync(FileAccessMode.ReadWrite))
             using (var writer = WriterFactory.Open(outputStream.AsStreamForWrite(), _type, options))
             {
-                using (var fileStream = await file.OpenStreamForReadAsync())
+                using (var inputStream = await file.OpenStreamForReadAsync())
                 {
-                    writer.Write(file.Name, fileStream, DateTime.Now);
+                    writer.Write(file.Name, inputStream, DateTime.Now);
                 }
             }
             return true;
@@ -101,9 +110,9 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
                 {
                     if (IsInterrupted()) break;
 
-                    using (var fileStream = await file.OpenStreamForReadAsync())
+                    using (var inputStream = await file.OpenStreamForReadAsync())
                     {
-                        writer.Write(file.Name, fileStream, DateTime.Now);
+                        writer.Write(file.Name, inputStream, DateTime.Now);
                     }
                 }
             }
@@ -112,7 +121,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
 
         public void SetCancellationToken(CancellationToken token)
         {
-            _token = token;
+            Token = token;
         }
 
         /// <summary>
@@ -121,7 +130,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
         /// <returns>True if cancellation request has been made, false otherwise.</returns>
         protected bool IsInterrupted()
         {
-            return _token.IsCancellationRequested;
+            return Token.IsCancellationRequested;
         }
 
         /// <summary>

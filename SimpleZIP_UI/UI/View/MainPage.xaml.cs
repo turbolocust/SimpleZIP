@@ -55,14 +55,14 @@ namespace SimpleZIP_UI.UI.View
 
         /// <summary>
         /// Opens the project's homepage in the web browser. 
-        /// Brings up a confirmation dialog first to avoid accidential redirection. 
+        /// Brings up a confirmation dialog first to avoid accidental redirection. 
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
         /// <param name="args">Arguments that may have been passed.</param>
         private async void GetSourceButton_Tap(object sender, TappedRoutedEventArgs args)
         {
-            var dialog = DialogFactory.CreateConfirmationDialog("",
-                "This will redirect you to the web browser.\n\nDo you want to proceed?");
+            var dialog = DialogFactory.CreateConfirmationDialog(
+                "This will open the web browser.", "\nProceed?");
 
             var result = await dialog.ShowAsync();
             if (result.Id.Equals(0)) // launch browser

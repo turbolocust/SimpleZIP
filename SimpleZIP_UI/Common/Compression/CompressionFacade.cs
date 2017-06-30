@@ -50,7 +50,7 @@ namespace SimpleZIP_UI.Common.Compression
             StorageFolder location, BaseControl.Algorithm key, CancellationToken ct)
         {
             InitOperation(key);
-
+            
             return await Task.Run(async () => // execute compression asynchronously
             {
                 var message = "";
@@ -222,15 +222,18 @@ namespace SimpleZIP_UI.Common.Compression
                 case BaseControl.Algorithm.SevenZip:
                     _compressionAlgorithm = SevenZip.Instance;
                     break;
-                case BaseControl.Algorithm.TarGz:
+                case BaseControl.Algorithm.Tar:
                     _compressionAlgorithm = Tar.Instance;
+                    break;
+                case BaseControl.Algorithm.TarGz:
+                    _compressionAlgorithm = Tarball.Instance;
                     _writerOptions = new WriterOptions(CompressionType.GZip)
                     {
                         LeaveStreamOpen = false
                     };
                     break;
                 case BaseControl.Algorithm.TarBz2:
-                    _compressionAlgorithm = Tar.Instance;
+                    _compressionAlgorithm = Tarball.Instance;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(key), key, null);

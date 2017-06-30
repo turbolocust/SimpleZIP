@@ -9,14 +9,14 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm.Type
 
         public static Tar Instance => _instance ?? (_instance = new Tar());
 
-        private Tar() : base(ArchiveType.Tar)
+        public Tar() : base(ArchiveType.Tar)
         {
             // singleton
         }
 
         protected override WriterOptions GetWriterOptions()
         {
-            return new WriterOptions(CompressionType.BZip2);
+            return new WriterOptions(CompressionType.None);
         }
     }
 }

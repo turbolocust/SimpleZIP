@@ -18,14 +18,16 @@
             <ComboBox x:Name="ArchiveTypeComboBox" DropDownClosed="ArchiveTypeComboBox_DropDownClosed" Width="180" Margin="8,0,8,12" Header="Archive Type" SelectedIndex="0" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}">
                 <ComboBoxItem Content="Zip (.zip)" />
                 <ComboBoxItem Content="7zip (.7z)" Visibility="Collapsed" />
+                <ComboBoxItem Content="Rar (.rar)" Visibility="Collapsed" />
                 <ComboBoxItem Content="GZip (.gzip)" />
+                <ComboBoxItem Content="Tar (.tar)" />
                 <ComboBoxItem Content="Tar+Gzip (.tgz)" />
                 <ComboBoxItem Content="Tar+Bz2 (.tbz2)" />
                 <ToolTipService.ToolTip>
                     <ToolTip x:Name="ArchiveTypeToolTip" HorizontalOffset="20" VerticalOffset="10" Opened="ToolTip_Opened" />
                 </ToolTipService.ToolTip>
             </ComboBox>
-            <TextBox x:Name="ArchiveNameTextBox" TextChanged="ArchiveNameTextBox_TextChanged" AcceptsReturn="False" Text="myArchive" Width="180" Header="Archive Name" IsReadOnly="False" TextWrapping="NoWrap" MaxLength="16" IsSpellCheckEnabled="False" InputScope="Url" >
+            <TextBox x:Name="ArchiveNameTextBox" TextChanged="ArchiveNameTextBox_TextChanged" AcceptsReturn="False" Text="myArchive" Width="180" Header="Archive Name" IsReadOnly="False" TextWrapping="NoWrap" MaxLength="32" IsSpellCheckEnabled="False" InputScope="Url" >
                 <ToolTipService.ToolTip>
                     <ToolTip x:Name="ArchiveNameToolTip" HorizontalOffset="20" VerticalOffset="10" />
                 </ToolTipService.ToolTip>
@@ -50,7 +52,7 @@
         <TransitionCollection>
             <NavigationThemeTransition>
                 <NavigationThemeTransition.DefaultNavigationTransitionInfo>
-                    <ContinuumNavigationTransitionInfo/>
+                    <SlideNavigationTransitionInfo/>
                 </NavigationThemeTransition.DefaultNavigationTransitionInfo>
             </NavigationThemeTransition>
         </TransitionCollection>

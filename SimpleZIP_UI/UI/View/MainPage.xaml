@@ -11,12 +11,12 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="7*"/>
         </Grid.RowDefinitions>
-        <Button Visibility="Visible" FontFamily="Segoe MDL2 Assets" Content="&#xE700;"  Grid.Row="0"
+        <Button Visibility="Visible" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" FontSize="20" Grid.Row="0"
                     Width="50" Height="50" Background="Transparent" Tapped="HamburgerButton_Tap" Foreground="White"/>
         <SplitView x:Name="MenuSplitView" DisplayMode="CompactOverlay" IsPaneOpen="False" Grid.Row="1"
                CompactPaneLength="0" VerticalContentAlignment="Stretch" VerticalAlignment="Stretch" OpenPaneLength="320">
             <SplitView.Pane>
-                <StackPanel Background="Transparent">
+                <StackPanel Background="Transparent" Padding="0,8,0,0" VerticalAlignment="Top">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -57,9 +57,9 @@
                         <RowDefinition Height="3*"/>
                         <RowDefinition Height="3*"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Text="SimpleZIP" FontSize="54"  VerticalAlignment="Top" Margin="32,16,0,0" Grid.Row="0" HorizontalAlignment="Left" Foreground="White"/>
+                    <TextBlock Text="SimpleZIP" FontFamily="Default" FontSize="54" CharacterSpacing="32" FontStyle="Normal" VerticalAlignment="Top" Margin="24,16,0,0" Grid.Row="0" HorizontalAlignment="Left" Foreground="White"/>
                     <Button Content="Compress File(s) . . ." HorizontalAlignment="Stretch" Grid.Row="1" MinHeight="32" Height="50" MaxHeight="72" VerticalAlignment="Bottom" Margin="32,16,32,16" Tapped="CompressButton_Tap" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}"/>
-                    <Button Content="Extract archive . . ." HorizontalAlignment="Stretch" Grid.Row="2" MinHeight="32" Height="50" MaxHeight="72" VerticalAlignment="Top" Margin="32,16,32,16" Tapped="ExtractButton_Tap" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}"/>
+                    <Button Content="Extract archive(s) . . ." HorizontalAlignment="Stretch" Grid.Row="2" MinHeight="32" Height="50" MaxHeight="72" VerticalAlignment="Top" Margin="32,16,32,16" Tapped="ExtractButton_Tap" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}"/>
                 </Grid>
             </SplitView.Content>
         </SplitView>
@@ -68,7 +68,7 @@
         <TransitionCollection>
             <NavigationThemeTransition>
                 <NavigationThemeTransition.DefaultNavigationTransitionInfo>
-                    <EntranceNavigationTransitionInfo />
+                    <CommonNavigationTransitionInfo />
                 </NavigationThemeTransition.DefaultNavigationTransitionInfo>
             </NavigationThemeTransition>
         </TransitionCollection>
