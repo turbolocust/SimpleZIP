@@ -25,23 +25,31 @@ namespace SimpleZIP_UI.UI
         }
 
         /// <summary>
-        /// Stores the file type for each algorithm type.
+        /// Stores file types for each algorithm. Consists only of file types with a single file name extension.
         /// </summary>
-        internal static readonly Dictionary<string, Algorithm> AlgorithmFileTypes = new Dictionary<string, Algorithm>();
+        internal static readonly Dictionary<string, Algorithm> AlgorithmFileTypes
+            = new Dictionary<string, Algorithm>(Enum.GetNames(typeof(Algorithm)).Length * 2);
+
+        /// <summary>
+        /// Stores file types for each algorithm. Consists only of file types with multiple file name extensions.
+        /// </summary>
+        internal static readonly Dictionary<string, Algorithm> AlgorithmExtendedFileTypes
+            = new Dictionary<string, Algorithm>();
 
         static BaseControl()
         {
+            // populate dictionary that holds file types
             AlgorithmFileTypes.Add(".zip", Algorithm.Zip);
-            AlgorithmFileTypes.Add(".7z", Algorithm.SevenZip);
-            AlgorithmFileTypes.Add(".rar", Algorithm.Rar);
             AlgorithmFileTypes.Add(".tar", Algorithm.Tar);
             AlgorithmFileTypes.Add(".gzip", Algorithm.GZip);
             AlgorithmFileTypes.Add(".gz", Algorithm.GZip);
-            AlgorithmFileTypes.Add(".tar.gz", Algorithm.TarGz);
             AlgorithmFileTypes.Add(".tgz", Algorithm.TarGz);
             AlgorithmFileTypes.Add(".bz2", Algorithm.TarBz2);
-            AlgorithmFileTypes.Add(".tar.bz2", Algorithm.TarBz2);
             AlgorithmFileTypes.Add(".tbz2", Algorithm.TarBz2);
+
+            // populate dictionary that holds extended file types
+            AlgorithmExtendedFileTypes.Add(".tar.gz", Algorithm.TarGz);
+            AlgorithmExtendedFileTypes.Add(".tar.bz2", Algorithm.TarBz2);
         }
 
         protected BaseControl(Page parent)

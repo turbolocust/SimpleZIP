@@ -31,12 +31,12 @@
             <uap:InfoTip>Open archive to extract</uap:InfoTip>
             <uap:EditFlags OpenIsSafe="true" />
             <uap:SupportedFileTypes>
-              <uap:FileType ContentType="application/zip">.zip</uap:FileType>
-              <uap:FileType ContentType="application/x-gzip">.gzip</uap:FileType>
-              <uap:FileType ContentType="application/x-gzip">.gz</uap:FileType>
-              <uap:FileType ContentType="application/x-bzip">.bz2</uap:FileType>
+              <uap:FileType ContentType="application/x-zip-compressed">.zip</uap:FileType>
+              <uap:FileType ContentType="application/x-gzip-compressed">.gzip</uap:FileType>
+              <uap:FileType ContentType="application/x-gzip-compressed">.gz</uap:FileType>
+              <uap:FileType ContentType="application/x-bzip2-compressed">.bz2</uap:FileType>
               <uap:FileType ContentType="application/x-compressed">.tgz</uap:FileType>
-              <uap:FileType ContentType="application/x-bzip">.tbz2</uap:FileType>
+              <uap:FileType ContentType="application/x-bzip2-compressed">.tbz2</uap:FileType>
               <uap:FileType ContentType="application/x-tar">.tar</uap:FileType>
             </uap:SupportedFileTypes>
           </uap:FileTypeAssociation>

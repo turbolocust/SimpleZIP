@@ -27,7 +27,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
 
         /// <summary>
         /// Compresses a file to the specified location. If the writer options are omitted, the default
-        /// fallback algorithm is used for the corresponding archive type of this intance.
+        /// fallback algorithm is used for the corresponding archive type of this instance.
         /// </summary>
         /// <param name="file">The file to be put into the archive.</param>
         /// <param name="archive">The file to write compressed bytes to.</param>
@@ -41,7 +41,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
 
         /// <summary>
         /// Compresses files to the specified location. If the writer options are omitted, the default
-        /// fallback algorithm is used for the corresponding archive type of this intance.
+        /// fallback algorithm is used for the corresponding archive type of this instance.
         /// </summary>
         /// <param name="files">The files to be put into the archive.</param>
         /// <param name="archive">The file to write compressed bytes to.</param>

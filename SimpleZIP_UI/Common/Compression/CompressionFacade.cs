@@ -12,6 +12,7 @@ using SimpleZIP_UI.Common.Model;
 using SimpleZIP_UI.Common.Util;
 using SimpleZIP_UI.Exceptions;
 using SimpleZIP_UI.UI;
+using static SimpleZIP_UI.UI.BaseControl;
 
 namespace SimpleZIP_UI.Common.Compression
 {
@@ -50,7 +51,7 @@ namespace SimpleZIP_UI.Common.Compression
             StorageFolder location, BaseControl.Algorithm key, CancellationToken ct)
         {
             InitOperation(key);
-            
+
             return await Task.Run(async () => // execute compression asynchronously
             {
                 var message = "";
@@ -131,13 +132,14 @@ namespace SimpleZIP_UI.Common.Compression
         /// location is not allowed.</exception>
         public async Task<Result> ExtractFromArchive(StorageFile archiveFile, StorageFolder location, CancellationToken ct)
         {
-            BaseControl.Algorithm key; // the file type of the archive
-            var message = "";
+            var fileType = FileUtils.GetFileNameExtension(archiveFile.Name);
+            var message = ""; // may holds information about errors
 
             // try to get enum type by file extension, which is the key
-            if (BaseControl.AlgorithmFileTypes.TryGetValue(archiveFile.FileType, out key))
+            if (AlgorithmFileTypes.TryGetValue(fileType, out BaseControl.Algorithm value)
+                || AlgorithmExtendedFileTypes.TryGetValue(fileType, out value))
             {
-                InitOperation(key);
+                InitOperation(value);
             }
             else
             {

@@ -9,6 +9,7 @@ using Windows.UI.Xaml.Navigation;
 using SimpleZIP_UI.Common.Model;
 using SimpleZIP_UI.Common.Util;
 using SimpleZIP_UI.UI.Factory;
+using static SimpleZIP_UI.UI.BaseControl;
 
 namespace SimpleZIP_UI.UI.View
 {
@@ -51,11 +52,11 @@ namespace SimpleZIP_UI.UI.View
                 archiveType = ParseArchiveType(archiveType); // parse actual type of selection
                 try
                 {
-                    BaseControl.Algorithm key; // set the algorithm by archive type
-                    BaseControl.AlgorithmFileTypes.TryGetValue(archiveType, out key);
+                    Algorithm value; // set the algorithm by archive type
+                    AlgorithmFileTypes.TryGetValue(archiveType, out value);
 
                     archiveName += archiveType;
-                    await InitOperation(key, archiveName);
+                    await InitOperation(value, archiveName);
                 }
                 catch (ArgumentNullException)
                 {
@@ -165,7 +166,7 @@ namespace SimpleZIP_UI.UI.View
         /// </summary>
         /// <param name="key">The type of the archive.</param>
         /// <param name="archiveName">The name of the archive.</param>
-        private async Task<bool> InitOperation(BaseControl.Algorithm key, string archiveName)
+        private async Task<bool> InitOperation(Algorithm key, string archiveName)
         {
             SetOperationActive(true);
             var archiveInfo = new ArchiveInfo(_selectedFiles, ArchiveInfo.CompressionMode.Compress)
