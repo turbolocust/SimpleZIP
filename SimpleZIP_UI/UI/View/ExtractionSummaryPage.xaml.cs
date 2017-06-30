@@ -107,21 +107,13 @@ namespace SimpleZIP_UI.UI.View
         }
 
         /// <summary>
-        /// Invoked after navigating away from this page.
-        /// </summary>
-        /// <param name="args">The arguments of the navigation event.</param>
-        protected override void OnNavigatedFrom(NavigationEventArgs args)
-        {
-            SetOperationActive(false);
-        }
-
-        /// <summary>
         /// Initializes the archiving operation and waits for the result.
         /// </summary>
         private async Task<bool> InitOperation()
         {
             SetOperationActive(true);
-            var result = await _control.StartButtonAction(_selectedFiles);
+            var archiveInfo = new ArchiveInfo(_selectedFiles, ArchiveInfo.CompressionMode.Decompress);
+            var result = await _control.StartButtonAction(archiveInfo);
 
             // move focus to avoid accidential focus event on text block
             FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
@@ -161,6 +153,16 @@ namespace SimpleZIP_UI.UI.View
                 StartButton.IsEnabled = true;
                 OutputPathTextBlock.IsEnabled = true;
             }
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs args)
+        {
+            SetOperationActive(false);
+        }
+
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            e.Cancel = _control.IsRunning;
         }
     }
 }

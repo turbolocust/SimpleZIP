@@ -1,34 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 using SimpleZIP_UI.Common.Compression;
 using SimpleZIP_UI.Common.Model;
-using SimpleZIP_UI.Exceptions;
 
 namespace SimpleZIP_UI.UI
 {
     /// <summary>
     /// Handles complex operations for the corresponding GUI controller.
     /// </summary>
-    internal class ExtractionSummaryPageControl : BaseControl
+    internal class ExtractionSummaryPageControl : SummaryPageControl
     {
         internal ExtractionSummaryPageControl(Page parent) : base(parent)
         {
         }
 
-        /// <summary>
-        /// Performs an action after the start button has been pressed.
-        /// </summary>
-        /// <param name="selectedFiles">A list of selected files.</param>
-        /// <returns>An object that consists of result parameters.</returns>
-        internal async Task<Result> StartButtonAction(IReadOnlyList<StorageFile> selectedFiles)
+        protected override async Task<Result> PerformOperation(ArchiveInfo archiveInfo)
         {
-            string message;
+            var selectedFiles = archiveInfo.SelectedFiles;
+            var message = "";
+
+            Result result = null;
+
             try
             {
-                InitOperation();
                 try
                 {
                     var handler = new CompressionFacade();
@@ -43,10 +38,10 @@ namespace SimpleZIP_UI.UI
                         {
                             if (token.IsCancellationRequested) break;
 
-                            var result = await handler.ExtractFromArchive(file, OutputFolder, token);
-                            if (result.StatusCode < 0)
+                            var subResult = await handler.ExtractFromArchive(file, OutputFolder, token);
+                            if (subResult.StatusCode < 0)
                             {
-                                totalDuration = totalDuration.Add(result.ElapsedTime);
+                                totalDuration = totalDuration.Add(subResult.ElapsedTime);
                             }
                             else
                             {
@@ -54,24 +49,19 @@ namespace SimpleZIP_UI.UI
                             }
                         }
 
-                        return new Result
-                        {
-                            Message = resultMessage,
-                            ElapsedTime = totalDuration
-                        };
+                        result = new Result { Message = resultMessage, ElapsedTime = totalDuration };
                     }
-                    return await handler.ExtractFromArchive(selectedFiles[0], OutputFolder, token);
+                    else
+                    {
+                        result = await handler.ExtractFromArchive(selectedFiles[0], OutputFolder, token);
+                    }
                 }
-                catch (OperationCanceledException ex)
+                catch (Exception ex)
                 {
-                    if (IsCancelRequest)
+                    if (ex is OperationCanceledException && IsCancelRequest)
                     {
                         IsCancelRequest = false; // reset
                     }
-                    message = ex.Message;
-                }
-                catch (InvalidArchiveTypeException ex)
-                {
                     message = ex.Message;
                 }
             }
@@ -80,10 +70,10 @@ namespace SimpleZIP_UI.UI
                 message = ex.Message;
             }
 
-            return new Result
+            return result ?? new Result
             {
-                Message = message,
-                StatusCode = Result.Status.Fail
+                StatusCode = Result.Status.Fail,
+                Message = message
             };
         }
     }

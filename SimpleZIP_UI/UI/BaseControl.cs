@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Windows.Storage;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
 using SimpleZIP_UI.Common.Model;
@@ -18,21 +15,6 @@ namespace SimpleZIP_UI.UI
         /// The parent page to whom this control belongs to.
         /// </summary>
         protected Page ParentPage { get; }
-
-        /// <summary>
-        /// True if a cancel request has been made.
-        /// </summary>
-        protected bool IsCancelRequest;
-
-        /// <summary>
-        /// Token used to cancel an archiving operation.
-        /// </summary>
-        protected CancellationTokenSource CancellationToken;
-
-        /// <summary>
-        /// Where the archive or its content will be saved to.
-        /// </summary>
-        protected StorageFolder OutputFolder;
 
         /// <summary>
         /// Enumeration type to identify algorithms.
@@ -63,21 +45,14 @@ namespace SimpleZIP_UI.UI
         protected BaseControl(Page parent)
         {
             ParentPage = parent;
-            CancellationToken = null;
         }
 
         /// <summary>
-        /// Initializes any operation by checking if an output folder was selected
-        /// and also creates a new token for cancellation.
+        /// Navigates back to the main page.
         /// </summary>
-        protected void InitOperation()
+        protected void NavigateBackHome()
         {
-            if (OutputFolder == null)
-            {
-                throw new NullReferenceException("No valid output folder selected.");
-            }
-            CancellationToken?.Dispose();
-            CancellationToken = new CancellationTokenSource();
+            ParentPage.Frame.Navigate(typeof(MainPage));
         }
 
         /// <summary>
@@ -105,36 +80,6 @@ namespace SimpleZIP_UI.UI
                 default: throw new ArgumentOutOfRangeException();
             }
             return dialog;
-        }
-
-        /// <summary>
-        /// Performs an action after the abort button has been pressed.
-        /// </summary>
-        internal void AbortButtonAction()
-        {
-            try
-            {
-                CancellationToken?.Cancel();
-            }
-            catch (ObjectDisposedException)
-            {
-                IsCancelRequest = true;
-            }
-        }
-
-        /// <summary>
-        /// Opens a picker to select a folder and returns it. May be <code>null</code> on cancellation.
-        /// </summary>
-        internal async Task<StorageFolder> OutputPathPanelAction()
-        {
-            var picker = PickerFactory.CreateFolderPicker();
-
-            var folder = await picker.PickSingleFolderAsync();
-            if (folder != null) // system has now access to folder
-            {
-                OutputFolder = folder;
-            }
-            return folder;
         }
 
         /// <summary>

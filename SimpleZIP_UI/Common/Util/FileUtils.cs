@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using Windows.Storage;
 
 namespace SimpleZIP_UI.Common.Util
@@ -27,16 +26,9 @@ namespace SimpleZIP_UI.Common.Util
         /// Deletes the specified item. This may be called if an operation has been canceled.
         /// </summary>
         /// <param name="item">The item to be deleted.</param>
-        public static async void Cleanup(IStorageItem item)
+        public static async void Delete(IStorageItem item)
         {
-            try
-            {
-                await item.DeleteAsync();
-            }
-            catch (IOException)
-            {
-                // can be ignored
-            }
+            await item.DeleteAsync();
         }
     }
 }

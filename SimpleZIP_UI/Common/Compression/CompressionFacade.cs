@@ -54,7 +54,6 @@ namespace SimpleZIP_UI.Common.Compression
             return await Task.Run(async () => // execute compression asynchronously
             {
                 var message = "";
-
                 try
                 {
                     var archive = await location.CreateFileAsync(archiveName,
@@ -64,7 +63,7 @@ namespace SimpleZIP_UI.Common.Compression
 
                     if (ct.IsCancellationRequested)
                     {
-                        FileUtils.Cleanup(archive);
+                        FileUtils.Delete(archive);
                     }
                 }
                 catch (Exception ex)
@@ -94,7 +93,6 @@ namespace SimpleZIP_UI.Common.Compression
             return await Task.Run(async () => // execute compression asynchronously
             {
                 var message = "";
-
                 if (files.Count > 0)
                 {
                     try
@@ -106,7 +104,7 @@ namespace SimpleZIP_UI.Common.Compression
 
                         if (ct.IsCancellationRequested)
                         {
-                            FileUtils.Cleanup(archive);
+                            FileUtils.Delete(archive);
                         }
                     }
                     catch (Exception ex)

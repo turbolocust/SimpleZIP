@@ -81,10 +81,6 @@ namespace SimpleZIP_UI.UI.View
             await new AboutDialog().ShowAsync();
         }
 
-        /// <summary>
-        /// Invoked after navigating to this page.
-        /// </summary>
-        /// <param name="args">Arguments that may have been passed.</param>
         protected override void OnNavigatedTo(NavigationEventArgs args)
         {
             var frame = Window.Current.Content as Frame;

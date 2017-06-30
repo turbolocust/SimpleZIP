@@ -77,11 +77,11 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
             options = options ?? GetWriterOptions(); // set options if null
 
             using (var outputStream = await archive.OpenAsync(FileAccessMode.ReadWrite))
-            using (var archiveStream = WriterFactory.Open(outputStream.AsStreamForWrite(), _type, options))
+            using (var writer = WriterFactory.Open(outputStream.AsStreamForWrite(), _type, options))
             {
                 using (var fileStream = await file.OpenStreamForReadAsync())
                 {
-                    archiveStream.Write(file.Name, fileStream, DateTime.Now);
+                    writer.Write(file.Name, fileStream, DateTime.Now);
                 }
             }
             return true;
@@ -95,7 +95,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
             options = options ?? GetWriterOptions(); // set options if null
 
             using (var outputStream = await archive.OpenAsync(FileAccessMode.ReadWrite))
-            using (var archiveStream = WriterFactory.Open(outputStream.AsStreamForWrite(), _type, options))
+            using (var writer = WriterFactory.Open(outputStream.AsStreamForWrite(), _type, options))
             {
                 foreach (var file in files)
                 {
@@ -103,7 +103,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
 
                     using (var fileStream = await file.OpenStreamForReadAsync())
                     {
-                        archiveStream.Write(file.Name, fileStream, DateTime.Now);
+                        writer.Write(file.Name, fileStream, DateTime.Now);
                     }
                 }
             }

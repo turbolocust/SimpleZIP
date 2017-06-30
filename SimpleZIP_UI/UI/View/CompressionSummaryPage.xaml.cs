@@ -152,38 +152,13 @@ namespace SimpleZIP_UI.UI.View
             var toolTip = (ToolTip)sender;
 
             // use timer to close tooltip after 8 seconds
-            var timer = new DispatcherTimer { Interval = new TimeSpan(0, 0, 8) };
+            var timer = new DispatcherTimer { Interval = new TimeSpan(0, 0, 5) };
             timer.Tick += (s, evt) =>
             {
                 toolTip.IsOpen = false;
                 timer.Stop();
             };
             timer.Start();
-        }
-
-        /// <summary>
-        /// Invoked after navigating to this page.
-        /// </summary>
-        /// <param name="args">Arguments that may have been passed.</param>
-        protected override void OnNavigatedTo(NavigationEventArgs args)
-        {
-            _selectedFiles = args.Parameter as IReadOnlyList<StorageFile>;
-
-            if (_selectedFiles == null) return;
-
-            foreach (var file in _selectedFiles) // populate list
-            {
-                ItemsListBox.Items?.Add(new TextBlock { Text = file.Name });
-            }
-        }
-
-        /// <summary>
-        /// Invoked after navigating away from this page.
-        /// </summary>
-        /// <param name="args">Arguments that may have been passed.</param>
-        protected override void OnNavigatedFrom(NavigationEventArgs args)
-        {
-            SetOperationActive(false);
         }
 
         /// <summary>
@@ -194,7 +169,12 @@ namespace SimpleZIP_UI.UI.View
         private async Task<bool> InitOperation(BaseControl.Algorithm key, string archiveName)
         {
             SetOperationActive(true);
-            var result = await _control.StartButtonAction(_selectedFiles, archiveName, key);
+            var archiveInfo = new ArchiveInfo(_selectedFiles, ArchiveInfo.CompressionMode.Compress)
+            {
+                ArchiveName = archiveName,
+                Key = key
+            };
+            var result = await _control.StartButtonAction(archiveInfo);
 
             // move focus to avoid accidential focus event on text block
             FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
@@ -250,6 +230,28 @@ namespace SimpleZIP_UI.UI.View
                 ArchiveNameTextBox.IsEnabled = true;
                 ArchiveTypeComboBox.IsEnabled = true;
             }
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs args)
+        {
+            _selectedFiles = args.Parameter as IReadOnlyList<StorageFile>;
+
+            if (_selectedFiles == null) return;
+
+            foreach (var file in _selectedFiles) // populate list
+            {
+                ItemsListBox.Items?.Add(new TextBlock { Text = file.Name });
+            }
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs args)
+        {
+            SetOperationActive(false);
+        }
+
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            e.Cancel = _control.IsRunning;
         }
     }
 }

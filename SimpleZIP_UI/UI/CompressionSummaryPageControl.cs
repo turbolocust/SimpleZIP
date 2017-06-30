@@ -1,37 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 using SimpleZIP_UI.Common.Compression;
 using SimpleZIP_UI.Common.Model;
-using SimpleZIP_UI.Exceptions;
 
 namespace SimpleZIP_UI.UI
 {
     /// <summary>
     /// Handles complex operations for the corresponding GUI controller.
     /// </summary>
-    internal class CompressionSummaryPageControl : BaseControl
+    internal class CompressionSummaryPageControl : SummaryPageControl
     {
         internal CompressionSummaryPageControl(Page parent) : base(parent)
         {
         }
 
-        /// <summary>
-        /// Performs an action after the start button has been tapped.
-        /// </summary>
-        /// <param name="selectedFiles">A list of selected files.</param>
-        /// <param name="archiveName">The name of the archive to be created.</param>
-        /// <param name="key">The key of the algorithm to be used.</param>
-        /// <returns>An object that consists of result parameters.</returns>
-        internal async Task<Result> StartButtonAction(IReadOnlyList<StorageFile> selectedFiles, string archiveName, Algorithm key)
+        protected override async Task<Result> PerformOperation(ArchiveInfo archiveInfo)
         {
-            string message;
+            var selectedFiles = archiveInfo.SelectedFiles;
+            var archiveName = archiveInfo.ArchiveName;
+            var key = archiveInfo.Key;
+            var message = "";
+
+            Result result = null;
+
             try
             {
-                InitOperation();
-
                 try
                 {
                     var handler = new CompressionFacade();
@@ -46,35 +40,29 @@ namespace SimpleZIP_UI.UI
                         {
                             if (token.IsCancellationRequested) break;
 
-                            var result = await handler.CreateArchive(file, archiveName, OutputFolder, key, token);
-                            if (result.StatusCode == Result.Status.Success)
+                            var subResult = await handler.CreateArchive(file, archiveName, OutputFolder, key, token);
+                            if (subResult.StatusCode == Result.Status.Success)
                             {
-                                totalDuration = totalDuration.Add(result.ElapsedTime);
+                                totalDuration = totalDuration.Add(subResult.ElapsedTime);
                             }
                             else
                             {
                                 resultMessage += "\nFile " + file.DisplayName + " was not compressed.";
                             }
                         }
-
-                        return new Result()
-                        {
-                            Message = resultMessage,
-                            ElapsedTime = totalDuration
-                        };
+                        result = new Result() { Message = resultMessage, ElapsedTime = totalDuration };
                     }
-                    return await handler.CreateArchive(selectedFiles, archiveName, OutputFolder, key, token);
+                    else
+                    {
+                        result = await handler.CreateArchive(selectedFiles, archiveName, OutputFolder, key, token);
+                    }
                 }
-                catch (OperationCanceledException ex)
+                catch (Exception ex)
                 {
-                    if (IsCancelRequest)
+                    if (ex is OperationCanceledException && IsCancelRequest)
                     {
                         IsCancelRequest = false; // reset
                     }
-                    message = ex.Message;
-                }
-                catch (InvalidArchiveTypeException ex)
-                {
                     message = ex.Message;
                 }
             }
@@ -83,7 +71,7 @@ namespace SimpleZIP_UI.UI
                 message = ex.Message;
             }
 
-            return new Result
+            return result ?? new Result
             {
                 StatusCode = Result.Status.Fail,
                 Message = message
