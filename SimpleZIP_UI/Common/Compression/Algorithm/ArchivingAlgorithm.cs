@@ -42,10 +42,8 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
                 LeaveStreamOpen = false
             };
 
-            using (var inputStream = await archive.OpenReadAsync())
-            using (var reader = ReaderFactory.Open(inputStream.AsStreamForRead(), options))
+            using (var reader = ReaderFactory.Open(await archive.OpenStreamForReadAsync(), options))
             {
-                var size = inputStream.Size;
                 var bytes = new byte[DefaultBufferSize];
 
                 while (!IsInterrupted() && reader.MoveToNextEntry())
@@ -70,10 +68,6 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
 
                         }
                     }
-                    if (inputStream.Position == size) // to be extra sure that the end of stream has been reached
-                    {
-                        break;
-                    }
                 }
             }
             return true;
@@ -83,10 +77,10 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
         {
             if (file == null || archive == null || location == null) return false;
 
-            options = options ?? GetWriterOptions(); // set options if null
+            options = options ?? GetWriterOptions(); // get options if null
+            options.LeaveStreamOpen = false;
 
-            using (var outputStream = await archive.OpenAsync(FileAccessMode.ReadWrite))
-            using (var writer = WriterFactory.Open(outputStream.AsStreamForWrite(), _type, options))
+            using (var writer = WriterFactory.Open(await archive.OpenStreamForWriteAsync(), _type, options))
             {
                 using (var inputStream = await file.OpenStreamForReadAsync())
                 {
@@ -101,10 +95,10 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
         {
             if (files == null || archive == null || location == null) return false;
 
-            options = options ?? GetWriterOptions(); // set options if null
+            options = options ?? GetWriterOptions(); // get options if null
+            options.LeaveStreamOpen = false;
 
-            using (var outputStream = await archive.OpenAsync(FileAccessMode.ReadWrite))
-            using (var writer = WriterFactory.Open(outputStream.AsStreamForWrite(), _type, options))
+            using (var writer = WriterFactory.Open(await archive.OpenStreamForWriteAsync(), _type, options))
             {
                 foreach (var file in files)
                 {
@@ -112,7 +106,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm
 
                     using (var inputStream = await file.OpenStreamForReadAsync())
                     {
-                        writer.Write(file.Name, inputStream, DateTime.Now);
+                        writer.Write(file.Name, inputStream);
                     }
                 }
             }

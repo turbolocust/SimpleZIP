@@ -16,7 +16,7 @@ namespace SimpleZIP_UI.Common.Compression.Algorithm.Type
 
         protected override WriterOptions GetWriterOptions()
         {
-            return new WriterOptions(CompressionType.BZip2);
+            return new WriterOptions(CompressionType.BZip2); // default
         }
     }
 }

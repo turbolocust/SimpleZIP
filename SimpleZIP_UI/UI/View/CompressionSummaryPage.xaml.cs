@@ -47,7 +47,7 @@ namespace SimpleZIP_UI.UI.View
             var archiveName = ArchiveNameTextBox.Text;
             var archiveType = selectedItem?.Content?.ToString();
 
-            if (archiveType != null && archiveName.Length > 0 && !FileUtils.ContainsIllegalChars(archiveName))
+            if (archiveType != null && archiveName.Length > 0 && !archiveName.ContainsIllegalChars())
             {
                 archiveType = ParseArchiveType(archiveType); // parse actual type of selection
                 try
@@ -130,7 +130,7 @@ namespace SimpleZIP_UI.UI.View
             {
                 ArchiveNameTextBox.Text = "myArchive";
             }
-            else if (FileUtils.ContainsIllegalChars(fileName)) // check for illegal characters in file name
+            else if (fileName.ContainsIllegalChars()) // check for illegal characters in file name
             {
                 ArchiveNameToolTip.Content = "These characters are not allowed:\n" +
                                                   "\\ / | : * \" ? < >\n";

@@ -78,11 +78,7 @@ namespace SimpleZIP_UI.UI.View
         protected override void OnNavigatedTo(NavigationEventArgs args)
         {
             var list = args.Parameter as IReadOnlyList<StorageFile>;
-            if (list != null)
-            {
-                _selectedFiles = list;
-            }
-            else // file opened from file explorer
+            if (list == null) // file opened from file explorer
             {
                 var eventArgs = args.Parameter as Windows.ApplicationModel.Activation.IActivatedEventArgs;
                 if (eventArgs?.Kind == Windows.ApplicationModel.Activation.ActivationKind.File)

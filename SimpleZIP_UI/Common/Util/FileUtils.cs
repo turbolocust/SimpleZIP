@@ -4,24 +4,30 @@ using Windows.Storage;
 
 namespace SimpleZIP_UI.Common.Util
 {
-    internal class FileUtils
+    internal static class FileUtils
     {
-        private FileUtils()
-        {
-            // holds static members only
-        }
-
         /// <summary>
         /// Checks if the specified string contains illegal characters which are not allowed in file names.
         /// </summary>
         /// <param name="filename">The file name to be validated.</param>
         /// <returns>True if file name contains illegal characters, false otherwise.</returns>
-        public static bool ContainsIllegalChars(string filename)
+        public static bool ContainsIllegalChars(this string filename)
         {
             return filename.Contains("<") || filename.Contains(">") || filename.Contains("/") || filename.Contains("\\") ||
                    filename.Contains("|") || filename.Contains(":") || filename.Contains("*") || filename.Contains("\"") ||
                    filename.Contains("?");
         }
+
+        /// <summary>
+        /// Checks whether a specified path has multiple file name extensions.
+        /// </summary>
+        /// <param name="path">The file path.</param>
+        /// <returns>True if the path has at least two file name extensions.</returns>
+        public static bool ContainsMultipleFileNameExtensions(this string path)
+        {
+            return !string.IsNullOrEmpty(path) && path.Split('.').Length - 1 > 1;
+        }
+
 
         /// <summary>
         /// Returns the file name extension of the specified path. Paths with multiple file name 
@@ -32,18 +38,8 @@ namespace SimpleZIP_UI.Common.Util
         /// or <code>String.Empty</code> if path does not have an extension.</returns>
         public static string GetFileNameExtension(string path)
         {
-            return ContainsMultipleFileNameExtensions(path)
+            return path.ContainsMultipleFileNameExtensions()
                 ? path.Substring(path.IndexOf('.')) : Path.GetExtension(path);
-        }
-
-        /// <summary>
-        /// Checks whether a specified path has multiple file name extensions.
-        /// </summary>
-        /// <param name="path">The file path.</param>
-        /// <returns>True if the path has at least two file name extensions.</returns>
-        public static bool ContainsMultipleFileNameExtensions(string path)
-        {
-            return !string.IsNullOrEmpty(path) && path.Split('.').Length - 1 > 1;
         }
 
         /// <summary>

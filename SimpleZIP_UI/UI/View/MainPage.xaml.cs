@@ -1,11 +1,9 @@
 ﻿using System;
 using Windows.System;
-using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-using SimpleZIP_UI.Exceptions;
 using SimpleZIP_UI.UI.Factory;
 
 namespace SimpleZIP_UI.UI.View
@@ -25,22 +23,14 @@ namespace SimpleZIP_UI.UI.View
             MenuSplitView.IsPaneOpen = !MenuSplitView.IsPaneOpen;
         }
 
-        private void CompressButton_Tap(object sender, TappedRoutedEventArgs e)
+        private async void CompressButton_Tap(object sender, TappedRoutedEventArgs e)
         {
-            _control.CompressButtonAction();
+            await _control.CompressButtonAction();
         }
 
         private async void ExtractButton_Tap(object sender, TappedRoutedEventArgs e)
         {
-            try
-            {
-                _control.DecompressButtonAction();
-            }
-            catch (InvalidArchiveTypeException ex)
-            {
-                var dialog = new MessageDialog(ex.Message);
-                await dialog.ShowAsync();
-            }
+            await _control.DecompressButtonAction();
         }
 
         /// <summary>

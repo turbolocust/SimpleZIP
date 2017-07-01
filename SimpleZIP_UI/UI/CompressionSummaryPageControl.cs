@@ -50,7 +50,7 @@ namespace SimpleZIP_UI.UI
                                 resultMessage += "\nFile " + file.DisplayName + " was not compressed.";
                             }
                         }
-                        result = new Result() { Message = resultMessage, ElapsedTime = totalDuration };
+                        result = new Result { Message = resultMessage, ElapsedTime = totalDuration };
                     }
                     else
                     {
