@@ -33,6 +33,7 @@ namespace SimpleZIP_UI.UI.View
         /// <param name="args">Arguments that may have been passed.</param>
         private void AbortButton_Tap(object sender, TappedRoutedEventArgs args)
         {
+            AbortButtonToolTip.IsOpen = true;
             _control.AbortButtonAction();
         }
 
@@ -52,11 +53,16 @@ namespace SimpleZIP_UI.UI.View
                 archiveType = ParseArchiveType(archiveType); // parse actual type of selection
                 try
                 {
-                    Algorithm value; // set the algorithm by archive type
-                    AlgorithmFileTypes.TryGetValue(archiveType, out value);
+                    // set the algorithm by archive file type
+                    AlgorithmFileTypes.TryGetValue(archiveType, out Algorithm value);
 
                     archiveName += archiveType;
-                    await InitOperation(value, archiveName);
+                    var result = await InitOperation(value, archiveName);
+
+                    // move focus to avoid accidental focus event on text block
+                    FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
+
+                    _control.CreateResultDialog(result).ShowAsync().AsTask().Forget();
                 }
                 catch (ArgumentNullException)
                 {
@@ -110,8 +116,8 @@ namespace SimpleZIP_UI.UI.View
 
                 if (archiveType != null && archiveType.Contains("gzip"))
                 {
-                    ArchiveTypeToolTip.Content = "GZIP only allows the compression of a single file.\r\n" +
-                    "Therefore, each file will be put into a separate archive.";
+                    ArchiveTypeToolTip.Content = "GZIP only allows to compress a single file.\r\n" +
+                    "Thus, each file will be put into a separate archive.";
                     ArchiveTypeToolTip.IsOpen = true;
                 }
             }
@@ -153,7 +159,7 @@ namespace SimpleZIP_UI.UI.View
             var toolTip = (ToolTip)sender;
 
             // use timer to close tooltip after 8 seconds
-            var timer = new DispatcherTimer { Interval = new TimeSpan(0, 0, 5) };
+            var timer = new DispatcherTimer { Interval = new TimeSpan(0, 0, 8) };
             timer.Tick += (s, evt) =>
             {
                 toolTip.IsOpen = false;
@@ -167,7 +173,7 @@ namespace SimpleZIP_UI.UI.View
         /// </summary>
         /// <param name="key">The type of the archive.</param>
         /// <param name="archiveName">The name of the archive.</param>
-        private async Task<bool> InitOperation(Algorithm key, string archiveName)
+        private async Task<Result> InitOperation(Algorithm key, string archiveName)
         {
             SetOperationActive(true);
             var archiveInfo = new ArchiveInfo(_selectedFiles, ArchiveInfo.CompressionMode.Compress)
@@ -175,13 +181,7 @@ namespace SimpleZIP_UI.UI.View
                 ArchiveName = archiveName,
                 Key = key
             };
-            var result = await _control.StartButtonAction(archiveInfo);
-
-            // move focus to avoid accidental focus event on text block
-            FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
-
-            await _control.CreateResultDialog(result).ShowAsync();
-            return result.StatusCode == Result.Status.Success;
+            return await _control.StartButtonAction(archiveInfo);
         }
 
         /// <summary>
@@ -249,6 +249,8 @@ namespace SimpleZIP_UI.UI.View
         protected override void OnNavigatedFrom(NavigationEventArgs args)
         {
             SetOperationActive(false);
+            AbortButtonToolTip.IsOpen = false;
+            ArchiveTypeToolTip.IsOpen = false;
         }
 
         protected override async void OnNavigatingFrom(NavigatingCancelEventArgs e)

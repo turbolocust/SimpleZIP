@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.Storage;
 
 namespace SimpleZIP_UI.Common.Util
@@ -53,6 +54,17 @@ namespace SimpleZIP_UI.Common.Util
         public static async void Delete(IStorageItem item)
         {
             await item.DeleteAsync();
+        }
+
+        /// <summary>
+        /// Returns the file size of the specified file.
+        /// </summary>
+        /// <param name="file">The file from which to get the file size.</param>
+        /// <returns>The file size as unsigned long.</returns>
+        public static async Task<ulong> GetFileSize(StorageFile file)
+        {
+            var properties = await file.GetBasicPropertiesAsync();
+            return properties.Size;
         }
     }
 }

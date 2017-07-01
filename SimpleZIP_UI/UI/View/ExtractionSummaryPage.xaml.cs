@@ -8,6 +8,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using SimpleZIP_UI.Common.Model;
+using SimpleZIP_UI.Common.Util;
 
 namespace SimpleZIP_UI.UI.View
 {
@@ -30,6 +31,7 @@ namespace SimpleZIP_UI.UI.View
         /// <param name="args">Arguments that may have been passed.</param>
         private void AbortButton_Tap(object sender, TappedRoutedEventArgs args)
         {
+            AbortButtonToolTip.IsOpen = true;
             _control.AbortButtonAction();
         }
 
@@ -41,7 +43,12 @@ namespace SimpleZIP_UI.UI.View
         /// <exception cref="ArgumentOutOfRangeException">Thrown on fatal error.</exception>
         private async void StartButton_Tap(object sender, TappedRoutedEventArgs args)
         {
-            await InitOperation();
+            var result = await InitOperation();
+
+            // move focus to avoid accidental focus event on text block
+            FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
+
+            _control.CreateResultDialog(result).ShowAsync().AsTask().Forget();
             Frame.Navigate(typeof(MainPage));
         }
 
@@ -105,17 +112,11 @@ namespace SimpleZIP_UI.UI.View
         /// <summary>
         /// Initializes the archiving operation and waits for the result.
         /// </summary>
-        private async Task<bool> InitOperation()
+        private async Task<Result> InitOperation()
         {
             SetOperationActive(true);
             var archiveInfo = new ArchiveInfo(_selectedFiles, ArchiveInfo.CompressionMode.Decompress);
-            var result = await _control.StartButtonAction(archiveInfo);
-
-            // move focus to avoid accidental focus event on text block
-            FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
-
-            await _control.CreateResultDialog(result).ShowAsync();
-            return result.StatusCode == Result.Status.Success;
+            return await _control.StartButtonAction(archiveInfo);
         }
 
         /// <summary>
@@ -155,6 +156,7 @@ namespace SimpleZIP_UI.UI.View
         protected override void OnNavigatedFrom(NavigationEventArgs args)
         {
             SetOperationActive(false);
+            AbortButtonToolTip.IsOpen = false;
         }
 
         protected override async void OnNavigatingFrom(NavigatingCancelEventArgs e)

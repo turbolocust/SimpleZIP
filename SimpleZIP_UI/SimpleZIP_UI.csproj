@@ -93,11 +93,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Compression\Algorithm\ArchivingAlgorithm.cs" />
-    <Compile Include="Common\Compression\Algorithm\Type\Rar.cs" />
     <Compile Include="Common\Compression\Algorithm\Type\SevenZip.cs" />
     <Compile Include="Common\Compression\Algorithm\Type\Tar.cs" />
     <Compile Include="Common\Model\ArchiveInfo.cs" />
     <Compile Include="Common\Model\Result.cs" />
+    <Compile Include="Common\Util\TaskUtils.cs" />
     <Compile Include="UI\SummaryPageControl.cs" />
     <Compile Include="UI\View\AboutDialog.xaml.cs">
       <DependentUpon>AboutDialog.xaml</DependentUpon>

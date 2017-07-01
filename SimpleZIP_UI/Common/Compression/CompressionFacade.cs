@@ -218,9 +218,6 @@ namespace SimpleZIP_UI.Common.Compression
                 case BaseControl.Algorithm.GZip:
                     _compressionAlgorithm = GZip.Instance;
                     break;
-                case BaseControl.Algorithm.Rar:
-                    _compressionAlgorithm = Rar.Instance;
-                    break;
                 case BaseControl.Algorithm.SevenZip:
                     _compressionAlgorithm = SevenZip.Instance;
                     break;

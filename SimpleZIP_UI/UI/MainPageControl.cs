@@ -43,6 +43,11 @@ namespace SimpleZIP_UI.UI
             return true;
         }
 
+        /// <summary>
+        /// Navigates to the specified page type with a list of files as parameter.
+        /// </summary>
+        /// <param name="page">The source page type.</param>
+        /// <param name="files">List consisting of <code>StorageFile</code>.</param>
         private void NavigateTo(Type page, IReadOnlyList<StorageFile> files)
         {
             ParentPage.Frame.Navigate(page, files);
