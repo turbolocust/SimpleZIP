@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Windows.Storage;
 
 namespace SimpleZIP_UI.Common.Util
@@ -7,15 +8,18 @@ namespace SimpleZIP_UI.Common.Util
     internal static class FileUtils
     {
         /// <summary>
+        /// Array that consists of characters which are not allowed in file names.
+        /// </summary>
+        public static readonly char[] IllegalChars = { '<', '>', '/', '\\', '|', ':', '*', '\"', '?' };
+
+        /// <summary>
         /// Checks if the specified string contains illegal characters which are not allowed in file names.
         /// </summary>
         /// <param name="filename">The file name to be validated.</param>
         /// <returns>True if file name contains illegal characters, false otherwise.</returns>
         public static bool ContainsIllegalChars(this string filename)
         {
-            return filename.Contains("<") || filename.Contains(">") || filename.Contains("/") || filename.Contains("\\") ||
-                   filename.Contains("|") || filename.Contains(":") || filename.Contains("*") || filename.Contains("\"") ||
-                   filename.Contains("?");
+            return IllegalChars.Any(character => filename.IndexOf(character) != -1);
         }
 
         /// <summary>

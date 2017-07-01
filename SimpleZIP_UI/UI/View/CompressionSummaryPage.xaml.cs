@@ -76,9 +76,9 @@ namespace SimpleZIP_UI.UI.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args">Arguments that may have been passed.</param>
-        private void OutputPathPanel_Tap(object sender, TappedRoutedEventArgs args)
+        private async void OutputPathPanel_Tap(object sender, TappedRoutedEventArgs args)
         {
-            PickOutputPath();
+            await PickOutputPath();
         }
 
         /// <summary>
@@ -87,11 +87,11 @@ namespace SimpleZIP_UI.UI.View
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
         /// <param name="args">Arguments that may have been passed.</param>
-        private void OutputPathTextBlock_GotFocus(object sender, RoutedEventArgs args)
+        private async void OutputPathTextBlock_GotFocus(object sender, RoutedEventArgs args)
         {
             if (!ProgressRing.IsActive)
             {
-                PickOutputPath();
+                await PickOutputPath();
                 FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
             }
         }
@@ -132,8 +132,9 @@ namespace SimpleZIP_UI.UI.View
             }
             else if (fileName.ContainsIllegalChars()) // check for illegal characters in file name
             {
-                ArchiveNameToolTip.Content = "These characters are not allowed:\n" +
-                                                  "\\ / | : * \" ? < >\n";
+                var content = "These characters are not allowed:\n" +
+                    string.Join(" ", FileUtils.IllegalChars);
+                ArchiveNameToolTip.Content = content;
                 ArchiveNameToolTip.IsOpen = true;
             }
             else
@@ -187,11 +188,12 @@ namespace SimpleZIP_UI.UI.View
         /// Delegates the action to pick an output folder. 
         /// Displays the name of the output folder afterwards.
         /// </summary>
-        private async void PickOutputPath()
+        private async Task<bool> PickOutputPath()
         {
             var folder = await _control.OutputPathPanelAction();
             OutputPathTextBlock.Text = folder?.Name ?? "";
             StartButton.IsEnabled = OutputPathTextBlock.Text.Length > 0;
+            return StartButton.IsEnabled;
         }
 
         /// <summary>
