@@ -1,4 +1,6 @@
-﻿using Windows.Storage.Pickers;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Windows.Storage.Pickers;
 
 namespace SimpleZIP_UI.UI.Factory
 {
@@ -38,10 +40,9 @@ namespace SimpleZIP_UI.UI.Factory
                 SuggestedStartLocation = PickerLocationId.ComputerFolder
             };
 
-            // add each supported file type to the picker
-            foreach (var fileType in BaseControl.AlgorithmFileTypes)
+            foreach (var fileType in GetListOfSupportedFileTypes())
             {
-                picker.FileTypeFilter.Add(fileType.Key);
+                picker.FileTypeFilter.Add(fileType);
             }
 
             return picker;
@@ -56,10 +57,21 @@ namespace SimpleZIP_UI.UI.Factory
             var picker = new FolderPicker
             {
                 ViewMode = PickerViewMode.List,
-                SuggestedStartLocation = PickerLocationId.DocumentsLibrary
+                SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
+                FileTypeFilter = { "*" }
             };
 
             return picker;
         }
+
+        /// <summary>
+        /// Returns a list consisting of supported file types.
+        /// </summary>
+        /// <returns>A list of supported file types.</returns>
+        public static IList<string> GetListOfSupportedFileTypes()
+        {
+            return BaseControl.AlgorithmFileTypes.Select(fileType => fileType.Key).ToList();
+        }
+
     }
 }
