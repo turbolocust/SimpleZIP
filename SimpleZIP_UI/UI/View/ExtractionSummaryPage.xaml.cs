@@ -160,9 +160,10 @@ namespace SimpleZIP_UI.UI.View
             SetOperationActive(false);
         }
 
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        protected override async void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
-            e.Cancel = _control.IsRunning;
+            e.Cancel = _control.IsRunning || _control.IsCancelRequest;
+            await _control.ConfirmCancellationRequest();
         }
     }
 }

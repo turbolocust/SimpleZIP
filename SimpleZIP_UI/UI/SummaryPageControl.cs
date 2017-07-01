@@ -69,6 +69,28 @@ namespace SimpleZIP_UI.UI
         }
 
         /// <summary>
+        /// Enables the user to cancel the operation via the Back button.
+        /// </summary>
+        /// <returns>True if cancel request has been confirmed, false otherwise.</returns>
+        internal async Task<bool> ConfirmCancellationRequest()
+        {
+            if (IsRunning && !IsCancelRequest)
+            {
+                var dialog = DialogFactory.CreateConfirmationDialog("Please confirm",
+                    "\nAn operation is running.\nDo you really want to cancel it?");
+
+                var result = await dialog.ShowAsync();
+                if (result.Id.Equals(0))
+                {
+                    AbortButtonAction();
+                    IsCancelRequest = true;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Opens a picker to select a folder and returns it. May be <code>null</code> on cancellation.
         /// </summary>
         internal async Task<StorageFolder> OutputPathPanelAction()
@@ -105,6 +127,7 @@ namespace SimpleZIP_UI.UI
         {
             CancellationToken?.Dispose();
             IsRunning = false;
+            IsCancelRequest = false;
         }
 
         /// <summary>

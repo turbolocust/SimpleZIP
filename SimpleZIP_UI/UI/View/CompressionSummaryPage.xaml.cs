@@ -195,14 +195,14 @@ namespace SimpleZIP_UI.UI.View
         }
 
         /// <summary>
-        /// Parses the file type of the specified string.
+        /// Parses the file type of the specified string from combo box.
         /// </summary>
-        /// <param name="s">The string to be parsed.</param>
-        /// <returns>The parsed string.</returns>
+        /// <param name="s">The string from the combo box to be parsed.</param>
+        /// <returns>The file type as string.</returns>
         private static string ParseArchiveType(string s)
         {
             int startIndex = s.IndexOf('.'),
-                length = (s.Length - 1) - startIndex;
+                length = s.Length - 1 - startIndex;
             return s.Substring(startIndex, length);
         }
 
@@ -249,9 +249,10 @@ namespace SimpleZIP_UI.UI.View
             SetOperationActive(false);
         }
 
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        protected override async void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
-            e.Cancel = _control.IsRunning;
+            e.Cancel = _control.IsRunning || _control.IsCancelRequest;
+            await _control.ConfirmCancellationRequest();
         }
     }
 }
