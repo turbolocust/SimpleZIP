@@ -92,6 +92,7 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application\Compression\OperationMode.cs" />
     <Compile Include="Application\Compression\Algorithm\ArchivingAlgorithm.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\SevenZip.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\Tar.cs" />
@@ -109,7 +110,7 @@
     <Compile Include="Application\Compression\Algorithm\IArchivingAlgorithm.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\Tarball.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\Zip.cs" />
-    <Compile Include="Application\Compression\CompressionFacade.cs" />
+    <Compile Include="Application\Compression\ArchivingOperation.cs" />
     <Compile Include="Application\Util\FileUtils.cs" />
     <Compile Include="Presentation\View\ExtractionSummaryPage.xaml.cs">
       <DependentUpon>ExtractionSummaryPage.xaml</DependentUpon>

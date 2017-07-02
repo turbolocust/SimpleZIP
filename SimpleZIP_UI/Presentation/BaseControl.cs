@@ -21,7 +21,7 @@ namespace SimpleZIP_UI.Presentation
         /// </summary>
         public enum Algorithm
         {
-            Zip, GZip, SevenZip, Rar, Tar, TarGz, TarBz2
+            Zip, GZip, SevenZip, Tar, TarGz, TarBz2
         }
 
         /// <summary>

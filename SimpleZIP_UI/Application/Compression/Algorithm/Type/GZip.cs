@@ -53,9 +53,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
             return true;
         }
 
-        public new async Task<bool> Compress(StorageFile file, StorageFile archive, StorageFolder location, WriterOptions options = null)
+        public new async Task<bool> Compress(IReadOnlyList<StorageFile> files, StorageFile archive, StorageFolder location, WriterOptions options = null)
         {
-            if (file == null || archive == null || location == null) return false;
+            if (files == null || files.Count == 0 || archive == null || location == null) return false;
+
+            var file = files[0];
 
             using (var outputFileStream = await archive.OpenAsync(FileAccessMode.ReadWrite))
             using (var gzipStream = new GZipStream(outputFileStream.AsStreamForWrite(), CompressionLevel.Optimal))
@@ -72,11 +74,6 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
                 }
             }
             return true;
-        }
-
-        public new Task<bool> Compress(IReadOnlyList<StorageFile> files, StorageFile archive, StorageFolder location, WriterOptions options = null)
-        {
-            throw new NotSupportedException("Gzip only allows the compression of a single file.");
         }
 
         protected override WriterOptions GetWriterOptions()

@@ -7,6 +7,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using SimpleZIP_UI.Application.Compression;
 using SimpleZIP_UI.Application.Model;
 using SimpleZIP_UI.Application.Util;
 
@@ -97,7 +98,10 @@ namespace SimpleZIP_UI.Presentation.View
         private async Task<Result> InitOperation()
         {
             SetOperationActive(true);
-            var archiveInfo = new ArchiveInfo(_selectedFiles, ArchiveInfo.CompressionMode.Decompress);
+            var archiveInfo = new ArchiveInfo(OperationMode.Decompress)
+            {
+                SelectedFiles = _selectedFiles
+            };
             return await _control.StartButtonAction(archiveInfo);
         }
 
@@ -152,7 +156,7 @@ namespace SimpleZIP_UI.Presentation.View
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
-            e.Cancel = _control.IsRunning;
+            e.Cancel = _control.Operation.IsRunning;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs args)
@@ -163,7 +167,7 @@ namespace SimpleZIP_UI.Presentation.View
 
         public void Dispose()
         {
-            _control.Dispose();
+            _control?.Dispose();
         }
     }
 }

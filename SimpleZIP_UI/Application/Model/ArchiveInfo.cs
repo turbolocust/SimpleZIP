@@ -1,28 +1,25 @@
 ﻿using System.Collections.Generic;
 using Windows.Storage;
+using SimpleZIP_UI.Application.Compression;
 using SimpleZIP_UI.Presentation;
 
 namespace SimpleZIP_UI.Application.Model
 {
     internal class ArchiveInfo
     {
-        public ArchiveInfo(IReadOnlyList<StorageFile> files, CompressionMode mode)
+        public ArchiveInfo(OperationMode mode)
         {
-            SelectedFiles = files;
             Mode = mode;
         }
 
-        internal IReadOnlyList<StorageFile> SelectedFiles { get; }
+        internal OperationMode Mode { get; }
+
+        internal IReadOnlyList<StorageFile> SelectedFiles { get; set; }
 
         internal string ArchiveName { get; set; }
 
-        internal BaseControl.Algorithm Key { get; set; }
+        internal StorageFolder OutputFolder { get; set; }
 
-        internal CompressionMode Mode { get; }
-
-        public enum CompressionMode
-        {
-            Compress, Decompress
-        }
+        internal BaseControl.Algorithm Algorithm { get; set; }
     }
 }

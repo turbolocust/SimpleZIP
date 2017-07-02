@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
-using SimpleZIP_UI.Application.Compression;
 using SimpleZIP_UI.Application.Model;
 
 namespace SimpleZIP_UI.Presentation
 {
-    /// <summary>
-    /// Handles complex operations for the corresponding GUI controller.
-    /// </summary>
     internal class ExtractionSummaryPageControl : SummaryPageControl
     {
         internal ExtractionSummaryPageControl(Page parent) : base(parent)
@@ -26,9 +22,6 @@ namespace SimpleZIP_UI.Presentation
             {
                 try
                 {
-                    var handler = new CompressionFacade();
-                    var token = CancellationToken.Token;
-
                     if (selectedFiles.Count > 1) // multiple files selected
                     {
                         var totalDuration = new TimeSpan();
@@ -36,10 +29,11 @@ namespace SimpleZIP_UI.Presentation
 
                         foreach (var file in selectedFiles)
                         {
-                            if (token.IsCancellationRequested) break;
+                            if (IsCancelRequest) break;
 
-                            var subResult = await handler.ExtractFromArchive(file, OutputFolder, token);
-                            if (subResult.StatusCode < 0)
+                            archiveInfo.SelectedFiles = new[] { file };
+                            var subResult = await Operation.Perform(archiveInfo);
+                            if (subResult.StatusCode == Result.Status.Success)
                             {
                                 totalDuration = totalDuration.Add(subResult.ElapsedTime);
                             }
@@ -48,12 +42,11 @@ namespace SimpleZIP_UI.Presentation
                                 resultMessage += "\nArchive " + file.DisplayName + " could not be extracted.";
                             }
                         }
-
                         result = new Result { Message = resultMessage, ElapsedTime = totalDuration };
                     }
                     else
                     {
-                        result = await handler.ExtractFromArchive(selectedFiles[0], OutputFolder, token);
+                        result = await Operation.Perform(archiveInfo);
                     }
                 }
                 catch (Exception ex)

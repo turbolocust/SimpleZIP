@@ -15,65 +15,72 @@ using SimpleZIP_UI.Presentation;
 
 namespace SimpleZIP_UI.Application.Compression
 {
-    internal class CompressionFacade
+    internal class ArchivingOperation : IDisposable
     {
         /// <summary>
-        /// Stores the current time when initializing a new operation.
+        /// Source for cancellation token.
         /// </summary>
-        private DateTime _startTime;
+        private readonly CancellationTokenSource _tokenSource;
 
         /// <summary>
-        /// Stores the result of the operation.
-        /// </summary>
-        private bool _isSuccess;
-
-        /// <summary>
-        /// The algorithm that is used for compression or decompression.
-        /// </summary>
-        private IArchivingAlgorithm _compressionAlgorithm;
-
-        /// <summary>
-        /// Optional writer options for compression.
+        /// Optional writer options for compression mode.
         /// </summary>
         private WriterOptions _writerOptions;
 
         /// <summary>
-        /// Creates a new archive with a compressed version of the specified file.
+        /// True if an operation is in progress..
         /// </summary>
-        /// <param name="file">The file to be compressed.</param>
-        /// <param name="archiveName">The name of the archive to be created.</param>
-        /// <param name="location">Where to store the archive.</param>
-        /// <param name="key">The key of the algorithm to be used.</param>
-        /// <param name="ct">The token that is used to cancel the operation.</param>
-        /// <returns>An object that consists of result parameters.</returns>
-        public async Task<Result> CreateArchive(StorageFile file, string archiveName,
-            StorageFolder location, BaseControl.Algorithm key, CancellationToken ct)
+        internal bool IsRunning { get; private set; }
+
+        public ArchivingOperation()
         {
-            InitOperation(key);
+            _tokenSource = new CancellationTokenSource();
+        }
 
-            return await Task.Run(async () => // execute compression asynchronously
+        /// <summary>
+        /// Performs this operation.
+        /// </summary>
+        /// <param name="archiveInfo">Consists of information about the archive.</param>
+        /// <returns>A result object consisting of further details.</returns>
+        public async Task<Result> Perform(ArchiveInfo archiveInfo)
+        {
+            if (archiveInfo == null) return null;
+
+            IsRunning = true;
+            var startTime = DateTime.Now;
+
+            Result result;
+            switch (archiveInfo.Mode)
             {
-                var message = "";
-                try
-                {
-                    var archive = await location.CreateFileAsync(archiveName,
-                        CreationCollisionOption.GenerateUniqueName);
+                case OperationMode.Compress:
+                    result = await CreateArchive(
+                        archiveInfo.SelectedFiles,
+                        archiveInfo.ArchiveName,
+                        archiveInfo.OutputFolder,
+                        archiveInfo.Algorithm);
+                    break;
+                case OperationMode.Decompress:
+                    result = await ExtractFromArchive(
+                        archiveInfo.SelectedFiles[0],
+                        archiveInfo.OutputFolder);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
 
-                    _isSuccess = await _compressionAlgorithm.Compress(file, archive, location, _writerOptions);
+            var duration = DateTime.Now - startTime;
+            result.ElapsedTime = duration;
 
-                    if (ct.IsCancellationRequested)
-                    {
-                        FileUtils.Delete(archive);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    message = ex.Message;
-                }
+            IsRunning = false;
+            return result;
+        }
 
-                return EvaluateResult(message, ct);
-
-            }, ct);
+        /// <summary>
+        /// Cancels this operation.
+        /// </summary>
+        public void Cancel()
+        {
+            _tokenSource.Cancel();
         }
 
         /// <summary>
@@ -82,17 +89,19 @@ namespace SimpleZIP_UI.Application.Compression
         /// <param name="files">The files to be compressed.</param>
         /// <param name="archiveName">The name of the archive to be created.</param>
         /// <param name="location">Where to store the archive.</param>
-        /// <param name="key">The key of the algorithm to be used.</param>
-        /// <param name="ct">The token that is used to cancel the operation.</param>
+        /// <param name="value">The algorithm to be used.</param>
         /// <returns>An object that consists of result parameters.</returns>
-        public async Task<Result> CreateArchive(IReadOnlyList<StorageFile> files, string archiveName,
-            StorageFolder location, BaseControl.Algorithm key, CancellationToken ct)
+        private async Task<Result> CreateArchive(IReadOnlyList<StorageFile> files,
+            string archiveName, StorageFolder location, BaseControl.Algorithm value)
         {
-            InitOperation(key);
+            var token = _tokenSource.Token;
+            var algorithm = ChooseStrategy(value);
 
             return await Task.Run(async () => // execute compression asynchronously
             {
                 var message = "";
+                var isSuccess = false;
+
                 if (files.Count > 0)
                 {
                     try
@@ -100,9 +109,10 @@ namespace SimpleZIP_UI.Application.Compression
                         var archive = await location.CreateFileAsync(archiveName,
                             CreationCollisionOption.GenerateUniqueName);
 
-                        _isSuccess = await _compressionAlgorithm.Compress(files, archive, location, _writerOptions);
+                        algorithm.SetCancellationToken(token);
+                        isSuccess = await algorithm.Compress(files, archive, location, _writerOptions);
 
-                        if (ct.IsCancellationRequested)
+                        if (token.IsCancellationRequested)
                         {
                             FileUtils.Delete(archive);
                         }
@@ -113,9 +123,9 @@ namespace SimpleZIP_UI.Application.Compression
                     }
                 }
 
-                return EvaluateResult(message, ct);
+                return EvaluateResult(message, isSuccess);
 
-            }, ct);
+            }, token);
         }
 
         /// <summary>
@@ -123,22 +133,22 @@ namespace SimpleZIP_UI.Application.Compression
         /// </summary>
         /// <param name="archiveFile">The archive to be extracted.</param>
         /// <param name="location">The location where to extract the archive's content.</param>
-        /// <param name="ct">The token that is used to cancel the operation.</param>
         /// <returns>An object that consists of result parameters.</returns>
         /// <exception cref="InvalidArchiveTypeException">If the file type of the selected 
         /// file is not supported or unknown.</exception>
         /// <exception cref="UnauthorizedAccessException">If extraction at the archive's 
         /// location is not allowed.</exception>
-        public async Task<Result> ExtractFromArchive(StorageFile archiveFile, StorageFolder location, CancellationToken ct)
+        private async Task<Result> ExtractFromArchive(StorageFile archiveFile, StorageFolder location)
         {
             var fileType = FileUtils.GetFileNameExtension(archiveFile.Name);
-            var message = ""; // may holds information about errors
+            var token = _tokenSource.Token;
+            IArchivingAlgorithm algorithm;
 
             // try to get enum type by file extension, which is the key
             if (BaseControl.AlgorithmFileTypes.TryGetValue(fileType, out BaseControl.Algorithm value)
                 || BaseControl.AlgorithmExtendedFileTypes.TryGetValue(fileType, out value))
             {
-                InitOperation(value);
+                algorithm = ChooseStrategy(value);
             }
             else
             {
@@ -147,92 +157,91 @@ namespace SimpleZIP_UI.Application.Compression
 
             return await Task.Run(async () => // execute extraction asynchronously
             {
+                var message = "";
+                var isSuccess = false;
+
                 try
                 {
-                    _isSuccess = await _compressionAlgorithm.Extract(archiveFile, location);
+                    algorithm.SetCancellationToken(token);
+                    isSuccess = await algorithm.Extract(archiveFile, location);
                 }
                 catch (IOException ex)
                 {
                     message = ex.Message;
                 }
 
-                return EvaluateResult(message, ct);
+                return EvaluateResult(message, isSuccess);
 
-            }, ct);
-        }
-
-        /// <summary>
-        /// Initializes the compression or decompression operation
-        /// and chooses the strategy by using the specified key.
-        /// </summary>
-        /// <param name="key">The key of the algorithm.</param>
-        private void InitOperation(BaseControl.Algorithm key)
-        {
-            _writerOptions = null;
-            _startTime = DateTime.Now;
-            ChooseStrategy(key); // determines the right algorithm
+            }, token);
         }
 
         /// <summary>
         /// Evaluates the operation and returns the result.
         /// </summary>
         /// <param name="message">The message to be evaluated.</param>
-        /// <param name="ct">The token to be considered on evaluation.</param>
+        /// <param name="isSuccess">True if operation was successful, false otherwise.</param>
         /// <returns>An object that consists of result parameters.</returns>
-        private Result EvaluateResult(string message, CancellationToken ct)
+        private Result EvaluateResult(string message, bool isSuccess)
         {
             Result.Status status;
-            TimeSpan duration;
 
-            if (ct.IsCancellationRequested)
+            if (_tokenSource.IsCancellationRequested)
             {
                 status = Result.Status.Interrupt;
             }
             else
             {
-                status = _isSuccess ? Result.Status.Success : Result.Status.Fail;
-                duration = DateTime.Now - _startTime;
+                status = isSuccess
+                    ? Result.Status.Success
+                    : Result.Status.Fail;
             }
 
             return new Result
             {
                 StatusCode = status,
-                Message = message,
-                ElapsedTime = duration
+                Message = message
             };
         }
 
         /// <summary>
         /// Assigns the correct algorithm instance to be used by evaluating its key.
         /// </summary>
-        /// <param name="key">The key of the algorithm.</param>
+        /// <param name="value">The value of the algorithm.</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when key matched no algorithm.</exception>
-        private void ChooseStrategy(BaseControl.Algorithm key)
+        /// <returns>An instance of the archiving algorithm that matches the specified value.</returns>
+        private IArchivingAlgorithm ChooseStrategy(BaseControl.Algorithm value)
         {
-            switch (key)
+            IArchivingAlgorithm algorithm;
+            switch (value)
             {
                 case BaseControl.Algorithm.Zip:
-                    _compressionAlgorithm = Zip.Instance;
+                    algorithm = Zip.Instance;
                     break;
                 case BaseControl.Algorithm.GZip:
-                    _compressionAlgorithm = GZip.Instance;
+                    algorithm = GZip.Instance;
                     break;
                 case BaseControl.Algorithm.SevenZip:
-                    _compressionAlgorithm = SevenZip.Instance;
+                    algorithm = SevenZip.Instance;
                     break;
                 case BaseControl.Algorithm.Tar:
-                    _compressionAlgorithm = Tar.Instance;
+                    algorithm = Tar.Instance;
                     break;
                 case BaseControl.Algorithm.TarGz:
-                    _compressionAlgorithm = Tarball.Instance;
+                    algorithm = Tarball.Instance;
                     _writerOptions = new WriterOptions(CompressionType.GZip);
                     break;
                 case BaseControl.Algorithm.TarBz2:
-                    _compressionAlgorithm = Tarball.Instance;
+                    algorithm = Tarball.Instance;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(key), key, null);
+                    throw new ArgumentOutOfRangeException(nameof(value), value, null);
             }
+            return algorithm;
+        }
+
+        public void Dispose()
+        {
+            _tokenSource.Dispose();
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
+using SimpleZIP_UI.Application.Compression;
 using SimpleZIP_UI.Application.Model;
 using SimpleZIP_UI.Presentation.Factory;
 
@@ -17,14 +17,9 @@ namespace SimpleZIP_UI.Presentation
         public bool IsCancelRequest { get; protected set; }
 
         /// <summary>
-        /// True if an operation is running.
+        /// Reference to the currently active archiving operation.
         /// </summary>
-        public bool IsRunning { get; protected set; }
-
-        /// <summary>
-        /// Token used to cancel an archiving operation.
-        /// </summary>
-        protected CancellationTokenSource CancellationToken;
+        public ArchivingOperation Operation;
 
         /// <summary>
         /// Where the archive or its content will be saved to.
@@ -33,7 +28,6 @@ namespace SimpleZIP_UI.Presentation
 
         internal SummaryPageControl(Page parent) : base(parent)
         {
-            CancellationToken = new CancellationTokenSource();
         }
 
         /// <summary>
@@ -43,13 +37,10 @@ namespace SimpleZIP_UI.Presentation
         /// <returns>True on success, false otherwise.</returns>
         internal async Task<Result> StartButtonAction(ArchiveInfo archiveInfo)
         {
-            using (CancellationToken)
-            {
-                InitOperation();
-                var result = await PerformOperation(archiveInfo);
-                FinalizeOperation();
-                return result;
-            }
+            InitOperation(archiveInfo);
+            var result = await PerformOperation(archiveInfo);
+            FinalizeOperation();
+            return result;
         }
 
         /// <summary>
@@ -59,15 +50,19 @@ namespace SimpleZIP_UI.Presentation
         {
             try
             {
-                CancellationToken?.Cancel();
-                if (!IsRunning)
+                if (!Operation.IsRunning)
                 {
                     NavigateBackHome();
                 }
+                else
+                {
+                    IsCancelRequest = true;
+                    Operation.Cancel();
+                }
             }
-            catch (ObjectDisposedException)
+            catch (Exception)
             {
-                IsCancelRequest = true;
+                NavigateBackHome();
             }
         }
 
@@ -99,17 +94,18 @@ namespace SimpleZIP_UI.Presentation
         }
 
         /// <summary>
-        /// Initializes any operation by checking if an output folder was selected
-        /// and also creates a new token for cancellation.
+        /// Initializes a new operation.
         /// </summary>
+        /// <param name="archiveInfo">Consists of information about the archive.</param>
         /// <exception cref="NullReferenceException">Thrown if output folder is <code>null</code>.</exception>
-        protected void InitOperation()
+        protected void InitOperation(ArchiveInfo archiveInfo)
         {
             if (OutputFolder == null)
             {
                 throw new NullReferenceException("No valid output folder selected.");
             }
-            IsRunning = true;
+            archiveInfo.OutputFolder = OutputFolder;
+            Operation = new ArchivingOperation();
         }
 
         /// <summary>
@@ -117,8 +113,8 @@ namespace SimpleZIP_UI.Presentation
         /// </summary>
         protected void FinalizeOperation()
         {
-            IsRunning = false;
             IsCancelRequest = false;
+            Operation.Dispose();
         }
 
         /// <summary>
@@ -132,7 +128,7 @@ namespace SimpleZIP_UI.Presentation
         {
             if (disposing)
             {
-                CancellationToken.Dispose();
+                Operation?.Dispose();
             }
         }
 

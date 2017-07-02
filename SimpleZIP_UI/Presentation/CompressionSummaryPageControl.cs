@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
-using SimpleZIP_UI.Application.Compression;
 using SimpleZIP_UI.Application.Model;
 
 namespace SimpleZIP_UI.Presentation
 {
-    /// <summary>
-    /// Handles complex operations for the corresponding GUI controller.
-    /// </summary>
     internal class CompressionSummaryPageControl : SummaryPageControl
     {
         internal CompressionSummaryPageControl(Page parent) : base(parent)
@@ -18,8 +14,7 @@ namespace SimpleZIP_UI.Presentation
         protected override async Task<Result> PerformOperation(ArchiveInfo archiveInfo)
         {
             var selectedFiles = archiveInfo.SelectedFiles;
-            var archiveName = archiveInfo.ArchiveName;
-            var key = archiveInfo.Key;
+            var key = archiveInfo.Algorithm;
             var message = "";
 
             Result result = null;
@@ -28,9 +23,6 @@ namespace SimpleZIP_UI.Presentation
             {
                 try
                 {
-                    var handler = new CompressionFacade();
-                    var token = CancellationToken.Token;
-
                     if (key.Equals(Algorithm.GZip)) // requires special treatment
                     {
                         var totalDuration = new TimeSpan(0);
@@ -38,9 +30,10 @@ namespace SimpleZIP_UI.Presentation
 
                         foreach (var file in selectedFiles)
                         {
-                            if (token.IsCancellationRequested) break;
+                            if (IsCancelRequest) break;
 
-                            var subResult = await handler.CreateArchive(file, archiveName, OutputFolder, key, token);
+                            archiveInfo.SelectedFiles = new[] { file };
+                            var subResult = await Operation.Perform(archiveInfo);
                             if (subResult.StatusCode == Result.Status.Success)
                             {
                                 totalDuration = totalDuration.Add(subResult.ElapsedTime);
@@ -54,7 +47,7 @@ namespace SimpleZIP_UI.Presentation
                     }
                     else
                     {
-                        result = await handler.CreateArchive(selectedFiles, archiveName, OutputFolder, key, token);
+                        result = await Operation.Perform(archiveInfo);
                     }
                 }
                 catch (Exception ex)

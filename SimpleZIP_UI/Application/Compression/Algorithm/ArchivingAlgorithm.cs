@@ -73,25 +73,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             return true;
         }
 
-        public async Task<bool> Compress(StorageFile file, StorageFile archive, StorageFolder location, WriterOptions options = null)
-        {
-            if (file == null || archive == null || location == null) return false;
-
-            options = options ?? GetWriterOptions(); // get options if null
-            options.LeaveStreamOpen = false;
-
-            using (var writer = WriterFactory.Open(await archive.OpenStreamForWriteAsync(), _type, options))
-            {
-                using (var inputStream = await file.OpenStreamForReadAsync())
-                {
-                    writer.Write(file.Name, inputStream, DateTime.Now);
-                }
-            }
-            return true;
-        }
-
         public async Task<bool> Compress(IReadOnlyList<StorageFile> files, StorageFile archive,
-            StorageFolder location, WriterOptions options = null)
+             StorageFolder location, WriterOptions options = null)
         {
             if (files == null || archive == null || location == null) return false;
 
