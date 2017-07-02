@@ -6,8 +6,8 @@ using Windows.Storage;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using SharpCompress.Common;
 using SharpCompress.Writers;
-using SimpleZIP_UI.Common.Compression.Algorithm;
-using SimpleZIP_UI.Common.Compression.Algorithm.Type;
+using SimpleZIP_UI.Application.Compression.Algorithm;
+using SimpleZIP_UI.Application.Compression.Algorithm.Type;
 
 namespace SimpleZIP_UI_TEST
 {
@@ -16,45 +16,45 @@ namespace SimpleZIP_UI_TEST
     {
         private IReadOnlyList<StorageFile> _files;
 
-        private readonly StorageFolder _workingDir = ApplicationData.Current.LocalFolder;
+        private readonly StorageFolder _workingDir = ApplicationData.Current.TemporaryFolder;
 
-        private const string ArchiveName = "testArchive";
+        private const string ArchiveName = "simpleZipUiTestArchive";
 
-        private const string FileText = "This is a testfile, for testing compression and extraction.";
+        private const string FileText = "This is just a test for testing compression and extraction.";
 
         /// <summary>
         /// Tests the compression and extraction using ZIP archive type.
         /// </summary>
         [TestMethod]
-        public void ZipCompressionExtractionTest()
+        public async void ZipCompressionExtractionTest()
         {
             var options = new WriterOptions(CompressionType.Deflate);
-            ArchiveCompression(Zip.Instance, ".zip", options);
+            await PerformArchiveOperations(Zip.Instance, ".zip", options);
         }
 
         /// <summary>
         /// Tests the compression and extraction using TAR (gzip) archive type.
         /// </summary>
         [TestMethod]
-        public void TarGzipCompressionExtractionTest()
+        public async void TarGzipCompressionExtractionTest()
         {
             var options = new WriterOptions(CompressionType.GZip);
-            ArchiveCompression(Tarball.Instance, ".tgz", options);
+            await PerformArchiveOperations(Tarball.Instance, ".tgz", options);
         }
 
         /// <summary>
         /// Tests the compression and extraction using TAR (bzip2) archive type.
         /// </summary>
         [TestMethod]
-        public void TarBzip2CompressionExtractionTest()
+        public async void TarBzip2CompressionExtractionTest()
         {
             var options = new WriterOptions(CompressionType.BZip2);
-            ArchiveCompression(Tarball.Instance, ".tbz2", options);
+            await PerformArchiveOperations(Tarball.Instance, ".tbz2", options);
         }
 
-        private async void ArchiveCompression(IArchivingAlgorithm compressionAlgorithm, string fileType, WriterOptions options)
+        private async Task<bool> PerformArchiveOperations(IArchivingAlgorithm compressionAlgorithm, string fileType, WriterOptions options)
         {
-            await Task.Run(async () =>
+            return await Task.Run(async () =>
             {
                 var tempFile = await _workingDir.CreateFileAsync("tempFile");
 
@@ -71,8 +71,7 @@ namespace SimpleZIP_UI_TEST
                 var archive = await _workingDir.CreateFileAsync(ArchiveName + fileType);
                 Assert.IsTrue(await compressionAlgorithm.Compress(_files, archive, _workingDir, options));
 
-                await ArchiveExtraction(compressionAlgorithm, fileType); // extract archive after creation
-
+                return await ArchiveExtraction(compressionAlgorithm, fileType); // extract archive after creation
             });
         }
 
@@ -81,7 +80,7 @@ namespace SimpleZIP_UI_TEST
             var archive = await _workingDir.GetFileAsync(ArchiveName + fileType);
             Assert.IsNotNull(archive);
 
-            var outputFolder = await _workingDir.CreateFolderAsync("Output");
+            var outputFolder = await _workingDir.CreateFolderAsync("simpleZipUiTempOutput");
             Assert.IsNotNull(outputFolder);
 
             // extract archive
@@ -111,21 +110,7 @@ namespace SimpleZIP_UI_TEST
                 Assert.Fail("Archive not properly created.");
             }
 
-            // clean up when done
-            await outputFolder.DeleteAsync();
-            await PurgeWorkingDir();
-            return true;
-        }
-
-        private async Task<bool> PurgeWorkingDir()
-        {
-            var files = await _workingDir.GetFilesAsync();
-
-            foreach (var file in files)
-            {
-                await file.DeleteAsync();
-            }
-
+            await outputFolder.DeleteAsync(); // clean up when done
             return true;
         }
     }
