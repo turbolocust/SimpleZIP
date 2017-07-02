@@ -1,0 +1,77 @@
+﻿<Page
+    x:Class="SimpleZIP_UI.Presentation.View.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
+
+    <Grid Background="Transparent" Margin="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="7*"/>
+        </Grid.RowDefinitions>
+        <Button Visibility="Visible" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" FontSize="20" Grid.Row="0"
+                    Width="50" Height="50" Background="Transparent" Tapped="HamburgerButton_Tap" Foreground="White"/>
+        <SplitView x:Name="MenuSplitView" DisplayMode="CompactOverlay" IsPaneOpen="False" Grid.Row="1"
+               CompactPaneLength="0" VerticalContentAlignment="Stretch" VerticalAlignment="Stretch" OpenPaneLength="320">
+            <SplitView.Pane>
+                <StackPanel Background="Transparent" Padding="0,8,0,0" VerticalAlignment="Top">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Visibility="Collapsed" Orientation="Horizontal" Grid.Row="0">
+                            <Button Height="50" Background="Transparent" Tapped="OpenArchiveButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                <StackPanel Orientation="Horizontal">
+                                    <SymbolIcon Symbol="OpenFile"/>
+                                    <TextBlock Text="Open Archive. . ." FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Grid.Row="1">
+                            <Button Height="50" Background="Transparent" Tapped="GetSourceButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                <StackPanel Orientation="Horizontal">
+                                    <SymbolIcon Symbol="World"/>
+                                    <TextBlock Text="Get Source Code!" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Grid.Row="2">
+                            <Button Height="50" Background="Transparent" Tapped="AboutMenuButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                                <StackPanel Orientation="Horizontal">
+                                    <SymbolIcon Symbol="ContactInfo"/>
+                                    <TextBlock Text="About" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </SplitView.Pane>
+            <SplitView.Content>
+                <Grid Background="Transparent" Margin="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="4*"/>
+                        <RowDefinition Height="3*"/>
+                        <RowDefinition Height="3*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="SimpleZIP" FontFamily="Default" FontSize="54" CharacterSpacing="32" FontStyle="Normal" VerticalAlignment="Top" Margin="24,16,0,0" Grid.Row="0" HorizontalAlignment="Left" Foreground="White"/>
+                    <Button Content="Compress File(s) . . ." HorizontalAlignment="Stretch" Grid.Row="1" MinHeight="32" Height="50" MaxHeight="72" VerticalAlignment="Bottom" Margin="32,16,32,16" Tapped="CompressButton_Tap" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}"/>
+                    <Button Content="Extract archive(s) . . ." HorizontalAlignment="Stretch" Grid.Row="2" MinHeight="32" Height="50" MaxHeight="72" VerticalAlignment="Top" Margin="32,16,32,16" Tapped="ExtractButton_Tap" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}"/>
+                </Grid>
+            </SplitView.Content>
+        </SplitView>
+    </Grid>
+    <Page.Transitions>
+        <TransitionCollection>
+            <NavigationThemeTransition>
+                <NavigationThemeTransition.DefaultNavigationTransitionInfo>
+                    <CommonNavigationTransitionInfo />
+                </NavigationThemeTransition.DefaultNavigationTransitionInfo>
+            </NavigationThemeTransition>
+        </TransitionCollection>
+    </Page.Transitions>
+</Page>
+

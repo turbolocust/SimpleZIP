@@ -92,39 +92,39 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\Compression\Algorithm\ArchivingAlgorithm.cs" />
-    <Compile Include="Common\Compression\Algorithm\Type\SevenZip.cs" />
-    <Compile Include="Common\Compression\Algorithm\Type\Tar.cs" />
-    <Compile Include="Common\Model\ArchiveInfo.cs" />
-    <Compile Include="Common\Model\Result.cs" />
-    <Compile Include="Common\Util\TaskUtils.cs" />
-    <Compile Include="UI\SummaryPageControl.cs" />
-    <Compile Include="UI\View\AboutDialog.xaml.cs">
+    <Compile Include="Application\Compression\Algorithm\ArchivingAlgorithm.cs" />
+    <Compile Include="Application\Compression\Algorithm\Type\SevenZip.cs" />
+    <Compile Include="Application\Compression\Algorithm\Type\Tar.cs" />
+    <Compile Include="Application\Model\ArchiveInfo.cs" />
+    <Compile Include="Application\Model\Result.cs" />
+    <Compile Include="Application\Util\TaskUtils.cs" />
+    <Compile Include="Presentation\SummaryPageControl.cs" />
+    <Compile Include="Presentation\View\AboutDialog.xaml.cs">
       <DependentUpon>AboutDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Common\Compression\Algorithm\Type\GZip.cs" />
-    <Compile Include="Common\Compression\Algorithm\IArchivingAlgorithm.cs" />
-    <Compile Include="Common\Compression\Algorithm\Type\Tarball.cs" />
-    <Compile Include="Common\Compression\Algorithm\Type\Zip.cs" />
-    <Compile Include="Common\Compression\CompressionFacade.cs" />
-    <Compile Include="Common\Util\FileUtils.cs" />
-    <Compile Include="UI\View\ExtractionSummaryPage.xaml.cs">
+    <Compile Include="Application\Compression\Algorithm\Type\GZip.cs" />
+    <Compile Include="Application\Compression\Algorithm\IArchivingAlgorithm.cs" />
+    <Compile Include="Application\Compression\Algorithm\Type\Tarball.cs" />
+    <Compile Include="Application\Compression\Algorithm\Type\Zip.cs" />
+    <Compile Include="Application\Compression\CompressionFacade.cs" />
+    <Compile Include="Application\Util\FileUtils.cs" />
+    <Compile Include="Presentation\View\ExtractionSummaryPage.xaml.cs">
       <DependentUpon>ExtractionSummaryPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\BaseControl.cs" />
-    <Compile Include="UI\ExtractionSummaryPageControl.cs" />
-    <Compile Include="UI\Factory\DialogFactory.cs" />
-    <Compile Include="UI\Factory\PickerFactory.cs" />
+    <Compile Include="Presentation\BaseControl.cs" />
+    <Compile Include="Presentation\ExtractionSummaryPageControl.cs" />
+    <Compile Include="Presentation\Factory\DialogFactory.cs" />
+    <Compile Include="Presentation\Factory\PickerFactory.cs" />
     <Compile Include="Exceptions\InvalidArchiveTypeException.cs" />
-    <Compile Include="UI\CompressionSummaryPageControl.cs" />
-    <Compile Include="UI\View\CompressionSummaryPage.xaml.cs">
+    <Compile Include="Presentation\CompressionSummaryPageControl.cs" />
+    <Compile Include="Presentation\View\CompressionSummaryPage.xaml.cs">
       <DependentUpon>CompressionSummaryPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\MainPageControl.cs" />
-    <Compile Include="UI\View\MainPage.xaml.cs">
+    <Compile Include="Presentation\MainPageControl.cs" />
+    <Compile Include="Presentation\View\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -182,19 +182,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="UI\View\AboutDialog.xaml">
+    <Page Include="Presentation\View\AboutDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\View\CompressionSummaryPage.xaml">
+    <Page Include="Presentation\View\CompressionSummaryPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\View\ExtractionSummaryPage.xaml">
+    <Page Include="Presentation\View\ExtractionSummaryPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\View\MainPage.xaml">
+    <Page Include="Presentation\View\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
