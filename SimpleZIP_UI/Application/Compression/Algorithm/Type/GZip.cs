@@ -25,29 +25,23 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
         {
             if (archive == null || location == null) return false;
 
-            using (var fileStream = await archive.OpenReadAsync())
-            using (var gzipStream = new GZipStream(fileStream.AsStreamForRead(), CompressionMode.Decompress))
+            using (var gzipStream = new GZipStream(await archive.OpenStreamForReadAsync(), CompressionMode.Decompress))
             {
                 // remove extension from output file name
                 var outputFileName = archive.Name.Substring(0, archive.Name.Length - archive.FileType.Length);
 
                 var file = await location.CreateFileAsync(outputFileName, CreationCollisionOption.GenerateUniqueName);
-                if (file != null) // file created
-                {
-                    using (var outputStream = await file.OpenStreamForWriteAsync())
-                    {
-                        var bytes = new byte[DefaultBufferSize];
-                        int readBytes;
+                if (file == null) return false; // file was not created
 
-                        while (!IsInterrupted() && (readBytes = gzipStream.Read(bytes, 0, bytes.Length)) > 0)
-                        {
-                            await outputStream.WriteAsync(bytes, 0, readBytes, Token);
-                        }
-                    }
-                }
-                else
+                using (var outputStream = await file.OpenStreamForWriteAsync())
                 {
-                    return false;
+                    var bytes = new byte[DefaultBufferSize];
+                    int readBytes;
+
+                    while (!IsInterrupted() && (readBytes = gzipStream.Read(bytes, 0, bytes.Length)) > 0)
+                    {
+                        await outputStream.WriteAsync(bytes, 0, readBytes, Token);
+                    }
                 }
             }
             return true;
@@ -59,8 +53,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
 
             var file = files[0];
 
-            using (var outputFileStream = await archive.OpenAsync(FileAccessMode.ReadWrite))
-            using (var gzipStream = new GZipStream(outputFileStream.AsStreamForWrite(), CompressionLevel.Optimal))
+            using (var gzipStream = new GZipStream(await archive.OpenStreamForWriteAsync(), CompressionLevel.Fastest))
             {
                 using (var inputStream = await file.OpenStreamForReadAsync())
                 {

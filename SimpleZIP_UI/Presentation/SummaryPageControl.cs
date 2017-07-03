@@ -50,7 +50,7 @@ namespace SimpleZIP_UI.Presentation
         {
             try
             {
-                if (!Operation.IsRunning)
+                if (Operation == null || !Operation.IsRunning)
                 {
                     NavigateBackHome();
                 }
@@ -60,7 +60,7 @@ namespace SimpleZIP_UI.Presentation
                     Operation.Cancel();
                 }
             }
-            catch (Exception)
+            catch (ObjectDisposedException)
             {
                 NavigateBackHome();
             }

@@ -156,7 +156,7 @@ namespace SimpleZIP_UI.Presentation.View
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
-            e.Cancel = _control.Operation.IsRunning;
+            e.Cancel = _control.Operation?.IsRunning ?? false;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs args)
