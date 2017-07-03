@@ -2,13 +2,8 @@
 
 namespace SimpleZIP_UI.Presentation.Factory
 {
-    internal class DialogFactory
+    internal static class DialogFactory
     {
-        private DialogFactory()
-        {
-            // holds static members only
-        }
-
         /// <summary>
         /// Creates a new message dialog with two buttons for confirmation.
         /// One labeled "Yes" with index 0. The other labeled "No" with index 1.

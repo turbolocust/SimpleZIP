@@ -4,13 +4,8 @@ using Windows.Storage.Pickers;
 
 namespace SimpleZIP_UI.Presentation.Factory
 {
-    internal class PickerFactory
+    internal static class PickerFactory
     {
-        private PickerFactory()
-        {
-            // holds static members only
-        }
-
         /// <summary>
         /// Creates a new file open picker to select any file(s) that may be compressed.
         /// </summary>
