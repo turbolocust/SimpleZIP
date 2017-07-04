@@ -225,6 +225,9 @@ namespace SimpleZIP_UI.Application.Compression
                 case BaseControl.Algorithm.TarBz2:
                     algorithm = new TarBzip2();
                     break;
+                case BaseControl.Algorithm.TarLz:
+                    algorithm = new TarLz();
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(value), value, null);
             }

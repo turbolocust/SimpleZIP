@@ -51,6 +51,16 @@ namespace SimpleZIP_UI_TEST
             var options = new WriterOptions(CompressionType.BZip2);
             await PerformArchiveOperations(new TarBzip2(), ".tbz2", options);
         }
+        
+        /// <summary>
+        /// Tests the compression and extraction using TAR (lzip) archive type.
+        /// </summary>
+        [TestMethod]
+        public async void TarLzipCompressionExtractionTest()
+        {
+            var options = new WriterOptions(CompressionType.BZip2);
+            await PerformArchiveOperations(new TarLz(), ".tlz", options);
+        }
 
         private async Task<bool> PerformArchiveOperations(IArchivingAlgorithm compressionAlgorithm, string fileType, WriterOptions options)
         {
