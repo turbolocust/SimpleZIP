@@ -3,7 +3,7 @@ using SharpCompress.Writers;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
 {
-    public class TarGz : Tar
+    public class TarGzip : Tar
     {
         protected override WriterOptions GetWriterOptions()
         {

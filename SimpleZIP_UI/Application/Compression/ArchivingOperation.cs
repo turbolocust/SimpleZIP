@@ -220,13 +220,13 @@ namespace SimpleZIP_UI.Application.Compression
                     algorithm = new Tar();
                     break;
                 case BaseControl.Algorithm.TarGz:
-                    algorithm = new TarGz();
+                    algorithm = new TarGzip();
                     break;
                 case BaseControl.Algorithm.TarBz2:
                     algorithm = new TarBzip2();
                     break;
                 case BaseControl.Algorithm.TarLz:
-                    algorithm = new TarLz();
+                    algorithm = new TarLzip();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(value), value, null);

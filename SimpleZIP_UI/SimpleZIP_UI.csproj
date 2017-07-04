@@ -92,8 +92,8 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Application\Compression\Algorithm\Type\TarGz.cs" />
-    <Compile Include="Application\Compression\Algorithm\Type\TarLz.cs" />
+    <Compile Include="Application\Compression\Algorithm\Type\TarGzip.cs" />
+    <Compile Include="Application\Compression\Algorithm\Type\TarLzip.cs" />
     <Compile Include="Application\Compression\OperationMode.cs" />
     <Compile Include="Application\Compression\Algorithm\ArchivingAlgorithm.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\SevenZip.cs" />
