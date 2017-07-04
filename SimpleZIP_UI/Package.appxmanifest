@@ -38,6 +38,7 @@
               <uap:FileType ContentType="application/x-compressed">.tgz</uap:FileType>
               <uap:FileType ContentType="application/x-bzip2-compressed">.tbz2</uap:FileType>
               <uap:FileType ContentType="application/x-tar">.tar</uap:FileType>
+              <uap:FileType ContentType="application/x-lzip-compressed">.tlz</uap:FileType>
             </uap:SupportedFileTypes>
           </uap:FileTypeAssociation>
         </uap:Extension>

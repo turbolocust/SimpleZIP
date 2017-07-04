@@ -8,9 +8,6 @@ using SimpleZIP_UI.Presentation.View;
 
 namespace SimpleZIP_UI.Presentation
 {
-    /// <summary>
-    /// Handles complex operations for the corresponding GUI controller.
-    /// </summary>
     internal class MainPageControl : BaseControl
     {
         internal MainPageControl(Page parent) : base(parent)
@@ -18,7 +15,7 @@ namespace SimpleZIP_UI.Presentation
         }
 
         /// <summary>
-        /// Handles complex logic for the compress button.
+        /// Performs an action when the compress button has been tapped.
         /// </summary>
         internal async Task<bool> CompressButtonAction()
         {
@@ -31,7 +28,7 @@ namespace SimpleZIP_UI.Presentation
         }
 
         /// <summary>
-        /// Handles complex logic for the decompress button.
+        /// Performs an action when the decompress button has been tapped.
         /// </summary>
         internal async Task<bool> DecompressButtonAction()
         {

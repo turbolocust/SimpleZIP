@@ -92,6 +92,8 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application\Compression\Algorithm\Type\TarGz.cs" />
+    <Compile Include="Application\Compression\Algorithm\Type\TarLz.cs" />
     <Compile Include="Application\Compression\OperationMode.cs" />
     <Compile Include="Application\Compression\Algorithm\ArchivingAlgorithm.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\SevenZip.cs" />
@@ -108,7 +110,7 @@
     </Compile>
     <Compile Include="Application\Compression\Algorithm\Type\GZip.cs" />
     <Compile Include="Application\Compression\Algorithm\IArchivingAlgorithm.cs" />
-    <Compile Include="Application\Compression\Algorithm\Type\Tarball.cs" />
+    <Compile Include="Application\Compression\Algorithm\Type\TarBzip2.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\Zip.cs" />
     <Compile Include="Application\Compression\ArchivingOperation.cs" />
     <Compile Include="Application\Util\FileUtils.cs" />

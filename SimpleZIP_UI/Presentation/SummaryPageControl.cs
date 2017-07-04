@@ -31,20 +31,35 @@ namespace SimpleZIP_UI.Presentation
         }
 
         /// <summary>
-        /// Performs an action after the start button has been tapped.
+        /// Performs an action when the start button has been tapped.
         /// </summary>
         /// <param name="archiveInfo">Consists of information about the archive.</param>
         /// <returns>True on success, false otherwise.</returns>
         internal async Task<Result> StartButtonAction(ArchiveInfo archiveInfo)
         {
-            InitOperation(archiveInfo);
-            var result = await PerformOperation(archiveInfo);
-            FinalizeOperation();
-            return result;
+            using (Operation = new ArchivingOperation())
+            {
+                Result result;
+                try
+                {
+                    InitOperation(archiveInfo);
+                    result = await PerformOperation(archiveInfo);
+                    FinalizeOperation();
+                }
+                catch (Exception ex)
+                {
+                    result = new Result
+                    {
+                        Message = ex.Message,
+                        StatusCode = Result.Status.Fail
+                    };
+                }
+                return result;
+            }
         }
 
         /// <summary>
-        /// Performs an action after the abort button has been pressed.
+        /// Performs an action when the abort button has been pressed.
         /// </summary>
         internal void AbortButtonAction()
         {
@@ -94,7 +109,7 @@ namespace SimpleZIP_UI.Presentation
         }
 
         /// <summary>
-        /// Initializes a new operation.
+        /// Performs various tasks before the start of the archiving operation.
         /// </summary>
         /// <param name="archiveInfo">Consists of information about the archive.</param>
         /// <exception cref="NullReferenceException">Thrown if output folder is <code>null</code>.</exception>
@@ -105,16 +120,14 @@ namespace SimpleZIP_UI.Presentation
                 throw new NullReferenceException("No valid output folder selected.");
             }
             archiveInfo.OutputFolder = OutputFolder;
-            Operation = new ArchivingOperation();
         }
 
         /// <summary>
-        /// Finalizes the currently active operation.
+        /// Performs various tasks after the archiving operation has finished.
         /// </summary>
         protected void FinalizeOperation()
         {
             IsCancelRequest = false;
-            Operation.Dispose();
         }
 
         /// <summary>

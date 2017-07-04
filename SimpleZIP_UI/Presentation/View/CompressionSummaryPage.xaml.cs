@@ -9,7 +9,6 @@ using Windows.UI.Xaml.Navigation;
 using SimpleZIP_UI.Application.Compression;
 using SimpleZIP_UI.Application.Model;
 using SimpleZIP_UI.Application.Util;
-using SimpleZIP_UI.Presentation.Factory;
 
 namespace SimpleZIP_UI.Presentation.View
 {
@@ -46,6 +45,7 @@ namespace SimpleZIP_UI.Presentation.View
             ArchiveTypeComboBox.Items.Add(CreateItemForComboBox("TAR (.tar)", ".tar"));
             ArchiveTypeComboBox.Items.Add(CreateItemForComboBox("TAR+GZIP (.tgz)", ".tgz"));
             ArchiveTypeComboBox.Items.Add(CreateItemForComboBox("TAR+BZIP2 (.tbz2)", ".tbz2"));
+            ArchiveTypeComboBox.Items.Add(CreateItemForComboBox("TAR+LZIP (.tlz)", ".tlz"));
             ArchiveTypeComboBox.SelectedIndex = 0; // selected index on page launch
 
             _control = new CompressionSummaryPageControl(this);
@@ -81,28 +81,19 @@ namespace SimpleZIP_UI.Presentation.View
 
             if (archiveName.Length > 0 && !archiveName.ContainsIllegalChars())
             {
-                try
-                {
-                    // set the algorithm by archive file type
-                    FileTypesComboBoxItems.TryGetValue(selectedItem, out string archiveType);
-                    BaseControl.AlgorithmFileTypes.TryGetValue(archiveType, out BaseControl.Algorithm value);
+                // set the algorithm by archive file type
+                FileTypesComboBoxItems.TryGetValue(selectedItem, out string archiveType);
+                BaseControl.AlgorithmFileTypes.TryGetValue(archiveType, out BaseControl.Algorithm value);
 
-                    archiveName += archiveType;
-                    var result = await InitOperation(value, archiveName);
+                archiveName += archiveType;
+                var result = await InitOperation(value, archiveName);
 
-                    // move focus to avoid accidental focus event on text block
-                    FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
+                // move focus to avoid accidental focus event on text block
+                FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
 
-                    _control.CreateResultDialog(result).ShowAsync().AsTask().Forget();
-                }
-                catch (ArgumentNullException)
-                {
-                    await DialogFactory.CreateErrorDialog("Archive type not recognized.").ShowAsync();
-                }
-                finally
-                {
-                    Frame.Navigate(typeof(MainPage));
-                }
+                _control.CreateResultDialog(result).ShowAsync().AsTask().Forget();
+
+                Frame.Navigate(typeof(MainPage));
             }
         }
 

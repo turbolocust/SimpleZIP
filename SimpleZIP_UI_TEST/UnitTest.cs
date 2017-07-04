@@ -29,7 +29,7 @@ namespace SimpleZIP_UI_TEST
         public async void ZipCompressionExtractionTest()
         {
             var options = new WriterOptions(CompressionType.Deflate);
-            await PerformArchiveOperations(Zip.Instance, ".zip", options);
+            await PerformArchiveOperations(new Zip(), ".zip", options);
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace SimpleZIP_UI_TEST
         public async void TarGzipCompressionExtractionTest()
         {
             var options = new WriterOptions(CompressionType.GZip);
-            await PerformArchiveOperations(Tarball.Instance, ".tgz", options);
+            await PerformArchiveOperations(new TarGz(), ".tgz", options);
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace SimpleZIP_UI_TEST
         public async void TarBzip2CompressionExtractionTest()
         {
             var options = new WriterOptions(CompressionType.BZip2);
-            await PerformArchiveOperations(Tarball.Instance, ".tbz2", options);
+            await PerformArchiveOperations(new TarBzip2(), ".tbz2", options);
         }
 
         private async Task<bool> PerformArchiveOperations(IArchivingAlgorithm compressionAlgorithm, string fileType, WriterOptions options)

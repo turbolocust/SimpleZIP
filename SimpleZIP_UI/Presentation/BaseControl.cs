@@ -21,7 +21,7 @@ namespace SimpleZIP_UI.Presentation
         /// </summary>
         public enum Algorithm
         {
-            Zip, GZip, SevenZip, Tar, TarGz, TarBz2
+            Zip, GZip, SevenZip, Tar, TarGz, TarBz2, TarLz
         }
 
         /// <summary>
@@ -44,15 +44,16 @@ namespace SimpleZIP_UI.Presentation
                 {".gzip", Algorithm.GZip},
                 {".gz", Algorithm.GZip},
                 {".tgz", Algorithm.TarGz},
-                {".bz2", Algorithm.TarBz2},
-                {".tbz2", Algorithm.TarBz2}
+                {".tbz2", Algorithm.TarBz2},
+                {".tlz", Algorithm.TarLz}
             };
 
             // populate dictionary that maps extended file types to algorithms
             AlgorithmExtendedFileTypes = new Dictionary<string, Algorithm>
             {
                 { ".tar.gz", Algorithm.TarGz },
-                { ".tar.bz2", Algorithm.TarBz2 }
+                { ".tar.bz2", Algorithm.TarBz2 },
+                { ".tar.lz", Algorithm.TarLz }
             };
         }
 

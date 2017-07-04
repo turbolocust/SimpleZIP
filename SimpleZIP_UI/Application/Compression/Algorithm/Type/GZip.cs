@@ -12,13 +12,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
 {
     public class GZip : ArchivingAlgorithm
     {
-        private static GZip _instance;
-
-        public static GZip Instance => _instance ?? (_instance = new GZip());
-
-        private GZip() : base(ArchiveType.GZip)
+        public GZip() : base(ArchiveType.GZip)
         {
-            // singleton
         }
 
         public new async Task<bool> Extract(StorageFile archive, StorageFolder location, ReaderOptions options = null)

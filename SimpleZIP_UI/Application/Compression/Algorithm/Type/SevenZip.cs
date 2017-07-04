@@ -10,10 +10,6 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
 {
     public class SevenZip : ArchivingAlgorithm
     {
-        private static SevenZip _instance;
-
-        public static SevenZip Instance => _instance ?? (_instance = new SevenZip());
-
         public SevenZip() : base(ArchiveType.SevenZip)
         {
         }

@@ -4,8 +4,6 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
-using SharpCompress.Common;
-using SharpCompress.Writers;
 using SimpleZIP_UI.Application.Compression.Algorithm;
 using SimpleZIP_UI.Application.Compression.Algorithm.Type;
 using SimpleZIP_UI.Application.Model;
@@ -21,11 +19,6 @@ namespace SimpleZIP_UI.Application.Compression
         /// Source for cancellation token.
         /// </summary>
         private readonly CancellationTokenSource _tokenSource;
-
-        /// <summary>
-        /// Optional writer options for compression mode.
-        /// </summary>
-        private WriterOptions _writerOptions;
 
         /// <summary>
         /// True if an operation is in progress..
@@ -110,7 +103,7 @@ namespace SimpleZIP_UI.Application.Compression
                             CreationCollisionOption.GenerateUniqueName);
 
                         algorithm.SetCancellationToken(token);
-                        isSuccess = await algorithm.Compress(files, archive, location, _writerOptions);
+                        isSuccess = await algorithm.Compress(files, archive, location);
 
                         if (token.IsCancellationRequested)
                         {
@@ -204,9 +197,9 @@ namespace SimpleZIP_UI.Application.Compression
         }
 
         /// <summary>
-        /// Assigns the correct algorithm instance to be used by evaluating its key.
+        /// Assigns the correct algorithm instance to be used by evaluating its enum value.
         /// </summary>
-        /// <param name="value">The value of the algorithm.</param>
+        /// <param name="value">The enum value of the algorithm.</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when key matched no algorithm.</exception>
         /// <returns>An instance of the archiving algorithm that matches the specified value.</returns>
         private IArchivingAlgorithm ChooseStrategy(BaseControl.Algorithm value)
@@ -215,23 +208,22 @@ namespace SimpleZIP_UI.Application.Compression
             switch (value)
             {
                 case BaseControl.Algorithm.Zip:
-                    algorithm = Zip.Instance;
+                    algorithm = new Zip();
                     break;
                 case BaseControl.Algorithm.GZip:
-                    algorithm = GZip.Instance;
+                    algorithm = new GZip();
                     break;
                 case BaseControl.Algorithm.SevenZip:
-                    algorithm = SevenZip.Instance;
+                    algorithm = new SevenZip();
                     break;
                 case BaseControl.Algorithm.Tar:
-                    algorithm = Tar.Instance;
+                    algorithm = new Tar();
                     break;
                 case BaseControl.Algorithm.TarGz:
-                    algorithm = Tarball.Instance;
-                    _writerOptions = new WriterOptions(CompressionType.GZip);
+                    algorithm = new TarGz();
                     break;
                 case BaseControl.Algorithm.TarBz2:
-                    algorithm = Tarball.Instance;
+                    algorithm = new TarBzip2();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(value), value, null);
@@ -241,6 +233,7 @@ namespace SimpleZIP_UI.Application.Compression
 
         public void Dispose()
         {
+            IsRunning = false;
             _tokenSource.Dispose();
         }
     }

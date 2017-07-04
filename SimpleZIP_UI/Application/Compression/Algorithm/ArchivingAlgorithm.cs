@@ -37,7 +37,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         {
             if (archive == null || location == null) return false;
 
-            options = options ?? new ReaderOptions()
+            options = options ?? new ReaderOptions
             {
                 LeaveStreamOpen = false
             };
