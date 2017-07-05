@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
+using SimpleZIP_UI.Application.Compression;
 
 namespace SimpleZIP_UI.Application.Util
 {
@@ -33,7 +34,6 @@ namespace SimpleZIP_UI.Application.Util
             return !string.IsNullOrEmpty(path) && path.Split('.').Length - 1 > 1;
         }
 
-
         /// <summary>
         /// Returns the file name extension of the specified path. Paths with multiple file name 
         /// extensions are also being considered, e.g. ".tar.gz" or ".tar.bz2".
@@ -43,8 +43,26 @@ namespace SimpleZIP_UI.Application.Util
         /// or <code>String.Empty</code> if path does not have an extension.</returns>
         public static string GetFileNameExtension(string path)
         {
-            return path.ContainsMultipleFileNameExtensions()
-                ? path.Substring(path.IndexOf('.')) : Path.GetExtension(path);
+            var fileNameExtension = "";
+            if (path.ContainsMultipleFileNameExtensions())
+            {
+                foreach (var extendedFileType in Archive.AlgorithmExtendedFileTypes)
+                {
+                    var key = extendedFileType.Key;
+                    if (path.EndsWith(key))
+                    {
+                        fileNameExtension = key;
+                        break;
+                    }
+                }
+            }
+
+            if (string.IsNullOrEmpty(fileNameExtension))
+            {
+                fileNameExtension = Path.GetExtension(path);
+            }
+
+            return fileNameExtension;
         }
 
         /// <summary>
@@ -65,6 +83,42 @@ namespace SimpleZIP_UI.Application.Util
         {
             var properties = await file.GetBasicPropertiesAsync();
             return properties.Size;
+        }
+
+        /// <summary>
+        /// Creates a file (<see cref="string"/>) at the specified location 
+        /// (<see cref="StorageFolder"/>) including all the missing directories in the path.
+        /// </summary>
+        /// <param name="location">Used to create directories and the file.</param>
+        /// <param name="path">Dynamic path to the file to be created.</param>
+        /// <returns>The created file or <code>null</code> if path is <code>String.Empty</code>.</returns>
+        /// <exception cref="ArgumentException">Thrown if path is invalid and thus creation of 
+        /// a folder or file failed.</exception>
+        /// <exception cref="NullReferenceException">Thrown if any argument is <code>null</code>.</exception>
+        public static async Task<StorageFile> CreateFileAsync(StorageFolder location, string path)
+        {
+            var separatorChar = Path.DirectorySeparatorChar;
+            var dirPath = path.Replace('/', separatorChar);
+            var pathMembers = dirPath.Split(separatorChar);
+
+            StorageFile file = null;
+            if (pathMembers.Length > 1) // at least one directory in path
+            {
+                var lastPos = pathMembers.Length - 1;
+                var folder = location;
+                // ignore last position as it's supposed be a file
+                for (var i = 0; i < lastPos; ++i)
+                {
+                    var folderName = pathMembers[i];
+                    folder = await folder.CreateFolderAsync(folderName, CreationCollisionOption.OpenIfExists);
+                }
+                file = await folder.CreateFileAsync(pathMembers[lastPos], CreationCollisionOption.GenerateUniqueName);
+            }
+            else if (pathMembers.Length > 0)
+            {
+                file = await location.CreateFileAsync(pathMembers[0], CreationCollisionOption.GenerateUniqueName);
+            }
+            return file;
         }
     }
 }

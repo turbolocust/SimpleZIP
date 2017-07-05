@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,6 +6,7 @@ using Windows.Storage;
 using SharpCompress.Common;
 using SharpCompress.Readers;
 using SharpCompress.Writers;
+using SimpleZIP_UI.Application.Util;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm
 {
@@ -50,9 +50,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                 {
                     if (!reader.Entry.IsDirectory)
                     {
-                        var file = await location.CreateFileAsync(reader.Entry.Key,
-                            CreationCollisionOption.GenerateUniqueName);
-
+                        var file = await FileUtils.CreateFileAsync(location, reader.Entry.Key);
                         if (file == null) return false;
 
                         using (var entryStream = reader.OpenEntryStream())
@@ -65,7 +63,6 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                                     await outputStream.WriteAsync(bytes, 0, readBytes, Token);
                                 }
                             }
-
                         }
                     }
                 }
@@ -74,7 +71,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         }
 
         public async Task<bool> Compress(IReadOnlyList<StorageFile> files, StorageFile archive,
-             StorageFolder location, WriterOptions options = null)
+            StorageFolder location, WriterOptions options = null)
         {
             if (files == null || archive == null || location == null) return false;
 
