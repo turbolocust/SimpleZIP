@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
+using SharpCompress.Common;
 using SimpleZIP_UI.Application.Model;
 
 namespace SimpleZIP_UI.Presentation
@@ -14,7 +15,7 @@ namespace SimpleZIP_UI.Presentation
         protected override async Task<Result> PerformOperation(ArchiveInfo archiveInfo)
         {
             var selectedFiles = archiveInfo.SelectedFiles;
-            var key = archiveInfo.Algorithm;
+            var key = archiveInfo.ArchiveType;
             var message = "";
 
             Result result = null;
@@ -23,7 +24,7 @@ namespace SimpleZIP_UI.Presentation
             {
                 try
                 {
-                    if (key.Equals(Algorithm.GZip)) // requires special treatment
+                    if (key.Equals(ArchiveType.GZip)) // requires special treatment
                     {
                         var totalDuration = new TimeSpan(0);
                         var resultMessage = "";

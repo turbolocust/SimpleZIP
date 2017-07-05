@@ -9,7 +9,6 @@ using SimpleZIP_UI.Application.Compression.Algorithm.Type;
 using SimpleZIP_UI.Application.Model;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Exceptions;
-using SimpleZIP_UI.Presentation;
 
 namespace SimpleZIP_UI.Application.Compression
 {
@@ -50,7 +49,7 @@ namespace SimpleZIP_UI.Application.Compression
                         archiveInfo.SelectedFiles,
                         archiveInfo.ArchiveName,
                         archiveInfo.OutputFolder,
-                        archiveInfo.Algorithm);
+                        archiveInfo.ArchiveType);
                     break;
                 case OperationMode.Decompress:
                     result = await ExtractFromArchive(
@@ -82,10 +81,10 @@ namespace SimpleZIP_UI.Application.Compression
         /// <param name="files">The files to be compressed.</param>
         /// <param name="archiveName">The name of the archive to be created.</param>
         /// <param name="location">Where to store the archive.</param>
-        /// <param name="value">The algorithm to be used.</param>
+        /// <param name="value">The archive type to be created.</param>
         /// <returns>An object that consists of result parameters.</returns>
         private async Task<Result> CreateArchive(IReadOnlyList<StorageFile> files,
-            string archiveName, StorageFolder location, BaseControl.Algorithm value)
+            string archiveName, StorageFolder location, Archive.ArchiveType value)
         {
             var token = _tokenSource.Token;
             var algorithm = ChooseStrategy(value);
@@ -138,8 +137,8 @@ namespace SimpleZIP_UI.Application.Compression
             IArchivingAlgorithm algorithm;
 
             // try to get enum type by file extension, which is the key
-            if (BaseControl.AlgorithmFileTypes.TryGetValue(fileType, out BaseControl.Algorithm value)
-                || BaseControl.AlgorithmExtendedFileTypes.TryGetValue(fileType, out value))
+            if (Archive.AlgorithmFileTypes.TryGetValue(fileType, out Archive.ArchiveType value)
+                || Archive.AlgorithmExtendedFileTypes.TryGetValue(fileType, out value))
             {
                 algorithm = ChooseStrategy(value);
             }
@@ -197,35 +196,35 @@ namespace SimpleZIP_UI.Application.Compression
         }
 
         /// <summary>
-        /// Assigns the correct algorithm instance to be used by evaluating its enum value.
+        /// Assigns the correct algorithm instance to be used by evaluating the archive type.
         /// </summary>
-        /// <param name="value">The enum value of the algorithm.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown when key matched no algorithm.</exception>
+        /// <param name="value">The enum value of the archive type.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when archive type matched no algorithm.</exception>
         /// <returns>An instance of the archiving algorithm that matches the specified value.</returns>
-        private IArchivingAlgorithm ChooseStrategy(BaseControl.Algorithm value)
+        private IArchivingAlgorithm ChooseStrategy(Archive.ArchiveType value)
         {
             IArchivingAlgorithm algorithm;
             switch (value)
             {
-                case BaseControl.Algorithm.Zip:
+                case Archive.ArchiveType.Zip:
                     algorithm = new Zip();
                     break;
-                case BaseControl.Algorithm.GZip:
+                case Archive.ArchiveType.GZip:
                     algorithm = new GZip();
                     break;
-                case BaseControl.Algorithm.SevenZip:
+                case Archive.ArchiveType.SevenZip:
                     algorithm = new SevenZip();
                     break;
-                case BaseControl.Algorithm.Tar:
+                case Archive.ArchiveType.Tar:
                     algorithm = new Tar();
                     break;
-                case BaseControl.Algorithm.TarGz:
+                case Archive.ArchiveType.TarGz:
                     algorithm = new TarGzip();
                     break;
-                case BaseControl.Algorithm.TarBz2:
+                case Archive.ArchiveType.TarBz2:
                     algorithm = new TarBzip2();
                     break;
-                case BaseControl.Algorithm.TarLz:
+                case Archive.ArchiveType.TarLz:
                     algorithm = new TarLzip();
                     break;
                 default:

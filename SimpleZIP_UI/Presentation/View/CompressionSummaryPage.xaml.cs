@@ -82,7 +82,7 @@ namespace SimpleZIP_UI.Presentation.View
             {
                 // set the algorithm by archive file type
                 FileTypesComboBoxItems.TryGetValue(selectedItem, out string archiveType);
-                BaseControl.AlgorithmFileTypes.TryGetValue(archiveType, out BaseControl.Algorithm value);
+                Archive.AlgorithmFileTypes.TryGetValue(archiveType, out Archive.ArchiveType value);
 
                 archiveName += archiveType;
                 var result = await InitOperation(value, archiveName);
@@ -191,14 +191,14 @@ namespace SimpleZIP_UI.Presentation.View
         /// </summary>
         /// <param name="key">The type of the archive.</param>
         /// <param name="archiveName">The name of the archive.</param>
-        private async Task<Result> InitOperation(BaseControl.Algorithm key, string archiveName)
+        private async Task<Result> InitOperation(Archive.ArchiveType key, string archiveName)
         {
             SetOperationActive(true);
             var archiveInfo = new ArchiveInfo(OperationMode.Compress)
             {
                 SelectedFiles = _selectedFiles,
                 ArchiveName = archiveName,
-                Algorithm = key
+                ArchiveType = key
             };
             return await _control.StartButtonAction(archiveInfo);
         }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Windows.Storage.Pickers;
+using SimpleZIP_UI.Application.Compression;
 
 namespace SimpleZIP_UI.Presentation.Factory
 {
@@ -65,7 +66,7 @@ namespace SimpleZIP_UI.Presentation.Factory
         /// <returns>A list of supported file types.</returns>
         public static IList<string> GetListOfSupportedFileTypes()
         {
-            return BaseControl.AlgorithmFileTypes.Select(fileType => fileType.Key).ToList();
+            return Archive.AlgorithmFileTypes.Select(fileType => fileType.Key).ToList();
         }
 
     }

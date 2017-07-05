@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Windows.Storage;
 using SimpleZIP_UI.Application.Compression;
-using SimpleZIP_UI.Presentation;
 
 namespace SimpleZIP_UI.Application.Model
 {
@@ -20,6 +19,6 @@ namespace SimpleZIP_UI.Application.Model
 
         internal StorageFolder OutputFolder { get; set; }
 
-        internal BaseControl.Algorithm Algorithm { get; set; }
+        internal Archive.ArchiveType ArchiveType { get; set; }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
@@ -15,47 +14,6 @@ namespace SimpleZIP_UI.Presentation
         /// The parent page to whom this control belongs to.
         /// </summary>
         protected Page ParentPage { get; }
-
-        /// <summary>
-        /// Enumeration type to identify algorithms.
-        /// </summary>
-        public enum Algorithm
-        {
-            Zip, GZip, SevenZip, Tar, TarGz, TarBz2, TarLz
-        }
-
-        /// <summary>
-        /// Maps file types for each algorithm. Consists only of file types with a single file name extension.
-        /// </summary>
-        internal static readonly Dictionary<string, Algorithm> AlgorithmFileTypes;
-
-        /// <summary>
-        /// Maps file types for each algorithm. Consists only of file types with multiple file name extensions.
-        /// </summary>
-        internal static readonly Dictionary<string, Algorithm> AlgorithmExtendedFileTypes;
-
-        static BaseControl()
-        {
-            // populate dictionary that maps file types to algorithms
-            AlgorithmFileTypes = new Dictionary<string, Algorithm>(Enum.GetNames(typeof(Algorithm)).Length * 2)
-            {
-                {".zip", Algorithm.Zip},
-                {".tar", Algorithm.Tar},
-                {".gzip", Algorithm.GZip},
-                {".gz", Algorithm.GZip},
-                {".tgz", Algorithm.TarGz},
-                {".tbz2", Algorithm.TarBz2},
-                {".tlz", Algorithm.TarLz}
-            };
-
-            // populate dictionary that maps extended file types to algorithms
-            AlgorithmExtendedFileTypes = new Dictionary<string, Algorithm>
-            {
-                { ".tar.gz", Algorithm.TarGz },
-                { ".tar.bz2", Algorithm.TarBz2 },
-                { ".tar.lz", Algorithm.TarLz }
-            };
-        }
 
         protected BaseControl(Page parent)
         {
