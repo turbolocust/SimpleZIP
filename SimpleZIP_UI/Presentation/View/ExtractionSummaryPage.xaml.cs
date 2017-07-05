@@ -16,7 +16,7 @@ namespace SimpleZIP_UI.Presentation.View
     public sealed partial class ExtractionSummaryPage : Page, IDisposable
     {
         /// <summary>
-        /// The aggregated page control instance.
+        /// The aggregated control instance.
         /// </summary>
         private readonly ExtractionSummaryPageControl _control;
 
@@ -35,7 +35,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// Invoked when the abort button has been tapped.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Arguments that may have been passed.</param>
+        /// <param name="args">Arguments that have been passed.</param>
         private void AbortButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             AbortButtonToolTip.IsOpen = true;
@@ -46,37 +46,22 @@ namespace SimpleZIP_UI.Presentation.View
         /// Invoked when the start button has been tapped.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Arguments that may have been passed.</param>
+        /// <param name="args">Arguments that have been passed.</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown on fatal error.</exception>
         private async void StartButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             var result = await InitOperation();
-
-            // move focus to avoid accidental focus event on text block
-            FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
-
             _control.CreateResultDialog(result).ShowAsync().AsTask().Forget();
             Frame.Navigate(typeof(MainPage));
         }
 
         /// <summary>
-        /// Invoked when the panel that holds the output path has been tapped.
+        /// Invoked when the button holding the output path has been tapped.
         /// As a result, the user can pick an output folder for the archive.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Arguments that may have been passed.</param>
-        private void OutputPathPanel_Tap(object sender, TappedRoutedEventArgs args)
-        {
-            SetOutputPath();
-        }
-
-        /// <summary>
-        /// Invoked when output path text block got focus.
-        /// As a result, the user can pick an output folder for the archive.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Arguments that may have been passed.</param>
-        private void OutputPathTextBlock_GotFocus(object sender, RoutedEventArgs args)
+        /// <param name="args">Arguments that have been passed.</param>
+        private void OutputPathButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             SetOutputPath();
         }
@@ -87,9 +72,16 @@ namespace SimpleZIP_UI.Presentation.View
         private async void SetOutputPath()
         {
             if (ProgressRing.IsActive) return;
-            var text = OutputPathTextBlock.Text = await _control.PickOutputPath();
-            StartButton.IsEnabled = !string.IsNullOrEmpty(text);
-            FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
+            var text = await _control.PickOutputPath();
+            if (!string.IsNullOrEmpty(text))
+            {
+                OutputPathButton.Content = text;
+                StartButton.IsEnabled = true;
+            }
+            else
+            {
+                StartButton.IsEnabled = false;
+            }
         }
 
         /// <summary>
@@ -116,14 +108,14 @@ namespace SimpleZIP_UI.Presentation.View
                 ProgressRing.IsActive = true;
                 ProgressRing.Visibility = Visibility.Visible;
                 StartButton.IsEnabled = false;
-                OutputPathTextBlock.IsEnabled = false;
+                OutputPathButton.IsEnabled = false;
             }
             else
             {
                 ProgressRing.IsActive = false;
                 ProgressRing.Visibility = Visibility.Collapsed;
                 StartButton.IsEnabled = true;
-                OutputPathTextBlock.IsEnabled = true;
+                OutputPathButton.IsEnabled = true;
             }
         }
 

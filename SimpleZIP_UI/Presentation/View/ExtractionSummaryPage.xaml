@@ -10,13 +10,13 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="1.5*" />
             <RowDefinition Height="0.5*" />
-            <RowDefinition Height="5.0*" />
+            <RowDefinition Height="6.5*" />
             <RowDefinition Height="1.5*" />
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" IsTapEnabled="True" Tapped="OutputPathPanel_Tap" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Transparent">
-            <TextBox x:Name="OutputPathTextBlock" GotFocus="OutputPathTextBlock_GotFocus" AllowFocusWhenDisabled="False" Margin="8,0,24,0" PlaceholderText="TAP TO CHOOSE" Header="Output Path" Width="Auto" FontWeight="Normal" BorderBrush="CornflowerBlue"
-                     IsReadOnly="True" AcceptsReturn="False" TextWrapping="NoWrap" BorderThickness="2" IsTapEnabled="False" SelectionHighlightColor="Transparent" Background="Transparent" InputScope="Text" IsSpellCheckEnabled="False"
-                     IsTextPredictionEnabled="False" IsHoldingEnabled="False" IsDoubleTapEnabled="False" />
+        <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center" Background="Transparent">
+            <TextBlock Text="Output Path" IsTapEnabled="False" FontSize="16" FontWeight="Bold" Margin="8,8,0,8" FocusVisualPrimaryBrush="Transparent" FocusVisualSecondaryBrush="Transparent" />
+            <Button x:Name="OutputPathButton" Content="TAP TO CHOOSE" AllowFocusWhenDisabled="False" Margin="8,0,24,0" Width="Auto" Height="40" FontWeight="Normal" BorderBrush="CornflowerBlue"
+                    BorderThickness="2" IsTapEnabled="True" Background="Transparent" IsHoldingEnabled="False" IsDoubleTapEnabled="False" Tapped="OutputPathButton_Tap" />
         </StackPanel>
         <TextBlock Text="File(s) to decompress:" Grid.Row="1" FontWeight="Bold" FontSize="16" CharacterSpacing="56" Margin="8,0,0,0" VerticalAlignment="Center" Foreground="White" />
         <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">

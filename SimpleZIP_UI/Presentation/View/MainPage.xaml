@@ -12,9 +12,9 @@
             <RowDefinition Height="7*"/>
         </Grid.RowDefinitions>
         <Button Visibility="Visible" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" FontSize="20" Grid.Row="0"
-                    Width="50" Height="50" Background="Transparent" Tapped="HamburgerButton_Tap" Foreground="White"/>
+                Width="50" Height="50" Background="Transparent" Tapped="HamburgerButton_Tap" Foreground="White"/>
         <SplitView x:Name="MenuSplitView" DisplayMode="CompactOverlay" IsPaneOpen="False" Grid.Row="1"
-               CompactPaneLength="0" VerticalContentAlignment="Stretch" VerticalAlignment="Stretch" OpenPaneLength="320">
+                   CompactPaneLength="0" VerticalContentAlignment="Stretch" VerticalAlignment="Stretch" OpenPaneLength="320">
             <SplitView.Pane>
                 <StackPanel Background="Transparent" Padding="0,8,0,0" VerticalAlignment="Top">
                     <Grid>
