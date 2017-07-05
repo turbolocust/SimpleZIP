@@ -8,6 +8,7 @@
   - TAR (Uncompressed)
   - TAR+GZIP (=Tarball)
   - TAR+BZIP2 (=Tarball)
+  - TAR+LZIP (=Tarball)
   
 Supported formats for decompression:
   - ZIP
@@ -15,5 +16,6 @@ Supported formats for decompression:
   - TAR
   - TAR+GZIP
   - TAR+BZIP2
+  - TAR+LZIP
 
 <br />This project makes use of the SharpCompress library (https://github.com/adamhathcock/sharpcompress) and depends on its quality when it comes to archiving operations.
