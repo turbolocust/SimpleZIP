@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using SimpleZIP_UI.Application.Compression;
+using System.Collections.Generic;
 
 namespace SimpleZIP_UI.Application.Util
 {
@@ -46,7 +47,7 @@ namespace SimpleZIP_UI.Application.Util
             var fileNameExtension = "";
             if (path.ContainsMultipleFileNameExtensions())
             {
-                foreach (var extendedFileType in Archive.AlgorithmExtendedFileTypes)
+                foreach (var extendedFileType in Archives.ArchiveExtendedFileTypes)
                 {
                     var key = extendedFileType.Key;
                     if (path.EndsWith(key))
@@ -79,10 +80,25 @@ namespace SimpleZIP_UI.Application.Util
         /// </summary>
         /// <param name="file">The file from which to get the file size.</param>
         /// <returns>The file size as unsigned long.</returns>
-        public static async Task<ulong> GetFileSize(StorageFile file)
+        public static async Task<ulong> GetFileSizeAsync(StorageFile file)
         {
             var properties = await file.GetBasicPropertiesAsync();
             return properties.Size;
+        }
+
+        /// <summary>
+        /// Returns the total file size of all files in the specified list.
+        /// </summary>
+        /// <param name="files">List consisting of <see cref="StorageFile"/>.</param>
+        /// <returns>The total size of all files as unsigned long.</returns>
+        public static async Task<ulong> GetFileSizesAsync(IReadOnlyList<StorageFile> files)
+        {
+            ulong totalSize = 0L;
+            foreach (var file in files)
+            {
+                totalSize += await GetFileSizeAsync(file);
+            }
+            return totalSize;
         }
 
         /// <summary>
@@ -106,7 +122,7 @@ namespace SimpleZIP_UI.Application.Util
             {
                 var lastPos = pathMembers.Length - 1;
                 var folder = location;
-                // ignore last position as it's supposed be a file
+                // ignore last position because it's supposed be a file
                 for (var i = 0; i < lastPos; ++i)
                 {
                     var folderName = pathMembers[i];

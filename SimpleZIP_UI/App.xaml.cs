@@ -123,14 +123,12 @@ namespace SimpleZIP_UI
         private static void OnBackRequested(object sender, BackRequestedEventArgs args)
         {
             var rootFrame = Window.Current.Content as Frame;
-
             if (rootFrame != null && rootFrame.CanGoBack)
             {
                 args.Handled = true;
                 rootFrame.GoBack();
             }
         }
-
 
         /// <summary>
         /// Invoked when application execution is being suspended. Application state is saved

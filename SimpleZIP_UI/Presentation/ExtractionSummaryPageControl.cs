@@ -17,6 +17,7 @@ namespace SimpleZIP_UI.Presentation
             var message = "";
 
             Result result = null;
+            CheckFileSizes(selectedFiles);
 
             try
             {

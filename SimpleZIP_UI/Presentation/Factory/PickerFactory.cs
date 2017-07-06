@@ -66,8 +66,7 @@ namespace SimpleZIP_UI.Presentation.Factory
         /// <returns>A list of supported file types.</returns>
         public static IList<string> GetListOfSupportedFileTypes()
         {
-            return Archive.AlgorithmFileTypes.Select(fileType => fileType.Key).ToList();
+            return Archives.ArchiveFileTypes.Select(fileType => fileType.Key).ToList();
         }
-
     }
 }

@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
 using SimpleZIP_UI.Application.Compression.Algorithm;
-using SimpleZIP_UI.Application.Compression.Algorithm.Type;
 using SimpleZIP_UI.Application.Model;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Exceptions;
@@ -84,10 +83,10 @@ namespace SimpleZIP_UI.Application.Compression
         /// <param name="value">The archive type to be created.</param>
         /// <returns>An object that consists of result parameters.</returns>
         private async Task<Result> CreateArchive(IReadOnlyList<StorageFile> files,
-            string archiveName, StorageFolder location, Archive.ArchiveType value)
+            string archiveName, StorageFolder location, Archives.ArchiveType value)
         {
             var token = _tokenSource.Token;
-            var algorithm = ChooseStrategy(value);
+            var algorithm = Archives.DetermineAlgorithm(value);
 
             return await Task.Run(async () => // execute compression asynchronously
             {
@@ -137,10 +136,10 @@ namespace SimpleZIP_UI.Application.Compression
             IArchivingAlgorithm algorithm;
 
             // try to get enum type by file extension, which is the key
-            if (Archive.AlgorithmFileTypes.TryGetValue(fileType, out Archive.ArchiveType value)
-                || Archive.AlgorithmExtendedFileTypes.TryGetValue(fileType, out value))
+            if (Archives.ArchiveFileTypes.TryGetValue(fileType, out Archives.ArchiveType value)
+                || Archives.ArchiveExtendedFileTypes.TryGetValue(fileType, out value))
             {
-                algorithm = ChooseStrategy(value);
+                algorithm = Archives.DetermineAlgorithm(value);
             }
             else
             {
@@ -193,44 +192,6 @@ namespace SimpleZIP_UI.Application.Compression
                 StatusCode = status,
                 Message = message
             };
-        }
-
-        /// <summary>
-        /// Assigns the correct algorithm instance to be used by evaluating the archive type.
-        /// </summary>
-        /// <param name="value">The enum value of the archive type.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown when archive type matched no algorithm.</exception>
-        /// <returns>An instance of the archiving algorithm that matches the specified value.</returns>
-        private IArchivingAlgorithm ChooseStrategy(Archive.ArchiveType value)
-        {
-            IArchivingAlgorithm algorithm;
-            switch (value)
-            {
-                case Archive.ArchiveType.Zip:
-                    algorithm = new Zip();
-                    break;
-                case Archive.ArchiveType.GZip:
-                    algorithm = new GZip();
-                    break;
-                case Archive.ArchiveType.SevenZip:
-                    algorithm = new SevenZip();
-                    break;
-                case Archive.ArchiveType.Tar:
-                    algorithm = new Tar();
-                    break;
-                case Archive.ArchiveType.TarGz:
-                    algorithm = new TarGzip();
-                    break;
-                case Archive.ArchiveType.TarBz2:
-                    algorithm = new TarBzip2();
-                    break;
-                case Archive.ArchiveType.TarLz:
-                    algorithm = new TarLzip();
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(value), value, null);
-            }
-            return algorithm;
         }
 
         public void Dispose()

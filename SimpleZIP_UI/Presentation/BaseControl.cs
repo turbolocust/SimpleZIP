@@ -5,6 +5,7 @@ using Windows.UI.Xaml.Controls;
 using SimpleZIP_UI.Application.Model;
 using SimpleZIP_UI.Presentation.Factory;
 using SimpleZIP_UI.Presentation.View;
+using Windows.UI.Notifications;
 
 namespace SimpleZIP_UI.Presentation
 {
@@ -53,6 +54,30 @@ namespace SimpleZIP_UI.Presentation
                 default: throw new ArgumentOutOfRangeException();
             }
             return dialog;
+        }
+
+        /// <summary>
+        /// Shows a toast notification that will disappear after the specified amount of seconds. 
+        /// </summary>
+        /// <param name="title">The title of the toast notification.</param>
+        /// <param name="content">The content of the toast notification.</param>
+        /// <param name="seconds">Timer in seconds after which toast will disappear. Defaults to <code>4</code>.</param>
+        internal void ShowToastNotification(string title, string content, uint seconds = 4)
+        {
+            var notifier = ToastNotificationManager.CreateToastNotifier();
+            var toastXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastText02);
+            var toastNodeList = toastXml.GetElementsByTagName("text");
+            toastNodeList.Item(0)?.AppendChild(toastXml.CreateTextNode(title));
+            toastNodeList.Item(1)?.AppendChild(toastXml.CreateTextNode(content));
+            toastXml.SelectSingleNode("/toast");
+            var audio = toastXml.CreateElement("audio");
+            audio.SetAttribute("src", "ms-winsoundevent:Notification.SMS");
+
+            var toast = new ToastNotification(toastXml)
+            {
+                ExpirationTime = DateTime.Now.AddSeconds(seconds)
+            };
+            notifier.Show(toast);
         }
 
         /// <summary>

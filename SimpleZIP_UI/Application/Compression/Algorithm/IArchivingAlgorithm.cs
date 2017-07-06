@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
+using SharpCompress.Common;
 using SharpCompress.Readers;
 using SharpCompress.Writers;
 
@@ -19,11 +20,23 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// </summary>
         /// <param name="archive">The archive to be extracted.</param>
         /// <param name="location">The location where to extract the archive to.</param>
-        /// <param name="options">Options that the reader will use. May be omitted.></param>
-        /// <returns>True on success, false on error.</returns>
+        /// <param name="options">Options for the reader. May be omitted.></param>
+        /// <returns>True on success, false on fail.</returns>
         /// <exception cref="IOException">Thrown on any error when reading from or writing to streams.</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not permitted.</exception>
         Task<bool> Extract(StorageFile archive, StorageFolder location, ReaderOptions options = null);
+
+        /// <summary>
+        /// Extracts an entry from the specified archive to the specified location.
+        /// </summary>
+        /// <param name="archive">The archive which contains the entry.</param>
+        /// <param name="entry">The entry of the archive to be extracted.</param>
+        /// <param name="location">The location where to extract the entries to.</param>
+        /// <param name="options">Options for the reader. May be omitted.</param>
+        /// <exception cref="IOException">Thrown on any error when reading from or writing to streams.</exception>
+        /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not permitted.</exception>
+        /// <returns>True on success, false on fail.</returns>
+        Task<bool> Extract(StorageFile archive, Entry entry, StorageFolder location, ReaderOptions options = null);
 
         /// <summary>
         /// Compresses files to the specified location. If the writer options are omitted, the default
@@ -32,8 +45,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <param name="files">The files to be put into the archive.</param>
         /// <param name="archive">The file to write compressed bytes to.</param>
         /// <param name="location">Where the archive will be created.</param>
-        /// <param name="options">Options that the writer will use. May be omitted.</param>
-        /// <returns>True on success, false on error.</returns>
+        /// <param name="options">Options for the writer. May be omitted.</param>
+        /// <returns>True on success, false on fail.</returns>
         /// <exception cref="IOException">Thrown on any error when reading from or writing to streams.</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not allowed.</exception>
         /// <exception cref="NotSupportedException">Thrown when archive type does not have a writer.</exception>

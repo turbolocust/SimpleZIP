@@ -5,11 +5,18 @@ using Windows.UI.Xaml.Controls;
 using SimpleZIP_UI.Application.Compression;
 using SimpleZIP_UI.Application.Model;
 using SimpleZIP_UI.Presentation.Factory;
+using System.Collections.Generic;
+using SimpleZIP_UI.Application.Util;
 
 namespace SimpleZIP_UI.Presentation
 {
     internal abstract class SummaryPageControl : BaseControl, IDisposable
     {
+        /// <summary>
+        /// Specifies the threshold for the total file size 
+        /// after which a warning message will be displayed.
+        /// </summary>
+        private const ulong FileSizeWarningThreshold = 20971520; // 20 megabytes
 
         /// <summary>
         /// True if a cancel request has been made.
@@ -106,6 +113,20 @@ namespace SimpleZIP_UI.Presentation
         {
             var folder = await OutputPathPanelAction();
             return folder?.Name ?? "";
+        }
+
+        /// <summary>
+        /// Checks the total size of all the files in the specified list and
+        /// displays a toast notification if a threshold has been passed.
+        /// </summary>
+        /// <param name="files"></param>
+        protected async void CheckFileSizes(IReadOnlyList<StorageFile> files)
+        {
+            var totalSize = await FileUtils.GetFileSizesAsync(files);
+            if (totalSize >= FileSizeWarningThreshold)
+            {
+                ShowToastNotification("Please be patient", "This might take a while. . .");
+            }
         }
 
         /// <summary>

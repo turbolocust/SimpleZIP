@@ -35,7 +35,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
 
         public async Task<bool> Extract(StorageFile archive, StorageFolder location, ReaderOptions options = null)
         {
-            if (archive == null || location == null) return false;
+            if (archive == null | location == null) return false;
 
             options = options ?? new ReaderOptions
             {
@@ -44,36 +44,64 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
 
             using (var reader = ReaderFactory.Open(await archive.OpenStreamForReadAsync(), options))
             {
-                var bytes = new byte[DefaultBufferSize];
-
                 while (!IsInterrupted() && reader.MoveToNextEntry())
                 {
                     if (!reader.Entry.IsDirectory)
                     {
-                        var file = await FileUtils.CreateFileAsync(location, reader.Entry.Key);
-                        if (file == null) return false;
-
-                        using (var entryStream = reader.OpenEntryStream())
-                        {
-                            using (var outputStream = await file.OpenStreamForWriteAsync())
-                            {
-                                int readBytes;
-                                while (!IsInterrupted() && (readBytes = entryStream.Read(bytes, 0, bytes.Length)) > 0)
-                                {
-                                    await outputStream.WriteAsync(bytes, 0, readBytes, Token);
-                                }
-                            }
-                        }
+                        await WriteEntry(reader, location);
                     }
                 }
             }
             return true;
         }
 
+        public async Task<bool> Extract(StorageFile archive, Entry entry, StorageFolder location, ReaderOptions options = null)
+        {
+            if (archive == null | entry == null | location == null) return false;
+
+            options = options ?? new ReaderOptions
+            {
+                LeaveStreamOpen = false
+            };
+
+            using (var reader = ReaderFactory.Open(await archive.OpenStreamForReadAsync(), options))
+            {
+                while (!IsInterrupted() && reader.MoveToNextEntry())
+                {
+                    if (reader.Entry.Crc.Equals(entry.Crc))
+                    {
+                        await WriteEntry(reader, location);
+                    }
+                }
+            }
+            return true;
+        }
+
+        private async Task<IEntry> WriteEntry(IReader reader, StorageFolder location)
+        {
+            var entry = reader.Entry;
+            var file = await FileUtils.CreateFileAsync(location, entry.Key);
+            if (file == null) return null;
+
+            using (var entryStream = reader.OpenEntryStream())
+            {
+                using (var outputStream = await file.OpenStreamForWriteAsync())
+                {
+                    var bytes = new byte[DefaultBufferSize];
+                    int readBytes;
+                    while (!IsInterrupted() && (readBytes = entryStream.Read(bytes, 0, bytes.Length)) > 0)
+                    {
+                        await outputStream.WriteAsync(bytes, 0, readBytes, Token);
+                    }
+                }
+            }
+            return entry;
+        }
+
         public async Task<bool> Compress(IReadOnlyList<StorageFile> files, StorageFile archive,
             StorageFolder location, WriterOptions options = null)
         {
-            if (files == null || archive == null || location == null) return false;
+            if (files == null | archive == null | location == null) return false;
 
             options = options ?? GetWriterOptions(); // get options if null
             options.LeaveStreamOpen = false;

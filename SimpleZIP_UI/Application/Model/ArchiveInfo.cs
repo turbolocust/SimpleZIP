@@ -19,6 +19,6 @@ namespace SimpleZIP_UI.Application.Model
 
         internal StorageFolder OutputFolder { get; set; }
 
-        internal Archive.ArchiveType ArchiveType { get; set; }
+        internal Archives.ArchiveType ArchiveType { get; set; }
     }
 }

@@ -159,7 +159,7 @@ namespace SimpleZIP_UI.Presentation.View
 
         public void Dispose()
         {
-            _control?.Dispose();
+            _control.Dispose();
         }
     }
 }

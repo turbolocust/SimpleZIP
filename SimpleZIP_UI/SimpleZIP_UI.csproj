@@ -92,13 +92,16 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Application\Compression\Archive.cs" />
+    <Compile Include="Application\Compression\Archives.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\TarGzip.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\TarLzip.cs" />
     <Compile Include="Application\Compression\OperationMode.cs" />
     <Compile Include="Application\Compression\Algorithm\ArchivingAlgorithm.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\SevenZip.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\Tar.cs" />
+    <Compile Include="Application\Compression\Reader\ArchiveReader.cs" />
+    <Compile Include="Application\Compression\Reader\Entry.cs" />
+    <Compile Include="Application\Compression\Reader\Node.cs" />
     <Compile Include="Application\Model\ArchiveInfo.cs" />
     <Compile Include="Application\Model\Result.cs" />
     <Compile Include="Application\Util\TaskUtils.cs" />
