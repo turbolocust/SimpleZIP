@@ -49,7 +49,7 @@ namespace SimpleZIP_UI.Application.Compression
         }
 
         /// <summary>
-        /// Assigns the correct algorithm instance to be used by evaluating the archive type.
+        /// Determines the corresponding algorithm instance by evaluating the specified archive type.
         /// </summary>
         /// <param name="value">The enum value of the archive type.</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when archive type matched no algorithm.</exception>
