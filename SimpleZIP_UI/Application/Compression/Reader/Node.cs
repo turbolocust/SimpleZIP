@@ -7,10 +7,25 @@ namespace SimpleZIP_UI.Application.Compression.Reader
     /// </summary>
     internal class Node
     {
+        /// <summary>
+        /// The identifier of this node including file separators.
+        /// </summary>
         internal string Id { get; }
 
+        /// <summary>
+        /// Friendly name of this node. Can be set differently but should optimally 
+        /// consist of the <see cref="Id"/> without path and file separators.
+        /// </summary>
+        internal string Name { get; set; }
+
+        /// <summary>
+        /// The entries of this node. See <see cref="Entry"/>.
+        /// </summary>
         internal ICollection<Entry> Entries { get; }
 
+        /// <summary>
+        /// Children of this node, which are also nodes.
+        /// </summary>
         internal ICollection<Node> Children { get; }
 
         internal Node(string id)
