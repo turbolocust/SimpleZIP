@@ -3,12 +3,17 @@
     /// <summary>
     /// Represents an entry within a node.
     /// </summary>
-    internal class Entry
+    internal class Entry : IArchiveEntry
     {
         /// <summary>
         /// The key of the entry without the path.
         /// </summary>
-        internal string Name { get; }
+        public string Name { get; }
+
+        /// <summary>
+        /// Defaults to false as this entry is not a node.
+        /// </summary>
+        public bool IsNode { get; } = false;
 
         /// <summary>
         /// The checksum of the archive entry.

@@ -56,7 +56,7 @@ namespace SimpleZIP_UI.Application.Compression
                         archiveInfo.OutputFolder);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(archiveInfo.Mode));
             }
 
             var duration = DateTime.Now - startTime;

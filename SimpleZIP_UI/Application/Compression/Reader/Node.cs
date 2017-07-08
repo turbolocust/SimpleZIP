@@ -5,34 +5,33 @@ namespace SimpleZIP_UI.Application.Compression.Reader
     /// <summary>
     /// Represents a node in the archive's hierarchy.
     /// </summary>
-    internal class Node
+    internal class Node : IArchiveEntry
     {
+        /// <summary>
+        /// Friendly name of this node. Can be set differently but should optimally 
+        /// consist of the <see cref="Id"/> without path and file separators.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Defaults to true as this entry is a node.
+        /// </summary>
+        public bool IsNode { get; } = true;
+
         /// <summary>
         /// The identifier of this node including file separators.
         /// </summary>
         internal string Id { get; }
 
         /// <summary>
-        /// Friendly name of this node. Can be set differently but should optimally 
-        /// consist of the <see cref="Id"/> without path and file separators.
+        /// Children of this node, which are nodes or entries.
         /// </summary>
-        internal string Name { get; set; }
-
-        /// <summary>
-        /// The entries of this node. See <see cref="Entry"/>.
-        /// </summary>
-        internal ICollection<Entry> Entries { get; }
-
-        /// <summary>
-        /// Children of this node, which are also nodes.
-        /// </summary>
-        internal ICollection<Node> Children { get; }
+        internal ICollection<IArchiveEntry> Children { get; }
 
         internal Node(string id)
         {
             Id = id;
-            Entries = new LinkedList<Entry>();
-            Children = new LinkedList<Node>();
+            Children = new LinkedList<IArchiveEntry>();
         }
 
         protected bool Equals(Node other)

@@ -40,18 +40,22 @@ namespace SimpleZIP_UI.Presentation
             switch (result.StatusCode)
             {
                 case Result.Status.Success:
-                    var durationText = BuildDurationText(result.ElapsedTime);
-                    dialog = DialogFactory.CreateInformationDialog(
-                        "Success", durationText);
-                    break;
+                    {
+                        var durationText = BuildDurationText(result.ElapsedTime);
+                        dialog = DialogFactory.CreateInformationDialog("Success", durationText);
+                        break;
+                    }
                 case Result.Status.Fail:
-                    dialog = DialogFactory.CreateErrorDialog(result.Message);
-                    break;
+                    {
+                        dialog = DialogFactory.CreateErrorDialog(result.Message);
+                        break;
+                    }
                 case Result.Status.Interrupt:
-                    dialog = DialogFactory.CreateInformationDialog("Interrupted",
-                        "Operation has been canceled.");
-                    break;
-                default: throw new ArgumentOutOfRangeException();
+                    {
+                        dialog = DialogFactory.CreateInformationDialog("Interrupted", "Operation has been canceled.");
+                        break;
+                    }
+                default: throw new ArgumentOutOfRangeException(nameof(result.StatusCode));
             }
             return dialog;
         }

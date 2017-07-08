@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 using SimpleZIP_UI.Presentation.Factory;
 using SimpleZIP_UI.Presentation.View;
@@ -23,7 +21,7 @@ namespace SimpleZIP_UI.Presentation
             var files = await picker.PickMultipleFilesAsync();
 
             if (!(files?.Count > 0)) return false;
-            NavigateTo(typeof(CompressionSummaryPage), files);
+            ParentPage.Frame.Navigate(typeof(CompressionSummaryPage), files);
             return true;
         }
 
@@ -36,18 +34,21 @@ namespace SimpleZIP_UI.Presentation
             var files = await picker.PickMultipleFilesAsync();
 
             if (!(files?.Count > 0)) return false;
-            NavigateTo(typeof(ExtractionSummaryPage), files);
+            ParentPage.Frame.Navigate(typeof(ExtractionSummaryPage), files);
             return true;
         }
 
         /// <summary>
-        /// Navigates to the specified page type with a list of files as parameter.
+        /// Performs an action when the button for opening an archive has been tapped.
         /// </summary>
-        /// <param name="page">The source page type.</param>
-        /// <param name="files">List consisting of <code>StorageFile</code>.</param>
-        private void NavigateTo(Type page, IReadOnlyList<StorageFile> files)
+        internal async Task<bool> OpenArchiveButtonAction()
         {
-            ParentPage.Frame.Navigate(page, files);
+            var picker = PickerFactory.CreateDecompressFileOpenPicker();
+            var file = await picker.PickSingleFileAsync();
+
+            if (file == null) return false;
+            ParentPage.Frame.Navigate(typeof(BrowseArchivePage), file);
+            return true;
         }
     }
 }

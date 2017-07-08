@@ -25,7 +25,7 @@ namespace SimpleZIP_UI.Presentation.Factory
 
         /// <summary>
         /// Creates a new file picker to select any archive that may be decompressed.
-        /// Only those files can be picked that are supported by the application (see <code>AlgorithmFileTypes</code> enum).
+        /// Only those files can be picked that are supported by the application (see <see cref="Archives.ArchiveFileTypes"/>).
         /// </summary>
         /// <returns>The newly created file picker.</returns>
         public static FileOpenPicker CreateDecompressFileOpenPicker()

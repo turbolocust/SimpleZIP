@@ -99,12 +99,14 @@
     <Compile Include="Application\Compression\Algorithm\ArchivingAlgorithm.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\SevenZip.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\Tar.cs" />
+    <Compile Include="Application\Compression\Reader\IArchiveEntry.cs" />
     <Compile Include="Application\Compression\Reader\ArchiveReader.cs" />
     <Compile Include="Application\Compression\Reader\Entry.cs" />
     <Compile Include="Application\Compression\Reader\Node.cs" />
     <Compile Include="Application\Model\ArchiveInfo.cs" />
     <Compile Include="Application\Model\Result.cs" />
     <Compile Include="Application\Util\TaskUtils.cs" />
+    <Compile Include="Presentation\BrowseArchivePageControl.cs" />
     <Compile Include="Presentation\SummaryPageControl.cs" />
     <Compile Include="Presentation\View\AboutDialog.xaml.cs">
       <DependentUpon>AboutDialog.xaml</DependentUpon>
@@ -118,6 +120,9 @@
     <Compile Include="Application\Compression\Algorithm\Type\Zip.cs" />
     <Compile Include="Application\Compression\ArchivingOperation.cs" />
     <Compile Include="Application\Util\FileUtils.cs" />
+    <Compile Include="Presentation\View\BrowseArchivePage.xaml.cs">
+      <DependentUpon>BrowseArchivePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\View\ExtractionSummaryPage.xaml.cs">
       <DependentUpon>ExtractionSummaryPage.xaml</DependentUpon>
     </Compile>
@@ -134,6 +139,7 @@
     <Compile Include="Presentation\View\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Presentation\View\Model\BrowseArchivePageModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -193,6 +199,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Presentation\View\BrowseArchivePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Presentation\View\CompressionSummaryPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -206,6 +216,7 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

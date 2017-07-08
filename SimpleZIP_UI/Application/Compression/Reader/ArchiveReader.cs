@@ -11,6 +11,11 @@ namespace SimpleZIP_UI.Application.Compression.Reader
     internal class ArchiveReader : IDisposable
     {
         /// <summary>
+        /// The defined name of the root node.
+        /// </summary>
+        private const string RootNodeName = "root";
+
+        /// <summary>
         /// Dictionary that consists of existing nodes. Each node is unique and this 
         /// dictionary is used to access existing nodes as fast as possible => O(1).
         /// </summary>
@@ -59,7 +64,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         {
             if (Closed) throw new ObjectDisposedException(GetType().FullName);
 
-            var rootNode = new Node("root");
+            var rootNode = new Node(RootNodeName);
             _nodes.Add(rootNode.Id, rootNode);
 
             foreach (var entry in ReadArchive())
@@ -69,16 +74,14 @@ namespace SimpleZIP_UI.Application.Compression.Reader
                 {
                     var pair = GetEntryKeyPair(key);
                     var parentKey = pair.ParentKey;
-                    var parentNode = string.IsNullOrEmpty(parentKey)
-                        ? rootNode : GetNode(parentKey);
                     var childNode = GetNode(key);
                     childNode.Name = pair.EntryName;
-                    parentNode.Children.Add(childNode);
+                    GetNode(parentKey).Children.Add(childNode);
                 }
                 else
                 {
                     var pair = GetEntryKeyPair(key);
-                    GetNode(pair.ParentKey).Entries.Add(new Entry(pair.EntryName, entry.Crc));
+                    GetNode(pair.ParentKey).Children.Add(new Entry(pair.EntryName, entry.Crc));
                 }
             }
 
@@ -101,8 +104,8 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         /// Returns the node with the specified key. If it does not exist, it 
         /// will first be created and added to <see cref="_nodes"/>.
         /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
+        /// <param name="key">The key of the node as string.</param>
+        /// <returns>The node with the specified key.</returns>
         private Node GetNode(string key)
         {
             _nodes.TryGetValue(key, out Node node);
@@ -116,18 +119,17 @@ namespace SimpleZIP_UI.Application.Compression.Reader
 
         /// <summary>
         /// Returns an <see cref="EntryKeyPair"/> which holds the name of the entry 
-        /// and the key of its parent node. The parent key might be <see cref="string.Empty"/> 
-        /// if the entry is located in the root directory.
+        /// and the key of its parent node, also considering the root node.
         /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
+        /// <param name="key">The full key of the entry.</param>
+        /// <returns>An <see cref="EntryKeyPair"/>.</returns>
         private static EntryKeyPair GetEntryKeyPair(string key)
         {
             var trimmedKey = key.TrimEnd('/');
             var lastSeparatorIndex = trimmedKey.LastIndexOf('/');
             var entryName = trimmedKey.Substring(lastSeparatorIndex + 1);
             var parentKey = lastSeparatorIndex == -1 // is in root directory
-                ? string.Empty
+                ? RootNodeName
                 : trimmedKey.Substring(0, trimmedKey.Length - entryName.Length);
             return new EntryKeyPair
             {
@@ -142,7 +144,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
             Reader?.Dispose();
         }
 
-        private class EntryKeyPair
+        private struct EntryKeyPair
         {
             internal string EntryName { get; set; }
 

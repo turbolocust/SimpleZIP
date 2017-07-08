@@ -56,13 +56,13 @@ namespace SimpleZIP_UI.Presentation.View
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
         /// <param name="args">Arguments that have been passed.</param>
-        private void OpenArchiveButton_Tap(object sender, TappedRoutedEventArgs args)
+        private async void OpenArchiveButton_Tap(object sender, TappedRoutedEventArgs args)
         {
-            throw new NotImplementedException();
+            await _control.OpenArchiveButtonAction();
         }
 
         /// <summary>
-        /// Opens the project's homepage in the web browser. 
+        /// Opens the project's homepage using the <see cref="Launcher"/>.
         /// Brings up a confirmation dialog first to avoid accidental redirection. 
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
