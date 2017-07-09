@@ -1,9 +1,9 @@
 ﻿namespace SimpleZIP_UI.Application.Compression.Reader
 {
     /// <summary>
-    /// Represents an entry within a node.
+    /// Represents a file entry within a node.
     /// </summary>
-    internal class Entry : IArchiveEntry
+    public class FileEntry : IArchiveEntry
     {
         /// <summary>
         /// The key of the entry without the path.
@@ -16,14 +16,20 @@
         public bool IsNode { get; } = false;
 
         /// <summary>
-        /// The checksum of the archive entry.
+        /// The uncompressed size of this file entry.
+        /// </summary>
+        public ulong Size { get; }
+
+        /// <summary>
+        /// The checksum of the file entry.
         /// </summary>
         internal long Crc { get; }
 
-        internal Entry(string name, long crc)
+        internal FileEntry(string name, long crc, ulong size)
         {
             Name = name;
             Crc = crc;
+            Size = size;
         }
     }
 }

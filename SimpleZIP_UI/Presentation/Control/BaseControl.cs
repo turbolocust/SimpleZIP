@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Text;
+using Windows.System.Display;
+using Windows.UI.Notifications;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
-using SimpleZIP_UI.Application.Model;
+using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Presentation.Factory;
 using SimpleZIP_UI.Presentation.View;
-using Windows.UI.Notifications;
 
-namespace SimpleZIP_UI.Presentation
+namespace SimpleZIP_UI.Presentation.Control
 {
     internal abstract class BaseControl
     {
@@ -15,6 +16,11 @@ namespace SimpleZIP_UI.Presentation
         /// The parent page to whom this control belongs to.
         /// </summary>
         protected Page ParentPage { get; }
+
+        /// <summary>
+        /// Display request which can be used to keep screen active.
+        /// </summary>
+        protected DisplayRequest DisplayRequest { get; set; }
 
         protected BaseControl(Page parent)
         {
@@ -47,12 +53,20 @@ namespace SimpleZIP_UI.Presentation
                     }
                 case Result.Status.Fail:
                     {
-                        dialog = DialogFactory.CreateErrorDialog(result.Message);
+                        var message = !string.IsNullOrEmpty(result.Message)
+                            ? result.Message : "Something went wrong.";
+                        dialog = DialogFactory.CreateErrorDialog(message);
                         break;
                     }
                 case Result.Status.Interrupt:
                     {
-                        dialog = DialogFactory.CreateInformationDialog("Interrupted", "Operation has been canceled.");
+                        dialog = DialogFactory.CreateInformationDialog(
+                            "Interrupted", "Operation has been canceled.");
+                        break;
+                    }
+                case Result.Status.PartialFail:
+                    {
+                        dialog = DialogFactory.CreateErrorDialog("Not all files were extracted.");
                         break;
                     }
                 default: throw new ArgumentOutOfRangeException(nameof(result.StatusCode));

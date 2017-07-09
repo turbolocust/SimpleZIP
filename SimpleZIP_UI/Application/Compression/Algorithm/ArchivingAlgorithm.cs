@@ -6,6 +6,7 @@ using Windows.Storage;
 using SharpCompress.Common;
 using SharpCompress.Readers;
 using SharpCompress.Writers;
+using SimpleZIP_UI.Application.Compression.Reader;
 using SimpleZIP_UI.Application.Util;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm
@@ -55,9 +56,9 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             return true;
         }
 
-        public async Task<bool> Extract(StorageFile archive, Entry entry, StorageFolder location, ReaderOptions options = null)
+        public async Task<bool> Extract(StorageFile archive, StorageFolder location, IReadOnlyList<FileEntry> entries, ReaderOptions options = null)
         {
-            if (archive == null | entry == null | location == null) return false;
+            if (archive == null | entries == null | location == null) return false;
 
             options = options ?? new ReaderOptions
             {
@@ -68,9 +69,12 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             {
                 while (!IsInterrupted() && reader.MoveToNextEntry())
                 {
-                    if (reader.Entry.Crc.Equals(entry.Crc))
+                    foreach (var entry in entries)
                     {
-                        await WriteEntry(reader, location);
+                        if (reader.Entry.Crc.Equals(entry.Crc))
+                        {
+                            await WriteEntry(reader, location);
+                        }
                     }
                 }
             }

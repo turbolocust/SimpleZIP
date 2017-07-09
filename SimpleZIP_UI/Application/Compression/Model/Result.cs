@@ -1,11 +1,12 @@
 ﻿using System;
 
-namespace SimpleZIP_UI.Application.Model
+namespace SimpleZIP_UI.Application.Compression.Model
 {
     internal class Result
     {
         /// <summary>
-        /// Constructs a new instance of this class with status code set to <code>Status.Success</code>.
+        /// Constructs a new instance of this class with status 
+        /// code set to <see cref="Status.Success"/>.
         /// </summary>
         internal Result()
         {
@@ -20,7 +21,7 @@ namespace SimpleZIP_UI.Application.Model
 
         public enum Status
         {
-            Fail, Success, Interrupt
+            Fail, PartialFail, Success, Interrupt
         }
     }
 }

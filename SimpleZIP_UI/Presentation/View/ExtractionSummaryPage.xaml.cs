@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-using SimpleZIP_UI.Application.Compression;
-using SimpleZIP_UI.Application.Model;
+using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Util;
+using SimpleZIP_UI.Presentation.Control;
 
 namespace SimpleZIP_UI.Presentation.View
 {
@@ -23,7 +22,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// <summary>
         /// A list of selected files for decompression.
         /// </summary>
-        private IReadOnlyList<StorageFile> _selectedFiles;
+        private IReadOnlyList<ExtractableItem> _selectedItems;
 
         public ExtractionSummaryPage()
         {
@@ -90,11 +89,9 @@ namespace SimpleZIP_UI.Presentation.View
         private async Task<Result> InitOperation()
         {
             SetOperationActive(true);
-            var archiveInfo = new ArchiveInfo(OperationMode.Decompress)
-            {
-                SelectedFiles = _selectedFiles
-            };
-            return await _control.StartButtonAction(archiveInfo);
+            var infos = new List<DecompressionInfo>(_selectedItems.Count);
+            infos.AddRange(_selectedItems.Select(item => new DecompressionInfo(item)));
+            return await _control.StartButtonAction(infos.ToArray());
         }
 
         /// <summary>
@@ -121,27 +118,19 @@ namespace SimpleZIP_UI.Presentation.View
 
         protected override void OnNavigatedTo(NavigationEventArgs args)
         {
-            var list = args.Parameter as IReadOnlyList<StorageFile>;
-            if (list == null) // file opened from file explorer
+            if (args.Parameter is IReadOnlyList<ExtractableItem> list)
             {
-                var eventArgs = args.Parameter as Windows.ApplicationModel.Activation.IActivatedEventArgs;
-                if (eventArgs?.Kind == Windows.ApplicationModel.Activation.ActivationKind.File)
+                _selectedItems = list;
+                foreach (var item in _selectedItems) // populate list
                 {
-                    var fileArgs = eventArgs as Windows.ApplicationModel.Activation.FileActivatedEventArgs;
-                    var files = fileArgs?.Files;
-                    if (files != null)
+                    ItemsListBox.Items.Add(new TextBlock { Text = item.DisplayName });
+                    if (!item.Entries.IsNullOrEmpty()) // add entries with indent as well
                     {
-                        list = files.Where(file => file != null).Cast<StorageFile>().ToList();
+                        foreach (var entry in item.Entries)
+                        {
+                            ItemsListBox.Items.Add(new TextBlock { Text = "\t" + entry.Name });
+                        }
                     }
-                }
-            }
-
-            if (list != null)
-            {
-                _selectedFiles = list;
-                foreach (var f in _selectedFiles) // populate list
-                {
-                    ItemsListBox.Items?.Add(new TextBlock { Text = f.Name });
                 }
             }
         }

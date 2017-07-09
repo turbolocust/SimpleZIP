@@ -87,7 +87,7 @@ namespace SimpleZIP_UI
         {
             base.OnFileActivated(args);
             var rootFrame = new Frame();
-            rootFrame.Navigate(typeof(ExtractionSummaryPage), args);
+            rootFrame.Navigate(typeof(MainPage), args);
             Window.Current.Content = rootFrame;
             Window.Current.Activate();
         }

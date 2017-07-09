@@ -1,20 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.System.Display;
 using Windows.UI.Xaml.Controls;
-using SimpleZIP_UI.Application.Compression;
-using SimpleZIP_UI.Application.Model;
-using SimpleZIP_UI.Presentation.Factory;
-using System.Collections.Generic;
+using SimpleZIP_UI.Application.Compression.Model;
+using SimpleZIP_UI.Application.Compression.Operation;
 using SimpleZIP_UI.Application.Util;
+using SimpleZIP_UI.Presentation.Factory;
 
-namespace SimpleZIP_UI.Presentation
+namespace SimpleZIP_UI.Presentation.Control
 {
-    internal abstract class SummaryPageControl : BaseControl, IDisposable
+    internal abstract class SummaryPageControl<T> : BaseControl, IDisposable where T : OperationInfo
     {
         /// <summary>
         /// Specifies the threshold for the total file size 
-        /// after which a warning message will be displayed.
+        /// after which a notification will be displayed.
         /// </summary>
         private const ulong FileSizeWarningThreshold = 20971520; // 20 megabytes
 
@@ -26,32 +28,34 @@ namespace SimpleZIP_UI.Presentation
         /// <summary>
         /// Reference to the currently active archiving operation.
         /// </summary>
-        public ArchivingOperation Operation;
+        public ArchivingOperation<T> Operation;
 
         /// <summary>
         /// Where the archive or its content will be saved to.
         /// </summary>
-        protected StorageFolder OutputFolder;
+        public StorageFolder OutputFolder { get; protected set; }
 
         internal SummaryPageControl(Page parent) : base(parent)
         {
+            DisplayRequest = new DisplayRequest();
         }
 
         /// <summary>
         /// Performs an action when the start button has been tapped.
         /// </summary>
-        /// <param name="archiveInfo">Consists of information about the archive.</param>
+        /// <param name="operationInfos">The amount of operations to be performed.</param>
         /// <returns>True on success, false otherwise.</returns>
-        internal async Task<Result> StartButtonAction(ArchiveInfo archiveInfo)
+        internal async Task<Result> StartButtonAction(params T[] operationInfos)
         {
-            using (Operation = new ArchivingOperation())
+            using (Operation = GetArchivingOperation())
             {
                 Result result;
+                var startTime = DateTime.Now;
+
                 try
                 {
-                    InitOperation(archiveInfo);
-                    result = await PerformOperation(archiveInfo);
-                    FinalizeOperation();
+                    InitOperation(operationInfos);
+                    result = await PerformOperation(operationInfos);
                 }
                 catch (Exception ex)
                 {
@@ -61,6 +65,12 @@ namespace SimpleZIP_UI.Presentation
                         StatusCode = Result.Status.Fail
                     };
                 }
+                finally
+                {
+                    FinalizeOperation();
+                }
+
+                result.ElapsedTime = DateTime.Now - startTime;
                 return result;
             }
         }
@@ -116,13 +126,12 @@ namespace SimpleZIP_UI.Presentation
         }
 
         /// <summary>
-        /// Checks the total size of all the files in the specified list and
-        /// displays a toast notification if a threshold has been passed.
+        /// Validates the specified size and displays a toast notification 
+        /// if a threshold has been passed (<see cref="FileSizeWarningThreshold"/>).
         /// </summary>
-        /// <param name="files"></param>
-        protected async void CheckFileSizes(IReadOnlyList<StorageFile> files)
+        /// <param name="totalSize">The total size to be validated.</param>
+        private void ValidateFileSizes(ulong totalSize)
         {
-            var totalSize = await FileUtils.GetFileSizesAsync(files);
             if (totalSize >= FileSizeWarningThreshold)
             {
                 ShowToastNotification("Please be patient", "This might take a while. . .");
@@ -130,17 +139,54 @@ namespace SimpleZIP_UI.Presentation
         }
 
         /// <summary>
+        /// Checks the total size of all specified sizes and displays a toast notification 
+        /// if a threshold has been passed (<see cref="FileSizeWarningThreshold"/>).
+        /// </summary>
+        /// <param name="item">The item whose size is to be checked.</param>
+        protected async void CheckFileSizes(ExtractableItem item)
+        {
+            ulong totalSize = 0L;
+            if (!item.Entries.IsNullOrEmpty())
+            {
+                totalSize = item.Entries.Aggregate(totalSize,
+                    (current, entry) => current + entry.Size);
+            }
+            else
+            {
+                totalSize = await FileUtils.GetFileSizeAsync(item.Archive);
+            }
+            ValidateFileSizes(totalSize);
+        }
+
+        /// <summary>
+        /// Checks the total size of all the files in the specified list and displays a 
+        /// toast notification if a threshold has been passed (<see cref="FileSizeWarningThreshold"/>).
+        /// </summary>
+        /// <param name="files">The files whose sizes are to be checked.</param>
+        protected async void CheckFileSizes(IReadOnlyList<StorageFile> files)
+        {
+            var totalSize = await FileUtils.GetFileSizesAsync(files);
+            ValidateFileSizes(totalSize);
+        }
+
+        /// <summary>
         /// Performs various tasks before the start of the archiving operation.
         /// </summary>
-        /// <param name="archiveInfo">Consists of information about the archive.</param>
+        /// <param name="operationInfos">The amount of operations to be performed.</param>
         /// <exception cref="NullReferenceException">Thrown if output folder is <code>null</code>.</exception>
-        protected void InitOperation(ArchiveInfo archiveInfo)
+        protected void InitOperation(params T[] operationInfos)
         {
             if (OutputFolder == null)
             {
                 throw new NullReferenceException("No valid output folder selected.");
             }
-            archiveInfo.OutputFolder = OutputFolder;
+            // set output folder to each operation info
+            foreach (var operationInfo in operationInfos)
+            {
+                operationInfo.OutputFolder = OutputFolder;
+            }
+            // keep display alive while operation is in progress
+            DisplayRequest.RequestActive();
         }
 
         /// <summary>
@@ -149,14 +195,21 @@ namespace SimpleZIP_UI.Presentation
         protected void FinalizeOperation()
         {
             IsCancelRequest = false;
+            DisplayRequest.RequestRelease();
         }
+
+        /// <summary>
+        /// Returns a concrete instance of the archiving operation.
+        /// </summary>
+        /// <returns>A concrete instance of the archiving operation.</returns>
+        protected abstract ArchivingOperation<T> GetArchivingOperation();
 
         /// <summary>
         /// Performs the archiving operation.
         /// </summary>
-        /// <param name="archiveInfo">Consists of information about the archive.</param>
+        /// <param name="operationInfos"></param>
         /// <returns>True on success, false otherwise.</returns>
-        protected abstract Task<Result> PerformOperation(ArchiveInfo archiveInfo);
+        protected abstract Task<Result> PerformOperation(T[] operationInfos);
 
         protected virtual void Dispose(bool disposing)
         {

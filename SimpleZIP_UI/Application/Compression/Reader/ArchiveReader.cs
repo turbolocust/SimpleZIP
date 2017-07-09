@@ -81,7 +81,8 @@ namespace SimpleZIP_UI.Application.Compression.Reader
                 else
                 {
                     var pair = GetEntryKeyPair(key);
-                    GetNode(pair.ParentKey).Children.Add(new Entry(pair.EntryName, entry.Crc));
+                    var fileEntry = new FileEntry(pair.EntryName, entry.Crc, (ulong) entry.Size);
+                    GetNode(pair.ParentKey).Children.Add(fileEntry);
                 }
             }
 

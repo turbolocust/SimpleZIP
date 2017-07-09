@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -7,6 +9,10 @@ using Windows.UI.Xaml.Navigation;
 using SimpleZIP_UI.Presentation.Factory;
 using Windows.UI.ViewManagement;
 using Windows.Foundation;
+using Windows.Storage;
+using SimpleZIP_UI.Application.Compression.Model;
+using SimpleZIP_UI.Application.Util;
+using SimpleZIP_UI.Presentation.Control;
 
 namespace SimpleZIP_UI.Presentation.View
 {
@@ -91,8 +97,25 @@ namespace SimpleZIP_UI.Presentation.View
 
         protected override void OnNavigatedTo(NavigationEventArgs args)
         {
-            var frame = Window.Current.Content as Frame;
-            frame?.BackStack.Clear(); // going back is prohibited after aborting operation
+            if (Window.Current.Content is Frame frame)
+            {
+                var eventArgs = args.Parameter as Windows.ApplicationModel.Activation.IActivatedEventArgs;
+                if (eventArgs?.Kind == Windows.ApplicationModel.Activation.ActivationKind.File)
+                {
+                    var fileArgs = eventArgs as Windows.ApplicationModel.Activation.FileActivatedEventArgs;
+                    var files = fileArgs?.Files;
+                    if (!files.IsNullOrEmpty())
+                    {
+                        var list = new List<ExtractableItem>(files.Count);
+                        list.AddRange(files.Select(file => new ExtractableItem(file.Name, file as StorageFile)));
+                        frame.Navigate(typeof(ExtractionSummaryPage), list);
+                    }
+                }
+                else
+                {
+                    frame.BackStack.Clear(); // going back is prohibited after aborting operation
+                }
+            }
         }
     }
 }

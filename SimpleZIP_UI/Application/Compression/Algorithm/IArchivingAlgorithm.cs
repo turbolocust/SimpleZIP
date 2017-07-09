@@ -4,9 +4,9 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
-using SharpCompress.Common;
 using SharpCompress.Readers;
 using SharpCompress.Writers;
+using SimpleZIP_UI.Application.Compression.Reader;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm
 {
@@ -27,16 +27,16 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         Task<bool> Extract(StorageFile archive, StorageFolder location, ReaderOptions options = null);
 
         /// <summary>
-        /// Extracts an entry from the specified archive to the specified location.
+        /// Extracts entries from the specified archive to the specified location.
         /// </summary>
         /// <param name="archive">The archive which contains the entry.</param>
-        /// <param name="entry">The entry of the archive to be extracted.</param>
         /// <param name="location">The location where to extract the entries to.</param>
+        /// <param name="entries">Entries of the archive to be extracted.</param>
         /// <param name="options">Options for the reader. May be omitted.</param>
         /// <exception cref="IOException">Thrown on any error when reading from or writing to streams.</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not permitted.</exception>
         /// <returns>True on success, false on fail.</returns>
-        Task<bool> Extract(StorageFile archive, Entry entry, StorageFolder location, ReaderOptions options = null);
+        Task<bool> Extract(StorageFile archive, StorageFolder location, IReadOnlyList<FileEntry> entries, ReaderOptions options = null);
 
         /// <summary>
         /// Compresses files to the specified location. If the writer options are omitted, the default

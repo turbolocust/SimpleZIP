@@ -3,7 +3,7 @@
 namespace SimpleZIP_UI.Application.Compression.Reader
 {
     /// <summary>
-    /// Represents a node in the archive's hierarchy.
+    /// Represents a folder in the archive's hierarchy.
     /// </summary>
     internal class Node : IArchiveEntry
     {

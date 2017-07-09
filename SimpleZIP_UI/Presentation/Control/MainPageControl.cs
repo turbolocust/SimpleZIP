@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Windows.Storage;
 using Windows.UI.Xaml.Controls;
+using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Presentation.Factory;
 using SimpleZIP_UI.Presentation.View;
 
-namespace SimpleZIP_UI.Presentation
+namespace SimpleZIP_UI.Presentation.Control
 {
     internal class MainPageControl : BaseControl
     {
@@ -34,8 +38,20 @@ namespace SimpleZIP_UI.Presentation
             var files = await picker.PickMultipleFilesAsync();
 
             if (!(files?.Count > 0)) return false;
-            ParentPage.Frame.Navigate(typeof(ExtractionSummaryPage), files);
+            ParentPage.Frame.Navigate(typeof(ExtractionSummaryPage), ConvertFiles(files));
             return true;
+        }
+
+        /// <summary>
+        /// Converts the specified collection to objects of type <see cref="ExtractableItem"/>.
+        /// </summary>
+        /// <param name="files">The files to be converted.</param>
+        /// <returns>A list which consists of <see cref="ExtractableItem"/> objects.</returns>
+        private static IReadOnlyList<ExtractableItem> ConvertFiles(IReadOnlyCollection<StorageFile> files)
+        {
+            var items = new List<ExtractableItem>(files.Count);
+            items.AddRange(files.Select(file => new ExtractableItem(file.DisplayName, file)));
+            return items;
         }
 
         /// <summary>

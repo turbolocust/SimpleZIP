@@ -7,8 +7,9 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using SimpleZIP_UI.Application.Compression;
-using SimpleZIP_UI.Application.Model;
+using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Util;
+using SimpleZIP_UI.Presentation.Control;
 
 namespace SimpleZIP_UI.Presentation.View
 {
@@ -194,13 +195,12 @@ namespace SimpleZIP_UI.Presentation.View
         private async Task<Result> InitOperation(Archives.ArchiveType key, string archiveName)
         {
             SetOperationActive(true);
-            var archiveInfo = new ArchiveInfo(OperationMode.Compress)
+            var info = new CompressionInfo(key)
             {
-                SelectedFiles = _selectedFiles,
                 ArchiveName = archiveName,
-                ArchiveType = key
+                SelectedFiles = _selectedFiles
             };
-            return await _control.StartButtonAction(archiveInfo);
+            return await _control.StartButtonAction(info);
         }
 
         /// <summary>

@@ -34,6 +34,7 @@ namespace SimpleZIP_UI.Application.Compression
                 {".tar", ArchiveType.Tar},
                 {".gzip", ArchiveType.GZip},
                 {".gz", ArchiveType.GZip},
+                {".bz2", ArchiveType.TarBz2},
                 {".tgz", ArchiveType.TarGz},
                 {".tbz2", ArchiveType.TarBz2},
                 {".tlz", ArchiveType.TarLz}
