@@ -19,7 +19,7 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-                            <SymbolIcon Symbol="{Binding Symbol}" Margin="0,0,8,0" Foreground="RoyalBlue" />
+                            <SymbolIcon Symbol="{Binding Symbol}" Margin="0,0,8,0" Foreground="DodgerBlue" />
                             <TextBlock FontSize="20" IsTextSelectionEnabled="False" TextWrapping="NoWrap" Text="{Binding DisplayName}" />
                         </StackPanel>
                     </DataTemplate>

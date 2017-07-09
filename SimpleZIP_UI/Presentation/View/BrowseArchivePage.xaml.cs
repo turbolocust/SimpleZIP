@@ -6,6 +6,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using SimpleZIP_UI.Application.Compression.Reader;
+using SimpleZIP_UI.Presentation.Control;
 using SimpleZIP_UI.Presentation.View.Model;
 
 namespace SimpleZIP_UI.Presentation.View
@@ -18,11 +19,6 @@ namespace SimpleZIP_UI.Presentation.View
         private readonly BrowseArchivePageControl _control;
 
         /// <summary>
-        /// Models bound to the list box in view.
-        /// </summary>
-        public ObservableCollection<BrowseArchivePageModel> ArchivePageModels { get; }
-
-        /// <summary>
         /// Set consisting of selected models in view.
         /// </summary>
         private readonly ISet<BrowseArchivePageModel> _selectedModels;
@@ -31,6 +27,11 @@ namespace SimpleZIP_UI.Presentation.View
         /// Used as a history when navigating back and to determine currently active node.
         /// </summary>
         private readonly Stack<Node> _nodeStack;
+
+        /// <summary>
+        /// Models bound to the list box in view.
+        /// </summary>
+        public ObservableCollection<BrowseArchivePageModel> ArchivePageModels { get; }
 
         public BrowseArchivePage()
         {
@@ -41,15 +42,25 @@ namespace SimpleZIP_UI.Presentation.View
             ArchivePageModels = new ObservableCollection<BrowseArchivePageModel>();
         }
 
-        private void ConfirmSelection_Tap(object sender, TappedRoutedEventArgs e)
+        /// <summary>
+        /// Invoked when the confirmation button has been tapped.
+        /// </summary>
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="args">Arguments that have been passed.</param>
+        private void ConfirmSelection_Tap(object sender, TappedRoutedEventArgs args)
         {
-            throw new System.NotImplementedException();
+            _control.ConfirmationButtonAction(_selectedModels, _nodeStack.Peek());
         }
 
-        private void ItemsListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        /// <summary>
+        /// Invoked when the selection in the list box has changed.
+        /// </summary>
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="args">Arguments that have been passed.</param>
+        private void ItemsListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs args)
         {
             // add items from selection
-            foreach (var item in e.AddedItems)
+            foreach (var item in args.AddedItems)
             {
                 if (item is BrowseArchivePageModel addItem)
                 {
@@ -69,7 +80,7 @@ namespace SimpleZIP_UI.Presentation.View
                 }
             }
             // remove items from selection
-            foreach (var item in e.RemovedItems)
+            foreach (var item in args.RemovedItems)
             {
                 if (item is BrowseArchivePageModel removeItem)
                 {
@@ -80,6 +91,11 @@ namespace SimpleZIP_UI.Presentation.View
             ConfirmSelectionButton.IsEnabled = _selectedModels.Count > 0;
         }
 
+        /// <summary>
+        /// Populates the list box with the content of the specified node.
+        /// </summary>
+        /// <param name="nextNode">The node whose content will be used 
+        /// to populate the list box.</param>
         private void UpdateListContent(Node nextNode)
         {
             ArchivePageModels.Clear();
@@ -107,7 +123,7 @@ namespace SimpleZIP_UI.Presentation.View
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
-            if (_nodeStack.Count > 1)
+            if (_nodeStack.Count > 1) // can go back in history
             {
                 e.Cancel = true;
                 _nodeStack.Pop();
