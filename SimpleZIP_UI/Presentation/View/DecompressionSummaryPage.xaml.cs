@@ -12,22 +12,22 @@ using SimpleZIP_UI.Presentation.Control;
 
 namespace SimpleZIP_UI.Presentation.View
 {
-    public sealed partial class ExtractionSummaryPage : Page, IDisposable
+    public sealed partial class DecompressionSummaryPage : Page, IDisposable
     {
         /// <summary>
         /// The aggregated control instance.
         /// </summary>
-        private readonly ExtractionSummaryPageControl _control;
+        private readonly DecompressionSummaryPageControl _control;
 
         /// <summary>
         /// A list of selected files for decompression.
         /// </summary>
         private IReadOnlyList<ExtractableItem> _selectedItems;
 
-        public ExtractionSummaryPage()
+        public DecompressionSummaryPage()
         {
             InitializeComponent();
-            _control = new ExtractionSummaryPageControl(this);
+            _control = new DecompressionSummaryPageControl(this);
         }
 
         /// <summary>

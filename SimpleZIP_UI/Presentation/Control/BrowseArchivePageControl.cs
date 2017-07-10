@@ -60,7 +60,8 @@ namespace SimpleZIP_UI.Presentation.Control
             if (items.Count > 0)
             {
                 var item = new ExtractableItem(_archiveFile.DisplayName, _archiveFile, items);
-                ParentPage.Frame.Navigate(typeof(ExtractionSummaryPage), item);
+                ParentPage.Frame.Navigate(typeof(DecompressionSummaryPage), item);
+                ParentPage.Frame.Navigate(typeof(DecompressionSummaryPage), item);
             }
         }
     }

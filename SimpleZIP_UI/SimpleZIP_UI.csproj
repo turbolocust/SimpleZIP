@@ -128,11 +128,11 @@
     <Compile Include="Presentation\View\BrowseArchivePage.xaml.cs">
       <DependentUpon>BrowseArchivePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Presentation\View\ExtractionSummaryPage.xaml.cs">
-      <DependentUpon>ExtractionSummaryPage.xaml</DependentUpon>
+    <Compile Include="Presentation\View\DecompressionSummaryPage.xaml.cs">
+      <DependentUpon>DecompressionSummaryPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Control\BaseControl.cs" />
-    <Compile Include="Presentation\Control\ExtractionSummaryPageControl.cs" />
+    <Compile Include="Presentation\Control\DecompressionSummaryPageControl.cs" />
     <Compile Include="Presentation\Factory\DialogFactory.cs" />
     <Compile Include="Presentation\Factory\PickerFactory.cs" />
     <Compile Include="Exceptions\InvalidArchiveTypeException.cs" />
@@ -212,7 +212,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Presentation\View\ExtractionSummaryPage.xaml">
+    <Page Include="Presentation\View\DecompressionSummaryPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

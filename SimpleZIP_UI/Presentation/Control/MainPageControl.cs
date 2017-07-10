@@ -38,7 +38,7 @@ namespace SimpleZIP_UI.Presentation.Control
             var files = await picker.PickMultipleFilesAsync();
 
             if (!(files?.Count > 0)) return false;
-            ParentPage.Frame.Navigate(typeof(ExtractionSummaryPage), ConvertFiles(files));
+            ParentPage.Frame.Navigate(typeof(DecompressionSummaryPage), ConvertFiles(files));
             return true;
         }
 

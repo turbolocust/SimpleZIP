@@ -207,7 +207,7 @@ namespace SimpleZIP_UI.Presentation.Control
         /// <summary>
         /// Performs the archiving operation.
         /// </summary>
-        /// <param name="operationInfos"></param>
+        /// <param name="operationInfos">The amount of operations to be performed.</param>
         /// <returns>True on success, false otherwise.</returns>
         protected abstract Task<Result> PerformOperation(T[] operationInfos);
 

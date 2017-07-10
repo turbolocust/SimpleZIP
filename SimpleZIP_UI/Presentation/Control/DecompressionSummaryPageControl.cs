@@ -7,9 +7,9 @@ using SimpleZIP_UI.Application.Compression.Operation;
 
 namespace SimpleZIP_UI.Presentation.Control
 {
-    internal class ExtractionSummaryPageControl : SummaryPageControl<DecompressionInfo>
+    internal class DecompressionSummaryPageControl : SummaryPageControl<DecompressionInfo>
     {
-        internal ExtractionSummaryPageControl(Page parent) : base(parent)
+        internal DecompressionSummaryPageControl(Page parent) : base(parent)
         {
         }
 

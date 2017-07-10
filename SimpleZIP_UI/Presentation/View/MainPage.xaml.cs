@@ -108,7 +108,7 @@ namespace SimpleZIP_UI.Presentation.View
                     {
                         var list = new List<ExtractableItem>(files.Count);
                         list.AddRange(files.Select(file => new ExtractableItem(file.Name, file as StorageFile)));
-                        frame.Navigate(typeof(ExtractionSummaryPage), list);
+                        frame.Navigate(typeof(DecompressionSummaryPage), list);
                     }
                 }
                 else
