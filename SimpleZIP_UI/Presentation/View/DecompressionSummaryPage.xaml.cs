@@ -150,7 +150,7 @@ namespace SimpleZIP_UI.Presentation.View
                     foreach (var entry in item.Entries)
                     {
                         stringBuilder.Clear();
-                        stringBuilder.Append("\t").Append(entry.Name);
+                        stringBuilder.Append("   >> ").Append(entry.Name);
                         ItemsListBox.Items.Add(new TextBlock { Text = stringBuilder.ToString() });
                     }
                 }

@@ -17,6 +17,11 @@ namespace SimpleZIP_UI.Presentation.Control
         /// </summary>
         private StorageFile _archiveFile;
 
+        /// <summary>
+        /// True if navigation is about to be executed, false otherwise.
+        /// </summary>
+        internal bool IsNavigating { get; private set; }
+
         internal BrowseArchivePageControl(Page parent) : base(parent)
         {
         }
@@ -43,7 +48,7 @@ namespace SimpleZIP_UI.Presentation.Control
         /// <param name="node">The currently active node that holds equivalents of the models.</param>
         internal void ConfirmationButtonAction(ICollection<BrowseArchivePageModel> models, Node node)
         {
-            var items = new List<FileEntry>(models.Count);
+            var entries = new List<FileEntry>(models.Count);
             foreach (var model in models)
             {
                 foreach (var child in node.Children)
@@ -52,16 +57,17 @@ namespace SimpleZIP_UI.Presentation.Control
                     {
                         if (child is FileEntry entry)
                         {
-                            items.Add(entry);
+                            entries.Add(entry);
+                            break;
                         }
                     }
                 }
             }
-            if (items.Count > 0)
+            if (entries.Count > 0)
             {
-                var item = new ExtractableItem(_archiveFile.DisplayName, _archiveFile, items);
-                ParentPage.Frame.Navigate(typeof(DecompressionSummaryPage), item);
-                ParentPage.Frame.Navigate(typeof(DecompressionSummaryPage), item);
+                IsNavigating = true;
+                var item = new ExtractableItem(_archiveFile.DisplayName, _archiveFile, entries);
+                ParentPage.Frame.Navigate(typeof(DecompressionSummaryPage), new[] { item });
             }
         }
     }

@@ -123,7 +123,9 @@ namespace SimpleZIP_UI.Presentation.View
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
-            if (_nodeStack.Count > 1) // can go back in history
+            // can only go back in history if stack holds at 
+            // least two elements, as first one is the root node
+            if (_nodeStack.Count > 1 && !_control.IsNavigating)
             {
                 e.Cancel = true;
                 _nodeStack.Pop();
