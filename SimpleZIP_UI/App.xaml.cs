@@ -80,14 +80,14 @@ namespace SimpleZIP_UI
         }
 
         /// <summary>
-        /// Invoked when file has been opened from a file explorer.
+        /// Invoked when file has been opened via file explorer.
         /// </summary>
         /// <param name="args">Arguments that have been passed.</param>
         protected override void OnFileActivated(FileActivatedEventArgs args)
         {
             base.OnFileActivated(args);
             var rootFrame = new Frame();
-            rootFrame.Navigate(typeof(MainPage), args);
+            rootFrame.Navigate(typeof(DecompressionSummaryPage), args);
             Window.Current.Content = rootFrame;
             Window.Current.Activate();
         }
@@ -116,7 +116,7 @@ namespace SimpleZIP_UI
         }
 
         /// <summary>
-        /// Navigates back from the previous frame.
+        /// Navigates back to the previous frame.
         /// </summary>
         /// <param name="sender">The sender of the event.</param>
         /// <param name="args">Arguments that have been passed.</param>

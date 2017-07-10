@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -118,20 +120,41 @@ namespace SimpleZIP_UI.Presentation.View
 
         protected override void OnNavigatedTo(NavigationEventArgs args)
         {
-            if (args.Parameter is IReadOnlyList<ExtractableItem> list)
+            // check if file has been opened via file explorer
+            var eventArgs = args.Parameter as Windows.ApplicationModel.Activation.IActivatedEventArgs;
+            if (eventArgs?.Kind == Windows.ApplicationModel.Activation.ActivationKind.File)
             {
-                _selectedItems = list;
-                foreach (var item in _selectedItems) // populate list
+                var fileArgs = eventArgs as Windows.ApplicationModel.Activation.FileActivatedEventArgs;
+                var files = fileArgs?.Files;
+                if (!files.IsNullOrEmpty())
                 {
-                    ItemsListBox.Items.Add(new TextBlock { Text = item.DisplayName });
-                    if (!item.Entries.IsNullOrEmpty()) // add entries with indent as well
+                    var itemList = new List<ExtractableItem>(files.Count);
+                    itemList.AddRange(files.Select(file
+                        => new ExtractableItem(file.Name, file as StorageFile)));
+                    _selectedItems = itemList;
+                }
+            }
+            // navigated from MainPage
+            else if (args.Parameter is IReadOnlyList<ExtractableItem> items)
+            {
+                _selectedItems = items;
+            }
+            // populate list
+            var stringBuilder = new StringBuilder();
+            foreach (var item in _selectedItems)
+            {
+                stringBuilder.Append(item.DisplayName).Append(item.Archive.FileType);
+                ItemsListBox.Items.Add(new TextBlock { Text = stringBuilder.ToString() });
+                if (!item.Entries.IsNullOrEmpty()) // add entries with indent as well
+                {
+                    foreach (var entry in item.Entries)
                     {
-                        foreach (var entry in item.Entries)
-                        {
-                            ItemsListBox.Items.Add(new TextBlock { Text = "\t" + entry.Name });
-                        }
+                        stringBuilder.Clear();
+                        stringBuilder.Append("\t").Append(entry.Name);
+                        ItemsListBox.Items.Add(new TextBlock { Text = stringBuilder.ToString() });
                     }
                 }
+                stringBuilder.Clear();
             }
         }
 
