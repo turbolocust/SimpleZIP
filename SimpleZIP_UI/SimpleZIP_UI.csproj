@@ -111,6 +111,7 @@
     <Compile Include="Application\Compression\Model\Result.cs" />
     <Compile Include="Application\Util\CollectionUtils.cs" />
     <Compile Include="Application\Util\TaskUtils.cs" />
+    <Compile Include="Exceptions\ReadingArchiveException.cs" />
     <Compile Include="Presentation\Control\BrowseArchivePageControl.cs" />
     <Compile Include="Presentation\Control\SummaryPageControl.cs" />
     <Compile Include="Presentation\View\AboutDialog.xaml.cs">

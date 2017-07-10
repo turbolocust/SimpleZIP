@@ -3,8 +3,10 @@ using SharpCompress.Common;
 using SharpCompress.Readers;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
+using SimpleZIP_UI.Exceptions;
 
 namespace SimpleZIP_UI.Application.Compression.Reader
 {
@@ -65,25 +67,46 @@ namespace SimpleZIP_UI.Application.Compression.Reader
             if (Closed) throw new ObjectDisposedException(GetType().FullName);
 
             var rootNode = new Node(RootNodeName);
+            var keyBuilder = new StringBuilder();
+            var nameBuilder = new StringBuilder();
             _nodes.Add(rootNode.Id, rootNode);
 
             foreach (var entry in ReadArchive())
             {
+                if (entry.IsDirectory) continue; // are considered anyhow
+
                 var key = entry.Key;
-                if (entry.IsDirectory)
+                var pair = GetEntryKeyPair(key);
+                var parentNode = rootNode;
+
+                for (var i = 0; i <= pair.SeparatorPos; ++i)
                 {
-                    var pair = GetEntryKeyPair(key);
-                    var parentKey = pair.ParentKey;
-                    var childNode = GetNode(key);
-                    childNode.Name = pair.EntryName;
-                    GetNode(parentKey).Children.Add(childNode);
+                    var c = key[i];
+                    keyBuilder.Append(c);
+
+                    if (c == '/') // next parent found
+                    {
+                        var node = GetNode(keyBuilder.ToString());
+                        node.Name = nameBuilder.ToString();
+                        parentNode.Children.Add(node); // will only be added if missing
+                        parentNode = node;
+                        nameBuilder.Clear();
+                    }
+                    else
+                    {
+                        nameBuilder.Append(c);
+                    }
                 }
-                else
+
+                if (!parentNode.Id.Equals(pair.ParentKey))
                 {
-                    var pair = GetEntryKeyPair(key);
-                    var fileEntry = new FileEntry(pair.EntryName, entry.Crc, (ulong) entry.Size);
-                    GetNode(pair.ParentKey).Children.Add(fileEntry);
+                    throw new ReadingArchiveException("Error reading archive.");
                 }
+
+                var entrySize = (ulong)entry.Size;
+                var fileEntry = new FileEntry(pair.EntryName, entry.Crc, entrySize);
+                parentNode.Children.Add(fileEntry);
+                keyBuilder.Clear();
             }
 
             return rootNode; // return first element in tree, which is the root node
@@ -135,7 +158,8 @@ namespace SimpleZIP_UI.Application.Compression.Reader
             return new EntryKeyPair
             {
                 EntryName = entryName,
-                ParentKey = parentKey
+                ParentKey = parentKey,
+                SeparatorPos = lastSeparatorIndex
             };
         }
 
@@ -150,6 +174,8 @@ namespace SimpleZIP_UI.Application.Compression.Reader
             internal string EntryName { get; set; }
 
             internal string ParentKey { get; set; }
+
+            internal int SeparatorPos { get; set; }
         }
     }
 }

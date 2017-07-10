@@ -31,7 +31,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         internal Node(string id)
         {
             Id = id;
-            Children = new LinkedList<IArchiveEntry>();
+            Children = new HashSet<IArchiveEntry>();
         }
 
         protected bool Equals(Node other)
