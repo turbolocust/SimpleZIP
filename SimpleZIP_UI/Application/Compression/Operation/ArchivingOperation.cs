@@ -42,10 +42,9 @@ namespace SimpleZIP_UI.Application.Compression.Operation
             {
                 return await StartOperation(operationInfo);
             }
-            catch (AggregateException)
+            finally
             {
                 IsRunning = false;
-                throw;
             }
         }
 

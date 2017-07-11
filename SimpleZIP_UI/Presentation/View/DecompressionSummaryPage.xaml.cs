@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -140,21 +141,23 @@ namespace SimpleZIP_UI.Presentation.View
                 _selectedItems = items;
             }
             // populate list
-            var stringBuilder = new StringBuilder();
             foreach (var item in _selectedItems)
             {
-                stringBuilder.Append(item.DisplayName).Append(item.Archive.FileType);
-                ItemsListBox.Items.Add(new TextBlock { Text = stringBuilder.ToString() });
+                ItemsListBox.Items.Add(new TextBlock { Text = item.DisplayName });
                 if (!item.Entries.IsNullOrEmpty()) // add entries with indent as well
                 {
+                    var stringBuilder = new StringBuilder();
                     foreach (var entry in item.Entries)
                     {
+                        stringBuilder.Append("->\t").Append(entry.Name);
+                        ItemsListBox.Items.Add(new TextBlock
+                        {
+                            Text = stringBuilder.ToString(),
+                            FontStyle = FontStyle.Italic
+                        });
                         stringBuilder.Clear();
-                        stringBuilder.Append("   >> ").Append(entry.Name);
-                        ItemsListBox.Items.Add(new TextBlock { Text = stringBuilder.ToString() });
                     }
                 }
-                stringBuilder.Clear();
             }
         }
 

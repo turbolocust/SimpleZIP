@@ -24,9 +24,9 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         internal string Id { get; }
 
         /// <summary>
-        /// Children of this node, which are nodes or entries.
+        /// Children of this node, which are nodes and entries.
         /// </summary>
-        internal ICollection<IArchiveEntry> Children { get; }
+        internal ISet<IArchiveEntry> Children { get; }
 
         internal Node(string id)
         {

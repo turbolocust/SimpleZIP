@@ -10,6 +10,10 @@ using SimpleZIP_UI.Exceptions;
 
 namespace SimpleZIP_UI.Application.Compression.Reader
 {
+    /// <summary>
+    /// Traverses the archive hierarchy and generates nodes, which represent folders,
+    /// and file entries. A node can have other nodes and file entries as children.
+    /// </summary>
     internal class ArchiveReader : IDisposable
     {
         /// <summary>
@@ -73,7 +77,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
 
             foreach (var entry in ReadArchive())
             {
-                if (entry.IsDirectory) continue; // are considered anyhow
+                if (entry.IsDirectory) continue; // are considered anyway
 
                 var key = entry.Key;
                 var pair = GetEntryKeyPair(key);
@@ -87,8 +91,10 @@ namespace SimpleZIP_UI.Application.Compression.Reader
                     if (c == '/') // next parent found
                     {
                         var node = GetNode(keyBuilder.ToString());
-                        node.Name = nameBuilder.ToString();
-                        parentNode.Children.Add(node); // will only be added if missing
+                        if (parentNode.Children.Add(node))
+                        {
+                            node.Name = nameBuilder.ToString();
+                        }
                         parentNode = node;
                         nameBuilder.Clear();
                     }
