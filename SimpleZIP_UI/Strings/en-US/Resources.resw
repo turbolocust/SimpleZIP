@@ -1,0 +1,284 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Abort.text" xml:space="preserve">
+    <value>Abort</value>
+    <comment>The interruption of an operation.</comment>
+  </data>
+  <data name="About.text" xml:space="preserve">
+    <value>About</value>
+    <comment>Information about the person who created the software.</comment>
+  </data>
+  <data name="ArchiveContent.text" xml:space="preserve">
+    <value>Archive Content:</value>
+    <comment>The content (compressed files) of an archive.</comment>
+  </data>
+  <data name="ArchiveName.text" xml:space="preserve">
+    <value>Archive Name</value>
+    <comment>A custom name for the archive to be compressed.</comment>
+  </data>
+  <data name="ArchiveType.text" xml:space="preserve">
+    <value>Archive Type</value>
+    <comment>The type of the archive. For example ZIP for .zip files.</comment>
+  </data>
+  <data name="CompressArchive.text" xml:space="preserve">
+    <value>Compress File(s) . . .</value>
+    <comment>Allows the user to compress one or multiple archives.</comment>
+  </data>
+  <data name="Error.text" xml:space="preserve">
+    <value>Error</value>
+    <comment>Something went wrong.</comment>
+  </data>
+  <data name="ExtractAll.text" xml:space="preserve">
+    <value>Extract All</value>
+    <comment>Extracts all files from an archive.</comment>
+  </data>
+  <data name="ExtractArchive.text" xml:space="preserve">
+    <value>Extract Archive(s) . . .</value>
+    <comment>Allows the user to extract one or multiple archives.</comment>
+  </data>
+  <data name="ExtractSelected.text" xml:space="preserve">
+    <value>Extract Selected</value>
+    <comment>Extracts only the selected files from an archive.</comment>
+  </data>
+  <data name="FileNotCompressed.text" xml:space="preserve">
+    <value>File {0} was not compressed.</value>
+    <comment>Indicates that a file could not be compressed.</comment>
+  </data>
+  <data name="FilesToCompress.text" xml:space="preserve">
+    <value>File(s) to compress:</value>
+    <comment>The files that are to be compressed.</comment>
+  </data>
+  <data name="FilesToDecompress.text" xml:space="preserve">
+    <value>File(s) to decompress:</value>
+    <comment>Files that will be decompressed.</comment>
+  </data>
+  <data name="GetSourceCode.text" xml:space="preserve">
+    <value>Get Source Code!</value>
+    <comment>To receive the source code of this software.</comment>
+  </data>
+  <data name="hours.text" xml:space="preserve">
+    <value>hours</value>
+    <comment>Amount of hours.</comment>
+  </data>
+  <data name="IllegalCharacters.text" xml:space="preserve">
+    <value>These characters are not allowed:</value>
+    <comment>Shows the user characters which cannot be used.</comment>
+  </data>
+  <data name="Interrupted.text" xml:space="preserve">
+    <value>Interrupted</value>
+    <comment>Execution stopped and did not complete.</comment>
+  </data>
+  <data name="LessThanSecond.text" xml:space="preserve">
+    <value>Less than one second.</value>
+    <comment>Something took less than one second.</comment>
+  </data>
+  <data name="MightTakeWhile.text" xml:space="preserve">
+    <value>This might take a while. . .</value>
+    <comment>Tells the user that it can take some time.</comment>
+  </data>
+  <data name="minutes.text" xml:space="preserve">
+    <value>minutes</value>
+    <comment>Amount of minutes.</comment>
+  </data>
+  <data name="NotAllExtracted.text" xml:space="preserve">
+    <value>Not all files were extracted.</value>
+    <comment>Some file were not extracted.</comment>
+  </data>
+  <data name="NoValidFolderSelected.text" xml:space="preserve">
+    <value>No valid output folder selected.</value>
+    <comment>Tells the user that a valid output folder has not been selected.</comment>
+  </data>
+  <data name="OnlySingleFileCompression.text" xml:space="preserve">
+    <value>GZIP only allows to compress a single file.</value>
+    <comment>Informs the user about the fact that Gzip only allows the compression of a single file.</comment>
+  </data>
+  <data name="OpenArchive.text" xml:space="preserve">
+    <value>Open Archive . . .</value>
+    <comment>Allows the user to open an archive.</comment>
+  </data>
+  <data name="OpenWebBrowserMessage.text" xml:space="preserve">
+    <value>This will open the web browser.</value>
+    <comment>Informs the user that the web browser will open after confirmation.</comment>
+  </data>
+  <data name="OperationCancelled.text" xml:space="preserve">
+    <value>Operation has been canceled.</value>
+    <comment>Stopped the further execution of an operation.</comment>
+  </data>
+  <data name="OutputPath.text" xml:space="preserve">
+    <value>Output Path</value>
+    <comment>The path where to store the compressed or decompressed files.</comment>
+  </data>
+  <data name="PleaseBePatient.text" xml:space="preserve">
+    <value>Please be patient</value>
+    <comment>Politely tells the user to be patient.</comment>
+  </data>
+  <data name="Proceed.text" xml:space="preserve">
+    <value>Proceed?</value>
+    <comment>Asks the user if whether to continue or not.</comment>
+  </data>
+  <data name="seconds.text" xml:space="preserve">
+    <value>seconds</value>
+    <comment>Amount of seconds.</comment>
+  </data>
+  <data name="SeparateArchive.text" xml:space="preserve">
+    <value>Thus, each file will be put into a separate archive.</value>
+    <comment>Informs the user that each file will be put into a separate archive.</comment>
+  </data>
+  <data name="SomethingWentWrong.text" xml:space="preserve">
+    <value>Something went wrong.</value>
+    <comment>An error occurred.</comment>
+  </data>
+  <data name="Start.text" xml:space="preserve">
+    <value>Start</value>
+    <comment>The beginning of an operation.</comment>
+  </data>
+  <data name="Success.text" xml:space="preserve">
+    <value>Success</value>
+    <comment>The accomplishment of an operation.</comment>
+  </data>
+  <data name="TapToChoose.text" xml:space="preserve">
+    <value>TAP TO CHOOSE</value>
+    <comment>Allows further interaction with the software after a tap.</comment>
+  </data>
+  <data name="TotalDuration.text" xml:space="preserve">
+    <value>Total Duration</value>
+    <comment>Total amount of time it took to accomplish something.</comment>
+  </data>
+  <data name="DevelopedBy.text" xml:space="preserve">
+    <value>Developed by</value>
+    <comment>Software was made by...</comment>
+  </data>
+  <data name="Feedback.text" xml:space="preserve">
+    <value>Any Feedback?</value>
+    <comment>Aks the user for feedback.</comment>
+  </data>
+  <data name="License.text" xml:space="preserve">
+    <value>This app uses the {0} library by Adam Hathcock and is licensed under the {1} without any warranty.</value>
+    <comment>License text.</comment>
+  </data>
+  <data name="SendEmail.text" xml:space="preserve">
+    <value>Send me an Email.</value>
+    <comment>Allows the user to send an email to the author of the software.</comment>
+  </data>
+  <data name="AboutApplication.text" xml:space="preserve">
+    <value>About This Application</value>
+    <comment>Information about this application.</comment>
+  </data>
+</root>
