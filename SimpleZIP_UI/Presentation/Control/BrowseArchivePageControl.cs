@@ -42,11 +42,22 @@ namespace SimpleZIP_UI.Presentation.Control
         }
 
         /// <summary>
-        /// Converts each model from the specified collection to <see cref="ExtractableItem"/>.
+        /// Navigates to <see cref="DecompressionSummaryPage"/> with the archive 
+        /// file (<see cref="_archiveFile"/>) as a parameter.
+        /// </summary>
+        public void ExtractWholeArchiveButtonAction()
+        {
+            var item = new ExtractableItem(_archiveFile.Name, _archiveFile);
+            ParentPage.Frame.Navigate(typeof(DecompressionSummaryPage), new[] { item });
+        }
+
+        /// <summary>
+        /// Converts each model from the specified collection to <see cref="ExtractableItem"/> 
+        /// and navigates to <see cref="DecompressionSummaryPage"/> afterwards.
         /// </summary>
         /// <param name="models">The models to be converted.</param>
         /// <param name="node">The currently active node that holds equivalents of the models.</param>
-        internal void ConfirmationButtonAction(ICollection<BrowseArchivePageModel> models, Node node)
+        internal void ExtractSelectedEntriesButtonAction(ICollection<BrowseArchivePageModel> models, Node node)
         {
             var entries = new List<FileEntry>(models.Count);
             foreach (var model in models)
@@ -66,7 +77,7 @@ namespace SimpleZIP_UI.Presentation.Control
             if (entries.Count > 0)
             {
                 IsNavigating = true;
-                var item = new ExtractableItem(_archiveFile.DisplayName, _archiveFile, entries);
+                var item = new ExtractableItem(_archiveFile.Name, _archiveFile, entries);
                 ParentPage.Frame.Navigate(typeof(DecompressionSummaryPage), new[] { item });
             }
         }

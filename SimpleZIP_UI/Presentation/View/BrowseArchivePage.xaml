@@ -9,8 +9,8 @@
 
     <Grid Background="Transparent" Padding="0,0,0,8">
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.5*" />
-            <RowDefinition Height="8.0*" />
+            <RowDefinition Height="0.6*" />
+            <RowDefinition Height="7.9*" />
             <RowDefinition Height="1.5*" />
         </Grid.RowDefinitions>
         <TextBlock Text="Archive content:" Grid.Row="0" FontWeight="Bold" FontSize="16" CharacterSpacing="56" Margin="8,0,0,0" VerticalAlignment="Center" Foreground="White" />
@@ -27,7 +27,12 @@
             </ListBox>
         </ScrollViewer>
         <StackPanel Grid.Row="2" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,16,0">
-            <Button x:Name="ConfirmSelectionButton" Tapped="ConfirmSelection_Tap" IsEnabled="False" Content="Confirm Selection" Width="140" MinHeight="44" Height="50" MaxHeight="60" Foreground="White" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}" />
+            <Button Tapped="ExtractWholeArchiveButton_Tap" IsEnabled="True" Width="125" MinHeight="44" Height="50" MaxHeight="60" Margin="0,0,16,0" Foreground="White" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+                <TextBlock Text="Extract All" TextWrapping="Wrap" />
+            </Button>
+            <Button x:Name="ExtractSelectedEntriesButton" Tapped="ExtractSelectedEntriesButton_Tap" IsEnabled="False" Width="125" MinHeight="44" Height="50" MaxHeight="60" Foreground="White" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+                <TextBlock Text="Extract Selected" TextWrapping="Wrap" />
+            </Button>
         </StackPanel>
     </Grid>
     <Page.Transitions>

@@ -10,8 +10,8 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="2.5*" />
             <RowDefinition Height="1.5*" />
-            <RowDefinition Height="0.5*" />
-            <RowDefinition Height="4.0*" />
+            <RowDefinition Height="0.6*" />
+            <RowDefinition Height="3.9*" />
             <RowDefinition Height="1.5*" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="8,0,0,0">
@@ -36,9 +36,13 @@
             <ListBox x:Name="ItemsListBox"  Margin="8,0,8,0" SelectionMode="Single" CanDrag="False" HorizontalContentAlignment="Stretch" Background="Transparent" Height="Auto" Foreground="White" />
         </ScrollViewer>
         <StackPanel Grid.Row="4" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,16,0">
-            <ProgressRing x:Name="ProgressRing" Width="40" Height="40" Margin="0, 0, 24, 0" IsActive="False" />
-            <Button x:Name="StartButton" Tapped="StartButton_Tap" IsEnabled="False" Content="Start" Width="120" MinHeight="44" Height="50" MaxHeight="60" Margin="0,0,16,0" Foreground="White" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}" />
-            <Button Tapped="AbortButton_Tap" Content="Abort" Width="120" MinHeight="44" Height="50" MaxHeight="60" Foreground="White" Background="DarkRed" BorderBrush="{ThemeResource ButtonBorderThemeBrush}" />
+            <ProgressRing x:Name="ProgressRing" Width="40" Height="40" Margin="0, 0, 20, 0" IsActive="False" />
+            <Button x:Name="StartButton" Tapped="StartButton_Tap" IsEnabled="False" Width="125" MinHeight="44" Height="50" MaxHeight="60" Margin="0,0,16,0" Foreground="White" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+                <TextBlock Text="Start" TextWrapping="Wrap" />
+            </Button>
+            <Button Tapped="AbortButton_Tap" Width="125" MinHeight="44" Height="50" MaxHeight="60" Foreground="White" Background="DarkRed" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+                <TextBlock Text="Abort" TextWrapping="Wrap" />
+            </Button>
             <ToolTipService.ToolTip>
                 <ToolTip x:Name="AbortButtonToolTip" Content="Trying to abort. . ." FontSize="13" HorizontalOffset="20" VerticalOffset="20" />
             </ToolTipService.ToolTip>

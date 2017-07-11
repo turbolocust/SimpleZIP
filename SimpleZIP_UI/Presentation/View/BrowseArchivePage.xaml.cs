@@ -43,13 +43,23 @@ namespace SimpleZIP_UI.Presentation.View
         }
 
         /// <summary>
-        /// Invoked when the confirmation button has been tapped.
+        /// Invoked when the button to extract the whole archive has been tapped.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
         /// <param name="args">Arguments that have been passed.</param>
-        private void ConfirmSelection_Tap(object sender, TappedRoutedEventArgs args)
+        private void ExtractWholeArchiveButton_Tap(object sender, TappedRoutedEventArgs args)
         {
-            _control.ConfirmationButtonAction(_selectedModels, _nodeStack.Peek());
+            _control.ExtractWholeArchiveButtonAction();
+        }
+
+        /// <summary>
+        /// Invoked when the button to only extract the selected entries has been tapped.
+        /// </summary>
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="args">Arguments that have been passed.</param>
+        private void ExtractSelectedEntriesButton_Tap(object sender, TappedRoutedEventArgs args)
+        {
+            _control.ExtractSelectedEntriesButtonAction(_selectedModels, _nodeStack.Peek());
         }
 
         /// <summary>
@@ -88,7 +98,7 @@ namespace SimpleZIP_UI.Presentation.View
                 }
             }
             // enable button if at least one item is selected
-            ConfirmSelectionButton.IsEnabled = _selectedModels.Count > 0;
+            ExtractSelectedEntriesButton.IsEnabled = _selectedModels.Count > 0;
         }
 
         /// <summary>
