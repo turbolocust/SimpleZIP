@@ -119,125 +119,170 @@
   </resheader>
   <data name="Abort.text" xml:space="preserve">
     <value>Abbrechen</value>
+    <comment>Erlaubt das Unterbrechen einer Operation.</comment>
   </data>
   <data name="About.text" xml:space="preserve">
     <value>Über</value>
+    <comment>Information über die Person, die diese Software erstellt hat.</comment>
   </data>
   <data name="AboutApplication.text" xml:space="preserve">
     <value>Über diese Anwendung</value>
+    <comment>Information über die Software.</comment>
   </data>
   <data name="ArchiveContent.text" xml:space="preserve">
     <value>Archivinhalt:</value>
+    <comment>Der (komprimierte) Inhalt eines Archivs.</comment>
   </data>
   <data name="ArchiveName.text" xml:space="preserve">
     <value>Archivname</value>
+    <comment>Der Name des zu komprimierenden Archivs.</comment>
   </data>
   <data name="ArchiveType.text" xml:space="preserve">
     <value>Archivtyp</value>
+    <comment>Der Typ des Archivs. Zum Beispiel ZIP für .zip-Dateien.</comment>
   </data>
   <data name="CompressArchive.text" xml:space="preserve">
     <value>Komprimiere Datei(en) . . .</value>
+    <comment>Erlaubt dem Benutzer eine oder mehrere Dateien zu komprimieren.</comment>
   </data>
   <data name="DevelopedBy.text" xml:space="preserve">
     <value>Entwickelt von</value>
+    <comment>Die Software wurde entwickelt von...</comment>
   </data>
   <data name="Error.text" xml:space="preserve">
     <value>Fehler</value>
+    <comment>Etwas ging schief.</comment>
   </data>
   <data name="ExtractAll.text" xml:space="preserve">
     <value>Extrahiere Alle</value>
+    <comment>Extrahiere alle Dateien aus einem Archiv.</comment>
   </data>
   <data name="ExtractArchive.text" xml:space="preserve">
     <value>Extrahiere Archiv(e) . . .</value>
+    <comment>Erlaubt dem Benutzer eines oder mehrere Archive zu extrahieren.</comment>
   </data>
   <data name="ExtractSelected.text" xml:space="preserve">
     <value>Extrahiere Auswahl</value>
+    <comment>Entpackt ausschließlich die gewählten Dateien von einem Archiv.</comment>
   </data>
   <data name="Feedback.text" xml:space="preserve">
     <value>Feedback?</value>
+    <comment>Fragt den Nutzer nach Feedback.</comment>
   </data>
   <data name="FileNotCompressed.text" xml:space="preserve">
     <value>Datei {0} wurde nicht komprimiert.</value>
+    <comment>Sagt aus, dass eine Datei nicht komprimiert werden konnte.</comment>
   </data>
   <data name="FilesToCompress.text" xml:space="preserve">
     <value>Datei(en) zu komprimieren:</value>
+    <comment>Dateien, die komprimiert werden sollen.</comment>
   </data>
   <data name="FilesToDecompress.text" xml:space="preserve">
     <value>Datei(en) zu extrahieren:</value>
+    <comment>Dateien, die extrahiert werden sollen.</comment>
   </data>
   <data name="GetSourceCode.text" xml:space="preserve">
     <value>Hol dir den Quellcode!</value>
+    <comment>Der Benutzer kann sich den Quellcode holen.</comment>
   </data>
   <data name="hours.text" xml:space="preserve">
     <value>Stunden</value>
+    <comment>Menge an Stunden.</comment>
   </data>
   <data name="IllegalCharacters.text" xml:space="preserve">
     <value>Diese Zeichen sind nicht erlaubt:</value>
+    <comment>Zeigt dem Benutzer Zeichen, welche nicht verwendet werden können.</comment>
   </data>
   <data name="Interrupted.text" xml:space="preserve">
     <value>Unterbrochen</value>
+    <comment>Ausführung wurde beendet und ist unvollständig.</comment>
   </data>
   <data name="LessThanSecond.text" xml:space="preserve">
     <value>Weniger als eine Sekunde.</value>
+    <comment>Etwas dauerte weniger als eine Sekunde.</comment>
   </data>
   <data name="License.text" xml:space="preserve">
     <value>Diese Anwendung nutzt die {0} Bibliothek von Adam Hathcock und ist lizenziert unter der {1}.</value>
+    <comment>Lizenztext.</comment>
   </data>
   <data name="MightTakeWhile.text" xml:space="preserve">
     <value>Das könnte ein wenig dauern. . .</value>
+    <comment>Informiert den Benutzer darüber, dass etwas ein wenig Zeit benötigen könnte.</comment>
   </data>
   <data name="minutes.text" xml:space="preserve">
     <value>Minuten</value>
+    <comment>Menge an Minuten.</comment>
   </data>
   <data name="NotAllExtracted.text" xml:space="preserve">
     <value>Nicht alle Dateien wurden extrahiert.</value>
+    <comment>Manche Dateien wurden nicht entpackt.</comment>
   </data>
   <data name="NoValidFolderSelected.text" xml:space="preserve">
     <value>Keinen gültigen Ausgabeordner gewählt.</value>
+    <comment>Teilt dem Benutzer mit, dass kein gültiger Ausgabeordner gewählt wurde.</comment>
   </data>
   <data name="OnlySingleFileCompression.text" xml:space="preserve">
     <value>GZIP erlaubt nur die Kompression einer einzelnen Datei.</value>
+    <comment>Informiert den Benutzer darüber, dass Gzip lediglich die Kompression einer einzelnen Datei erlaubt.</comment>
   </data>
   <data name="OpenArchive.text" xml:space="preserve">
     <value>Öffne Archiv . . .</value>
+    <comment>Erlaubt dem Benutzer das Öffnen eines Archivs.</comment>
   </data>
   <data name="OpenWebBrowserMessage.text" xml:space="preserve">
     <value>Dies öffnet den Web-Browser.</value>
+    <comment>Informiert den Benutzer, dass nach dem Bestätigen der Web-Browser geöffnet wird.</comment>
   </data>
   <data name="OperationCancelled.text" xml:space="preserve">
     <value>Operation wurde abgebrochen.</value>
+    <comment>Keine weitere Ausführung der Operation.</comment>
   </data>
   <data name="OutputPath.text" xml:space="preserve">
     <value>Ausgabepfad</value>
+    <comment>Der Pfad an dem die komprimierten Dateien gespeichert werden.</comment>
   </data>
   <data name="PleaseBePatient.text" xml:space="preserve">
     <value>Bitte habe Geduld</value>
+    <comment>Höfliche Bitte um Geduld.</comment>
   </data>
   <data name="Proceed.text" xml:space="preserve">
     <value>Fortfahren?</value>
+    <comment>Fragt den Benutzer ob er/sie fortfahren möchte.</comment>
   </data>
   <data name="seconds.text" xml:space="preserve">
     <value>Sekunden</value>
+    <comment>Menge an Sekunden.</comment>
   </data>
   <data name="SendEmail.text" xml:space="preserve">
     <value>Schick mir eine Mail.</value>
+    <comment>Erlaubt dem Nutzer das Senden einer E-Mail an den Autor der Software.</comment>
   </data>
   <data name="SeparateArchive.text" xml:space="preserve">
     <value>Daher wird jede Datei in ein eigenes Archiv verpackt.</value>
+    <comment>Informiert den Benutzer darüber, dass jede Datei in ein separates Archiv gepackt wird.</comment>
   </data>
   <data name="SomethingWentWrong.text" xml:space="preserve">
     <value>Etwas ist schief gegangen.</value>
+    <comment>Ein Fehler trat auf.</comment>
   </data>
   <data name="Start.text" xml:space="preserve">
     <value>Start</value>
+    <comment>Der Anfang von etwas.</comment>
   </data>
   <data name="Success.text" xml:space="preserve">
     <value>Erfolg</value>
+    <comment>Positives Ergebnis.</comment>
   </data>
   <data name="TapToChoose.text" xml:space="preserve">
     <value>Antippen zum wählen</value>
+    <comment>Erlaubt weitere Interaktion mit der Software nach dem Antippen.</comment>
   </data>
   <data name="TotalDuration.text" xml:space="preserve">
     <value>Gesamtdauer</value>
+    <comment>Zeitraum der nötig war etwas zu vollenden.</comment>
+  </data>
+  <data name="TryingAbort.text" xml:space="preserve">
+    <value>Trying to abort. . .</value>
+    <comment>Versucht die Operation abzubrechen.</comment>
   </data>
 </root>
