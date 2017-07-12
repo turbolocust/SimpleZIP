@@ -7,6 +7,9 @@ namespace SimpleZIP_UI.Presentation.View
         public AboutDialog()
         {
             InitializeComponent();
+            // display following hard coded strings in UI
+            DevelopedByRun.Text = I18N.Resources.GetString("DevelopedBy/Text") + " Matthias Fussenegger";
+            LicenseRun.Text = I18N.Resources.GetString("License/Text", "GNU General Public License 3");
         }
 
         /// <summary>

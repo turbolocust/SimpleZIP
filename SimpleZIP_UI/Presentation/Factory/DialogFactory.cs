@@ -14,8 +14,8 @@ namespace SimpleZIP_UI.Presentation.Factory
         public static MessageDialog CreateConfirmationDialog(string title, string message)
         {
             var dialog = new MessageDialog(message, title);
-            dialog.Commands.Add(new UICommand("Yes") { Id = 0 });
-            dialog.Commands.Add(new UICommand("No") { Id = 1 });
+            dialog.Commands.Add(new UICommand(I18N.Resources.GetString("Yes/Text")) { Id = 0 });
+            dialog.Commands.Add(new UICommand(I18N.Resources.GetString("No/Text")) { Id = 1 });
             dialog.DefaultCommandIndex = 0;
             dialog.CancelCommandIndex = 1;
             return dialog;
@@ -28,7 +28,7 @@ namespace SimpleZIP_UI.Presentation.Factory
         /// <returns>The newly created message dialog.</returns>
         public static MessageDialog CreateErrorDialog(string message)
         {
-            return new MessageDialog(message, "Error");
+            return new MessageDialog(message, I18N.Resources.GetString("Error/Text"));
         }
 
         /// <summary>

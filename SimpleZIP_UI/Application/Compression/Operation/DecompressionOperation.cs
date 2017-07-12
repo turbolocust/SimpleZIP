@@ -38,7 +38,8 @@ namespace SimpleZIP_UI.Application.Compression.Operation
             }
             else
             {
-                throw new InvalidArchiveTypeException("The selected file format is not supported.");
+                throw new InvalidArchiveTypeException(
+                    I18N.Resources.GetString("FileFormatNotSupported/Text"));
             }
 
             return await Task.Run(async () => // execute extraction asynchronously

@@ -134,7 +134,8 @@ namespace SimpleZIP_UI.Presentation.Control
         {
             if (totalSize >= FileSizeWarningThreshold)
             {
-                ShowToastNotification("Please be patient", "This might take a while. . .");
+                ShowToastNotification(I18N.Resources.GetString("PleaseBePatient/Text"),
+                    I18N.Resources.GetString("MightTakeWhile/Text"));
             }
         }
 
@@ -178,7 +179,8 @@ namespace SimpleZIP_UI.Presentation.Control
         {
             if (OutputFolder == null)
             {
-                throw new NullReferenceException("No valid output folder selected.");
+                throw new NullReferenceException(
+                    I18N.Resources.GetString("NoValidFolderSelected/Text"));
             }
             // set output folder to each operation info
             foreach (var operationInfo in operationInfos)

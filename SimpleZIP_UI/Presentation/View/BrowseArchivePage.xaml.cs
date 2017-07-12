@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -108,6 +109,8 @@ namespace SimpleZIP_UI.Presentation.View
         /// to populate the list box.</param>
         private void UpdateListContent(Node nextNode)
         {
+            if (nextNode == null) return;
+
             ArchivePageModels.Clear();
             _selectedModels.Clear();
             _nodeStack.Push(nextNode);
@@ -129,6 +132,7 @@ namespace SimpleZIP_UI.Presentation.View
             var archive = args.Parameter as StorageFile;
             if (archive == null) throw new NullReferenceException("Cannot handle null parameter.");
             UpdateListContent(await _control.ReadArchive(archive));
+            ExtractWholeArchiveButton.IsEnabled = _nodeStack.Any();
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)

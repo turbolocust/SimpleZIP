@@ -15,36 +15,40 @@
             <RowDefinition Height="1.5*" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="8,0,0,0">
-            <ComboBox x:Name="ArchiveTypeComboBox" DropDownClosed="ArchiveTypeComboBox_DropDownClosed" Width="200" Margin="0,0,0,12" Header="Archive Type" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}">
+            <ComboBox x:Uid="ArchiveType" x:Name="ArchiveTypeComboBox" DropDownClosed="ArchiveTypeComboBox_DropDownClosed" Width="200" Margin="0,0,0,12" Header="" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}">
                 <ToolTipService.ToolTip>
                     <ToolTip x:Name="ArchiveTypeToolTip" FontSize="13" HorizontalOffset="20" VerticalOffset="10" Opened="ToolTip_Opened" />
                 </ToolTipService.ToolTip>
             </ComboBox>
-            <TextBox x:Name="ArchiveNameTextBox" TextChanged="ArchiveNameTextBox_TextChanged" AcceptsReturn="False" Text="myArchive" Width="200" Header="Archive Name" IsReadOnly="False" TextWrapping="NoWrap" MaxLength="32" IsSpellCheckEnabled="False" InputScope="Url" >
+            <TextBox x:Uid="ArchiveName" x:Name="ArchiveNameTextBox" TextChanged="ArchiveNameTextBox_TextChanged" AcceptsReturn="False" Text="" Width="200" Header="" IsReadOnly="False" TextWrapping="NoWrap" MaxLength="32" IsSpellCheckEnabled="False" InputScope="Url" >
                 <ToolTipService.ToolTip>
                     <ToolTip x:Name="ArchiveNameToolTip" FontSize="13" HorizontalOffset="20" VerticalOffset="10" />
                 </ToolTipService.ToolTip>
             </TextBox>
         </StackPanel>
         <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center" Background="Transparent">
-            <TextBlock Text="Output Path" IsTapEnabled="False" FontSize="16" FontWeight="Bold" Margin="8,0,0,8" FocusVisualPrimaryBrush="Transparent" FocusVisualSecondaryBrush="Transparent" />
-            <Button x:Name="OutputPathButton" Content="TAP TO CHOOSE" AllowFocusWhenDisabled="False" Margin="8,0,24,0" Width="Auto" Height="40" FontWeight="Normal" BorderBrush="CornflowerBlue"
-                    BorderThickness="2" IsTapEnabled="True" Background="Transparent" IsHoldingEnabled="False" IsDoubleTapEnabled="False" Tapped="OutputPathButton_Tap" />
+            <TextBlock x:Uid="OutputPath" Text="" IsTapEnabled="False" FontSize="16" FontWeight="Bold" Margin="8,0,0,8" FocusVisualPrimaryBrush="Transparent" FocusVisualSecondaryBrush="Transparent" />
+            <Button x:Name="OutputPathButton" AllowFocusWhenDisabled="False" Margin="8,0,24,0" Width="Auto" Height="40" FontWeight="Normal" BorderBrush="CornflowerBlue"
+                    BorderThickness="2" IsTapEnabled="True" Background="Transparent" IsHoldingEnabled="False" IsDoubleTapEnabled="False" Tapped="OutputPathButton_Tap">
+                <TextBlock x:Uid="TapToChoose" Text="" TextWrapping="NoWrap" />
+            </Button>
         </StackPanel>
-        <TextBlock Text="File(s) to compress:" Grid.Row="2" FontWeight="Bold" FontSize="16" CharacterSpacing="56" Margin="8,0,0,0" VerticalAlignment="Center" Foreground="White" />
+        <TextBlock x:Uid="FilesToCompress" Text="" Grid.Row="2" FontWeight="Bold" FontSize="16" CharacterSpacing="56" Margin="8,0,0,0" VerticalAlignment="Center" Foreground="White" />
         <ScrollViewer Grid.Row="3" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
             <ListBox x:Name="ItemsListBox"  Margin="8,0,8,0" SelectionMode="Single" CanDrag="False" HorizontalContentAlignment="Stretch" Background="Transparent" Height="Auto" Foreground="White" />
         </ScrollViewer>
         <StackPanel Grid.Row="4" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,16,0">
             <ProgressRing x:Name="ProgressRing" Width="40" Height="40" Margin="0, 0, 20, 0" IsActive="False" />
             <Button x:Name="StartButton" Tapped="StartButton_Tap" IsEnabled="False" Width="125" MinHeight="44" Height="50" MaxHeight="60" Margin="0,0,16,0" Foreground="White" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
-                <TextBlock Text="Start" TextWrapping="Wrap" />
+                <TextBlock x:Uid="Start" Text="" TextWrapping="Wrap" />
             </Button>
             <Button Tapped="AbortButton_Tap" Width="125" MinHeight="44" Height="50" MaxHeight="60" Foreground="White" Background="DarkRed" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
-                <TextBlock Text="Abort" TextWrapping="Wrap" />
+                <TextBlock x:Uid="Abort" Text="" TextWrapping="Wrap" />
             </Button>
             <ToolTipService.ToolTip>
-                <ToolTip x:Name="AbortButtonToolTip" Content="Trying to abort. . ." FontSize="13" HorizontalOffset="20" VerticalOffset="20" />
+                <ToolTip x:Name="AbortButtonToolTip" FontSize="13" HorizontalOffset="20" VerticalOffset="20">
+                    <TextBlock x:Uid="TryingAbort" Text="" TextWrapping="WrapWholeWords" />
+                </ToolTip>
             </ToolTipService.ToolTip>
         </StackPanel>
     </Grid>

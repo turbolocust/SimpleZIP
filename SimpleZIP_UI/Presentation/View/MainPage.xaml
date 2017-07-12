@@ -27,7 +27,7 @@
                             <Button Height="50" Background="Transparent" Tapped="OpenArchiveButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                                 <StackPanel Orientation="Horizontal">
                                     <SymbolIcon Symbol="OpenFile"/>
-                                    <TextBlock Text="Open Archive. . ." FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
+                                    <TextBlock x:Uid="OpenArchive" Text="" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
                                 </StackPanel>
                             </Button>
                         </StackPanel>
@@ -35,7 +35,7 @@
                             <Button Height="50" Background="Transparent" Tapped="GetSourceButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                                 <StackPanel Orientation="Horizontal">
                                     <SymbolIcon Symbol="World"/>
-                                    <TextBlock Text="Get Source Code!" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
+                                    <TextBlock x:Uid="GetSourceCode" Text="" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
                                 </StackPanel>
                             </Button>
                         </StackPanel>
@@ -43,7 +43,7 @@
                             <Button Height="50" Background="Transparent" Tapped="AboutMenuButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                                 <StackPanel Orientation="Horizontal">
                                     <SymbolIcon Symbol="ContactInfo"/>
-                                    <TextBlock Text="About" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
+                                    <TextBlock x:Uid="About" Text="" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
                                 </StackPanel>
                             </Button>
                         </StackPanel>
@@ -58,8 +58,12 @@
                         <RowDefinition Height="3*"/>
                     </Grid.RowDefinitions>
                     <TextBlock Text="SimpleZIP" FontFamily="Default" FontSize="54" CharacterSpacing="32" FontStyle="Normal" VerticalAlignment="Top" Margin="24,16,0,0" Grid.Row="0" HorizontalAlignment="Left" Foreground="White"/>
-                    <Button Content="Compress File(s) . . ." HorizontalAlignment="Stretch" Grid.Row="1" MinHeight="32" Height="50" MaxHeight="72" VerticalAlignment="Bottom" Margin="32,16,32,16" Tapped="CompressButton_Tap" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}"/>
-                    <Button Content="Extract archive(s) . . ." HorizontalAlignment="Stretch" Grid.Row="2" MinHeight="32" Height="50" MaxHeight="72" VerticalAlignment="Top" Margin="32,16,32,16" Tapped="ExtractButton_Tap" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}"/>
+                    <Button HorizontalAlignment="Stretch" Grid.Row="1" MinHeight="32" Height="50" MaxHeight="72" VerticalAlignment="Bottom" Margin="32,16,32,16" Tapped="CompressButton_Tap" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+                        <TextBlock x:Uid="CompressArchive" Text="" TextWrapping="Wrap" />
+                    </Button>
+                    <Button HorizontalAlignment="Stretch" Grid.Row="2" MinHeight="32" Height="50" MaxHeight="72" VerticalAlignment="Top" Margin="32,16,32,16" Tapped="ExtractButton_Tap" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+                        <TextBlock x:Uid="ExtractArchive" Text="" TextWrapping="Wrap" />
+                    </Button>
                 </Grid>
             </SplitView.Content>
         </SplitView>

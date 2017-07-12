@@ -85,7 +85,7 @@ namespace SimpleZIP_UI.Presentation.Control
                 if (subResult.StatusCode != Result.Status.Success)
                 {
                     statusCode = Result.Status.PartialFail;
-                    subMessage.AppendLine("File ").Append(file.DisplayName).Append(" was not compressed.");
+                    subMessage.AppendLine(I18N.Resources.GetString("FileNotCompressed/Text", file.DisplayName));
                 }
                 else
                 {

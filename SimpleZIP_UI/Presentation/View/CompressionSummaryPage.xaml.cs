@@ -132,12 +132,12 @@ namespace SimpleZIP_UI.Presentation.View
         {
             if (_selectedFiles.Count <= 1) return;
             var selectedItem = (ComboBoxItem)ArchiveTypeComboBox.SelectedItem;
-            var archiveType = selectedItem?.Content?.ToString();
 
-            if (archiveType != null && archiveType.Contains("gzip"))
+            if (FileTypesComboBoxItems.TryGetValue(selectedItem,
+                out string value) && value.Equals(".gzip"))
             {
-                ArchiveTypeToolTip.Content = "GZIP only allows to compress a single file.\r\n" +
-                                             "Thus, each file will be put into a separate archive.";
+                ArchiveTypeToolTip.Content = I18N.Resources.GetString("OnlySingleFileCompression/Text")
+                    + "\r\n" + I18N.Resources.GetString("SeparateArchive/Text");
                 ArchiveTypeToolTip.IsOpen = true;
             }
         }
@@ -153,12 +153,12 @@ namespace SimpleZIP_UI.Presentation.View
 
             if (fileName.Length < 1) // reset if empty
             {
-                ArchiveNameTextBox.Text = "myArchive";
+                ArchiveNameTextBox.Text = I18N.Resources.GetString("ArchiveName/Text");
             }
             else if (fileName.ContainsIllegalChars()) // check for illegal characters in file name
             {
-                var content = "These characters are not allowed:\n" +
-                              string.Join(" ", FileUtils.IllegalChars);
+                var content = I18N.Resources.GetString("IllegalCharacters/Text")
+                    + "\n" + string.Join(" ", FileUtils.IllegalChars);
                 ArchiveNameToolTip.Content = content;
                 ArchiveNameToolTip.IsOpen = true;
             }

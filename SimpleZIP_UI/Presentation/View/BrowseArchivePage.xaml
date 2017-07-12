@@ -13,7 +13,7 @@
             <RowDefinition Height="7.9*" />
             <RowDefinition Height="1.5*" />
         </Grid.RowDefinitions>
-        <TextBlock Text="Archive content:" Grid.Row="0" FontWeight="Bold" FontSize="16" CharacterSpacing="56" Margin="8,0,0,0" VerticalAlignment="Center" Foreground="White" />
+        <TextBlock x:Uid="ArchiveContent" Text="" Grid.Row="0" FontWeight="Bold" FontSize="16" CharacterSpacing="56" Margin="8,0,0,0" VerticalAlignment="Center" Foreground="White" />
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" Margin="0,16,0,0" VerticalScrollBarVisibility="Auto">
             <ListBox ItemsSource="{Binding ArchivePageModels}" SelectionChanged="ItemsListBox_OnSelectionChanged" Margin="8,0,8,0" SelectionMode="Multiple" CanDrag="False" HorizontalContentAlignment="Stretch" Background="Transparent" Height="Auto" Foreground="White">
                 <ListBox.ItemTemplate>
@@ -27,11 +27,11 @@
             </ListBox>
         </ScrollViewer>
         <StackPanel Grid.Row="2" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,16,0">
-            <Button Tapped="ExtractWholeArchiveButton_Tap" IsEnabled="True" Width="125" MinHeight="44" Height="50" MaxHeight="60" Margin="0,0,16,0" Foreground="White" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
-                <TextBlock Text="Extract All" TextWrapping="Wrap" />
+            <Button x:Name="ExtractWholeArchiveButton" Tapped="ExtractWholeArchiveButton_Tap" IsEnabled="False" Width="125" MinHeight="44" Height="50" MaxHeight="60" Margin="0,0,16,0" Foreground="White" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+                <TextBlock x:Uid="ExtractAll" Text="" TextWrapping="Wrap" />
             </Button>
             <Button x:Name="ExtractSelectedEntriesButton" Tapped="ExtractSelectedEntriesButton_Tap" IsEnabled="False" Width="125" MinHeight="44" Height="50" MaxHeight="60" Foreground="White" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
-                <TextBlock Text="Extract Selected" TextWrapping="Wrap" />
+                <TextBlock x:Uid="ExtractSelected" Text="" TextWrapping="Wrap" />
             </Button>
         </StackPanel>
     </Grid>

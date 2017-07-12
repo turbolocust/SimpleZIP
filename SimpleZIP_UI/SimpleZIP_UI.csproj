@@ -114,6 +114,7 @@
     <Compile Include="Application\Util\CollectionUtils.cs" />
     <Compile Include="Application\Util\TaskUtils.cs" />
     <Compile Include="Exceptions\ReadingArchiveException.cs" />
+    <Compile Include="I18N\Resources.cs" />
     <Compile Include="Presentation\Control\BrowseArchivePageControl.cs" />
     <Compile Include="Presentation\Control\SummaryPageControl.cs" />
     <Compile Include="Presentation\View\AboutDialog.xaml.cs">
@@ -224,7 +225,6 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

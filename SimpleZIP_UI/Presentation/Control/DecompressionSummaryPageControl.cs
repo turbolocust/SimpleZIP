@@ -38,7 +38,7 @@ namespace SimpleZIP_UI.Presentation.Control
                     if (subResult.StatusCode != Result.Status.Success)
                     {
                         statusCode = Result.Status.PartialFail;
-                        subMessage.AppendLine("Archive ").Append(item.DisplayName).Append(" could not be extracted.");
+                        subMessage.AppendLine(I18N.Resources.GetString("ArchiveNotExtracted/Text", item.DisplayName));
                     }
                     else
                     {

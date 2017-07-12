@@ -48,25 +48,28 @@ namespace SimpleZIP_UI.Presentation.Control
                 case Result.Status.Success:
                     {
                         var durationText = BuildDurationText(result.ElapsedTime);
-                        dialog = DialogFactory.CreateInformationDialog("Success", durationText);
+                        dialog = DialogFactory.CreateInformationDialog(
+                            I18N.Resources.GetString("Success/Text"), durationText);
                         break;
                     }
                 case Result.Status.Fail:
                     {
                         var message = !string.IsNullOrEmpty(result.Message)
-                            ? result.Message : "Something went wrong.";
+                            ? result.Message : I18N.Resources.GetString("SomethingWentWrong/Text");
                         dialog = DialogFactory.CreateErrorDialog(message);
                         break;
                     }
                 case Result.Status.Interrupt:
                     {
                         dialog = DialogFactory.CreateInformationDialog(
-                            "Interrupted", "Operation has been canceled.");
+                            I18N.Resources.GetString("Interrupted/Text"),
+                            I18N.Resources.GetString("OperationCancelled/Text"));
                         break;
                     }
                 case Result.Status.PartialFail:
                     {
-                        dialog = DialogFactory.CreateErrorDialog("Not all files were extracted.");
+                        dialog = DialogFactory.CreateErrorDialog(
+                            I18N.Resources.GetString("NotAllExtracted/Text"));
                         break;
                     }
                 default: throw new ArgumentOutOfRangeException(nameof(result.StatusCode));
@@ -106,27 +109,29 @@ namespace SimpleZIP_UI.Presentation.Control
         /// If the duration is less than one second it will not contain a number.</returns>
         private static string BuildDurationText(TimeSpan timeSpan)
         {
-            var durationText = new StringBuilder("Total duration: ");
+            var durationText = new StringBuilder(I18N.Resources.GetString("TotalDuration/Text"));
+            durationText.Append(" ");
 
             if (timeSpan.Seconds < 1)
             {
-                durationText.Append("Less than one second.");
+                durationText.Append(I18N.Resources.GetString("LessThanSecond/Text"));
             }
             else
             {
-                durationText.Append(timeSpan.ToString(@"hh\:mm\:ss"));
+                durationText.Append(timeSpan.ToString(@"hh\:mm\:ss")).Append(" ");
                 if (timeSpan.Minutes < 1)
                 {
-                    durationText.Append(" seconds.");
+                    durationText.Append(I18N.Resources.GetString("seconds/Text"));
                 }
                 else if (timeSpan.Hours < 1)
                 {
-                    durationText.Append(" minutes.");
+                    durationText.Append(I18N.Resources.GetString("minutes/Text"));
                 }
                 else
                 {
-                    durationText.Append(" hours.");
+                    durationText.Append(I18N.Resources.GetString("hours/Text"));
                 }
+                durationText.Append(".");
             }
             return durationText.ToString();
         }
