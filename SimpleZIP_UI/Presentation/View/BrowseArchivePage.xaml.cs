@@ -120,7 +120,7 @@ namespace SimpleZIP_UI.Presentation.View
                 var isNode = child.IsNode;
                 var model = new BrowseArchivePageModel(isNode)
                 {
-                    Symbol = isNode ? Symbol.OpenLocal : Symbol.Preview,
+                    Symbol = isNode ? Symbol.Folder : Symbol.Preview,
                     DisplayName = child.Name
                 };
                 ArchivePageModels.Add(model);

@@ -110,7 +110,7 @@ namespace SimpleZIP_UI.Presentation.Control
         private static string BuildDurationText(TimeSpan timeSpan)
         {
             var durationText = new StringBuilder(I18N.Resources.GetString("TotalDuration/Text"));
-            durationText.Append(" ");
+            durationText.Append(": ");
 
             if (timeSpan.Seconds < 1)
             {

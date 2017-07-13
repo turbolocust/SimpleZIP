@@ -262,7 +262,7 @@
     <comment>The path where to store the compressed or decompressed files.</comment>
   </data>
   <data name="PleaseBePatient.Text" xml:space="preserve">
-    <value>Bitte habe Geduld</value>
+    <value>Bitte habe Geduld.</value>
     <comment>Requests the user to be patient.</comment>
   </data>
   <data name="Proceed.Text" xml:space="preserve">

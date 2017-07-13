@@ -15,7 +15,7 @@
             <RowDefinition Height="1.5*" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="8,0,0,0">
-            <ComboBox x:Uid="ArchiveType" x:Name="ArchiveTypeComboBox" DropDownClosed="ArchiveTypeComboBox_DropDownClosed" Width="200" Margin="0,0,0,12" Header="" Foreground="{ThemeResource AutoSuggestBackgroundThemeBrush}">
+            <ComboBox x:Uid="ArchiveType" x:Name="ArchiveTypeComboBox" DropDownClosed="ArchiveTypeComboBox_DropDownClosed" Width="200" Margin="0,0,0,12" Header="" Foreground="{ThemeResource ButtonForegroundThemeBrush}">
                 <ToolTipService.ToolTip>
                     <ToolTip x:Name="ArchiveTypeToolTip" FontSize="13" HorizontalOffset="20" VerticalOffset="10" Opened="ToolTip_Opened" />
                 </ToolTipService.ToolTip>
@@ -33,16 +33,17 @@
                 <TextBlock x:Uid="TapToChoose" Text="" TextWrapping="NoWrap" />
             </Button>
         </StackPanel>
-        <TextBlock x:Uid="FilesToCompress" Text="" Grid.Row="2" FontWeight="Bold" FontSize="16" CharacterSpacing="56" Margin="8,0,0,0" VerticalAlignment="Center" Foreground="White" />
+        <TextBlock x:Uid="FilesToCompress" Text="" Grid.Row="2" FontWeight="Bold" FontSize="16" CharacterSpacing="56" Margin="8,0,0,0" VerticalAlignment="Center" />
         <ScrollViewer Grid.Row="3" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-            <ListBox x:Name="ItemsListBox"  Margin="8,0,8,0" SelectionMode="Single" CanDrag="False" HorizontalContentAlignment="Stretch" Background="Transparent" Height="Auto" Foreground="White" />
+            <ListBox x:Name="ItemsListBox"  Margin="8,0,8,0" SelectionMode="Single" CanDrag="False" HorizontalContentAlignment="Stretch" Background="Transparent" Height="Auto" Foreground="{ThemeResource ButtonForegroundThemeBrush}" />
         </ScrollViewer>
         <StackPanel Grid.Row="4" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,16,0">
             <ProgressRing x:Name="ProgressRing" Width="40" Height="40" Margin="0, 0, 20, 0" IsActive="False" />
-            <Button x:Name="StartButton" Tapped="StartButton_Tap" IsEnabled="False" Width="125" MinHeight="44" Height="50" MaxHeight="60" Margin="0,0,16,0" Foreground="White" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+            <Button x:Name="StartButton" Tapped="StartButton_Tap" IsEnabled="False" Width="125" MinHeight="44" Height="50" MaxHeight="60" Margin="0,0,16,0" 
+                    Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                 <TextBlock x:Uid="Start" Text="" TextWrapping="Wrap" />
             </Button>
-            <Button Tapped="AbortButton_Tap" Width="125" MinHeight="44" Height="50" MaxHeight="60" Foreground="White" Background="DarkRed" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+            <Button Tapped="AbortButton_Tap" Width="125" MinHeight="44" Height="50" MaxHeight="60" Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="DarkRed" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                 <TextBlock x:Uid="Abort" Text="" TextWrapping="Wrap" />
             </Button>
             <ToolTipService.ToolTip>

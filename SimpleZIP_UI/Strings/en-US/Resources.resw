@@ -226,7 +226,7 @@
     <comment>The path where to store the compressed or decompressed files.</comment>
   </data>
   <data name="PleaseBePatient.Text" xml:space="preserve">
-    <value>Please be patient</value>
+    <value>Please be patient.</value>
     <comment>Requests the user to be patient.</comment>
   </data>
   <data name="Proceed.Text" xml:space="preserve">
@@ -258,7 +258,7 @@
     <comment>Allows further interaction with the software after a tap.</comment>
   </data>
   <data name="TotalDuration.Text" xml:space="preserve">
-    <value>Total Duration</value>
+    <value>Total duration</value>
     <comment>Period it took to accomplish something.</comment>
   </data>
   <data name="DevelopedBy.Text" xml:space="preserve">

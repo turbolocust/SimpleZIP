@@ -20,16 +20,17 @@
                 <TextBlock x:Uid="TapToChoose" Text="" TextWrapping="NoWrap" />
             </Button>
         </StackPanel>
-        <TextBlock x:Uid="FilesToDecompress" Text="" Grid.Row="1" FontWeight="Bold" FontSize="16" CharacterSpacing="56" Margin="8,0,0,0" VerticalAlignment="Center" Foreground="White" />
+        <TextBlock x:Uid="FilesToDecompress" Text="" Grid.Row="1" FontWeight="Bold" FontSize="16" CharacterSpacing="56" Margin="8,0,0,0" VerticalAlignment="Center" />
         <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-            <ListBox x:Name="ItemsListBox" Margin="8,0,8,0" SelectionMode="Single" CanDrag="False" HorizontalContentAlignment="Stretch" Background="Transparent" Height="Auto" Foreground="White" />
+            <ListBox x:Name="ItemsListBox" Margin="8,0,8,0" SelectionMode="Single" CanDrag="False" HorizontalContentAlignment="Stretch" Background="Transparent" Height="Auto" />
         </ScrollViewer>
         <StackPanel Grid.Row="3" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,16,0">
             <ProgressRing x:Name="ProgressRing" Width="40" Height="40" Margin="0, 0, 20, 0" IsActive="False" />
-            <Button x:Name="StartButton" Tapped="StartButton_Tap" IsEnabled="False" Width="125" MinHeight="44" Height="50" MaxHeight="60" Margin="0,0,16,0" Foreground="White" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+            <Button x:Name="StartButton" Tapped="StartButton_Tap" IsEnabled="False" Width="125" MinHeight="44" Height="50" MaxHeight="60" Margin="0,0,16,0" 
+                    Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                 <TextBlock x:Uid="Start" Text="" TextWrapping="Wrap" />
             </Button>
-            <Button Tapped="AbortButton_Tap" Width="125" MinHeight="44" Height="50" MaxHeight="60" Foreground="White" Background="DarkRed" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+            <Button Tapped="AbortButton_Tap" Width="125" MinHeight="44" Height="50" MaxHeight="60" Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="DarkRed" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                 <TextBlock x:Uid="Abort" Text="" TextWrapping="Wrap" />
             </Button>
             <ToolTipService.ToolTip>
