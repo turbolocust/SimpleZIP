@@ -26,6 +26,11 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+            <ToolTipService.ToolTip>
+                <ToolTip x:Name="ScrollViewerToolTip" FontSize="13" HorizontalOffset="20">
+                    <TextBlock x:Uid="ReadingArchive" Text="" TextWrapping="WrapWholeWords" />
+                </ToolTip>
+            </ToolTipService.ToolTip>
         </ScrollViewer>
         <StackPanel Grid.Row="2" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,16,0">
             <Button x:Name="ExtractWholeArchiveButton" Tapped="ExtractWholeArchiveButton_Tap" IsEnabled="False" Width="125" MinHeight="44" Height="50" 

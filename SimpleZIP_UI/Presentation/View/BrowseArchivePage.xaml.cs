@@ -40,6 +40,7 @@ namespace SimpleZIP_UI.Presentation.View
             _control = new BrowseArchivePageControl(this);
             _selectedModels = new HashSet<BrowseArchivePageModel>();
             _nodeStack = new Stack<Node>();
+            ScrollViewerToolTip.IsOpen = true;
             ArchivePageModels = new ObservableCollection<BrowseArchivePageModel>();
         }
 
@@ -133,6 +134,7 @@ namespace SimpleZIP_UI.Presentation.View
             if (archive == null) throw new NullReferenceException("Cannot handle null parameter.");
             UpdateListContent(await _control.ReadArchive(archive));
             ExtractWholeArchiveButton.IsEnabled = _nodeStack.Any();
+            ScrollViewerToolTip.IsOpen = false;
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)

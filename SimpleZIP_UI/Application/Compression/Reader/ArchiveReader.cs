@@ -47,28 +47,32 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         /// <summary>
         /// Opens the specified archive file asynchronously.
         /// </summary>
-        /// <param name="archive">The archive to be read.</param>
-        /// <param name="leaveOpen">True to leave the stream open. Defaults to true.</param>
+        /// <param name="archive">The archive to be opened.</param>
+        /// <param name="options">Options for the <see cref="IReader"/>.</param>
         /// <returns>The stream used to read the archive.</returns>
-        public async Task<Stream> OpenArchiveAsync(StorageFile archive, bool leaveOpen = true)
+        private async Task<Stream> OpenArchiveAsync(IStorageFile archive, ReaderOptions options = null)
         {
-            if (Closed) throw new ObjectDisposedException(GetType().FullName);
+            options = options ?? new ReaderOptions
+            {
+                LeaveStreamOpen = false
+            };
 
             var stream = await archive.OpenStreamForReadAsync();
-            Reader = ReaderFactory.Open(stream, new ReaderOptions
-            {
-                LeaveStreamOpen = leaveOpen
-            });
+            Reader = ReaderFactory.Open(stream, options);
             return stream;
         }
 
         /// <summary>
         /// Reads the entire archive and builds up a tree representing its hierarchy.
         /// </summary>
-        /// <returns>The root node of the tree.</returns>
-        public Node Read()
+        /// <param name="archive">The archive to be read.</param>
+        /// <returns>The root node of the tree, which represents the root directory.</returns>
+        /// <exception cref="IOException">Thrown when an error while reading the archive occurred.</exception>
+        public async Task<Node> Read(StorageFile archive)
         {
             if (Closed) throw new ObjectDisposedException(GetType().FullName);
+
+            await OpenArchiveAsync(archive);
 
             var rootNode = new Node(RootNodeName);
             var keyBuilder = new StringBuilder();

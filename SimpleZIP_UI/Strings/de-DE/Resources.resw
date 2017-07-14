@@ -309,4 +309,8 @@
     <value>Ja</value>
     <comment>Positive answer.</comment>
   </data>
+  <data name="ReadingArchive.Text" xml:space="preserve">
+    <value>Lese Archiv. . .</value>
+    <comment>Indicates that an archive is being read.</comment>
+  </data>
 </root>

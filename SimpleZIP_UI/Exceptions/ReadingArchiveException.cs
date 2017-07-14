@@ -1,8 +1,9 @@
 ﻿using System;
+using System.IO;
 
 namespace SimpleZIP_UI.Exceptions
 {
-    internal class ReadingArchiveException : Exception
+    internal class ReadingArchiveException : IOException
     {
         public ReadingArchiveException()
         {

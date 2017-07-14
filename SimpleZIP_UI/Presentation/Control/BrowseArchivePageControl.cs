@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Compression.Reader;
 using SimpleZIP_UI.Application.Util;
-using SimpleZIP_UI.Exceptions;
 using SimpleZIP_UI.Presentation.Factory;
 using SimpleZIP_UI.Presentation.View;
 using SimpleZIP_UI.Presentation.View.Model;
@@ -40,13 +40,12 @@ namespace SimpleZIP_UI.Presentation.Control
             _archiveFile = archive;
             using (var reader = new ArchiveReader())
             {
-                await reader.OpenArchiveAsync(archive, false);
                 Node rootNode = null;
                 try
                 {
-                    rootNode = reader.Read();
+                    rootNode = await reader.Read(archive);
                 }
-                catch (ReadingArchiveException)
+                catch (IOException)
                 {
                     var dialog = DialogFactory.CreateErrorDialog(
                         I18N.Resources.GetString("ErrorReadingArchive/Text"));

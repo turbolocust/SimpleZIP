@@ -82,8 +82,8 @@ namespace SimpleZIP_UI.Presentation.Control
         /// </summary>
         /// <param name="title">The title of the toast notification.</param>
         /// <param name="content">The content of the toast notification.</param>
-        /// <param name="seconds">Timer in seconds after which toast will disappear. Defaults to <code>4</code>.</param>
-        internal void ShowToastNotification(string title, string content, uint seconds = 4)
+        /// <param name="seconds">Timer in seconds after which toast will disappear. Defaults to <code>8</code>.</param>
+        internal void ShowToastNotification(string title, string content, uint seconds = 8)
         {
             var notifier = ToastNotificationManager.CreateToastNotifier();
             var toastXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastText02);

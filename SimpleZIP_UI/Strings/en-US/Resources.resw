@@ -170,7 +170,7 @@
     <comment>Files that will be decompressed.</comment>
   </data>
   <data name="GetSourceCode.Text" xml:space="preserve">
-    <value>Get Source Code!</value>
+    <value>Get the Source Code!</value>
     <comment>User can receive the source code of this software.</comment>
   </data>
   <data name="hours.Text" xml:space="preserve">
@@ -308,5 +308,9 @@
   <data name="FileFormatNotSupported.Text" xml:space="preserve">
     <value>The selected file format is not supported.</value>
     <comment>Informs that the file format of the archive is not supported.</comment>
+  </data>
+  <data name="ReadingArchive.Text" xml:space="preserve">
+    <value>Reading archive. . .</value>
+    <comment>Indicates that an archive is being read.</comment>
   </data>
 </root>
