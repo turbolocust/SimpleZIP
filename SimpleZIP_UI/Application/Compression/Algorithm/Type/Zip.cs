@@ -1,4 +1,5 @@
 ﻿using SharpCompress.Common;
+using SharpCompress.Compressors.Deflate;
 using SharpCompress.Writers;
 using SharpCompress.Writers.Zip;
 
@@ -12,7 +13,10 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
 
         protected override WriterOptions GetWriterOptions()
         {
-            return new ZipWriterOptions(CompressionType.Deflate);
+            return new ZipWriterOptions(CompressionType.Deflate)
+            {
+                DeflateCompressionLevel = CompressionLevel.BestSpeed
+            };
         }
     }
 }
