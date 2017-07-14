@@ -11,6 +11,9 @@ using SimpleZIP_UI.Application.Util;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm
 {
+    /// <summary>
+    /// Offers archiving operations using SharpCompress' Reader and Writer API.
+    /// </summary>
     public abstract class ArchivingAlgorithm : IArchivingAlgorithm
     {
         /// <summary>
@@ -19,14 +22,12 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         protected const int DefaultBufferSize = 8192;
 
         /// <summary>
-        /// The token which can be used to interrupt the operation.
-        /// </summary>
-        protected CancellationToken Token;
-
-        /// <summary>
         /// The concrete algorithm to be used.
         /// </summary>
         private readonly ArchiveType _type;
+
+        /// <inheritdoc cref="IArchivingAlgorithm.Token"/>
+        public CancellationToken Token { get; set; }
 
         protected ArchivingAlgorithm(ArchiveType type)
         {
@@ -45,7 +46,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
 
             using (var reader = ReaderFactory.Open(await archive.OpenStreamForReadAsync(), options))
             {
-                while (!IsInterrupted() && reader.MoveToNextEntry())
+                while (!Token.IsCancellationRequested && reader.MoveToNextEntry())
                 {
                     if (!reader.Entry.IsDirectory)
                     {
@@ -58,7 +59,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
 
         public async Task<bool> Extract(StorageFile archive, StorageFolder location, IReadOnlyList<FileEntry> entries, ReaderOptions options = null)
         {
-            if (archive == null | entries == null | location == null) return false;
+            if (archive == null | entries.IsNullOrEmpty() | location == null) return false;
 
             options = options ?? new ReaderOptions
             {
@@ -67,7 +68,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
 
             using (var reader = ReaderFactory.Open(await archive.OpenStreamForReadAsync(), options))
             {
-                while (!IsInterrupted() && reader.MoveToNextEntry())
+                while (!Token.IsCancellationRequested && reader.MoveToNextEntry())
                 {
                     foreach (var entry in entries)
                     {
@@ -93,7 +94,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                 {
                     var bytes = new byte[DefaultBufferSize];
                     int readBytes;
-                    while (!IsInterrupted() && (readBytes = entryStream.Read(bytes, 0, bytes.Length)) > 0)
+                    while ((readBytes = entryStream.Read(bytes, 0, bytes.Length)) > 0)
                     {
                         await outputStream.WriteAsync(bytes, 0, readBytes, Token);
                     }
@@ -105,7 +106,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         public async Task<bool> Compress(IReadOnlyList<StorageFile> files, StorageFile archive,
             StorageFolder location, WriterOptions options = null)
         {
-            if (files == null | archive == null | location == null) return false;
+            if (files.IsNullOrEmpty() | archive == null | location == null) return false;
 
             options = options ?? GetWriterOptions(); // get options if null
             options.LeaveStreamOpen = false;
@@ -114,7 +115,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             {
                 foreach (var file in files)
                 {
-                    if (IsInterrupted()) break;
+                    if (Token.IsCancellationRequested) break;
 
                     using (var inputStream = await file.OpenStreamForReadAsync())
                     {
@@ -123,20 +124,6 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                 }
             }
             return true;
-        }
-
-        public void SetCancellationToken(CancellationToken token)
-        {
-            Token = token;
-        }
-
-        /// <summary>
-        /// Checks if this operation should be canceled.
-        /// </summary>
-        /// <returns>True if cancellation request has been made, false otherwise.</returns>
-        protected bool IsInterrupted()
-        {
-            return Token.IsCancellationRequested;
         }
 
         /// <summary>

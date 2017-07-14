@@ -49,7 +49,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
 
                 try
                 {
-                    algorithm.SetCancellationToken(token);
+                    algorithm.Token = token;
                     isSuccess = entries == null
                         ? await algorithm.Extract(archiveFile, location)
                         : await algorithm.Extract(archiveFile, location, entries);

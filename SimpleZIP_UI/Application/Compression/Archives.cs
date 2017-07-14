@@ -12,7 +12,7 @@ namespace SimpleZIP_UI.Application.Compression
         /// </summary>
         public enum ArchiveType
         {
-            Zip, GZip, SevenZip, Tar, TarGz, TarBz2, TarLz
+            Zip, GZip, BZip2, SevenZip, Tar, TarGz, TarBz2, TarLz
         }
 
         /// <summary>
@@ -35,6 +35,8 @@ namespace SimpleZIP_UI.Application.Compression
                 {".gzip", ArchiveType.GZip},
                 {".gz", ArchiveType.GZip},
                 {".tgz", ArchiveType.TarGz},
+                {".tgzip", ArchiveType.TarGz},
+                {".bz2", ArchiveType.BZip2},
                 {".tbz2", ArchiveType.TarBz2},
                 {".tbzip2", ArchiveType.TarBz2 },
                 {".tlz", ArchiveType.TarLz},
@@ -47,8 +49,7 @@ namespace SimpleZIP_UI.Application.Compression
             {
                 { ".tar.gz", ArchiveType.TarGz },
                 { ".tar.bz2", ArchiveType.TarBz2 },
-                { ".tar.lz", ArchiveType.TarLz },
-                { ".tar.lzma", ArchiveType.TarLz }
+                { ".tar.lz", ArchiveType.TarLz }
             };
         }
 
@@ -68,6 +69,9 @@ namespace SimpleZIP_UI.Application.Compression
                     break;
                 case ArchiveType.GZip:
                     algorithm = new GZip();
+                    break;
+                case ArchiveType.BZip2:
+                    algorithm = new BZip2();
                     break;
                 case ArchiveType.SevenZip:
                     algorithm = new SevenZip();

@@ -149,7 +149,7 @@ namespace SimpleZIP_UI.Presentation.View
                     var stringBuilder = new StringBuilder();
                     foreach (var entry in item.Entries)
                     {
-                        stringBuilder.Append("->\t").Append(entry.Name);
+                        stringBuilder.Append("-> ").Append(entry.Name);
                         ItemsListBox.Items.Add(new TextBlock
                         {
                             Text = stringBuilder.ToString(),

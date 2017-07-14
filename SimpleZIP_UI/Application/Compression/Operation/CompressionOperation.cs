@@ -35,7 +35,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                         var archive = await location.CreateFileAsync(archiveName,
                             CreationCollisionOption.GenerateUniqueName);
 
-                        algorithm.SetCancellationToken(token);
+                        algorithm.Token = token;
                         isSuccess = await algorithm.Compress(files, archive, location);
 
                         if (token.IsCancellationRequested)

@@ -35,8 +35,9 @@ namespace SimpleZIP_UI.Presentation.Control
 
             try
             {
-                var result = key.Equals(Archives.ArchiveType.GZip) // requires special treatment
-                    ? await CompressGZip(selectedFiles, operationInfo)
+                var result = key.Equals(Archives.ArchiveType.GZip)
+                            || key.Equals(Archives.ArchiveType.BZip2)
+                    ? await CompressSeparately(selectedFiles, operationInfo)
                     : await Operation.Perform(operationInfo);
                 resultMessage.Append(result.Message);
                 statusCode = result.StatusCode;
@@ -63,13 +64,12 @@ namespace SimpleZIP_UI.Presentation.Control
         }
 
         /// <summary>
-        /// Compresses each of the specified files as GZip since GZip 
-        /// only allows the compression of a single file.
+        /// Compresses each of the specified files separately.
         /// </summary>
         /// <param name="files">The files to be compressed.</param>
         /// <param name="operationInfo">The amount of operations to be performed.</param>
         /// <returns>A result object consisting of further details.</returns>
-        private async Task<Result> CompressGZip(IReadOnlyCollection<StorageFile> files, CompressionInfo operationInfo)
+        private async Task<Result> CompressSeparately(IReadOnlyCollection<StorageFile> files, CompressionInfo operationInfo)
         {
             var subMessage = new StringBuilder();
             var successCount = 0;

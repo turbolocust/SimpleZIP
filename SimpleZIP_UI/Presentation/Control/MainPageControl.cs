@@ -50,7 +50,7 @@ namespace SimpleZIP_UI.Presentation.Control
         private static IReadOnlyList<ExtractableItem> ConvertFiles(IReadOnlyCollection<StorageFile> files)
         {
             var items = new List<ExtractableItem>(files.Count);
-            items.AddRange(files.Select(file => new ExtractableItem(file.DisplayName, file)));
+            items.AddRange(files.Select(file => new ExtractableItem(file.Name, file)));
             return items;
         }
 

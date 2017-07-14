@@ -16,6 +16,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
     public interface IArchivingAlgorithm
     {
         /// <summary>
+        /// The token which can be used to interrupt the operation.
+        /// </summary>
+        CancellationToken Token { get; set; }
+
+        /// <summary>
         /// Extracts an archive to the specified location.
         /// </summary>
         /// <param name="archive">The archive to be extracted.</param>
@@ -51,11 +56,5 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not allowed.</exception>
         /// <exception cref="NotSupportedException">Thrown when archive type does not have a writer.</exception>
         Task<bool> Compress(IReadOnlyList<StorageFile> files, StorageFile archive, StorageFolder location, WriterOptions options = null);
-
-        /// <summary>
-        /// Makes this operation interruptable by setting a cancellation token.
-        /// </summary>
-        /// <param name="token">The token that is used to interrupt the operation.</param>
-        void SetCancellationToken(CancellationToken token);
     }
 }
