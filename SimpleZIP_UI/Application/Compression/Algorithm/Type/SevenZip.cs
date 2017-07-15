@@ -14,7 +14,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
         {
         }
 
-        public new Task<bool> Extract(StorageFile archive, StorageFolder location, ReaderOptions options = null)
+        public new Task<bool> Decompress(StorageFile archive, StorageFolder location, ReaderOptions options = null)
         {
             throw new NotImplementedException();
         }

@@ -24,11 +24,12 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         /// file is not supported or unknown.</exception>
         /// <exception cref="UnauthorizedAccessException">If extraction at the archive's 
         /// location is not allowed.</exception>
-        private async Task<Result> ExtractFromArchive(StorageFile archiveFile, StorageFolder location, IReadOnlyList<FileEntry> entries = null)
+        private async Task<Result> ExtractFromArchive(StorageFile archiveFile, StorageFolder location,
+            IReadOnlyList<FileEntry> entries = null)
         {
             var fileType = FileUtils.GetFileNameExtension(archiveFile.Name);
             var token = TokenSource.Token;
-            IArchivingAlgorithm algorithm;
+            ICompressionAlgorithm algorithm;
 
             // try to get enum type by file extension, which is the key
             if (Archives.ArchiveFileTypes.TryGetValue(fileType, out Archives.ArchiveType value)
@@ -51,8 +52,8 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                 {
                     algorithm.Token = token;
                     isSuccess = entries == null
-                        ? await algorithm.Extract(archiveFile, location)
-                        : await algorithm.Extract(archiveFile, location, entries);
+                        ? await algorithm.Decompress(archiveFile, location)
+                        : await algorithm.Decompress(archiveFile, location, entries);
                 }
                 catch (IOException ex)
                 {

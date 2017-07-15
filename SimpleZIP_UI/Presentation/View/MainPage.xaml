@@ -16,7 +16,7 @@
         <SplitView x:Name="MenuSplitView" DisplayMode="CompactOverlay" IsPaneOpen="False" Grid.Row="1"
                    CompactPaneLength="0" VerticalContentAlignment="Stretch" VerticalAlignment="Stretch" OpenPaneLength="320">
             <SplitView.Pane>
-                <StackPanel Background="Transparent" VerticalAlignment="Top">
+                <StackPanel Background="Transparent" VerticalAlignment="Top" RequestedTheme="Dark">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>

@@ -11,9 +11,9 @@ using SimpleZIP_UI.Application.Compression.Reader;
 namespace SimpleZIP_UI.Application.Compression.Algorithm
 {
     /// <summary>
-    /// Any implementing class offers methods for archiving operations, like compressing or decompressing files.
+    /// Offers methods for compression and decompression of files/archives.
     /// </summary>
-    public interface IArchivingAlgorithm
+    public interface ICompressionAlgorithm
     {
         /// <summary>
         /// The token which can be used to interrupt the operation.
@@ -21,7 +21,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         CancellationToken Token { get; set; }
 
         /// <summary>
-        /// Extracts an archive to the specified location.
+        /// Decompresses and extracts an archive to the specified location.
         /// </summary>
         /// <param name="archive">The archive to be extracted.</param>
         /// <param name="location">The location where to extract the archive to.</param>
@@ -29,19 +29,19 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <returns>True on success, false on fail.</returns>
         /// <exception cref="IOException">Thrown on any error when reading from or writing to streams.</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not permitted.</exception>
-        Task<bool> Extract(StorageFile archive, StorageFolder location, ReaderOptions options = null);
+        Task<bool> Decompress(StorageFile archive, StorageFolder location, ReaderOptions options = null);
 
         /// <summary>
-        /// Extracts entries from the specified archive to the specified location.
+        /// Decompresses and extracts entries from the specified archive to the specified location.
         /// </summary>
-        /// <param name="archive">The archive which contains the entry.</param>
+        /// <param name="archive">The archive which contains the entries.</param>
         /// <param name="location">The location where to extract the entries to.</param>
         /// <param name="entries">Entries of the archive to be extracted.</param>
         /// <param name="options">Options for the reader. May be omitted.</param>
         /// <exception cref="IOException">Thrown on any error when reading from or writing to streams.</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not permitted.</exception>
         /// <returns>True on success, false on fail.</returns>
-        Task<bool> Extract(StorageFile archive, StorageFolder location, IReadOnlyList<FileEntry> entries, ReaderOptions options = null);
+        Task<bool> Decompress(StorageFile archive, StorageFolder location, IReadOnlyList<FileEntry> entries, ReaderOptions options = null);
 
         /// <summary>
         /// Compresses files to the specified location. If the writer options are omitted, the default

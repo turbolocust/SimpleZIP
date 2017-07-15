@@ -1,4 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- ReSharper disable DuplicateResource -->
+<!-- ReSharper disable MarkupTextTypo -->
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -170,8 +172,8 @@
     <comment>Files that will be decompressed.</comment>
   </data>
   <data name="GetSourceCode.Text" xml:space="preserve">
-    <value>Get the Source Code!</value>
-    <comment>User can receive the source code of this software.</comment>
+    <value>Under the Hood</value>
+    <comment>User can get the source code of this software.</comment>
   </data>
   <data name="hours.Text" xml:space="preserve">
     <value>hours</value>

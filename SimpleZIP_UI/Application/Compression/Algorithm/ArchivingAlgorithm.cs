@@ -14,7 +14,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
     /// <summary>
     /// Offers archiving operations using SharpCompress' Reader and Writer API.
     /// </summary>
-    public abstract class ArchivingAlgorithm : IArchivingAlgorithm
+    public abstract class ArchivingAlgorithm : ICompressionAlgorithm
     {
         /// <summary>
         /// Default buffer size for streams.
@@ -26,7 +26,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// </summary>
         private readonly ArchiveType _type;
 
-        /// <inheritdoc cref="IArchivingAlgorithm.Token"/>
+        /// <inheritdoc cref="ICompressionAlgorithm.Token"/>
         public CancellationToken Token { get; set; }
 
         protected ArchivingAlgorithm(ArchiveType type)
@@ -35,7 +35,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             Token = CancellationToken.None;
         }
 
-        public async Task<bool> Extract(StorageFile archive, StorageFolder location, ReaderOptions options = null)
+        public async Task<bool> Decompress(StorageFile archive, StorageFolder location,
+            ReaderOptions options = null)
         {
             if (archive == null | location == null) return false;
 
@@ -57,7 +58,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             return true;
         }
 
-        public async Task<bool> Extract(StorageFile archive, StorageFolder location, IReadOnlyList<FileEntry> entries, ReaderOptions options = null)
+        public async Task<bool> Decompress(StorageFile archive, StorageFolder location,
+            IReadOnlyList<FileEntry> entries, ReaderOptions options = null)
         {
             if (archive == null | entries.IsNullOrEmpty() | location == null) return false;
 

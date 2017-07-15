@@ -25,9 +25,9 @@ namespace SimpleZIP_UI.Presentation.View
         private readonly ISet<BrowseArchivePageModel> _selectedModels;
 
         /// <summary>
-        /// Used as a history when navigating back and to determine currently active node.
+        /// Used as a history when navigating back and to determine the currently active node.
         /// </summary>
-        private readonly Stack<Node> _nodeStack;
+        private readonly Stack<Node> _nodeStack = new Stack<Node>();
 
         /// <summary>
         /// Models bound to the list box in view.
@@ -39,9 +39,9 @@ namespace SimpleZIP_UI.Presentation.View
             InitializeComponent();
             _control = new BrowseArchivePageControl(this);
             _selectedModels = new HashSet<BrowseArchivePageModel>();
-            _nodeStack = new Stack<Node>();
-            ScrollViewerToolTip.IsOpen = true;
             ArchivePageModels = new ObservableCollection<BrowseArchivePageModel>();
+            ScrollViewerToolTip.IsOpen = true;
+            ScrollViewerToolTip.IsEnabled = true;
         }
 
         /// <summary>
@@ -135,6 +135,7 @@ namespace SimpleZIP_UI.Presentation.View
             UpdateListContent(await _control.ReadArchive(archive));
             ExtractWholeArchiveButton.IsEnabled = _nodeStack.Any();
             ScrollViewerToolTip.IsOpen = false;
+            ScrollViewerToolTip.IsEnabled = false;
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)

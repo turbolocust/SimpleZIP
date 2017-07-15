@@ -39,7 +39,7 @@ namespace SimpleZIP_UI.Presentation.View
         {
             InitializeComponent();
 
-            // populate combo box items
+            // ReSharper disable once PossibleNullReferenceException
             ArchiveTypeComboBox.Items.Add(CreateItemForComboBox("ZIP (.zip)", ".zip"));
             ArchiveTypeComboBox.Items.Add(CreateItemForComboBox("GZIP (.gzip)", ".gzip"));
             ArchiveTypeComboBox.Items.Add(CreateItemForComboBox("TAR (.tar)", ".tar"));

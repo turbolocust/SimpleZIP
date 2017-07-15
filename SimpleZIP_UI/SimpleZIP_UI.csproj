@@ -102,6 +102,7 @@
     <Compile Include="Application\Compression\Algorithm\ArchivingAlgorithm.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\SevenZip.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\Tar.cs" />
+    <Compile Include="Application\Compression\Model\CompressorOptions.cs" />
     <Compile Include="Application\Compression\Model\DecompressionInfo.cs" />
     <Compile Include="Application\Compression\Model\OperationInfo.cs" />
     <Compile Include="Application\Compression\Operation\CompressionOperation.cs" />
@@ -126,7 +127,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Application\Compression\Algorithm\Type\GZip.cs" />
-    <Compile Include="Application\Compression\Algorithm\IArchivingAlgorithm.cs" />
+    <Compile Include="Application\Compression\Algorithm\ICompressionAlgorithm.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\TarBzip2.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\Zip.cs" />
     <Compile Include="Application\Compression\Operation\ArchivingOperation.cs" />

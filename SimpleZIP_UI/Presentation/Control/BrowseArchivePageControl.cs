@@ -19,7 +19,13 @@ namespace SimpleZIP_UI.Presentation.Control
         /// The associated archive. Will hold a reference to a storage file 
         /// once the <see cref="ReadArchive"/> method has been invoked.
         /// </summary>
-        private StorageFile _archiveFile;
+        private static StorageFile _archiveFile;
+
+        /// <summary>
+        /// Static reference to the root node. Works like a cache and 
+        /// allows faster resumption when navigating back to his page.
+        /// </summary>
+        private static Node _rootNode;
 
         /// <summary>
         /// True if navigation is about to be executed, false otherwise.
@@ -37,6 +43,8 @@ namespace SimpleZIP_UI.Presentation.Control
         /// <returns>The root node of the archive.</returns>
         internal async Task<Node> ReadArchive(StorageFile archive)
         {
+            if (_archiveFile != null && _archiveFile.IsEqual(archive)) return _rootNode;
+
             _archiveFile = archive;
             using (var reader = new ArchiveReader())
             {
@@ -51,7 +59,7 @@ namespace SimpleZIP_UI.Presentation.Control
                         I18N.Resources.GetString("ErrorReadingArchive/Text"));
                     dialog.ShowAsync().AsTask().Forget();
                 }
-                return rootNode;
+                return _rootNode = rootNode;
             }
         }
 

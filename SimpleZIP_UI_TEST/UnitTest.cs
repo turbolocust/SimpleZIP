@@ -62,7 +62,7 @@ namespace SimpleZIP_UI_TEST
             await PerformArchiveOperations(new TarLzip(), ".tlz", options);
         }
 
-        private async Task<bool> PerformArchiveOperations(IArchivingAlgorithm compressionAlgorithm, string fileType, WriterOptions options)
+        private async Task<bool> PerformArchiveOperations(ICompressionAlgorithm compressionAlgorithm, string fileType, WriterOptions options)
         {
             return await Task.Run(async () =>
             {
@@ -85,7 +85,7 @@ namespace SimpleZIP_UI_TEST
             });
         }
 
-        private async Task<bool> ArchiveExtraction(IArchivingAlgorithm compressionAlgorithm, string fileType)
+        private async Task<bool> ArchiveExtraction(ICompressionAlgorithm compressionAlgorithm, string fileType)
         {
             var archive = await _workingDir.GetFileAsync(ArchiveName + fileType);
             Assert.IsNotNull(archive);
@@ -94,7 +94,7 @@ namespace SimpleZIP_UI_TEST
             Assert.IsNotNull(outputFolder);
 
             // extract archive
-            Assert.IsTrue(await compressionAlgorithm.Extract(archive, outputFolder));
+            Assert.IsTrue(await compressionAlgorithm.Decompress(archive, outputFolder));
 
             var files = await outputFolder.GetFilesAsync();
             Assert.IsNotNull(files);

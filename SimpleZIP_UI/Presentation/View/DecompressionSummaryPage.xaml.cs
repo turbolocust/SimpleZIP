@@ -129,6 +129,7 @@ namespace SimpleZIP_UI.Presentation.View
                 var files = fileArgs?.Files;
                 if (!files.IsNullOrEmpty())
                 {
+                    // ReSharper disable once PossibleNullReferenceException
                     var itemList = new List<ExtractableItem>(files.Count);
                     itemList.AddRange(files.Select(file
                         => new ExtractableItem(file.Name, file as StorageFile)));
@@ -143,6 +144,7 @@ namespace SimpleZIP_UI.Presentation.View
             // populate list
             foreach (var item in _selectedItems)
             {
+                // ReSharper disable once PossibleNullReferenceException
                 ItemsListBox.Items.Add(new TextBlock { Text = item.DisplayName });
                 if (!item.Entries.IsNullOrEmpty()) // add entries with indent as well
                 {
