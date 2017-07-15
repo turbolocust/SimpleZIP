@@ -17,11 +17,6 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
     /// </summary>
     public abstract class CompressorAlgorithm : ICompressionAlgorithm
     {
-        /// <summary>
-        /// Default buffer size for streams.
-        /// </summary>
-        protected const int DefaultBufferSize = 4096;
-
         /// <inheritdoc cref="ICompressionAlgorithm.Token"/>
         public CancellationToken Token { get; set; }
 
@@ -31,18 +26,20 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             if (archive == null | location == null) return false;
 
             var compressorOptions = new CompressorOptions(false);
+            var fileSize = await FileUtils.GetFileSizeAsync(archive);
 
             using (var stream = await GetCompressorStream(archive, compressorOptions))
             {
-                // remove extension from output file name
-                var outputFileName = archive.Name.Substring(0, archive.Name.Length - archive.FileType.Length);
+                var outputFileName = archive.Name.Substring(0,
+                    archive.Name.Length - archive.FileType.Length);
 
-                var file = await location.CreateFileAsync(outputFileName, CreationCollisionOption.GenerateUniqueName);
+                var file = await location.CreateFileAsync(outputFileName,
+                    CreationCollisionOption.GenerateUniqueName);
                 if (file == null) return false; // file was not created
 
                 using (var outputStream = await file.OpenStreamForWriteAsync())
                 {
-                    var bytes = new byte[DefaultBufferSize];
+                    var bytes = new byte[fileSize];
                     int readBytes;
 
                     while ((readBytes = stream.Read(bytes, 0, bytes.Length)) > 0)
@@ -66,13 +63,14 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             if (files.IsNullOrEmpty() | archive == null | location == null) return false;
 
             var file = files[0];
+            var fileSize = await FileUtils.GetFileSizeAsync(file);
             var compressorOptions = new CompressorOptions(true) { FileName = file.Name };
 
             using (var stream = await GetCompressorStream(archive, compressorOptions))
             {
                 using (var inputStream = await file.OpenStreamForReadAsync())
                 {
-                    var bytes = new byte[DefaultBufferSize];
+                    var bytes = new byte[fileSize];
                     int readBytes;
 
                     while ((readBytes = await inputStream.ReadAsync(bytes, 0, bytes.Length, Token)) > 0)
