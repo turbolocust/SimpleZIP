@@ -34,15 +34,17 @@
               <uap:FileType ContentType="application/x-zip-compressed">.zip</uap:FileType>
               <uap:FileType ContentType="application/x-gzip-compressed">.gzip</uap:FileType>
               <uap:FileType ContentType="application/x-gzip-compressed">.gz</uap:FileType>
-              <uap:FileType ContentType="application/x-bzip2-compressed">.tbzip2</uap:FileType>
-              <uap:FileType ContentType="application/x-compressed">.tgz</uap:FileType>
-              <uap:FileType ContentType="application/x-bzip2-compressed">.tbz2</uap:FileType>
+              <uap:FileType ContentType="application/x-gzip-compressed">.tgz</uap:FileType>
+              <uap:FileType ContentType="application/x-gzip-compressed">.tgzip</uap:FileType>
               <uap:FileType ContentType="application/x-tar">.tar</uap:FileType>
               <uap:FileType ContentType="application/x-lzip-compressed">.tlz</uap:FileType>
               <uap:FileType ContentType="application/x-lzip-compressed">.tlzip</uap:FileType>
-              <uap:FileType ContentType="application/x-lzip-compressed">.tlzma</uap:FileType>
+              <uap:FileType ContentType="application/x-lzip-compressed">.lz</uap:FileType>
+              <uap:FileType ContentType="application/x-lzip-compressed">.lzip</uap:FileType>
               <uap:FileType ContentType="application/x-bzip2-compressed">.bz2</uap:FileType>
-              <uap:FileType ContentType="application/x-compressed">.tgzip</uap:FileType>
+              <uap:FileType ContentType="application/x-bzip2-compressed">.tbz2</uap:FileType>
+              <uap:FileType ContentType="application/x-bzip2-compressed">.bzip2</uap:FileType>
+              <uap:FileType ContentType="application/x-bzip2-compressed">.tbzip2</uap:FileType>
             </uap:SupportedFileTypes>
           </uap:FileTypeAssociation>
         </uap:Extension>

@@ -96,11 +96,11 @@
   <ItemGroup>
     <Compile Include="Application\Compression\Algorithm\CompressorAlgorithm.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\BZip2.cs" />
+    <Compile Include="Application\Compression\Algorithm\Type\LZip.cs" />
     <Compile Include="Application\Compression\Archives.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\TarGzip.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\TarLzip.cs" />
     <Compile Include="Application\Compression\Algorithm\ArchivingAlgorithm.cs" />
-    <Compile Include="Application\Compression\Algorithm\Type\SevenZip.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\Tar.cs" />
     <Compile Include="Application\Compression\Model\CompressorOptions.cs" />
     <Compile Include="Application\Compression\Model\DecompressionInfo.cs" />

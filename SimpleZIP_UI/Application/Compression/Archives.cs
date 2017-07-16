@@ -12,7 +12,7 @@ namespace SimpleZIP_UI.Application.Compression
         /// </summary>
         public enum ArchiveType
         {
-            Zip, GZip, BZip2, SevenZip, Tar, TarGz, TarBz2, TarLz
+            Zip, GZip, BZip2, LZip, Tar, TarGz, TarBz2, TarLz
         }
 
         /// <summary>
@@ -37,19 +37,24 @@ namespace SimpleZIP_UI.Application.Compression
                 {".tgz", ArchiveType.TarGz},
                 {".tgzip", ArchiveType.TarGz},
                 {".bz2", ArchiveType.BZip2},
+                {".bzip2", ArchiveType.BZip2},
                 {".tbz2", ArchiveType.TarBz2},
                 {".tbzip2", ArchiveType.TarBz2 },
+                {".lz", ArchiveType.LZip },
+                {".lzip", ArchiveType.LZip },
                 {".tlz", ArchiveType.TarLz},
-                {".tlzip", ArchiveType.TarLz},
-                {".tlzma", ArchiveType.TarLz }
+                {".tlzip", ArchiveType.TarLz}
             };
 
             // populate dictionary that maps extended file types to archive types
             ArchiveExtendedFileTypes = new Dictionary<string, ArchiveType>
             {
                 { ".tar.gz", ArchiveType.TarGz },
+                { ".tar.gzip", ArchiveType.TarGz },
                 { ".tar.bz2", ArchiveType.TarBz2 },
-                { ".tar.lz", ArchiveType.TarLz }
+                { ".tar.bzip2", ArchiveType.TarBz2 },
+                { ".tar.lz", ArchiveType.TarLz },
+                { ".tar.lzip", ArchiveType.TarLz }
             };
         }
 
@@ -73,8 +78,8 @@ namespace SimpleZIP_UI.Application.Compression
                 case ArchiveType.BZip2:
                     algorithm = new BZip2();
                     break;
-                case ArchiveType.SevenZip:
-                    algorithm = new SevenZip();
+                case ArchiveType.LZip:
+                    algorithm = new LZip();
                     break;
                 case ArchiveType.Tar:
                     algorithm = new Tar();
