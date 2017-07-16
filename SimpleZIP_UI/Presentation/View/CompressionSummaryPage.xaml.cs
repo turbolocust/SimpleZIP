@@ -46,8 +46,8 @@ namespace SimpleZIP_UI.Presentation.View
             ArchiveTypeComboBox.Items.Add(CreateItemForComboBox("GZIP (.gzip)", ".gzip"));
             ArchiveTypeComboBox.Items.Add(CreateItemForComboBox("TAR (.tar)", ".tar"));
             ArchiveTypeComboBox.Items.Add(CreateItemForComboBox("TAR+GZIP (.tgz)", ".tgz"));
-            ArchiveTypeComboBox.Items.Add(CreateItemForComboBox("TAR+BZIP2 (.tbz2), " + slowText, ".tbz2"));
-            ArchiveTypeComboBox.Items.Add(CreateItemForComboBox("TAR+LZMA (.tlz), " + slowText, ".tlz"));
+            ArchiveTypeComboBox.Items.Add(CreateItemForComboBox("TAR+LZIP (.tlz) [" + slowText + "]", ".tlz"));
+            ArchiveTypeComboBox.Items.Add(CreateItemForComboBox("TAR+BZIP2 (.tbz2) [" + slowText + "]", ".tbz2"));
             ArchiveTypeComboBox.SelectedIndex = 0; // selected index on page launch
 
             _control = new CompressionSummaryPageControl(this);
