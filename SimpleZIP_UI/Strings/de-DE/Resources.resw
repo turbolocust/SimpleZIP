@@ -192,12 +192,12 @@
     <comment>Informs that a file could not be compressed.</comment>
   </data>
   <data name="FilesToCompress.Text" xml:space="preserve">
-    <value>Datei(en) zu komprimieren:</value>
-    <comment>The files that are to be compressed.</comment>
+    <value>Zu komprimierende Datei(en):</value>
+    <comment>Files that are to be compressed.</comment>
   </data>
   <data name="FilesToDecompress.Text" xml:space="preserve">
-    <value>Datei(en) zu extrahieren:</value>
-    <comment>Files that will be decompressed.</comment>
+    <value>Zu extrahierende Datei(en):</value>
+    <comment>Files that are to be decompressed.</comment>
   </data>
   <data name="GetSourceCode.Text" xml:space="preserve">
     <value>Unter der Haube</value>
@@ -314,5 +314,13 @@
   <data name="ReadingArchive.Text" xml:space="preserve">
     <value>Lese Archiv. . .</value>
     <comment>Indicates that an archive is being read.</comment>
+  </data>
+  <data name="Fast.Text" xml:space="preserve">
+    <value>Schnell</value>
+    <comment>Operating at high speed.</comment>
+  </data>
+  <data name="Slow.Text" xml:space="preserve">
+    <value>Langsam</value>
+    <comment>Operating at low speed.</comment>
   </data>
 </root>

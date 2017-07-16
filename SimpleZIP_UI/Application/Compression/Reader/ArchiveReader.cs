@@ -114,7 +114,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
                 }
 
                 var entrySize = (ulong)entry.Size;
-                var fileEntry = new FileEntry(pair.EntryName, entry.Crc, entrySize);
+                var fileEntry = new FileEntry(entry.Key, pair.EntryName, entrySize);
                 parentNode.Children.Add(fileEntry);
                 keyBuilder.Clear();
             }

@@ -70,7 +70,8 @@ namespace SimpleZIP_UI.Presentation.View
         private async void GetSourceButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             var dialog = DialogFactory.CreateConfirmationDialog(
-                "This will open the web browser.", "\nProceed?");
+                I18N.Resources.GetString("OpenWebBrowserMessage/Text"),
+                "\n" + I18N.Resources.GetString("Proceed/Text"));
 
             var result = await dialog.ShowAsync();
             if (result.Id.Equals(0)) // launch browser

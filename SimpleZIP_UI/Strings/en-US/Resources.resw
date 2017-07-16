@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- ReSharper disable DuplicateResource -->
-<!-- ReSharper disable MarkupTextTypo -->
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -164,12 +163,12 @@
     <comment>Informs that a file could not be compressed.</comment>
   </data>
   <data name="FilesToCompress.Text" xml:space="preserve">
-    <value>File(s) to compress:</value>
-    <comment>The files that are to be compressed.</comment>
+    <value>File(s) to be compressed:</value>
+    <comment>Files that are to be compressed.</comment>
   </data>
   <data name="FilesToDecompress.Text" xml:space="preserve">
-    <value>File(s) to decompress:</value>
-    <comment>Files that will be decompressed.</comment>
+    <value>File(s) to be decompressed:</value>
+    <comment>Files that are to be decompressed.</comment>
   </data>
   <data name="GetSourceCode.Text" xml:space="preserve">
     <value>Under the Hood</value>
@@ -314,5 +313,13 @@
   <data name="ReadingArchive.Text" xml:space="preserve">
     <value>Reading archive. . .</value>
     <comment>Indicates that an archive is being read.</comment>
+  </data>
+  <data name="Fast.Text" xml:space="preserve">
+    <value>Fast</value>
+    <comment>Operating at high speed.</comment>
+  </data>
+  <data name="Slow.Text" xml:space="preserve">
+    <value>Slow</value>
+    <comment>Operating at low speed.</comment>
   </data>
 </root>

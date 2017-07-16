@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -72,12 +73,9 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             {
                 while (!Token.IsCancellationRequested && reader.MoveToNextEntry())
                 {
-                    foreach (var entry in entries)
+                    if (entries.Any(entry => reader.Entry.Key.Equals(entry.Key)))
                     {
-                        if (reader.Entry.Crc.Equals(entry.Crc))
-                        {
-                            await WriteEntry(reader, location);
-                        }
+                        await WriteEntry(reader, location);
                     }
                 }
             }

@@ -52,15 +52,16 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                         await outputStream.WriteAsync(bytes, 0, readBytes, Token);
                     }
                 }
-                GZipOutputFileNameWorkaround(file, stream);
+                await GZipOutputFileNameWorkaround(file, stream);
             }
             return true;
         }
 
-        public Task<bool> Decompress(StorageFile archive, StorageFolder location,
+        public async Task<bool> Decompress(StorageFile archive, StorageFolder location,
             IReadOnlyList<FileEntry> entries, ReaderOptions options = null)
         {
-            throw new NotSupportedException();
+            // ignore entries as they are not supported
+            return await Decompress(archive, location, options);
         }
 
         public async Task<bool> Compress(IReadOnlyList<StorageFile> files, StorageFile archive,
@@ -103,12 +104,15 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// </summary>
         /// <param name="file">The file to be renamed.</param>
         /// <param name="stream">The possible <see cref="GZipStream"/> which holds the filename.</param>
-        private static async void GZipOutputFileNameWorkaround(IStorageItem file, Stream stream)
+        /// <returns>True if stream is <see cref="GZipStream"/> an file was successfully renamed.</returns>
+        private static async Task<bool> GZipOutputFileNameWorkaround(IStorageItem file, Stream stream)
         {
             if (stream is GZipStream gzipStream && !string.IsNullOrEmpty(gzipStream.FileName))
             {
                 await file.RenameAsync(gzipStream.FileName);
+                return true;
             }
+            return false;
         }
 
         /// <summary>

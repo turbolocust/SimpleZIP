@@ -6,6 +6,11 @@
     public class FileEntry : IArchiveEntry
     {
         /// <summary>
+        /// The key the entry.
+        /// </summary>
+        internal string Key { get; }
+
+        /// <summary>
         /// The key of the entry without the path.
         /// </summary>
         public string Name { get; }
@@ -20,15 +25,10 @@
         /// </summary>
         public ulong Size { get; }
 
-        /// <summary>
-        /// The checksum of the file entry.
-        /// </summary>
-        internal long Crc { get; }
-
-        internal FileEntry(string name, long crc, ulong size)
+        internal FileEntry(string key, string name, ulong size)
         {
+            Key = key;
             Name = name;
-            Crc = crc;
             Size = size;
         }
     }

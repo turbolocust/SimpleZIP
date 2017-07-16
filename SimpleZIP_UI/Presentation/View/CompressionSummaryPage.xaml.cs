@@ -39,13 +39,15 @@ namespace SimpleZIP_UI.Presentation.View
         {
             InitializeComponent();
 
+            // to indicate that some algorithms are not operating at high speed
+            var slowText = I18N.Resources.GetString("Slow/Text").ToLower();
             // ReSharper disable once PossibleNullReferenceException
             ArchiveTypeComboBox.Items.Add(CreateItemForComboBox("ZIP (.zip)", ".zip"));
             ArchiveTypeComboBox.Items.Add(CreateItemForComboBox("GZIP (.gzip)", ".gzip"));
             ArchiveTypeComboBox.Items.Add(CreateItemForComboBox("TAR (.tar)", ".tar"));
             ArchiveTypeComboBox.Items.Add(CreateItemForComboBox("TAR+GZIP (.tgz)", ".tgz"));
-            ArchiveTypeComboBox.Items.Add(CreateItemForComboBox("TAR+BZIP2 (.tbz2)", ".tbz2"));
-            ArchiveTypeComboBox.Items.Add(CreateItemForComboBox("TAR+LZMA (.tlz)", ".tlz"));
+            ArchiveTypeComboBox.Items.Add(CreateItemForComboBox("TAR+BZIP2 (.tbz2), " + slowText, ".tbz2"));
+            ArchiveTypeComboBox.Items.Add(CreateItemForComboBox("TAR+LZMA (.tlz), " + slowText, ".tlz"));
             ArchiveTypeComboBox.SelectedIndex = 0; // selected index on page launch
 
             _control = new CompressionSummaryPageControl(this);

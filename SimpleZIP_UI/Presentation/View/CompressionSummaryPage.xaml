@@ -38,12 +38,12 @@
             <ListBox x:Name="ItemsListBox"  Margin="8,0,8,0" SelectionMode="Single" CanDrag="False" HorizontalContentAlignment="Stretch" Background="Transparent" Height="Auto" Foreground="{ThemeResource ButtonForegroundThemeBrush}" />
         </ScrollViewer>
         <StackPanel Grid.Row="4" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,16,0">
-            <ProgressRing x:Name="ProgressRing" Width="40" Height="40" Margin="0, 0, 20, 0" IsActive="False" />
-            <Button x:Name="StartButton" Tapped="StartButton_Tap" IsEnabled="False" Width="125" MinHeight="44" Height="50" MaxHeight="60" Margin="0,0,16,0" 
+            <ProgressRing x:Name="ProgressRing" Width="40" Height="40" Margin="0, 0, 16, 0" IsActive="False" />
+            <Button x:Name="StartButton" Tapped="StartButton_Tap" IsEnabled="False" Width="120" MinHeight="44" Height="50" MaxHeight="60" Margin="0,0,16,0" 
                     Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                 <TextBlock x:Uid="Start" Text="" TextWrapping="Wrap" />
             </Button>
-            <Button Tapped="AbortButton_Tap" Width="125" MinHeight="44" Height="50" MaxHeight="60" Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="DarkRed" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+            <Button Tapped="AbortButton_Tap" Width="120" MinHeight="44" Height="50" MaxHeight="60" Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="DarkRed" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                 <TextBlock x:Uid="Abort" Text="" TextWrapping="Wrap" />
             </Button>
             <ToolTipService.ToolTip>
