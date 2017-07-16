@@ -18,6 +18,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
     /// </summary>
     public abstract class CompressorAlgorithm : ICompressionAlgorithm
     {
+        /// <summary>
+        /// Default buffer size for streams.
+        /// </summary>
+        protected const int DefaultBufferSize = 8192;
+
         /// <inheritdoc cref="ICompressionAlgorithm.Token"/>
         public CancellationToken Token { get; set; }
 
@@ -27,7 +32,6 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             if (archive == null | location == null) return false;
 
             var compressorOptions = new CompressorOptions(false);
-            var fileSize = await FileUtils.GetFileSizeAsync(archive);
 
             using (var stream = await GetCompressorStream(archive, compressorOptions))
             {
@@ -40,7 +44,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
 
                 using (var outputStream = await file.OpenStreamForWriteAsync())
                 {
-                    var bytes = new byte[fileSize];
+                    var bytes = new byte[DefaultBufferSize];
                     int readBytes;
 
                     while ((readBytes = stream.Read(bytes, 0, bytes.Length)) > 0)
@@ -65,14 +69,16 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             if (files.IsNullOrEmpty() | archive == null | location == null) return false;
 
             var file = files[0];
-            var fileSize = await FileUtils.GetFileSizeAsync(file);
-            var compressorOptions = new CompressorOptions(true) { FileName = file.Name };
+            var compressorOptions = new CompressorOptions(true)
+            {
+                FileName = file.Name
+            };
 
             using (var stream = await GetCompressorStream(archive, compressorOptions))
             {
                 using (var inputStream = await file.OpenStreamForReadAsync())
                 {
-                    var bytes = new byte[fileSize];
+                    var bytes = new byte[DefaultBufferSize];
                     int readBytes;
 
                     while ((readBytes = await inputStream.ReadAsync(bytes, 0, bytes.Length, Token)) > 0)
