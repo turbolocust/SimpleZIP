@@ -23,7 +23,7 @@ namespace SimpleZIP_UI.Presentation.Control
 
         /// <summary>
         /// Static reference to the root node. Works like a cache and 
-        /// allows faster resumption when navigating back to his page.
+        /// allows faster resumption when navigating back to this page.
         /// </summary>
         private static Node _rootNode;
 
@@ -69,6 +69,7 @@ namespace SimpleZIP_UI.Presentation.Control
         /// </summary>
         public void ExtractWholeArchiveButtonAction()
         {
+            IsNavigating = true;
             var item = new ExtractableItem(_archiveFile.Name, _archiveFile);
             ParentPage.Frame.Navigate(typeof(DecompressionSummaryPage), new[] { item });
         }
