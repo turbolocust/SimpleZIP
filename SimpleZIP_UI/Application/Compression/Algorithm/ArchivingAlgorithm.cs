@@ -119,7 +119,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
 
                     using (var inputStream = await file.OpenStreamForReadAsync())
                     {
-                        writer.Write(file.Name, inputStream);
+                        await writer.WriteAsync(file.Name, inputStream, Token);
                     }
                 }
             }

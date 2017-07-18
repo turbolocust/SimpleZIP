@@ -114,6 +114,7 @@
     <Compile Include="Application\Compression\Model\CompressionInfo.cs" />
     <Compile Include="Application\Compression\Model\ExtractableItem.cs" />
     <Compile Include="Application\Compression\Model\Result.cs" />
+    <Compile Include="Application\Util\WriterUtils.cs" />
     <Compile Include="Application\Util\CollectionUtils.cs" />
     <Compile Include="Application\Util\TaskUtils.cs" />
     <Compile Include="Exceptions\ReadingArchiveException.cs" />
@@ -224,6 +225,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Application\Compression\Writer\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
