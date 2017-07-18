@@ -26,7 +26,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <inheritdoc cref="ICompressionAlgorithm.Token"/>
         public CancellationToken Token { get; set; }
 
-        public async Task<bool> Decompress(StorageFile archive, StorageFolder location,
+        public virtual async Task<bool> Decompress(StorageFile archive, StorageFolder location,
             ReaderOptions options = null)
         {
             if (archive == null | location == null) return false;
@@ -64,7 +64,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             return await Decompress(archive, location, options);
         }
 
-        public async Task<bool> Compress(IReadOnlyList<StorageFile> files, StorageFile archive,
+        public virtual async Task<bool> Compress(IReadOnlyList<StorageFile> files, StorageFile archive,
             StorageFolder location, WriterOptions options = null)
         {
             if (files.IsNullOrEmpty() | archive == null | location == null) return false;
@@ -82,7 +82,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                     var bytes = new byte[DefaultBufferSize];
                     int readBytes;
 
-                    while ((readBytes = await inputStream.ReadAsync(bytes, 0, bytes.Length, Token)) > 0)
+                    while ((readBytes = inputStream.Read(bytes, 0, bytes.Length)) > 0)
                     {
                         await stream.WriteAsync(bytes, 0, readBytes, Token);
                     }

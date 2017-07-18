@@ -17,6 +17,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         /// <param name="location">Where to store the archive.</param>
         /// <param name="value">The archive type to be created.</param>
         /// <returns>An object that consists of result parameters.</returns>
+        /// <exception cref="OperationCanceledException">Thrown if operation has been canceled.</exception>
         private async Task<Result> CreateArchive(IReadOnlyList<StorageFile> files,
             string archiveName, StorageFolder location, Archives.ArchiveType value)
         {
@@ -30,11 +31,10 @@ namespace SimpleZIP_UI.Application.Compression.Operation
 
                 if (files.Count > 0)
                 {
+                    var archive = await location.CreateFileAsync(archiveName,
+                        CreationCollisionOption.GenerateUniqueName);
                     try
                     {
-                        var archive = await location.CreateFileAsync(archiveName,
-                            CreationCollisionOption.GenerateUniqueName);
-
                         algorithm.Token = token;
                         isSuccess = await algorithm.Compress(files, archive, location);
 
@@ -45,7 +45,18 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                     }
                     catch (Exception ex)
                     {
+                        if (ex is TaskCanceledException)
+                        {
+                            throw new OperationCanceledException();
+                        }
                         message = ex.Message;
+                    }
+                    finally
+                    {
+                        if (token.IsCancellationRequested)
+                        {
+                            FileUtils.Delete(archive);
+                        }
                     }
                 }
 

@@ -36,7 +36,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             Token = CancellationToken.None;
         }
 
-        public async Task<bool> Decompress(StorageFile archive, StorageFolder location,
+        public virtual async Task<bool> Decompress(StorageFile archive, StorageFolder location,
             ReaderOptions options = null)
         {
             if (archive == null | location == null) return false;
@@ -59,7 +59,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             return true;
         }
 
-        public async Task<bool> Decompress(StorageFile archive, StorageFolder location,
+        public virtual async Task<bool> Decompress(StorageFile archive, StorageFolder location,
             IReadOnlyList<FileEntry> entries, ReaderOptions options = null)
         {
             if (archive == null | entries.IsNullOrEmpty() | location == null) return false;
@@ -103,7 +103,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             return entry;
         }
 
-        public async Task<bool> Compress(IReadOnlyList<StorageFile> files, StorageFile archive,
+        public virtual async Task<bool> Compress(IReadOnlyList<StorageFile> files, StorageFile archive,
             StorageFolder location, WriterOptions options = null)
         {
             if (files.IsNullOrEmpty() | archive == null | location == null) return false;

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
 using SimpleZIP_UI.Application.Compression.Algorithm;
@@ -20,10 +19,11 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         /// <param name="location">The location where to extract the archive's content.</param>
         /// <param name="entries">Optional entries to be extracted from the archive.</param>
         /// <returns>An object that consists of result parameters.</returns>
-        /// <exception cref="InvalidArchiveTypeException">If the file type of the selected 
+        /// <exception cref="InvalidArchiveTypeException">Thrown if the file type of the selected 
         /// file is not supported or unknown.</exception>
-        /// <exception cref="UnauthorizedAccessException">If extraction at the archive's 
+        /// <exception cref="UnauthorizedAccessException">Thrown if extraction at the archive's 
         /// location is not allowed.</exception>
+        /// <exception cref="OperationCanceledException">Thrown if operation has been canceled.</exception>
         private async Task<Result> ExtractFromArchive(StorageFile archiveFile, StorageFolder location,
             IReadOnlyList<FileEntry> entries = null)
         {
@@ -55,8 +55,12 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                         ? await algorithm.Decompress(archiveFile, location)
                         : await algorithm.Decompress(archiveFile, location, entries);
                 }
-                catch (IOException ex)
+                catch (Exception ex)
                 {
+                    if (ex is TaskCanceledException)
+                    {
+                        throw new OperationCanceledException();
+                    }
                     message = ex.Message;
                 }
 

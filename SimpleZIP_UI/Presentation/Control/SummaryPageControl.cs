@@ -140,8 +140,8 @@ namespace SimpleZIP_UI.Presentation.Control
         }
 
         /// <summary>
-        /// Checks the total size of all specified sizes and displays a toast notification 
-        /// if a threshold has been passed (<see cref="FileSizeWarningThreshold"/>).
+        /// Checks the total size of the specified item and its entries and displays a toast 
+        /// notification if a threshold has been passed (<see cref="FileSizeWarningThreshold"/>).
         /// </summary>
         /// <param name="item">The item whose size is to be checked.</param>
         protected async void CheckFileSizes(ExtractableItem item)
