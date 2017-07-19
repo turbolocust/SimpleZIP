@@ -252,7 +252,7 @@
     <comment>Allows the user to open an archive.</comment>
   </data>
   <data name="OpenWebBrowserMessage.Text" xml:space="preserve">
-    <value>Dies öffnet den Web-Browser.</value>
+    <value>Dies wird dich auf die Homepage der App weiterleiten.</value>
     <comment>Informs the user that the web browser will open after confirmation.</comment>
   </data>
   <data name="OperationCancelled.Text" xml:space="preserve">
