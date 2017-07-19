@@ -50,6 +50,7 @@ namespace SimpleZIP_UI.Application.Util
         /// <param name="stream">The source stream.</param>
         /// <param name="token">The token to be aggregated with the task.</param>
         /// <returns>An asynchronous operation that can be awaited.</returns>
+        /// <exception cref="TaskCanceledException">Thrown if task got canceled.</exception>
         public static Task WriteAsync(this IWriter writer, string entryName,
             Stream stream, CancellationToken token)
         {
@@ -74,7 +75,10 @@ namespace SimpleZIP_UI.Application.Util
                 var awaiter = childTask.GetAwaiter();
                 while (!awaiter.IsCompleted)
                 {
-                    if (token.IsCancellationRequested) break;
+                    if (token.IsCancellationRequested)
+                    {
+                        throw new TaskCanceledException(nameof(childTask));
+                    }
                 }
             }, token);
 
