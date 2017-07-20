@@ -53,15 +53,13 @@ namespace SimpleZIP_UI.Application.Compression
                 {".gzip", ArchiveType.GZip},
                 {".gz", ArchiveType.GZip},
                 {".tgz", ArchiveType.TarGz},
-                {".tgzip", ArchiveType.TarGz},
                 {".bz2", ArchiveType.BZip2},
                 {".bzip2", ArchiveType.BZip2},
                 {".tbz2", ArchiveType.TarBz2},
-                {".tbzip2", ArchiveType.TarBz2 },
                 {".lz", ArchiveType.LZip },
                 {".lzip", ArchiveType.LZip },
-                {".tlz", ArchiveType.TarLz},
-                {".tlzip", ArchiveType.TarLz}
+                {".lzma", ArchiveType.LZip },
+                {".tlz", ArchiveType.TarLz}
             };
 
             // populate dictionary that maps extended file types to archive types
@@ -72,7 +70,8 @@ namespace SimpleZIP_UI.Application.Compression
                 { ".tar.bz2", ArchiveType.TarBz2 },
                 { ".tar.bzip2", ArchiveType.TarBz2 },
                 { ".tar.lz", ArchiveType.TarLz },
-                { ".tar.lzip", ArchiveType.TarLz }
+                { ".tar.lzip", ArchiveType.TarLz },
+                { ".tar.lzma", ArchiveType.TarLz }
             };
         }
 

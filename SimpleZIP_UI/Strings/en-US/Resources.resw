@@ -59,8 +59,6 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <!-- ReSharper disable DuplicateResource -->
-  <!-- ReSharper disable MarkupTextTypo -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -119,6 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <!-- ReSharper disable DuplicateResource -->
+  <!-- ReSharper disable MarkupTextTypo -->
   <data name="Abort.Text" xml:space="preserve">
     <value>Abort</value>
     <comment>Allows the interruption of an operation.</comment>
@@ -216,7 +216,7 @@
     <comment>Allows the user to open an archive.</comment>
   </data>
   <data name="OpenWebBrowserMessage.Text" xml:space="preserve">
-    <value>This will redirect you to the app's homepage.</value>
+    <value>This will redirect you to the homepage of this app.</value>
     <comment>Informs the user that the web browser will open after confirmation.</comment>
   </data>
   <data name="OperationCancelled.Text" xml:space="preserve">
@@ -323,8 +323,8 @@
     <value>Slow</value>
     <comment>Operating at low speed.</comment>
   </data>
-  <data name="very.Text" xml:space="preserve">
-    <value>very</value>
-    <comment>Emphasize that the following description applies without qualification.</comment>
+  <data name="Uncompressed.Text" xml:space="preserve">
+    <value>Uncompressed</value>
+    <comment>An archive that is not compressed.</comment>
   </data>
 </root>
