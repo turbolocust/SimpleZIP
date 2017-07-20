@@ -47,7 +47,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         public virtual async Task<bool> Decompress(StorageFile archive, StorageFolder location,
             ReaderOptions options = null)
         {
-            if (archive == null | location == null) return false;
+            if (archive == null || location == null) return false;
 
             var compressorOptions = new CompressorOptions(false);
 
@@ -85,7 +85,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         public virtual async Task<bool> Compress(IReadOnlyList<StorageFile> files, StorageFile archive,
             StorageFolder location, WriterOptions options = null)
         {
-            if (files.IsNullOrEmpty() | archive == null | location == null) return false;
+            if (files.IsNullOrEmpty() || archive == null || location == null) return false;
 
             var file = files[0];
             var compressorOptions = new CompressorOptions(true)
