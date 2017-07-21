@@ -245,3 +245,5 @@ ModelManifest.xml
 .fake/
 /SimpleZIP_UI/BusyIndicator.xaml.cs
 /SimpleZIP_UI/BusyIndicator.xaml
+/SimpleZIP_UI/Package.StoreAssociation.xml
+/SimpleZIP_UI/_pkginfo.txt

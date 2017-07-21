@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="4b951173-35e0-4254-995f-16d95b0dd1af" Publisher="CN=Matthias" Version="1.0.0.0" />
-  <mp:PhoneIdentity PhoneProductId="4b951173-35e0-4254-995f-16d95b0dd1af" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+  <Identity Name="13323AA47phU.SimpleZIP" Publisher="CN=F076DB47-B438-4B57-85AE-EAC4B9DEAE80" Version="1.1.0.0" />
+  <mp:PhoneIdentity PhoneProductId="bec28070-f77c-4607-a350-0689371dce8c" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>SimpleZIP</DisplayName>
-    <PublisherDisplayName>Matthias Fussenegger</PublisherDisplayName>
+    <PublisherDisplayName>AA47phU</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>
@@ -29,7 +29,6 @@
           <uap:FileTypeAssociation Name="szip">
             <uap:Logo>Assets\simplezip_asset.png</uap:Logo>
             <uap:InfoTip>Open archive to extract</uap:InfoTip>
-            <uap:EditFlags OpenIsSafe="true" />
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="application/x-zip-compressed">.zip</uap:FileType>
               <uap:FileType ContentType="application/x-gzip-compressed">.gzip</uap:FileType>
