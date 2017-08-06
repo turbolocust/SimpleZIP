@@ -10,11 +10,13 @@
     <Grid Background="Transparent" Padding="0,0,0,8">
         <Grid.RowDefinitions>
             <RowDefinition Height="0.6*" />
-            <RowDefinition Height="7.9*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="7.8*" />
             <RowDefinition Height="1.5*" />
         </Grid.RowDefinitions>
         <TextBlock x:Uid="ArchiveContent" Text="" Grid.Row="0" FontWeight="Bold" FontSize="16" CharacterSpacing="56" Margin="8,0,0,0" VerticalAlignment="Center" />
-        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" Margin="0,16,0,0" VerticalScrollBarVisibility="Auto">
+        <ProgressBar x:Name="ProgressBar" Grid.Row="1" HorizontalAlignment="Stretch" IsIndeterminate="True" IsEnabled="False" Visibility="Collapsed" />
+        <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" Margin="0,16,0,0" VerticalScrollBarVisibility="Auto">
             <ListBox ItemsSource="{Binding ArchivePageModels}" SelectionChanged="ItemsListBox_OnSelectionChanged" Margin="8,0,8,0" SelectionMode="Multiple" CanDrag="False" 
                      HorizontalContentAlignment="Stretch" Background="Transparent" Height="Auto" Foreground="{ThemeResource ButtonForegroundThemeBrush}">
                 <ListBox.ItemTemplate>
@@ -26,13 +28,8 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <ToolTipService.ToolTip>
-                <ToolTip x:Name="ScrollViewerToolTip" FontSize="13" HorizontalOffset="20">
-                    <TextBlock x:Uid="ReadingArchive" Text="" TextWrapping="WrapWholeWords" />
-                </ToolTip>
-            </ToolTipService.ToolTip>
         </ScrollViewer>
-        <StackPanel Grid.Row="2" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,16,0">
+        <StackPanel Grid.Row="3" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,16,0">
             <Button x:Name="ExtractWholeArchiveButton" Tapped="ExtractWholeArchiveButton_Tap" IsEnabled="False" MinHeight="44" Height="50" 
                     MaxHeight="60" Margin="0,0,16,0" Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                 <TextBlock x:Uid="ExtractAll" Text="" TextWrapping="Wrap" />

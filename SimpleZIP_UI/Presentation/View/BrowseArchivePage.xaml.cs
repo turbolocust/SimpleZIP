@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Windows.Storage;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
@@ -58,8 +59,8 @@ namespace SimpleZIP_UI.Presentation.View
             _control = new BrowseArchivePageControl(this);
             _selectedModels = new HashSet<BrowseArchivePageModel>();
             ArchivePageModels = new ObservableCollection<BrowseArchivePageModel>();
-            ScrollViewerToolTip.IsOpen = true;
-            ScrollViewerToolTip.IsEnabled = true;
+            ProgressBar.IsEnabled = true;
+            ProgressBar.Visibility = Visibility.Visible;
         }
 
         /// <summary>
@@ -152,14 +153,14 @@ namespace SimpleZIP_UI.Presentation.View
             if (archive == null) throw new NullReferenceException("Cannot handle null parameter.");
             UpdateListContent(await _control.ReadArchive(archive));
             ExtractWholeArchiveButton.IsEnabled = _nodeStack.Any();
-            ScrollViewerToolTip.IsOpen = false;
-            ScrollViewerToolTip.IsEnabled = false;
+            ProgressBar.IsEnabled = false;
+            ProgressBar.Visibility = Visibility.Collapsed;
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             // can only go back in history if stack holds at 
-            // least two elements, as first one is the root node
+            // least two elements (first node is root node)
             if (_nodeStack.Count > 1 && !_control.IsNavigating)
             {
                 e.Cancel = true;
