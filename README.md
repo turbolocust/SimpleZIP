@@ -21,6 +21,9 @@ Supported formats for decompression:
 
 <br />This app makes use of the <a href="https://github.com/adamhathcock/sharpcompress">SharpCompress</a> library and depends on its quality when it comes to compression and decompression. While this app also runs on the desktop, the UI is mainly optimized for phones.
 <br /><br />
+
+# Screenshots
+
 <img src="https://homepages.fhv.at/mfu7609/images/simplezip_main_page.PNG" alt="main page"/><br />
 <img src="https://homepages.fhv.at/mfu7609/images/simplezip_compression_page.PNG" alt="compression page"/><br />
 <img src="https://homepages.fhv.at/mfu7609/images/simplezip_decompression_page.PNG" alt="decompression page"/><br />
