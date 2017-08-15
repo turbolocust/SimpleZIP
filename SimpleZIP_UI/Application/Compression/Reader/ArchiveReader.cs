@@ -199,11 +199,11 @@ namespace SimpleZIP_UI.Application.Compression.Reader
 
         private struct EntryKeyPair
         {
-            internal string EntryName { get; set; }
+            internal string EntryName;
 
-            internal string ParentKey { get; set; }
+            internal string ParentKey;
 
-            internal int SeparatorPos { get; set; }
+            internal int SeparatorPos;
         }
     }
 }

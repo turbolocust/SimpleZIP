@@ -81,7 +81,7 @@ namespace SimpleZIP_UI.Application.Compression
         /// <param name="value">The enum value of the archive type.</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when archive type matched no algorithm.</exception>
         /// <returns>An instance of the compression algorithm that matches the specified value.</returns>
-        public static ICompressionAlgorithm DetermineAlgorithm(ArchiveType value)
+        internal static ICompressionAlgorithm DetermineAlgorithm(ArchiveType value)
         {
             ICompressionAlgorithm algorithm;
             switch (value)
