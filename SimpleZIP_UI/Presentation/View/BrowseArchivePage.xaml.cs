@@ -26,7 +26,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using SimpleZIP_UI.Application.Compression.Reader;
-using SimpleZIP_UI.Presentation.Control;
+using SimpleZIP_UI.Presentation.Controller;
 using SimpleZIP_UI.Presentation.View.Model;
 
 namespace SimpleZIP_UI.Presentation.View
@@ -36,7 +36,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// <summary>
         /// The aggregated control instance.
         /// </summary>
-        private readonly BrowseArchivePageControl _control;
+        private readonly BrowseArchivePageController _controller;
 
         /// <summary>
         /// Set consisting of selected models in view.
@@ -56,7 +56,7 @@ namespace SimpleZIP_UI.Presentation.View
         public BrowseArchivePage()
         {
             InitializeComponent();
-            _control = new BrowseArchivePageControl(this);
+            _controller = new BrowseArchivePageController(this);
             _selectedModels = new HashSet<BrowseArchivePageModel>();
             ArchivePageModels = new ObservableCollection<BrowseArchivePageModel>();
             ProgressBar.IsEnabled = true;
@@ -67,27 +67,27 @@ namespace SimpleZIP_UI.Presentation.View
         /// Invoked when the button to extract the whole archive has been tapped.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Arguments that have been passed.</param>
+        /// <param name="args">Consists of event parameters.</param>
         private void ExtractWholeArchiveButton_Tap(object sender, TappedRoutedEventArgs args)
         {
-            _control.ExtractWholeArchiveButtonAction();
+            _controller.ExtractWholeArchiveButtonAction();
         }
 
         /// <summary>
         /// Invoked when the button to only extract the selected entries has been tapped.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Arguments that have been passed.</param>
+        /// <param name="args">Consists of event parameters.</param>
         private void ExtractSelectedEntriesButton_Tap(object sender, TappedRoutedEventArgs args)
         {
-            _control.ExtractSelectedEntriesButtonAction(_selectedModels, _nodeStack.Peek());
+            _controller.ExtractSelectedEntriesButtonAction(_selectedModels, _nodeStack.Peek());
         }
 
         /// <summary>
         /// Invoked when the selection in the list box has changed.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Arguments that have been passed.</param>
+        /// <param name="args">Consists of event parameters.</param>
         private void ItemsListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs args)
         {
             // add items from selection
@@ -151,7 +151,7 @@ namespace SimpleZIP_UI.Presentation.View
         {
             var archive = args.Parameter as StorageFile;
             if (archive == null) throw new NullReferenceException("Cannot handle null parameter.");
-            UpdateListContent(await _control.ReadArchive(archive));
+            UpdateListContent(await _controller.ReadArchive(archive));
             ExtractWholeArchiveButton.IsEnabled = _nodeStack.Any();
             ProgressBar.IsEnabled = false;
             ProgressBar.Visibility = Visibility.Collapsed;
@@ -161,7 +161,7 @@ namespace SimpleZIP_UI.Presentation.View
         {
             // can only go back in history if stack holds at 
             // least two elements (first node is root node)
-            if (_nodeStack.Count > 1 && !_control.IsNavigating)
+            if (_nodeStack.Count > 1 && !_controller.IsNavigating)
             {
                 e.Cancel = true;
                 _nodeStack.Pop();

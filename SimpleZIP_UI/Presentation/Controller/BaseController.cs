@@ -16,6 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
 using System;
 using System.Text;
 using Windows.System.Display;
@@ -26,9 +27,9 @@ using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Presentation.Factory;
 using SimpleZIP_UI.Presentation.View;
 
-namespace SimpleZIP_UI.Presentation.Control
+namespace SimpleZIP_UI.Presentation.Controller
 {
-    internal abstract class BaseControl
+    internal abstract class BaseController
     {
         /// <summary>
         /// The parent page to whom this control belongs to.
@@ -40,7 +41,7 @@ namespace SimpleZIP_UI.Presentation.Control
         /// </summary>
         protected DisplayRequest DisplayRequest { get; set; }
 
-        protected BaseControl(Page parent)
+        protected BaseController(Page parent)
         {
             ParentPage = parent;
         }

@@ -16,6 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -26,21 +27,21 @@ using SimpleZIP_UI.Application.Compression;
 using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Compression.Operation;
 
-namespace SimpleZIP_UI.Presentation.Control
+namespace SimpleZIP_UI.Presentation.Controller
 {
-    internal class CompressionSummaryPageControl : SummaryPageControl<CompressionInfo>
+    internal class CompressionSummaryPageController : SummaryPageController<CompressionInfo>
     {
-        internal CompressionSummaryPageControl(Page parent) : base(parent)
+        internal CompressionSummaryPageController(Page parent) : base(parent)
         {
         }
 
-        /// <inheritdoc cref="SummaryPageControl{T}.GetArchivingOperation"/>
+        /// <inheritdoc cref="SummaryPageController{T}.GetArchivingOperation"/>
         protected override ArchivingOperation<CompressionInfo> GetArchivingOperation()
         {
             return new CompressionOperation();
         }
 
-        /// <inheritdoc cref="SummaryPageControl{T}.PerformOperation"/>
+        /// <inheritdoc cref="SummaryPageController{T}.PerformOperation"/>
         protected override async Task<Result> PerformOperation(CompressionInfo[] operationInfos)
         {
             var operationInfo = operationInfos[0]; // since use case does not support multiple operations
@@ -48,8 +49,6 @@ namespace SimpleZIP_UI.Presentation.Control
             var key = operationInfo.ArchiveType;
             var resultMessage = new StringBuilder();
             Result.Status statusCode;
-
-            CheckFileSizes(selectedFiles);
 
             try
             {

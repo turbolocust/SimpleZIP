@@ -22,14 +22,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.UI.Core;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using SimpleZIP_UI.Application.Compression.Model;
+using SimpleZIP_UI.Application.Compression.Operation.Event;
 using SimpleZIP_UI.Application.Util;
-using SimpleZIP_UI.Presentation.Control;
+using SimpleZIP_UI.Presentation.Controller;
 
 namespace SimpleZIP_UI.Presentation.View
 {
@@ -38,7 +40,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// <summary>
         /// The aggregated control instance.
         /// </summary>
-        private readonly DecompressionSummaryPageControl _control;
+        private readonly DecompressionSummaryPageController _controller;
 
         /// <summary>
         /// A list of selected files for decompression.
@@ -48,30 +50,30 @@ namespace SimpleZIP_UI.Presentation.View
         public DecompressionSummaryPage()
         {
             InitializeComponent();
-            _control = new DecompressionSummaryPageControl(this);
+            _controller = new DecompressionSummaryPageController(this);
         }
 
         /// <summary>
         /// Invoked when the abort button has been tapped.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Arguments that have been passed.</param>
+        /// <param name="args">Consists of event parameters.</param>
         private void AbortButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             AbortButtonToolTip.IsOpen = true;
-            _control.AbortButtonAction();
+            _controller.AbortButtonAction();
         }
 
         /// <summary>
         /// Invoked when the start button has been tapped.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Arguments that have been passed.</param>
+        /// <param name="args">Consists of event parameters.</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown on fatal error.</exception>
         private async void StartButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             var result = await InitOperation();
-            _control.CreateResultDialog(result).ShowAsync().AsTask().Forget();
+            _controller.CreateResultDialog(result).ShowAsync().AsTask().Forget();
             Frame.Navigate(typeof(MainPage));
         }
 
@@ -80,19 +82,11 @@ namespace SimpleZIP_UI.Presentation.View
         /// As a result, the user can pick an output folder for the archive.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Arguments that have been passed.</param>
-        private void OutputPathButton_Tap(object sender, TappedRoutedEventArgs args)
+        /// <param name="args">Consists of event parameters.</param>
+        private async void OutputPathButton_Tap(object sender, TappedRoutedEventArgs args)
         {
-            SetOutputPath();
-        }
-
-        /// <summary>
-        /// Sets the output path and enables the start button if output path is valid.
-        /// </summary>
-        private async void SetOutputPath()
-        {
-            if (ProgressRing.IsActive) return;
-            var text = await _control.PickOutputPath();
+            if (ProgressBar.IsEnabled) return;
+            var text = await _controller.PickOutputPath();
             if (!string.IsNullOrEmpty(text))
             {
                 OutputPathButton.Content = text;
@@ -111,8 +105,14 @@ namespace SimpleZIP_UI.Presentation.View
         {
             SetOperationActive(true);
             var infos = new List<DecompressionInfo>(_selectedItems.Count);
-            infos.AddRange(_selectedItems.Select(item => new DecompressionInfo(item)));
-            return await _control.StartButtonAction(infos.ToArray());
+
+            foreach (var item in _selectedItems)
+            {
+                var size = await _controller.CheckFileSizes(item);
+                infos.Add(new DecompressionInfo(item, size));
+            }
+
+            return await _controller.StartButtonAction(OnProgressUpdate, infos.ToArray());
         }
 
         /// <summary>
@@ -123,17 +123,38 @@ namespace SimpleZIP_UI.Presentation.View
         {
             if (isActive)
             {
-                ProgressRing.IsActive = true;
-                ProgressRing.Visibility = Visibility.Visible;
+                ProgressBar.IsEnabled = true;
+                ProgressBar.Visibility = Visibility.Visible;
                 StartButton.IsEnabled = false;
                 OutputPathButton.IsEnabled = false;
             }
             else
             {
-                ProgressRing.IsActive = false;
-                ProgressRing.Visibility = Visibility.Collapsed;
+                ProgressBar.IsEnabled = false;
+                ProgressBar.Visibility = Visibility.Collapsed;
                 StartButton.IsEnabled = true;
                 OutputPathButton.IsEnabled = true;
+            }
+        }
+
+        /// <summary>
+        /// Updates the progress bar with the updated progress.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="args">Consists of event parameters.</param>
+        internal void OnProgressUpdate(object sender, ProgressUpdateEventArgs args)
+        {
+            if (_controller.ProgressManager.Exchange(args.Progress)
+                    .Equals(ProgressManager.Sentinel))
+            {
+                Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    var totalProgress = _controller.ProgressManager.Exchange(ProgressManager.Sentinel);
+                    if (totalProgress > ProgressBar.Value)
+                    {
+                        ProgressBar.Value = totalProgress;
+                    }
+                }).AsTask().Forget();
             }
         }
 
@@ -183,7 +204,7 @@ namespace SimpleZIP_UI.Presentation.View
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
-            e.Cancel = _control.Operation?.IsRunning ?? false;
+            e.Cancel = _controller.Operation?.IsRunning ?? false;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs args)
@@ -194,7 +215,7 @@ namespace SimpleZIP_UI.Presentation.View
 
         public void Dispose()
         {
-            _control.Dispose();
+            _controller.Dispose();
         }
     }
 }

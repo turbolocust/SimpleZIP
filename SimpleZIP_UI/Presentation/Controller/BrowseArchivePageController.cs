@@ -16,6 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,9 +30,9 @@ using SimpleZIP_UI.Presentation.Factory;
 using SimpleZIP_UI.Presentation.View;
 using SimpleZIP_UI.Presentation.View.Model;
 
-namespace SimpleZIP_UI.Presentation.Control
+namespace SimpleZIP_UI.Presentation.Controller
 {
-    internal class BrowseArchivePageControl : BaseControl
+    internal class BrowseArchivePageController : BaseController
     {
         /// <summary>
         /// The associated archive. Will hold a reference to a storage file 
@@ -50,7 +51,7 @@ namespace SimpleZIP_UI.Presentation.Control
         /// </summary>
         internal bool IsNavigating { get; private set; }
 
-        internal BrowseArchivePageControl(Page parent) : base(parent)
+        internal BrowseArchivePageController(Page parent) : base(parent)
         {
         }
 

@@ -98,7 +98,9 @@
     <PRIResource Include="Strings\en-US\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application\Compression\Algorithm\AbstractAlgorithm.cs" />
     <Compile Include="Application\Compression\Algorithm\CompressorAlgorithm.cs" />
+    <Compile Include="Application\Compression\Algorithm\Event\TotalBytesProcessedEventArgs.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\BZip2.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\LZip.cs" />
     <Compile Include="Application\Compression\Archives.cs" />
@@ -106,11 +108,12 @@
     <Compile Include="Application\Compression\Algorithm\Type\TarLzip.cs" />
     <Compile Include="Application\Compression\Algorithm\ArchivingAlgorithm.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\Tar.cs" />
-    <Compile Include="Application\Compression\Model\CompressorOptions.cs" />
     <Compile Include="Application\Compression\Model\DecompressionInfo.cs" />
     <Compile Include="Application\Compression\Model\OperationInfo.cs" />
     <Compile Include="Application\Compression\Operation\CompressionOperation.cs" />
     <Compile Include="Application\Compression\Operation\DecompressionOperation.cs" />
+    <Compile Include="Application\Compression\Operation\Event\ProgressUpdateEventArgs.cs" />
+    <Compile Include="Application\Compression\IProgressObserver.cs" />
     <Compile Include="Application\Compression\Reader\IArchiveEntry.cs" />
     <Compile Include="Application\Compression\Reader\ArchiveReader.cs" />
     <Compile Include="Application\Compression\Reader\FileEntry.cs" />
@@ -118,13 +121,16 @@
     <Compile Include="Application\Compression\Model\CompressionInfo.cs" />
     <Compile Include="Application\Compression\Model\ExtractableItem.cs" />
     <Compile Include="Application\Compression\Model\Result.cs" />
+    <Compile Include="Application\Compression\Streams\DecoratorStream.cs" />
+    <Compile Include="Application\Compression\Streams\ProgressObservableStream.cs" />
     <Compile Include="Application\Util\WriterUtils.cs" />
     <Compile Include="Application\Util\CollectionUtils.cs" />
     <Compile Include="Application\Util\TaskUtils.cs" />
     <Compile Include="Exceptions\ReadingArchiveException.cs" />
     <Compile Include="I18N\Resources.cs" />
-    <Compile Include="Presentation\Control\BrowseArchivePageControl.cs" />
-    <Compile Include="Presentation\Control\SummaryPageControl.cs" />
+    <Compile Include="Presentation\Controller\BrowseArchivePageController.cs" />
+    <Compile Include="Presentation\Controller\SummaryPageController.cs" />
+    <Compile Include="Presentation\ProgressManager.cs" />
     <Compile Include="Presentation\View\AboutDialog.xaml.cs">
       <DependentUpon>AboutDialog.xaml</DependentUpon>
     </Compile>
@@ -143,16 +149,16 @@
     <Compile Include="Presentation\View\DecompressionSummaryPage.xaml.cs">
       <DependentUpon>DecompressionSummaryPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Presentation\Control\BaseControl.cs" />
-    <Compile Include="Presentation\Control\DecompressionSummaryPageControl.cs" />
+    <Compile Include="Presentation\Controller\BaseController.cs" />
+    <Compile Include="Presentation\Controller\DecompressionSummaryPageController.cs" />
     <Compile Include="Presentation\Factory\DialogFactory.cs" />
     <Compile Include="Presentation\Factory\PickerFactory.cs" />
     <Compile Include="Exceptions\InvalidArchiveTypeException.cs" />
-    <Compile Include="Presentation\Control\CompressionSummaryPageControl.cs" />
+    <Compile Include="Presentation\Controller\CompressionSummaryPageController.cs" />
     <Compile Include="Presentation\View\CompressionSummaryPage.xaml.cs">
       <DependentUpon>CompressionSummaryPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Presentation\Control\MainPageControl.cs" />
+    <Compile Include="Presentation\Controller\MainPageController.cs" />
     <Compile Include="Presentation\View\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>

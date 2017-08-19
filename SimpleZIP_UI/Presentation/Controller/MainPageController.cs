@@ -16,6 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,11 +27,11 @@ using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Presentation.Factory;
 using SimpleZIP_UI.Presentation.View;
 
-namespace SimpleZIP_UI.Presentation.Control
+namespace SimpleZIP_UI.Presentation.Controller
 {
-    internal class MainPageControl : BaseControl
+    internal class MainPageController : BaseController
     {
-        internal MainPageControl(Page parent) : base(parent)
+        internal MainPageController(Page parent) : base(parent)
         {
         }
 

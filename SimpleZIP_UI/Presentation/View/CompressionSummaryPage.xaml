@@ -12,7 +12,8 @@
             <RowDefinition Height="1.4*" />
             <RowDefinition Height="0.6*" />
             <RowDefinition Height="4.0*" />
-            <RowDefinition Height="1.5*" />
+            <RowDefinition Height="0.1*" />
+            <RowDefinition Height="1.4*" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="8,0,0,0">
             <ComboBox x:Uid="ArchiveType" x:Name="ArchiveTypeComboBox" DropDownClosed="ArchiveTypeComboBox_DropDownClosed" Width="200" Margin="0,0,0,12" Header="" Foreground="{ThemeResource ButtonForegroundThemeBrush}">
@@ -37,8 +38,8 @@
         <ScrollViewer Grid.Row="3" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
             <ListBox x:Name="ItemsListBox"  Margin="8,0,8,0" SelectionMode="Single" CanDrag="False" HorizontalContentAlignment="Stretch" Background="Transparent" Height="Auto" Foreground="{ThemeResource ButtonForegroundThemeBrush}" />
         </ScrollViewer>
-        <StackPanel Grid.Row="4" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,16,0">
-            <ProgressRing x:Name="ProgressRing" Width="40" Height="40" Margin="0, 0, 16, 0" IsActive="False" />
+        <ProgressBar x:Name="ProgressBar" Grid.Row="4" HorizontalAlignment="Stretch" IsIndeterminate="False" IsEnabled="False" Visibility="Collapsed" />
+        <StackPanel Grid.Row="5" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,16,0">
             <Button x:Name="StartButton" Tapped="StartButton_Tap" IsEnabled="False" Width="120" MinHeight="44" Height="50" MaxHeight="60" Margin="0,0,16,0" 
                     Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                 <TextBlock x:Uid="Start" Text="" TextWrapping="Wrap" />

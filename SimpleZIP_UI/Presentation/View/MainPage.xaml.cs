@@ -24,7 +24,7 @@ using Windows.UI.Xaml.Navigation;
 using SimpleZIP_UI.Presentation.Factory;
 using Windows.UI.ViewManagement;
 using Windows.Foundation;
-using SimpleZIP_UI.Presentation.Control;
+using SimpleZIP_UI.Presentation.Controller;
 
 namespace SimpleZIP_UI.Presentation.View
 {
@@ -43,12 +43,12 @@ namespace SimpleZIP_UI.Presentation.View
         /// <summary>
         /// The aggregated control instance.
         /// </summary>
-        private readonly MainPageControl _control;
+        private readonly MainPageController _controller;
 
         public MainPage()
         {
             InitializeComponent();
-            _control = new MainPageControl(this);
+            _controller = new MainPageController(this);
             // set default launch size (will have no effect on phones)
             ApplicationView.PreferredLaunchViewSize = new Size(PreferredLaunchSizeWidth, PreferredLaunchSizeHeight);
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
@@ -61,22 +61,22 @@ namespace SimpleZIP_UI.Presentation.View
 
         private async void CompressButton_Tap(object sender, TappedRoutedEventArgs e)
         {
-            await _control.CompressButtonAction();
+            await _controller.CompressButtonAction();
         }
 
         private async void ExtractButton_Tap(object sender, TappedRoutedEventArgs e)
         {
-            await _control.DecompressButtonAction();
+            await _controller.DecompressButtonAction();
         }
 
         /// <summary>
         /// Opens an archive for exploring.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Arguments that have been passed.</param>
+        /// <param name="args">Consists of event parameters.</param>
         private async void OpenArchiveButton_Tap(object sender, TappedRoutedEventArgs args)
         {
-            await _control.OpenArchiveButtonAction();
+            await _controller.OpenArchiveButtonAction();
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// Brings up a confirmation dialog first to avoid accidental redirection. 
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Arguments that have been passed.</param>
+        /// <param name="args">Consists of event parameters.</param>
         private async void GetSourceButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             var dialog = DialogFactory.CreateConfirmationDialog(
@@ -102,7 +102,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// Shows a dialog with information about the application.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Arguments that have been passed.</param>
+        /// <param name="args">Consists of event parameters.</param>
         private async void AboutMenuButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             await new AboutDialog().ShowAsync();

@@ -10,9 +10,9 @@
     <Grid Background="Transparent" Padding="0,0,0,8">
         <Grid.RowDefinitions>
             <RowDefinition Height="0.6*" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="7.8*" />
-            <RowDefinition Height="1.5*" />
+            <RowDefinition Height="0.1*" />
+            <RowDefinition Height="7.9*" />
+            <RowDefinition Height="1.4*" />
         </Grid.RowDefinitions>
         <TextBlock x:Uid="ArchiveContent" Text="" Grid.Row="0" FontWeight="Bold" FontSize="16" CharacterSpacing="56" Margin="8,0,0,0" VerticalAlignment="Center" />
         <ProgressBar x:Name="ProgressBar" Grid.Row="1" HorizontalAlignment="Stretch" IsIndeterminate="True" IsEnabled="False" Visibility="Collapsed" />

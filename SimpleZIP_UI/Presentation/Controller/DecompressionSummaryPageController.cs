@@ -16,6 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
 using System;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,21 +24,21 @@ using Windows.UI.Xaml.Controls;
 using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Compression.Operation;
 
-namespace SimpleZIP_UI.Presentation.Control
+namespace SimpleZIP_UI.Presentation.Controller
 {
-    internal class DecompressionSummaryPageControl : SummaryPageControl<DecompressionInfo>
+    internal class DecompressionSummaryPageController : SummaryPageController<DecompressionInfo>
     {
-        internal DecompressionSummaryPageControl(Page parent) : base(parent)
+        internal DecompressionSummaryPageController(Page parent) : base(parent)
         {
         }
 
-        /// <inheritdoc cref="SummaryPageControl{T}.GetArchivingOperation"/>
+        /// <inheritdoc cref="SummaryPageController{T}.GetArchivingOperation"/>
         protected override ArchivingOperation<DecompressionInfo> GetArchivingOperation()
         {
             return new DecompressionOperation();
         }
 
-        /// <inheritdoc cref="SummaryPageControl{T}.PerformOperation"/>
+        /// <inheritdoc cref="SummaryPageController{T}.PerformOperation"/>
         protected override async Task<Result> PerformOperation(DecompressionInfo[] operationInfos)
         {
             var subMessage = new StringBuilder();
@@ -49,7 +50,7 @@ namespace SimpleZIP_UI.Presentation.Control
             {
                 if (IsCancelRequest) break;
                 var item = operationInfo.Item;
-                CheckFileSizes(item);
+
                 try
                 {
                     var subResult = await Operation.Perform(operationInfo);
