@@ -55,9 +55,24 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         protected ICompressionAlgorithm Algorithm;
 
         /// <summary>
-        /// True if an operation is in progress, false otherwise.
+        /// True if an operation is running, false otherwise.
         /// </summary>
-        internal bool IsRunning { get; private set; }
+        private volatile bool _isRunning;
+
+        /// <summary>
+        /// Checks whether this operation is currently running or not.
+        /// </summary>
+        public bool IsRunning
+        {
+            get => _isRunning;
+            protected set => _isRunning = value;
+        }
+
+        /// <summary>
+        /// Total amount of bytes this instance has processed
+        /// during the course of its existence.
+        /// </summary>
+        public long TotalBytesProcessed { get; protected set; }
 
         protected ArchivingOperation()
         {
@@ -110,14 +125,14 @@ namespace SimpleZIP_UI.Application.Compression.Operation
 
         /// <summary>
         /// Calculates the total progress by using the specified amount of bytes that 
-        /// have already been read and then delegates the progress to all listeners.
+        /// have already been processed and then delegates the progress to all listeners.
         /// </summary>
         /// <param name="sender">The sender of the event.</param>
         /// <param name="args">Consists of event parameters.</param>
         protected virtual void OnTotalBytesRead(object sender, TotalBytesProcessedEventArgs args)
         {
-            var readBytes = OperationInfo.TotalBytesRead += (ulong)args.TotalBytesProcessed;
-            var progress = readBytes / (double)OperationInfo.TotalFileSize * 100;
+            var processedBytes = TotalBytesProcessed += args.TotalBytesProcessed;
+            var progress = processedBytes / (double)OperationInfo.TotalFileSize * 100;
             var evtArgs = new ProgressUpdateEventArgs
             {
                 Progress = progress

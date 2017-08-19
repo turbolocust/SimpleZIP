@@ -35,8 +35,8 @@ namespace SimpleZIP_UI.Application.Compression.Model
         internal StorageFile Archive { get; }
 
         /// <summary>
-        /// Optional list of entries to be extracted. If this is
-        /// not <code>null</code>, then only these entries will be extracted.
+        /// Optional list of entries to be extracted. If this is not 
+        /// <code>null</code>, then only these entries will be extracted.
         /// </summary>
         internal IReadOnlyList<FileEntry> Entries { get; }
 

@@ -50,7 +50,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             {
                 if (IsCancelRequest) break;
                 var item = operationInfo.Item;
-
+                
                 try
                 {
                     var subResult = await Operation.Perform(operationInfo);

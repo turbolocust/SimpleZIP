@@ -157,22 +157,25 @@ namespace SimpleZIP_UI.Presentation.Controller
         }
 
         /// <summary>
-        /// Checks the total size of the specified item and its entries and displays a toast 
+        /// Checks the total size of the specified items and its entries and displays a toast 
         /// notification if a threshold has been passed (<see cref="FileSizeWarningThreshold"/>).
         /// </summary>
-        /// <param name="item">The item whose size is to be checked.</param>
-        /// <returns>Task which returns the total size of the file.</returns>
-        internal async Task<ulong> CheckFileSizes(ExtractableItem item)
+        /// <param name="items">The items whose size is to be checked.</param>
+        /// <returns>Task which returns the total size of the files.</returns>
+        internal async Task<ulong> CheckFileSizes(params ExtractableItem[] items)
         {
             ulong totalSize = 0L;
-            if (!item.Entries.IsNullOrEmpty())
+            foreach (var item in items)
             {
-                totalSize = item.Entries.Aggregate(totalSize,
-                    (current, entry) => current + entry.Size);
-            }
-            else
-            {
-                totalSize = await FileUtils.GetFileSizeAsync(item.Archive);
+                if (!item.Entries.IsNullOrEmpty())
+                {
+                    totalSize += item.Entries.Aggregate(totalSize,
+                        (current, entry) => current + entry.Size);
+                }
+                else
+                {
+                    totalSize += await FileUtils.GetFileSizeAsync(item.Archive);
+                }
             }
             ValidateFileSizes(totalSize);
             return totalSize;
