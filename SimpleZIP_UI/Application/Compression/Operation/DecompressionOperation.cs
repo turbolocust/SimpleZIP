@@ -18,9 +18,9 @@
 // ==--==
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
-using SimpleZIP_UI.Application.Compression.Algorithm;
 using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Compression.Reader;
 using SimpleZIP_UI.Application.Util;
@@ -45,21 +45,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         private async Task<Result> ExtractFromArchive(StorageFile archiveFile, StorageFolder location,
             IReadOnlyList<FileEntry> entries = null)
         {
-            var fileType = FileUtils.GetFileNameExtension(archiveFile.Name);
             var token = TokenSource.Token;
-            ICompressionAlgorithm algorithm;
-
-            // try to get enum type by file extension, which is the key
-            if (Archives.ArchiveFileTypes.TryGetValue(fileType, out Archives.ArchiveType value)
-                || Archives.ArchiveExtendedFileTypes.TryGetValue(fileType, out value))
-            {
-                algorithm = Archives.DetermineAlgorithm(value);
-            }
-            else
-            {
-                throw new InvalidArchiveTypeException(
-                    I18N.Resources.GetString("FileFormatNotSupported/Text"));
-            }
 
             return await Task.Run(async () => // execute extraction asynchronously
             {
@@ -68,16 +54,17 @@ namespace SimpleZIP_UI.Application.Compression.Operation
 
                 try
                 {
-                    algorithm.Token = token;
-                    isSuccess = entries == null
-                        ? await algorithm.Decompress(archiveFile, location)
-                        : await algorithm.Decompress(archiveFile, location, entries);
+                    Algorithm.Token = token;
+                    var stream = entries == null
+                        ? await Algorithm.Decompress(archiveFile, location)
+                        : await Algorithm.Decompress(archiveFile, location, entries);
+                    isSuccess = stream != Stream.Null;
                 }
                 catch (Exception ex)
                 {
-                    if (ex is TaskCanceledException)
+                    if (ex is OperationCanceledException)
                     {
-                        throw new OperationCanceledException();
+                        throw;
                     }
                     message = ex.Message;
                 }
@@ -85,6 +72,23 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                 return EvaluateResult(message, isSuccess);
 
             }, token);
+        }
+
+        /// <inheritdoc cref="ArchivingOperation{T}.SetAlgorithm"/>
+        protected override void SetAlgorithm(DecompressionInfo info)
+        {
+            var fileType = FileUtils.GetFileNameExtension(info.Item.Archive.Name);
+            // try to get enum type by filename extension, which is the key
+            if (Archives.ArchiveFileTypes.TryGetValue(fileType, out Archives.ArchiveType value)
+                || Archives.ArchiveExtendedFileTypes.TryGetValue(fileType, out value))
+            {
+                Algorithm = Archives.DetermineAlgorithm(value);
+            }
+            else
+            {
+                throw new InvalidArchiveTypeException(
+                    I18N.Resources.GetString("FileFormatNotSupported/Text"));
+            }
         }
 
         /// <inheritdoc cref="ArchivingOperation{T}.StartOperation"/>

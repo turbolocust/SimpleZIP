@@ -19,82 +19,85 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
 using SharpCompress.Compressors.Deflate;
 using SharpCompress.Readers;
 using SharpCompress.Writers;
-using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Compression.Reader;
+using SimpleZIP_UI.Application.Compression.Streams;
 using SimpleZIP_UI.Application.Util;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm
 {
     /// <summary>
-    /// Offers archiving operations using compressor streams.
+    /// Offers archiving operations using compressor streams only.
     /// </summary>
-    public abstract class CompressorAlgorithm : ICompressionAlgorithm
+    public abstract class CompressorAlgorithm : AbstractAlgorithm
     {
-        /// <summary>
-        /// Default buffer size for streams.
-        /// </summary>
-        protected const int DefaultBufferSize = 8192;
-
-        /// <inheritdoc cref="ICompressionAlgorithm.Token"/>
-        public CancellationToken Token { get; set; }
-
-        public virtual async Task<bool> Decompress(StorageFile archive, StorageFolder location,
+        public override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
             ReaderOptions options = null)
         {
-            if (archive == null || location == null) return false;
+            if (archive == null || location == null) return Stream.Null;
 
-            var compressorOptions = new CompressorOptions(false);
-
-            using (var stream = await GetCompressorStream(archive, compressorOptions))
+            var compressorOptions = new CompressorOptions { IsCompression = false };
+            Stream archiveStream = null, progressStream = null, compressorStream = Stream.Null;
+            try
             {
-                var outputFileName = archive.Name.Substring(0,
-                    archive.Name.Length - archive.FileType.Length);
+                archiveStream = await archive.OpenStreamForReadAsync();
+                progressStream = new ProgressObservableStream(this, archiveStream);
+                compressorStream = GetCompressorStream(progressStream, compressorOptions);
 
-                var file = await location.CreateFileAsync(outputFileName,
-                    CreationCollisionOption.GenerateUniqueName);
-                if (file == null) return false; // file was not created
+                var outputFileName = archive.Name.Substring(0, archive.Name.Length - archive.FileType.Length);
+
+                var file = await location.CreateFileAsync(outputFileName, CreationCollisionOption.GenerateUniqueName);
+                if (file == null) return Stream.Null; // file was not created
 
                 using (var outputStream = await file.OpenStreamForWriteAsync())
                 {
                     var bytes = new byte[DefaultBufferSize];
                     int readBytes;
 
-                    while ((readBytes = stream.Read(bytes, 0, bytes.Length)) > 0)
+                    while ((readBytes = compressorStream.Read(bytes, 0, bytes.Length)) > 0)
                     {
                         await outputStream.WriteAsync(bytes, 0, readBytes, Token);
                     }
                 }
-                await GZipOutputFileNameWorkaround(file, stream);
+                await GZipOutputFileNameWorkaround(file, compressorStream);
             }
-            return true;
+            finally
+            {
+                if (options != null && !options.LeaveStreamOpen)
+                {
+                    archiveStream?.Dispose();
+                    progressStream?.Dispose();
+                    compressorStream.Dispose();
+                }
+            }
+            return compressorStream;
         }
 
-        public async Task<bool> Decompress(StorageFile archive, StorageFolder location,
+        public sealed override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
             IReadOnlyList<FileEntry> entries, ReaderOptions options = null)
         {
             // ignore entries as they are not supported
             return await Decompress(archive, location, options);
         }
 
-        public virtual async Task<bool> Compress(IReadOnlyList<StorageFile> files, StorageFile archive,
+        public override async Task<Stream> Compress(IReadOnlyList<StorageFile> files, StorageFile archive,
             StorageFolder location, WriterOptions options = null)
         {
-            if (files.IsNullOrEmpty() || archive == null || location == null) return false;
+            if (files.IsNullOrEmpty() || archive == null || location == null) return Stream.Null;
 
-            var file = files[0];
-            var compressorOptions = new CompressorOptions(true)
+            var file = files[0]; // since multiple files are not supported
+            var compressorOptions = new CompressorOptions { FileName = file.Name, IsCompression = true };
+            Stream archiveStream = null, progressStream = null, compressorStream = Stream.Null;
+            try
             {
-                FileName = file.Name
-            };
+                archiveStream = await archive.OpenStreamForWriteAsync();
+                progressStream = new ProgressObservableStream(this, archiveStream);
+                compressorStream = GetCompressorStream(progressStream, compressorOptions);
 
-            using (var stream = await GetCompressorStream(archive, compressorOptions))
-            {
                 using (var inputStream = await file.OpenStreamForReadAsync())
                 {
                     var bytes = new byte[DefaultBufferSize];
@@ -102,11 +105,21 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
 
                     while ((readBytes = inputStream.Read(bytes, 0, bytes.Length)) > 0)
                     {
-                        await stream.WriteAsync(bytes, 0, readBytes, Token);
+                        await compressorStream.WriteAsync(bytes, 0, readBytes, Token);
                     }
                 }
             }
-            return true;
+            finally
+            {
+                if (options != null && !options.LeaveStreamOpen)
+                {
+                    archiveStream?.Dispose();
+                    progressStream?.Dispose();
+                    compressorStream.Dispose();
+                }
+            }
+
+            return compressorStream;
         }
 
         /// <summary>
@@ -129,11 +142,32 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         }
 
         /// <summary>
-        /// Gets the compressor stream from the derived class.
+        /// Gets the concrete compressor stream from the derived class.
         /// </summary>
-        /// <param name="archive">The archive whose stream is to be opened.</param>
+        /// <param name="stream">The stream to be decorated.</param>
         /// <param name="options">Options to be applied.</param>
-        /// <returns>The compressor stream to be used.</returns>
-        protected abstract Task<Stream> GetCompressorStream(StorageFile archive, CompressorOptions options);
+        /// <returns>Compressor stream which can be used for compression.</returns>
+        protected abstract Stream GetCompressorStream(Stream stream, CompressorOptions options);
+
+        /// <summary>
+        /// Options for compressor streams.
+        /// </summary>
+        protected struct CompressorOptions
+        {
+            /// <summary>
+            /// File name to be set for compression stream.
+            /// </summary>
+            internal string FileName;
+
+            /// <summary>
+            /// Comment to be set for compression stream.
+            /// </summary>
+            //internal string Comment;
+
+            /// <summary>
+            /// True indicates a stream for compression, false for decompression.
+            /// </summary>
+            internal bool IsCompression;
+        }
     }
 }

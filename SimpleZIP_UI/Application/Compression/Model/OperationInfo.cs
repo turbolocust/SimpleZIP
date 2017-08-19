@@ -22,6 +22,15 @@ namespace SimpleZIP_UI.Application.Compression.Model
 {
     internal abstract class OperationInfo
     {
+        internal ulong TotalFileSize { get; }
+
+        internal ulong TotalBytesRead { get; set; }
+
         internal StorageFolder OutputFolder { get; set; }
+
+        protected OperationInfo(ulong totalFileSize)
+        {
+            TotalFileSize = totalFileSize;
+        }
     }
 }

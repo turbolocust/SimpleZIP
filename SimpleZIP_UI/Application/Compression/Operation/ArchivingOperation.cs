@@ -19,16 +19,40 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using SimpleZIP_UI.Application.Compression.Algorithm;
+using SimpleZIP_UI.Application.Compression.Algorithm.Event;
 using SimpleZIP_UI.Application.Compression.Model;
+using SimpleZIP_UI.Application.Compression.Operation.Event;
 
 namespace SimpleZIP_UI.Application.Compression.Operation
 {
+    /// <summary>
+    /// Delegate for progress updates.
+    /// </summary>
+    /// <param name="evtArgs">Consists of event parameters.</param>
+    public delegate void ProgressUpdateEventHandler(ProgressUpdateEventArgs evtArgs);
+
     internal abstract class ArchivingOperation<T> : IDisposable where T : OperationInfo
     {
+        /// <summary>
+        /// Event handler for progress updates.
+        /// </summary>
+        public event EventHandler<ProgressUpdateEventArgs> ProgressUpdate;
+
         /// <summary>
         /// Source for cancellation token.
         /// </summary>
         protected readonly CancellationTokenSource TokenSource;
+
+        /// <summary>
+        /// Holds information about the current operation.
+        /// </summary>
+        protected OperationInfo OperationInfo;
+
+        /// <summary>
+        /// Associated algorithm instance.
+        /// </summary>
+        protected ICompressionAlgorithm Algorithm;
 
         /// <summary>
         /// True if an operation is in progress, false otherwise.
@@ -56,15 +80,26 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         public async Task<Result> Perform(T operationInfo)
         {
             IsRunning = true;
+            OperationInfo = operationInfo;
+            SetAlgorithm(operationInfo);
             try
             {
+                Algorithm.TotalBytesProcessed += OnTotalBytesRead;
                 return await StartOperation(operationInfo);
             }
             finally
             {
                 IsRunning = false;
+                Algorithm.TotalBytesProcessed -= OnTotalBytesRead;
             }
         }
+
+        /// <summary>
+        /// Sets the algorithm to be used based on the information in <see cref="OperationInfo"/>.
+        /// </summary>
+        /// <param name="info">Info about the operation. Explicit parameter 
+        /// is used to avoid future programming errors.</param>
+        protected abstract void SetAlgorithm(T info);
 
         /// <summary>
         /// Actually starts this operation.
@@ -72,6 +107,23 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         /// <param name="operationInfo">Information required for the operation.</param>
         /// <returns>A result object consisting of further details.</returns>
         protected abstract Task<Result> StartOperation(T operationInfo);
+
+        /// <summary>
+        /// Calculates the total progress by using the specified amount of bytes that 
+        /// have already been read and then delegates the progress to all listeners.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="args">Consists of event parameters.</param>
+        protected virtual void OnTotalBytesRead(object sender, TotalBytesProcessedEventArgs args)
+        {
+            var readBytes = OperationInfo.TotalBytesRead += (ulong)args.TotalBytesProcessed;
+            var progress = readBytes / (double)OperationInfo.TotalFileSize * 100;
+            var evtArgs = new ProgressUpdateEventArgs
+            {
+                Progress = progress
+            };
+            ProgressUpdate?.Invoke(this, evtArgs);
+        }
 
         /// <summary>
         /// Evaluates the operation and returns the result.

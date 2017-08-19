@@ -26,6 +26,7 @@ using SharpCompress.Common;
 using SharpCompress.Readers;
 using SharpCompress.Writers;
 using SimpleZIP_UI.Application.Compression.Reader;
+using SimpleZIP_UI.Application.Compression.Streams;
 using SimpleZIP_UI.Application.Util;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm
@@ -33,20 +34,12 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
     /// <summary>
     /// Offers archiving operations using SharpCompress' Reader and Writer API.
     /// </summary>
-    public abstract class ArchivingAlgorithm : ICompressionAlgorithm
+    public abstract class ArchivingAlgorithm : AbstractAlgorithm
     {
-        /// <summary>
-        /// Default buffer size for streams.
-        /// </summary>
-        protected const int DefaultBufferSize = 8192;
-
         /// <summary>
         /// The concrete algorithm to be used.
         /// </summary>
         private readonly ArchiveType _type;
-
-        /// <inheritdoc cref="ICompressionAlgorithm.Token"/>
-        public CancellationToken Token { get; set; }
 
         protected ArchivingAlgorithm(ArchiveType type)
         {
@@ -54,50 +47,76 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             Token = CancellationToken.None;
         }
 
-        public virtual async Task<bool> Decompress(StorageFile archive, StorageFolder location,
+        public override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
             ReaderOptions options = null)
         {
-            if (archive == null || location == null) return false;
+            if (archive == null || location == null) return Stream.Null;
 
-            options = options ?? new ReaderOptions
+            options = options ?? new ReaderOptions { LeaveStreamOpen = false };
+            Stream archiveStream = null, progressStream = Stream.Null;
+            try
             {
-                LeaveStreamOpen = false
-            };
+                archiveStream = await archive.OpenStreamForReadAsync();
+                progressStream = new ProgressObservableStream(this, archiveStream);
 
-            using (var reader = ReaderFactory.Open(await archive.OpenStreamForReadAsync(), options))
-            {
-                while (!Token.IsCancellationRequested && reader.MoveToNextEntry())
+                using (var reader = ReaderFactory.Open(progressStream, options))
                 {
-                    if (!reader.Entry.IsDirectory)
+                    while (reader.MoveToNextEntry())
                     {
-                        await WriteEntry(reader, location);
+                        Token.ThrowIfCancellationRequested();
+                        if (!reader.Entry.IsDirectory)
+                        {
+                            await WriteEntry(reader, location);
+                        }
                     }
                 }
             }
-            return true;
+            finally
+            {
+                if (!options.LeaveStreamOpen)
+                {
+                    archiveStream?.Dispose();
+                    progressStream.Dispose();
+                }
+            }
+
+            return progressStream;
         }
 
-        public virtual async Task<bool> Decompress(StorageFile archive, StorageFolder location,
+        public override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
             IReadOnlyList<FileEntry> entries, ReaderOptions options = null)
         {
-            if (archive == null || entries.IsNullOrEmpty() || location == null) return false;
+            if (archive == null || entries.IsNullOrEmpty() || location == null) return Stream.Null;
 
-            options = options ?? new ReaderOptions
+            options = options ?? new ReaderOptions { LeaveStreamOpen = false };
+            Stream archiveStream = null, progressStream = Stream.Null;
+            try
             {
-                LeaveStreamOpen = false
-            };
+                archiveStream = await archive.OpenStreamForReadAsync();
+                progressStream = new ProgressObservableStream(this, archiveStream);
 
-            using (var reader = ReaderFactory.Open(await archive.OpenStreamForReadAsync(), options))
-            {
-                while (!Token.IsCancellationRequested && reader.MoveToNextEntry())
+                using (var reader = ReaderFactory.Open(progressStream, options))
                 {
-                    if (entries.Any(entry => reader.Entry.Key.Equals(entry.Key)))
+                    while (reader.MoveToNextEntry())
                     {
-                        await WriteEntry(reader, location);
+                        Token.ThrowIfCancellationRequested();
+                        if (entries.Any(entry => reader.Entry.Key.Equals(entry.Key)))
+                        {
+                            await WriteEntry(reader, location);
+                        }
                     }
                 }
             }
-            return true;
+            finally
+            {
+                if (!options.LeaveStreamOpen)
+                {
+                    archiveStream?.Dispose();
+                    progressStream.Dispose();
+                }
+            }
+
+            return progressStream;
         }
 
         private async Task<IEntry> WriteEntry(IReader reader, StorageFolder location)
@@ -121,27 +140,45 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             return entry;
         }
 
-        public virtual async Task<bool> Compress(IReadOnlyList<StorageFile> files, StorageFile archive,
+        public override async Task<Stream> Compress(IReadOnlyList<StorageFile> files, StorageFile archive,
             StorageFolder location, WriterOptions options = null)
         {
-            if (files.IsNullOrEmpty() | archive == null | location == null) return false;
+            if (files.IsNullOrEmpty() | archive == null | location == null) return Stream.Null;
 
-            options = options ?? GetWriterOptions(); // get options if null
-            options.LeaveStreamOpen = false;
-
-            using (var writer = WriterFactory.Open(await archive.OpenStreamForWriteAsync(), _type, options))
+            if (options == null)
             {
-                foreach (var file in files)
-                {
-                    if (Token.IsCancellationRequested) break;
+                options = GetWriterOptions();
+                options.LeaveStreamOpen = false;
+            }
 
-                    using (var inputStream = await file.OpenStreamForReadAsync())
+            Stream archiveStream = null, progressStream = Stream.Null;
+            try
+            {
+                archiveStream = await archive.OpenStreamForWriteAsync();
+                progressStream = new ProgressObservableStream(this, archiveStream);
+
+                using (var writer = WriterFactory.Open(progressStream, _type, options))
+                {
+                    foreach (var file in files)
                     {
-                        await writer.WriteAsync(file.Name, inputStream, Token);
+                        Token.ThrowIfCancellationRequested();
+                        using (var inputStream = await file.OpenStreamForReadAsync())
+                        {
+                            await writer.WriteAsync(file.Name, inputStream, Token);
+                        }
                     }
                 }
             }
-            return true;
+            finally
+            {
+                if (!options.LeaveStreamOpen)
+                {
+                    archiveStream?.Dispose();
+                    progressStream.Dispose();
+                }
+            }
+
+            return progressStream;
         }
 
         /// <summary>

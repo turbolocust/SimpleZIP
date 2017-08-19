@@ -22,17 +22,30 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
+using SharpCompress.Common;
 using SharpCompress.Readers;
 using SharpCompress.Writers;
+using SimpleZIP_UI.Application.Compression.Algorithm.Event;
 using SimpleZIP_UI.Application.Compression.Reader;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm
 {
     /// <summary>
+    /// Delegate for total bytes processed.
+    /// </summary>
+    /// <param name="evtArgs">Consists of event parameters.</param>
+    public delegate void TotalBytesProcessedEventHandler(TotalBytesProcessedEventArgs evtArgs);
+
+    /// <summary>
     /// Offers methods for compression and decompression of files/archives.
     /// </summary>
     public interface ICompressionAlgorithm
     {
+        /// <summary>
+        /// Event handler for total bytes processed.
+        /// </summary>
+        event EventHandler<TotalBytesProcessedEventArgs> TotalBytesProcessed;
+
         /// <summary>
         /// The token which can be used to interrupt the operation.
         /// </summary>
@@ -44,10 +57,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <param name="archive">The archive to be extracted.</param>
         /// <param name="location">The location where to extract the archive to.</param>
         /// <param name="options">Options for the reader. May be omitted.></param>
-        /// <returns>True on success, false on fail.</returns>
+        /// <returns>Task which returns a stream that has been used to read the archive. The task will not be 
+        /// disposed if <see cref="OptionsBase.LeaveStreamOpen"/> in <see cref="options"/> is set to true.</returns>
         /// <exception cref="IOException">Thrown on any error when reading from or writing to streams.</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not permitted.</exception>
-        Task<bool> Decompress(StorageFile archive, StorageFolder location, ReaderOptions options = null);
+        Task<Stream> Decompress(StorageFile archive, StorageFolder location, ReaderOptions options = null);
 
         /// <summary>
         /// Decompresses and extracts entries from the specified archive to the specified location.
@@ -56,10 +70,12 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <param name="location">The location where to extract the entries to.</param>
         /// <param name="entries">Entries of the archive to be extracted.</param>
         /// <param name="options">Options for the reader. May be omitted.</param>
+        /// <returns>Task which returns a stream that has been used to read the archive. The task will not be 
+        /// disposed if <see cref="OptionsBase.LeaveStreamOpen"/> in <see cref="options"/> is set to true.</returns>
         /// <exception cref="IOException">Thrown on any error when reading from or writing to streams.</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not permitted.</exception>
-        /// <returns>True on success, false on fail.</returns>
-        Task<bool> Decompress(StorageFile archive, StorageFolder location, IReadOnlyList<FileEntry> entries, ReaderOptions options = null);
+        Task<Stream> Decompress(StorageFile archive, StorageFolder location,
+            IReadOnlyList<FileEntry> entries, ReaderOptions options = null);
 
         /// <summary>
         /// Compresses files to the specified location. If the writer options are omitted, the default
@@ -69,10 +85,12 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <param name="archive">The file to write compressed bytes to.</param>
         /// <param name="location">Where the archive will be created.</param>
         /// <param name="options">Options for the writer. May be omitted.</param>
-        /// <returns>True on success, false on fail.</returns>
+        /// <returns>Task which returns a stream that has been used to write the archive. The task will not be 
+        /// disposed if <see cref="OptionsBase.LeaveStreamOpen"/> in <see cref="options"/> is set to true.</returns>
         /// <exception cref="IOException">Thrown on any error when reading from or writing to streams.</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not allowed.</exception>
         /// <exception cref="NotSupportedException">Thrown when archive type does not have a writer.</exception>
-        Task<bool> Compress(IReadOnlyList<StorageFile> files, StorageFile archive, StorageFolder location, WriterOptions options = null);
+        Task<Stream> Compress(IReadOnlyList<StorageFile> files, StorageFile archive,
+            StorageFolder location, WriterOptions options = null);
     }
 }

@@ -21,11 +21,11 @@ namespace SimpleZIP_UI.Application.Compression.Model
     internal class DecompressionInfo : OperationInfo
     {
         /// <summary>
-        /// Aggregated item which can be extracted.
+        /// Aggregated item which is to be extracted.
         /// </summary>
         internal ExtractableItem Item { get; }
 
-        public DecompressionInfo(ExtractableItem item)
+        internal DecompressionInfo(ExtractableItem item, ulong size) : base(size)
         {
             Item = item;
         }

@@ -18,6 +18,7 @@
 // ==--==
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
 using SimpleZIP_UI.Application.Compression.Model;
@@ -33,14 +34,12 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         /// <param name="files">The files to be compressed.</param>
         /// <param name="archiveName">The name of the archive to be created.</param>
         /// <param name="location">Where to store the archive.</param>
-        /// <param name="value">The archive type to be created.</param>
         /// <returns>An object that consists of result parameters.</returns>
         /// <exception cref="OperationCanceledException">Thrown if operation has been canceled.</exception>
         private async Task<Result> CreateArchive(IReadOnlyList<StorageFile> files,
-            string archiveName, StorageFolder location, Archives.ArchiveType value)
+            string archiveName, StorageFolder location)
         {
             var token = TokenSource.Token;
-            var algorithm = Archives.DetermineAlgorithm(value);
 
             return await Task.Run(async () => // execute compression asynchronously
             {
@@ -53,19 +52,15 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                         CreationCollisionOption.GenerateUniqueName);
                     try
                     {
-                        algorithm.Token = token;
-                        isSuccess = await algorithm.Compress(files, archive, location);
-
-                        if (token.IsCancellationRequested)
-                        {
-                            FileUtils.Delete(archive);
-                        }
+                        Algorithm.Token = token;
+                        var stream = await Algorithm.Compress(files, archive, location);
+                        isSuccess = stream != Stream.Null;
                     }
                     catch (Exception ex)
                     {
-                        if (ex is TaskCanceledException)
+                        if (ex is OperationCanceledException)
                         {
-                            throw new OperationCanceledException();
+                            throw;
                         }
                         message = ex.Message;
                     }
@@ -83,14 +78,19 @@ namespace SimpleZIP_UI.Application.Compression.Operation
             }, token);
         }
 
+        /// <inheritdoc cref="ArchivingOperation{T}.SetAlgorithm"/>
+        protected override void SetAlgorithm(CompressionInfo info)
+        {
+            Algorithm = Archives.DetermineAlgorithm(info.ArchiveType);
+        }
+
         /// <inheritdoc cref="ArchivingOperation{T}.StartOperation"/>
         protected override async Task<Result> StartOperation(CompressionInfo info)
         {
             return await CreateArchive(
                 info.SelectedFiles,
                 info.ArchiveName,
-                info.OutputFolder,
-                info.ArchiveType);
+                info.OutputFolder);
         }
     }
 }

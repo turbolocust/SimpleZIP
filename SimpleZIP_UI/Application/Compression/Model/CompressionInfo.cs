@@ -29,16 +29,16 @@ namespace SimpleZIP_UI.Application.Compression.Model
         internal Archives.ArchiveType ArchiveType { get; }
 
         /// <summary>
-        /// List of selected files to be compressed.
-        /// </summary>
-        internal IReadOnlyList<StorageFile> SelectedFiles { get; set; }
-
-        /// <summary>
         /// The name of the archive to be created.
         /// </summary>
         internal string ArchiveName { get; set; }
 
-        public CompressionInfo(Archives.ArchiveType archiveType)
+        /// <summary>
+        /// List of selected files to be compressed.
+        /// </summary>
+        internal IReadOnlyList<StorageFile> SelectedFiles { get; set; }
+
+        internal CompressionInfo(Archives.ArchiveType archiveType, ulong size) : base(size)
         {
             ArchiveType = archiveType;
         }
