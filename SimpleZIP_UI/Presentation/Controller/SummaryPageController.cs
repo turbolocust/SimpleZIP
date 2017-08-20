@@ -235,6 +235,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         protected void FinishOperation()
         {
             IsCancelRequest = false;
+            ProgressManager.Reset();
             DisplayRequest.RequestRelease();
         }
 

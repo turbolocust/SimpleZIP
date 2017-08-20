@@ -15,7 +15,7 @@
             <RowDefinition Height="1.4*" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center" Background="Transparent">
-            <TextBlock x:Uid="OutputPath" Text="" IsTapEnabled="False" FontSize="16" FontWeight="Bold" Margin="8,8,0,8" FocusVisualPrimaryBrush="Transparent" FocusVisualSecondaryBrush="Transparent" />
+            <TextBlock x:Uid="OutputPath" Text="" IsTapEnabled="False" FontSize="16" Margin="8,8,0,8" FocusVisualPrimaryBrush="Transparent" FocusVisualSecondaryBrush="Transparent" />
             <Button x:Name="OutputPathButton" AllowFocusWhenDisabled="False" Margin="8,0,24,0" Width="Auto" Height="40" FontWeight="Normal" BorderBrush="CornflowerBlue"
                     BorderThickness="2" IsTapEnabled="True" Background="Transparent" IsHoldingEnabled="False" IsDoubleTapEnabled="False" Tapped="OutputPathButton_Tap">
                 <TextBlock x:Uid="TapToChoose" Text="" TextWrapping="NoWrap" />

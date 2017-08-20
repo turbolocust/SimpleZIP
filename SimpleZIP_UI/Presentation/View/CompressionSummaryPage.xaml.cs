@@ -266,8 +266,8 @@ namespace SimpleZIP_UI.Presentation.View
         /// <param name="args">Consists of event parameters.</param>
         internal void OnProgressUpdate(object sender, ProgressUpdateEventArgs args)
         {
-            if (_controller.ProgressManager.Exchange(args.Progress)
-                    .Equals(ProgressManager.Sentinel))
+            var progress = _controller.ProgressManager.UpdateProgress(sender, args.Progress);
+            if (_controller.ProgressManager.Exchange(progress).Equals(ProgressManager.Sentinel))
             {
                 Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
