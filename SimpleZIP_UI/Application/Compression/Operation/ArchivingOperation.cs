@@ -68,12 +68,6 @@ namespace SimpleZIP_UI.Application.Compression.Operation
             protected set => _isRunning = value;
         }
 
-        /// <summary>
-        /// Total amount of bytes this instance has processed
-        /// during the course of its existence.
-        /// </summary>
-        public long TotalBytesProcessed { get; protected set; }
-
         protected ArchivingOperation()
         {
             TokenSource = new CancellationTokenSource();
@@ -99,13 +93,13 @@ namespace SimpleZIP_UI.Application.Compression.Operation
             SetAlgorithm(operationInfo);
             try
             {
-                Algorithm.TotalBytesProcessed += OnTotalBytesRead;
+                Algorithm.TotalBytesProcessed += OnTotalBytesProcessed;
                 return await StartOperation(operationInfo);
             }
             finally
             {
                 IsRunning = false;
-                Algorithm.TotalBytesProcessed -= OnTotalBytesRead;
+                Algorithm.TotalBytesProcessed -= OnTotalBytesProcessed;
             }
         }
 
@@ -129,10 +123,9 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         /// </summary>
         /// <param name="sender">The sender of the event.</param>
         /// <param name="args">Consists of event parameters.</param>
-        protected virtual void OnTotalBytesRead(object sender, TotalBytesProcessedEventArgs args)
+        protected virtual void OnTotalBytesProcessed(object sender, TotalBytesProcessedEventArgs args)
         {
-            var processedBytes = TotalBytesProcessed += args.TotalBytesProcessed;
-            var progress = processedBytes / (double)OperationInfo.TotalFileSize * 100;
+            var progress = args.TotalBytesProcessed / (double)OperationInfo.TotalFileSize * 100;
             var evtArgs = new ProgressUpdateEventArgs
             {
                 Progress = progress

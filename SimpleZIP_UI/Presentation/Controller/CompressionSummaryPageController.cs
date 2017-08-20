@@ -45,7 +45,6 @@ namespace SimpleZIP_UI.Presentation.Controller
         protected override async Task<Result> PerformOperation(CompressionInfo[] operationInfos)
         {
             var operationInfo = operationInfos[0]; // since use case does not support multiple operations
-            var selectedFiles = operationInfo.SelectedFiles;
             var key = operationInfo.ArchiveType;
             var resultMessage = new StringBuilder();
             Result.Status statusCode;
@@ -54,7 +53,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             {
                 var result = key.Equals(Archives.ArchiveType.GZip)
                             || key.Equals(Archives.ArchiveType.BZip2)
-                    ? await CompressSeparately(selectedFiles, operationInfo)
+                    ? await CompressSeparately(operationInfo)
                     : await Operation.Perform(operationInfo);
                 resultMessage.Append(result.Message);
                 statusCode = result.StatusCode;
@@ -80,39 +79,42 @@ namespace SimpleZIP_UI.Presentation.Controller
             };
         }
 
-        /// <summary>
-        /// Compresses each of the specified files separately.
-        /// </summary>
-        /// <param name="files">The files to be compressed.</param>
-        /// <param name="operationInfo">The amount of operations to be performed.</param>
-        /// <returns>A result object consisting of further details.</returns>
-        private async Task<Result> CompressSeparately(IReadOnlyCollection<StorageFile> files, CompressionInfo operationInfo)
+        private async Task<Result> CompressSeparately(CompressionInfo operationInfo)
         {
             var subMessage = new StringBuilder();
             var successCount = 0;
             var statusCode = Result.Status.Fail;
+            var selectedFiles = new List<StorageFile>(operationInfo.SelectedFiles);
 
-            foreach (var file in files) // compress each file separately
+            try
             {
-                if (IsCancelRequest) break;
-
-                operationInfo.SelectedFiles = new[] { file };
-                var subResult = await Operation.Perform(operationInfo);
-
-                if (subResult.StatusCode != Result.Status.Success)
+                foreach (var file in selectedFiles) // compress each file separately
                 {
-                    statusCode = Result.Status.PartialFail;
-                    subMessage.AppendLine(I18N.Resources.GetString("FileNotCompressed/Text", file.DisplayName));
+                    if (IsCancelRequest) break;
+
+                    operationInfo.SelectedFiles = new[] { file };
+                    var subResult = await Operation.Perform(operationInfo);
+
+                    if (subResult.StatusCode != Result.Status.Success)
+                    {
+                        statusCode = Result.Status.PartialFail;
+                        subMessage.AppendLine(I18N.Resources
+                            .GetString("FileNotCompressed/Text", file.DisplayName));
+                    }
+                    else
+                    {
+                        ++successCount;
+                    }
+                    subMessage.AppendLine(subResult.Message);
                 }
-                else
+                if (successCount == selectedFiles.Count)
                 {
-                    ++successCount;
+                    statusCode = Result.Status.Success;
                 }
-                subMessage.AppendLine(subResult.Message);
             }
-            if (successCount == files.Count)
+            finally
             {
-                statusCode = Result.Status.Success;
+                operationInfo.SelectedFiles = selectedFiles;
             }
 
             return new Result

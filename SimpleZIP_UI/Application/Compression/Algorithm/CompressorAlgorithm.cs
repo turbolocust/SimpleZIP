@@ -152,7 +152,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <summary>
         /// Options for compressor streams.
         /// </summary>
-        protected struct CompressorOptions
+        protected class CompressorOptions
         {
             /// <summary>
             /// File name to be set for compression stream.

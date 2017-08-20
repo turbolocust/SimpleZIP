@@ -22,8 +22,14 @@ namespace SimpleZIP_UI.Application.Compression.Model
 {
     internal abstract class OperationInfo
     {
+        /// <summary>
+        /// Total size of files that are to be processed.
+        /// </summary>
         internal ulong TotalFileSize { get; }
 
+        /// <summary>
+        /// The output folder for archives or extracted files.
+        /// </summary>
         internal StorageFolder OutputFolder { get; set; }
 
         protected OperationInfo(ulong totalFileSize)
