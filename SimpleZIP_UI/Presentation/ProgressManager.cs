@@ -17,7 +17,7 @@
 // 
 // ==--==
 
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
 
@@ -38,15 +38,14 @@ namespace SimpleZIP_UI.Presentation
         private double _totalProgress;
 
         /// <summary>
-        /// Maps keys to their progress values. The values are held by 
-        /// <see cref="ProgressHolder"/>.
+        /// Maps keys to their progress values.
         /// </summary>
-        private readonly Dictionary<object, ProgressHolder> _progressValues;
+        private readonly ConcurrentDictionary<object, double> _progressValues;
 
         internal ProgressManager()
         {
             _totalProgress = Sentinel;
-            _progressValues = new Dictionary<object, ProgressHolder>();
+            _progressValues = new ConcurrentDictionary<object, double>();
         }
 
         /// <summary>
@@ -75,34 +74,19 @@ namespace SimpleZIP_UI.Presentation
         /// specified value will be mapped to that key. If the key already exists,
         /// the currently mapped value will be updated.
         /// </summary>
-        /// <param name="key">Key to which the value is to be mapped.</param>
-        /// <param name="value">Updated value to be mapped.</param>
+        /// <param name="id">Key to which the value is to be mapped.</param>
+        /// <param name="newValue">Updated value to be mapped.</param>
         /// <returns>The total progress value considering all mappings.</returns>
-        internal double UpdateProgress(object key, double value)
+        internal double UpdateProgress(object id, double newValue)
         {
             return _progressValues.Count > 1
-                ? CalculateTotalProgress(key, value)
-                : value / 100d;
+                ? CalculateTotalProgress(id, newValue) : newValue;
         }
 
-        private double CalculateTotalProgress(object key, double value)
+        private double CalculateTotalProgress(object id, double newValue)
         {
-            var exists = _progressValues.TryGetValue(key, out ProgressHolder holder);
-            if (!exists)
-            {
-                holder = new ProgressHolder();
-                _progressValues.Add(key, holder);
-            }
-            holder.Progress = value;
-
-            var progress = _progressValues.Sum(entry => entry.Value.Progress);
-            progress /= _progressValues.Count;
-            return progress / 100d;
-        }
-
-        private class ProgressHolder
-        {
-            internal double Progress;
+            _progressValues.AddOrUpdate(id, newValue, (key, oldValue) => newValue);
+            return _progressValues.Sum(entry => entry.Value) / _progressValues.Count;
         }
     }
 }
