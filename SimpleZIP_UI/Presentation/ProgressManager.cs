@@ -16,6 +16,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 namespace SimpleZIP_UI.Presentation
@@ -24,17 +27,35 @@ namespace SimpleZIP_UI.Presentation
     {
         /// <summary>
         /// Placeholder value which can be set if current progress value
-        /// has been received. Works like a lock and can be used to e.g. 
+        /// has been received. Works like a lock and is used to e.g. 
         /// avoid flooding of the UI thread.
         /// </summary>
         internal const double Sentinel = -1d;
 
-        private double _progressValue;
+        /// <summary>
+        /// Holds either the total progress or <see cref="Sentinel"/>.
+        /// </summary>
+        private double _totalProgress;
+
+        /// <summary>
+        /// Maps keys to their progress values. The values are held by 
+        /// <see cref="ProgressHolder"/>.
+        /// </summary>
+        private readonly Dictionary<object, ProgressHolder> _progressValues;
 
         internal ProgressManager()
         {
-            _progressValue = Sentinel;
+            _totalProgress = Sentinel;
+            _progressValues = new Dictionary<object, ProgressHolder>();
+        }
 
+        /// <summary>
+        /// Resets this instance and clears all mappings.
+        /// </summary>
+        internal void Reset()
+        {
+            _totalProgress = Sentinel;
+            _progressValues.Clear();
         }
 
         /// <summary>
@@ -42,10 +63,46 @@ namespace SimpleZIP_UI.Presentation
         /// as the current progress value. The specified value is set atomically.
         /// </summary>
         /// <param name="newValue">The value to be exchanged.</param>
-        /// <returns>The previous assigned value.</returns>
+        /// <returns>The previously assigned value.</returns>
         internal double Exchange(double newValue)
         {
-            return Interlocked.Exchange(ref _progressValue, newValue);
+            return Interlocked.Exchange(ref _totalProgress, newValue);
+        }
+
+        /// <summary>
+        /// Updates and returns the total progress value considering all mapped
+        /// values. Each time this method is called with an unknown key, the
+        /// specified value will be mapped to that key. If the key already exists,
+        /// the currently mapped value will be updated.
+        /// </summary>
+        /// <param name="key">Key to which the value is to be mapped.</param>
+        /// <param name="value">Updated value to be mapped.</param>
+        /// <returns>The total progress value considering all mappings.</returns>
+        internal double UpdateProgress(object key, double value)
+        {
+            return _progressValues.Count > 1
+                ? CalculateTotalProgress(key, value)
+                : value / 100d;
+        }
+
+        private double CalculateTotalProgress(object key, double value)
+        {
+            var exists = _progressValues.TryGetValue(key, out ProgressHolder holder);
+            if (!exists)
+            {
+                holder = new ProgressHolder();
+                _progressValues.Add(key, holder);
+            }
+            holder.Progress = value;
+
+            var progress = _progressValues.Sum(entry => entry.Value.Progress);
+            progress /= _progressValues.Count;
+            return progress / 100d;
+        }
+
+        private class ProgressHolder
+        {
+            internal double Progress;
         }
     }
 }
