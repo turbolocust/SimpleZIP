@@ -53,7 +53,7 @@ namespace SimpleZIP_UI.Presentation.Controller
                 
                 try
                 {
-                    var subResult = await Operation.Perform(operationInfo);
+                    var subResult = await Operation.Perform(operationInfo, false);
                     if (subResult.StatusCode != Result.Status.Success)
                     {
                         statusCode = Result.Status.PartialFail;
