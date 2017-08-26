@@ -2,6 +2,8 @@
 
 <b>A very simple archiving application for the Windows UWP platform</b> *(optimized for mobile phones)*.
 
+This app can be found in the Windows Store: https://www.microsoft.com/en-us/store/p/simplezip/9nz7l8c54zln
+
 <br />Supported formats for compression:
   - ZIP (Deflate)
   - GZIP
