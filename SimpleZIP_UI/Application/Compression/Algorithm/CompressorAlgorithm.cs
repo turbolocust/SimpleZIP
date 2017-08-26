@@ -133,9 +133,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <returns>True if stream is <see cref="GZipStream"/> an file was successfully renamed.</returns>
         private static async Task<bool> GZipOutputFileNameWorkaround(IStorageItem file, Stream stream)
         {
-            if (stream is GZipStream gzipStream && !string.IsNullOrEmpty(gzipStream.FileName))
+            if (stream is GZipStream gzipStream
+                && !string.IsNullOrEmpty(gzipStream.FileName))
             {
-                await file.RenameAsync(gzipStream.FileName);
+                await file.RenameAsync(gzipStream.FileName,
+                    NameCollisionOption.GenerateUniqueName);
                 return true;
             }
             return false;
