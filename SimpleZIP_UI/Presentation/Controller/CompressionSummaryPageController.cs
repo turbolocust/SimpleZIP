@@ -93,7 +93,7 @@ namespace SimpleZIP_UI.Presentation.Controller
                     if (IsCancelRequest) break;
 
                     operationInfo.SelectedFiles = new[] { file };
-                    var subResult = await Operation.Perform(operationInfo);
+                    var subResult = await Operation.Perform(operationInfo, false);
 
                     if (subResult.StatusCode != Result.Status.Success)
                     {

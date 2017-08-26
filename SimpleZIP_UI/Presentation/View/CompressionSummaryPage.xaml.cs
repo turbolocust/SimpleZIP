@@ -81,7 +81,7 @@ namespace SimpleZIP_UI.Presentation.View
                 CreateItemForComboBox("TAR+LZIP (.tlz) [" + slowText + "]", ".tlz")
             );
             ArchiveTypeComboBox.Items.Add(
-                CreateItemForComboBox("TAR+BZIP2 (.tbz2) [" + slowText + "!]", ".tbz2")
+                CreateItemForComboBox("TAR+BZIP2 (.tbz2) [" + slowText + "]", ".tbz2")
             );
             ArchiveTypeComboBox.SelectedIndex = 0; // selected index on page launch
 
