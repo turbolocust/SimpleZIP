@@ -144,6 +144,7 @@ namespace SimpleZIP_UI.Presentation.View
             var progress = _controller.ProgressManager.UpdateProgress(sender, args.Progress);
             if (_controller.ProgressManager.Exchange(progress).Equals(ProgressManager.Sentinel))
             {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     var totalProgress = _controller.ProgressManager.Exchange(ProgressManager.Sentinel);
@@ -151,7 +152,8 @@ namespace SimpleZIP_UI.Presentation.View
                     {
                         ProgressBar.Value = totalProgress;
                     }
-                }).AsTask().Forget();
+                });
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             }
         }
 
