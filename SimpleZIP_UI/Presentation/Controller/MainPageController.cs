@@ -31,14 +31,50 @@ namespace SimpleZIP_UI.Presentation.Controller
 {
     internal class MainPageController : BaseController
     {
+        internal enum MainPageActionType
+        {
+            Compress, Decompress, OpenArchive
+        }
+
         internal MainPageController(Page parent) : base(parent)
         {
         }
 
         /// <summary>
+        /// Performs a concrete action based on the specified <see cref="MainPageActionType"/>.
+        /// </summary>
+        /// <param name="type">The type of action to be performed.</param>
+        /// <returns>Task which returns true on success and false otherwise.</returns>
+        internal async Task<bool> PerformAction(MainPageActionType type)
+        {
+            bool success;
+            try
+            {
+                switch (type)
+                {
+                    case MainPageActionType.Compress:
+                        success = await CompressButtonAction();
+                        break;
+                    case MainPageActionType.Decompress:
+                        success = await DecompressButtonAction();
+                        break;
+                    case MainPageActionType.OpenArchive:
+                        success = await OpenArchiveButtonAction();
+                        break;
+                    default: throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                }
+            }
+            catch (Exception)
+            {
+                success = false;
+            }
+            return success;
+        }
+
+        /// <summary>
         /// Performs an action when the compress button has been tapped.
         /// </summary>
-        internal async Task<bool> CompressButtonAction()
+        private async Task<bool> CompressButtonAction()
         {
             var picker = PickerFactory.CreateCompressFilesOpenPicker();
             var files = await picker.PickMultipleFilesAsync();
@@ -51,7 +87,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// <summary>
         /// Performs an action when the decompress button has been tapped.
         /// </summary>
-        internal async Task<bool> DecompressButtonAction()
+        private async Task<bool> DecompressButtonAction()
         {
             var picker = PickerFactory.CreateDecompressFileOpenPicker();
             var files = await picker.PickMultipleFilesAsync();
@@ -76,7 +112,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// <summary>
         /// Performs an action when the button for opening an archive has been tapped.
         /// </summary>
-        internal async Task<bool> OpenArchiveButtonAction()
+        private async Task<bool> OpenArchiveButtonAction()
         {
             var picker = PickerFactory.CreateDecompressFileOpenPicker();
             var file = await picker.PickSingleFileAsync();

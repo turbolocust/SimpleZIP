@@ -25,6 +25,7 @@ using SimpleZIP_UI.Presentation.Factory;
 using Windows.UI.ViewManagement;
 using Windows.Foundation;
 using SimpleZIP_UI.Presentation.Controller;
+using static SimpleZIP_UI.Presentation.Controller.MainPageController;
 
 namespace SimpleZIP_UI.Presentation.View
 {
@@ -59,24 +60,34 @@ namespace SimpleZIP_UI.Presentation.View
             MenuSplitView.IsPaneOpen = !MenuSplitView.IsPaneOpen;
         }
 
-        private async void CompressButton_Tap(object sender, TappedRoutedEventArgs e)
+        /// <summary>
+        /// Allows the user to select files for compression.
+        /// </summary>
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="args">Consists of event parameters.</param>
+        private async void CompressButton_Tap(object sender, TappedRoutedEventArgs args)
         {
-            await _controller.CompressButtonAction();
-        }
-
-        private async void ExtractButton_Tap(object sender, TappedRoutedEventArgs e)
-        {
-            await _controller.DecompressButtonAction();
+            await _controller.PerformAction(MainPageActionType.Compress);
         }
 
         /// <summary>
-        /// Opens an archive for exploring.
+        /// Allows the user to select archives for decompression.
+        /// </summary>
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="args">Consists of event parameters.</param>
+        private async void ExtractButton_Tap(object sender, TappedRoutedEventArgs args)
+        {
+            await _controller.PerformAction(MainPageActionType.Decompress);
+        }
+
+        /// <summary>
+        /// Allows the user to open an archive for exploring.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
         /// <param name="args">Consists of event parameters.</param>
         private async void OpenArchiveButton_Tap(object sender, TappedRoutedEventArgs args)
         {
-            await _controller.OpenArchiveButtonAction();
+            await _controller.PerformAction(MainPageActionType.OpenArchive);
         }
 
         /// <summary>

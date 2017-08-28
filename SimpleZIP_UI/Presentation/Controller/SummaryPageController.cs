@@ -137,7 +137,16 @@ namespace SimpleZIP_UI.Presentation.Controller
         {
             var picker = PickerFactory.CreateFolderPicker();
 
-            var folder = await picker.PickSingleFolderAsync();
+            StorageFolder folder;
+            try
+            {
+                folder = await picker.PickSingleFolderAsync();
+            }
+            catch (Exception)
+            {
+                folder = null;
+            }
+
             if (folder != null) // system has now access to folder
             {
                 OutputFolder = folder;
