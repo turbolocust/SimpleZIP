@@ -149,8 +149,8 @@ namespace SimpleZIP_UI.Presentation.View
 
         protected override async void OnNavigatedTo(NavigationEventArgs args)
         {
-            var archive = args.Parameter as StorageFile;
-            if (archive == null) throw new NullReferenceException("Cannot handle null parameter.");
+            if (!(args.Parameter is StorageFile archive))
+                throw new NullReferenceException("Cannot handle null parameter.");
             UpdateListContent(await _controller.ReadArchive(archive));
             ExtractWholeArchiveButton.IsEnabled = _nodeStack.Any();
             ProgressBar.IsEnabled = false;

@@ -25,12 +25,15 @@ namespace SimpleZIP_UI.Application.Compression.Reader
     /// </summary>
     internal class Node : IArchiveEntry
     {
+        /// <inheritdoc />
         /// <summary>
         /// Friendly name of this node. Can be set differently but should optimally 
-        /// consist of the <see cref="Id"/> without path and file separators.
+        /// consist of the <see cref="P:SimpleZIP_UI.Application.Compression.Reader.Node.Id" /> 
+        /// without path and file separators.
         /// </summary>
         public string Name { get; set; }
 
+        /// <inheritdoc />
         /// <summary>
         /// Defaults to true as this entry is a node.
         /// </summary>

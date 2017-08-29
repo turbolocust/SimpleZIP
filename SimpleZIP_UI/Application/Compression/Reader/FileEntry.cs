@@ -28,11 +28,13 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         /// </summary>
         internal string Key { get; }
 
+        /// <inheritdoc />
         /// <summary>
         /// The key of the entry without the path.
         /// </summary>
         public string Name { get; }
 
+        /// <inheritdoc />
         /// <summary>
         /// Defaults to false as this entry is not a node.
         /// </summary>

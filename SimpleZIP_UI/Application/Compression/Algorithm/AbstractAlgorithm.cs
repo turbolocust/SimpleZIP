@@ -36,7 +36,6 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// </summary>
         protected const int DefaultBufferSize = 8192;
 
-        /// <inheritdoc cref="ICompressionAlgorithm.Token"/>
         public event EventHandler<TotalBytesProcessedEventArgs> TotalBytesProcessed;
 
         /// <inheritdoc cref="ICompressionAlgorithm.Token"/>

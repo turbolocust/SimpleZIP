@@ -10,11 +10,13 @@ using SimpleZIP_UI.Presentation.View;
 
 namespace SimpleZIP_UI
 {
+    /// <inheritdoc cref="Application" />
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
     public sealed partial class App
     {
+        /// <inheritdoc />
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -38,11 +40,9 @@ namespace SimpleZIP_UI
                 DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
-            var rootFrame = Window.Current.Content as Frame;
-
             // do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
-            if (rootFrame == null)
+            if (!(Window.Current.Content is Frame rootFrame))
             {
                 // create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();

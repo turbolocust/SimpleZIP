@@ -28,6 +28,7 @@ using SimpleZIP_UI.Exceptions;
 
 namespace SimpleZIP_UI.Application.Compression.Reader
 {
+    /// <inheritdoc />
     /// <summary>
     /// Traverses the archive hierarchy and generates nodes, which represent folders,
     /// and file entries. A node can have other nodes and file entries as children.

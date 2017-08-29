@@ -21,6 +21,7 @@ using System.IO;
 
 namespace SimpleZIP_UI.Application.Compression.Streams
 {
+    /// <inheritdoc />
     /// <summary>
     /// Decorator for System.IO.Stream instances.
     /// </summary>
