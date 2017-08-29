@@ -57,12 +57,14 @@
                         <RowDefinition Height="3*"/>
                         <RowDefinition Height="3*"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Text="SimpleZIP" FontFamily="Default" FontSize="54" CharacterSpacing="32" FontStyle="Normal" VerticalAlignment="Top" Margin="24,16,0,0" Grid.Row="0" HorizontalAlignment="Left" />
-                    <Button HorizontalAlignment="Stretch" Grid.Row="1" MinHeight="32" Height="50" MaxHeight="72" VerticalAlignment="Bottom" Margin="32,16,32,16" Tapped="CompressButton_Tap" Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
-                        <TextBlock x:Uid="CompressArchive" Text="" TextWrapping="Wrap" />
+                    <TextBlock Text="SimpleZIP" FontFamily="Default" FontSize="54" CharacterSpacing="32" FontStyle="Normal" FontWeight="Medium" Foreground="{ThemeResource SystemControlForegroundAccentBrush}" VerticalAlignment="Top" Margin="24,16,0,0" Grid.Row="0" HorizontalAlignment="Left" />
+                    <Button HorizontalAlignment="Stretch" Grid.Row="1" MinHeight="32" Height="50" MaxHeight="72" VerticalAlignment="Bottom" Margin="32,16,32,16" Tapped="CompressButton_Tap" 
+                            Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+                        <TextBlock x:Uid="CompressArchive" FontWeight="Medium" CharacterSpacing="20" Text="" TextWrapping="Wrap" />
                     </Button>
-                    <Button HorizontalAlignment="Stretch" Grid.Row="2" MinHeight="32" Height="50" MaxHeight="72" VerticalAlignment="Top" Margin="32,16,32,16" Tapped="ExtractButton_Tap" Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
-                        <TextBlock x:Uid="ExtractArchive" Text="" TextWrapping="Wrap" />
+                    <Button HorizontalAlignment="Stretch" Grid.Row="2" MinHeight="32" Height="50" MaxHeight="72" VerticalAlignment="Top" Margin="32,16,32,16" Tapped="ExtractButton_Tap" 
+                            Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+                        <TextBlock x:Uid="ExtractArchive" FontWeight="Medium" CharacterSpacing="20" Text="" TextWrapping="Wrap" />
                     </Button>
                 </Grid>
             </SplitView.Content>

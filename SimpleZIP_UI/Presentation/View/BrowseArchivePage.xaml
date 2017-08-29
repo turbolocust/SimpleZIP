@@ -14,7 +14,7 @@
             <RowDefinition Height="7.8*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <TextBlock x:Uid="ArchiveContent" Text="" Grid.Row="0" FontWeight="Bold" FontSize="16" CharacterSpacing="56" Margin="8,8,0,0" VerticalAlignment="Center" />
+        <TextBlock x:Uid="ArchiveContent" Text="" Grid.Row="0" FontWeight="Medium" FontSize="16" CharacterSpacing="56" Margin="8,8,0,0" VerticalAlignment="Center" />
         <ProgressBar x:Name="ProgressBar" Grid.Row="1" HorizontalAlignment="Stretch" IsIndeterminate="True" IsEnabled="False" Visibility="Collapsed" />
         <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" Margin="0,16,0,0" VerticalScrollBarVisibility="Auto">
             <ListBox ItemsSource="{Binding ArchivePageModels}" SelectionChanged="ItemsListBox_OnSelectionChanged" Margin="8,0,8,0" SelectionMode="Multiple" CanDrag="False" 
@@ -22,7 +22,7 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-                            <SymbolIcon Symbol="{Binding Symbol}" Margin="0,0,8,0" Foreground="DodgerBlue" />
+                            <SymbolIcon Symbol="{Binding Symbol}" Margin="0,0,8,0" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" />
                             <TextBlock FontSize="20" IsTextSelectionEnabled="False" TextWrapping="NoWrap" Text="{Binding DisplayName}" />
                         </StackPanel>
                     </DataTemplate>
@@ -30,12 +30,12 @@
             </ListBox>
         </ScrollViewer>
         <StackPanel Grid.Row="3" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,8,16,0">
-            <Button x:Name="ExtractWholeArchiveButton" Tapped="ExtractWholeArchiveButton_Tap" IsEnabled="False" MinHeight="44" Height="50" 
-                    MaxHeight="60" Margin="0,0,16,0" Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+            <Button x:Name="ExtractWholeArchiveButton" Tapped="ExtractWholeArchiveButton_Tap" IsEnabled="False" MinHeight="44" Height="50" MaxHeight="60" Margin="0,0,16,0" 
+                    Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                 <TextBlock x:Uid="ExtractAll" Text="" TextWrapping="Wrap" />
             </Button>
-            <Button x:Name="ExtractSelectedEntriesButton" Tapped="ExtractSelectedEntriesButton_Tap" IsEnabled="False" MinHeight="44" Height="50" 
-                    MaxHeight="60" Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+            <Button x:Name="ExtractSelectedEntriesButton" Tapped="ExtractSelectedEntriesButton_Tap" IsEnabled="False" MinHeight="44" Height="50" MaxHeight="60" 
+                    Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                 <TextBlock x:Uid="ExtractSelected" Text="" TextWrapping="Wrap" />
             </Button>
         </StackPanel>

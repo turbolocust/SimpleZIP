@@ -16,12 +16,12 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="8,8,0,20" Background="Transparent">
             <TextBlock x:Uid="OutputPath" Text="" IsTapEnabled="False" FontSize="16" Margin="0,0,0,12" FocusVisualPrimaryBrush="Transparent" FocusVisualSecondaryBrush="Transparent" />
-            <Button x:Name="OutputPathButton" AllowFocusWhenDisabled="False" Width="Auto" Height="40" FontWeight="Normal" BorderBrush="CornflowerBlue"
+            <Button x:Name="OutputPathButton" AllowFocusWhenDisabled="False" Width="Auto" Height="40" FontWeight="Normal" BorderBrush="{ThemeResource SystemControlBackgroundAccentBrush}"
                     BorderThickness="2" IsTapEnabled="True" Background="Transparent" IsHoldingEnabled="False" IsDoubleTapEnabled="False" Tapped="OutputPathButton_Tap">
                 <TextBlock x:Uid="TapToChoose" Text="" TextWrapping="NoWrap" />
             </Button>
         </StackPanel>
-        <TextBlock x:Uid="FilesToDecompress" Text="" Grid.Row="1" FontWeight="Bold" FontSize="16" CharacterSpacing="56" Margin="8,0,0,8" VerticalAlignment="Center" />
+        <TextBlock x:Uid="FilesToDecompress" Text="" Grid.Row="1" FontWeight="Medium" FontSize="16" CharacterSpacing="56" Margin="8,0,0,8" VerticalAlignment="Center" />
         <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
             <ListBox x:Name="ItemsListBox" Margin="4,0,0,0" SelectionMode="Single" CanDrag="False" HorizontalContentAlignment="Stretch" Background="Transparent" Height="Auto" />
         </ScrollViewer>
@@ -31,7 +31,8 @@
                     Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                 <TextBlock x:Uid="Start" Text="" TextWrapping="Wrap" />
             </Button>
-            <Button Tapped="AbortButton_Tap" Width="120" MinHeight="44" Height="50" MaxHeight="60" Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="DarkRed" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+            <Button Tapped="AbortButton_Tap" Width="120" MinHeight="44" Height="50" MaxHeight="60" Foreground="{ThemeResource ButtonForegroundThemeBrush}" 
+                    Background="DarkRed" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                 <TextBlock x:Uid="Abort" Text="" TextWrapping="Wrap" />
             </Button>
             <ToolTipService.ToolTip>
