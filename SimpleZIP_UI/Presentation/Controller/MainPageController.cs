@@ -16,7 +16,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +30,9 @@ namespace SimpleZIP_UI.Presentation.Controller
 {
     internal class MainPageController : BaseController
     {
+        /// <summary>
+        /// Type of action to be performed.
+        /// </summary>
         internal enum MainPageActionType
         {
             Compress, Decompress, OpenArchive
@@ -41,15 +43,23 @@ namespace SimpleZIP_UI.Presentation.Controller
         }
 
         /// <summary>
+        /// True if action was triggered. Avoids exceptions if the 
+        /// user successfully triggers multiple events on a control.
+        /// </summary>
+        private bool _actionTriggered;
+
+        /// <summary>
         /// Performs a concrete action based on the specified <see cref="MainPageActionType"/>.
         /// </summary>
         /// <param name="type">The type of action to be performed.</param>
         /// <returns>Task which returns true on success and false otherwise.</returns>
         internal async Task<bool> PerformAction(MainPageActionType type)
         {
+            if (_actionTriggered) return false;
             bool success;
             try
             {
+                _actionTriggered = true;
                 switch (type)
                 {
                     case MainPageActionType.Compress:
@@ -67,6 +77,10 @@ namespace SimpleZIP_UI.Presentation.Controller
             catch (Exception)
             {
                 success = false;
+            }
+            finally
+            {
+                _actionTriggered = false;
             }
             return success;
         }

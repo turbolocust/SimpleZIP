@@ -41,6 +41,11 @@ namespace SimpleZIP_UI.Presentation.Controller
         private const ulong FileSizeWarningThreshold = 1024 * 1024 * 25;
 
         /// <summary>
+        /// Avoids exceptions if file/folder picker is already open.
+        /// </summary>
+        private bool _pickerTriggered;
+
+        /// <summary>
         /// True if a cancel request has been made.
         /// </summary>
         internal bool IsCancelRequest { get; set; }
@@ -130,21 +135,26 @@ namespace SimpleZIP_UI.Presentation.Controller
         }
 
         /// <summary>
-        /// Opens a picker to select a folder and returns it. 
-        /// May be <code>null</code> on cancellation.
+        /// Opens a picker to select a folder and returns it. May be 
+        /// <code>null</code> on cancellation or if picker is already showing.
         /// </summary>
         internal async Task<StorageFolder> OutputPathPanelAction()
         {
-            var picker = PickerFactory.CreateFolderPicker();
-
+            if (_pickerTriggered) return null;
             StorageFolder folder;
             try
             {
+                _pickerTriggered = true;
+                var picker = PickerFactory.CreateFolderPicker();
                 folder = await picker.PickSingleFolderAsync();
             }
             catch (Exception)
             {
                 folder = null;
+            }
+            finally
+            {
+                _pickerTriggered = false;
             }
 
             if (folder != null) // system has now access to folder
