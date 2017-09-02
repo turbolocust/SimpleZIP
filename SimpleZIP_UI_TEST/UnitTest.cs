@@ -26,40 +26,40 @@ namespace SimpleZIP_UI_TEST
         /// Tests the compression and extraction using ZIP archive type.
         /// </summary>
         [TestMethod]
-        public async void ZipCompressionExtractionTest()
+        public async Task ZipCompressionExtractionTest()
         {
-            var options = new WriterOptions(CompressionType.Deflate);
-            await PerformArchiveOperations(new Zip(), ".zip", options);
+            var options = new WriterOptions(CompressionType.Deflate) { LeaveStreamOpen = false };
+            Assert.IsTrue(await PerformArchiveOperations(new Zip(), ".zip", options));
         }
 
         /// <summary>
         /// Tests the compression and extraction using TAR (gzip) archive type.
         /// </summary>
         [TestMethod]
-        public async void TarGzipCompressionExtractionTest()
+        public async Task TarGzipCompressionExtractionTest()
         {
-            var options = new WriterOptions(CompressionType.GZip);
-            await PerformArchiveOperations(new TarGzip(), ".tgz", options);
+            var options = new WriterOptions(CompressionType.GZip) { LeaveStreamOpen = false };
+            Assert.IsTrue(await PerformArchiveOperations(new TarGzip(), ".tgz", options));
         }
 
         /// <summary>
         /// Tests the compression and extraction using TAR (bzip2) archive type.
         /// </summary>
         [TestMethod]
-        public async void TarBzip2CompressionExtractionTest()
+        public async Task TarBzip2CompressionExtractionTest()
         {
-            var options = new WriterOptions(CompressionType.BZip2);
-            await PerformArchiveOperations(new TarBzip2(), ".tbz2", options);
+            var options = new WriterOptions(CompressionType.BZip2) { LeaveStreamOpen = false };
+            Assert.IsTrue(await PerformArchiveOperations(new TarBzip2(), ".tbz2", options));
         }
-        
+
         /// <summary>
         /// Tests the compression and extraction using TAR (lzip) archive type.
         /// </summary>
         [TestMethod]
-        public async void TarLzipCompressionExtractionTest()
+        public async Task TarLzipCompressionExtractionTest()
         {
-            var options = new WriterOptions(CompressionType.BZip2);
-            await PerformArchiveOperations(new TarLzip(), ".tlz", options);
+            var options = new WriterOptions(CompressionType.LZip) { LeaveStreamOpen = false };
+            Assert.IsTrue(await PerformArchiveOperations(new TarLzip(), ".tlz", options));
         }
 
         private async Task<bool> PerformArchiveOperations(ICompressionAlgorithm compressionAlgorithm, string fileType, WriterOptions options)
@@ -67,6 +67,7 @@ namespace SimpleZIP_UI_TEST
             return await Task.Run(async () =>
             {
                 var tempFile = await _workingDir.CreateFileAsync("tempFile");
+                Assert.IsNotNull(tempFile);
 
                 using (var streamWriter = new StreamWriter(await tempFile.OpenStreamForWriteAsync()))
                 {
@@ -74,12 +75,9 @@ namespace SimpleZIP_UI_TEST
                     streamWriter.WriteLine(FileText);
                 }
 
-                _files = await _workingDir.GetFilesAsync();
-                Assert.IsNotNull(_files);
-                Assert.AreEqual(_files.Count, 1); // check if file exists
-
+                _files = new[] { tempFile };
                 var archive = await _workingDir.CreateFileAsync(ArchiveName + fileType);
-                Assert.IsTrue(await compressionAlgorithm.Compress(_files, archive, _workingDir, options));
+                Assert.AreNotEqual(await compressionAlgorithm.Compress(_files, archive, _workingDir, options), Stream.Null);
 
                 return await ArchiveExtraction(compressionAlgorithm, fileType); // extract archive after creation
             });
@@ -94,33 +92,21 @@ namespace SimpleZIP_UI_TEST
             Assert.IsNotNull(outputFolder);
 
             // extract archive
-            Assert.IsTrue(await compressionAlgorithm.Decompress(archive, outputFolder));
+            Assert.AreNotEqual(await compressionAlgorithm.Decompress(archive, outputFolder), Stream.Null);
 
-            var files = await outputFolder.GetFilesAsync();
-            Assert.IsNotNull(files);
-
-            if (files.Count == 1)
+            var file = _files[0];
+            using (var streamReader = new StreamReader(await file.OpenStreamForReadAsync()))
             {
-                foreach (var file in files)
+                var line = streamReader.ReadLine();
+                if (!line.Equals(FileText))
                 {
-                    using (var streamReader = new StreamReader(await file.OpenStreamForReadAsync()))
-                    {
-                        var line = streamReader.ReadLine();
-                        Assert.IsNotNull(line);
-
-                        if (!line.Equals(FileText))
-                        {
-                            Assert.Fail("Files do not match.");
-                        }
-                    }
+                    Assert.Fail("Files do not match.");
                 }
             }
-            else
-            {
-                Assert.Fail("Archive not properly created.");
-            }
 
-            await outputFolder.DeleteAsync(); // clean up when done
+            // clean up when done
+            await outputFolder.DeleteAsync();
+            await file.DeleteAsync();
             return true;
         }
     }
