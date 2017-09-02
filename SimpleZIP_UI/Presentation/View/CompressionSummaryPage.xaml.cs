@@ -69,7 +69,7 @@ namespace SimpleZIP_UI.Presentation.View
             const string tgzText = "TAR+GZIP (.tgz)";
 
             var tarText = "TAR (.tar) [" + uncompressedText + "]";
-            var tlzText = "TAR+LZIP (.tlz) [" + slowText + "]";
+            var tlzText = "TAR+LZMA (.tlz) [" + slowText + "]";
             var tbz2Text = "TAR+BZIP2 (.tbz2) [" + slowText + "]";
 
             // ReSharper disable once PossibleNullReferenceException
