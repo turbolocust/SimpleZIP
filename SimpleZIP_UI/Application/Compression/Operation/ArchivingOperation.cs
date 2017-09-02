@@ -45,14 +45,14 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         protected readonly CancellationTokenSource TokenSource;
 
         /// <summary>
-        /// Holds information about the current operation.
-        /// </summary>
-        protected OperationInfo OperationInfo;
-
-        /// <summary>
         /// Associated algorithm instance.
         /// </summary>
         protected ICompressionAlgorithm Algorithm;
+
+        /// <summary>
+        /// Total amount of bytes to be processed.
+        /// </summary>
+        private ulong _totalBytesToProcess;
 
         /// <summary>
         /// Current progress in bytes. Used to calculate difference
@@ -103,8 +103,8 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         public async Task<Result> Perform(T operationInfo, bool resetBytesProcessed = true)
         {
             IsRunning = true;
-            OperationInfo = operationInfo;
             SetAlgorithm(operationInfo);
+            _totalBytesToProcess = operationInfo.TotalFileSize;
             try
             {
                 Algorithm.TotalBytesProcessed += OnTotalBytesProcessed;
@@ -147,7 +147,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
             TotalBytesProcessed += totalBytesProcessed - _previousBytesProcessed;
             _previousBytesProcessed = totalBytesProcessed;
             // actually calculate progress in percentage
-            var progress = TotalBytesProcessed / (double)OperationInfo.TotalFileSize * 100;
+            var progress = TotalBytesProcessed / (double)_totalBytesToProcess * 100;
             var evtArgs = new ProgressUpdateEventArgs
             {
                 Progress = progress

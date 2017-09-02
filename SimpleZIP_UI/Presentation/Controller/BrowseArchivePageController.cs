@@ -16,10 +16,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
-
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
@@ -72,11 +70,20 @@ namespace SimpleZIP_UI.Presentation.Controller
                 {
                     rootNode = await reader.Read(archive);
                 }
-                catch (IOException)
+                catch (Exception ex)
                 {
-                    var dialog = DialogFactory.CreateErrorDialog(
-                        I18N.Resources.GetString("ErrorReadingArchive/Text"));
+                    var resource = ex is InvalidOperationException
+                        ? "FileFormatNotSupported/Text" : "ErrorReadingArchive/Text";
+                    var dialog = DialogFactory.CreateErrorDialog(resource);
                     dialog.ShowAsync().AsTask().Forget();
+                    ParentPage.Frame.Navigate(typeof(MainPage));
+                }
+                finally
+                {
+                    if (rootNode == null)
+                    {
+                        _archiveFile = null;
+                    }
                 }
                 return _rootNode = rootNode;
             }
