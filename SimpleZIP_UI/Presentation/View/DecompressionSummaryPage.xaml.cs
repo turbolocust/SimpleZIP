@@ -90,12 +90,8 @@ namespace SimpleZIP_UI.Presentation.View
             if (!string.IsNullOrEmpty(text))
             {
                 OutputPathButton.Content = text;
-                StartButton.IsEnabled = true;
             }
-            else
-            {
-                StartButton.IsEnabled = false;
-            }
+            StartButton.IsEnabled = _controller.OutputFolder != null;
         }
 
         /// <summary>

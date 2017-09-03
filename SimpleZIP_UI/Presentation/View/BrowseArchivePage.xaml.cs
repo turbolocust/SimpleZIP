@@ -118,8 +118,10 @@ namespace SimpleZIP_UI.Presentation.View
                     _selectedModels.Remove(removeItem);
                 }
             }
-            // enable button if at least one item is selected
-            ExtractSelectedEntriesButton.IsEnabled = _selectedModels.Count > 0;
+            // enable button if at least one item is selected and
+            // archive does not consist of one file entry only
+            ExtractSelectedEntriesButton.IsEnabled =
+                _selectedModels.Count > 0 && !_controller.IsSingleFileEntryArchive();
         }
 
         /// <summary>
@@ -152,7 +154,7 @@ namespace SimpleZIP_UI.Presentation.View
             if (!(args.Parameter is StorageFile archive))
                 throw new NullReferenceException("Cannot handle null parameter.");
             UpdateListContent(await _controller.ReadArchive(archive));
-            ExtractWholeArchiveButton.IsEnabled = _nodeStack.Any();
+            ExtractWholeArchiveButton.IsEnabled = !_controller.IsEmptyArchive();
             ProgressBar.IsEnabled = false;
             ProgressBar.Visibility = Visibility.Collapsed;
         }
@@ -160,7 +162,7 @@ namespace SimpleZIP_UI.Presentation.View
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             // can only go back in history if stack holds at 
-            // least two elements (first node is root node)
+            // least two elements (since first node is root node)
             if (_nodeStack.Count > 1 && !_controller.IsNavigating)
             {
                 e.Cancel = true;

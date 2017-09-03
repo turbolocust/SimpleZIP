@@ -140,12 +140,8 @@ namespace SimpleZIP_UI.Presentation.View
             if (!string.IsNullOrEmpty(text))
             {
                 OutputPathButton.Content = text;
-                StartButton.IsEnabled = true;
             }
-            else
-            {
-                StartButton.IsEnabled = false;
-            }
+            StartButton.IsEnabled = _controller.OutputFolder != null;
         }
 
         /// <summary>
@@ -158,8 +154,7 @@ namespace SimpleZIP_UI.Presentation.View
             if (_selectedFiles.Count <= 1) return;
             var selectedItem = (ComboBoxItem)ArchiveTypeComboBox.SelectedItem;
 
-            if (FileTypesComboBoxItems.TryGetValue(selectedItem,
-                out string value) && value.Equals(".gzip"))
+            if (FileTypesComboBoxItems.TryGetValue(selectedItem, out var value) && value.Equals(".gzip"))
             {
                 ArchiveTypeToolTip.Content = I18N.Resources.GetString("OnlySingleFileCompression/Text")
                     + "\r\n" + I18N.Resources.GetString("SeparateArchive/Text");

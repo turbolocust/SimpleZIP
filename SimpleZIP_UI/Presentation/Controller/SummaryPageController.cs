@@ -195,7 +195,7 @@ namespace SimpleZIP_UI.Presentation.Controller
                 {
                     totalSize += await FileUtils.GetFileSizeAsync(item.Archive);
                 }
-            }
+            } 
             ValidateFileSizes(totalSize);
             return totalSize;
         }

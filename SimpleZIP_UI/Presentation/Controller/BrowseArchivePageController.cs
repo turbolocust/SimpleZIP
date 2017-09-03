@@ -18,6 +18,7 @@
 // ==--==
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
@@ -74,7 +75,8 @@ namespace SimpleZIP_UI.Presentation.Controller
                 {
                     var resource = ex is InvalidOperationException
                         ? "FileFormatNotSupported/Text" : "ErrorReadingArchive/Text";
-                    var dialog = DialogFactory.CreateErrorDialog(resource);
+                    var resourceText = I18N.Resources.GetString(resource);
+                    var dialog = DialogFactory.CreateErrorDialog(resourceText);
                     dialog.ShowAsync().AsTask().Forget();
                     ParentPage.Frame.Navigate(typeof(MainPage));
                 }
@@ -90,10 +92,33 @@ namespace SimpleZIP_UI.Presentation.Controller
         }
 
         /// <summary>
+        /// Checks whether the currently opened archive only consists
+        /// of one file entry. This evaluates to true if the opened 
+        /// archive is e.g. a GZIP file which only supports the
+        /// compression of a single file.
+        /// </summary>
+        /// <returns>True if archive only consists of one file entry.</returns>
+        internal bool IsSingleFileEntryArchive()
+        {
+            return _rootNode.Children.Count == 1
+                && !_rootNode.Children.First().IsNode;
+        }
+
+        /// <summary>
+        /// Checks whether the currently opened archive contains
+        /// any elements (including files and folders) or not.
+        /// </summary>
+        /// <returns>True if archive is empty, false otherwise.</returns>
+        internal bool IsEmptyArchive()
+        {
+            return _rootNode.Children.IsNullOrEmpty();
+        }
+
+        /// <summary>
         /// Navigates to <see cref="DecompressionSummaryPage"/> with the archive 
         /// file (<see cref="_archiveFile"/>) as a parameter.
         /// </summary>
-        public void ExtractWholeArchiveButtonAction()
+        internal void ExtractWholeArchiveButtonAction()
         {
             IsNavigating = true;
             var item = new ExtractableItem(_archiveFile.Name, _archiveFile);
