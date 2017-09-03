@@ -38,7 +38,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         /// <summary>
         /// The defined name of the root node.
         /// </summary>
-        private const string RootNodeName = "root";
+        public const string RootNodeName = "root";
 
         /// <summary>
         /// Dictionary that consists of existing nodes. Each node is unique and this 
@@ -100,15 +100,15 @@ namespace SimpleZIP_UI.Application.Compression.Reader
 
             foreach (var entry in ReadArchive())
             {
-                if (entry.IsDirectory) continue; // are considered anyway
+                // directories are considered anyway
+                if (entry.IsDirectory || entry.Key == null) continue;
 
-                var key = entry.Key;
-                var pair = GetEntryKeyPair(key);
+                var pair = GetEntryKeyPair(entry.Key);
                 var parentNode = rootNode;
 
                 for (var i = 0; i <= pair.SeparatorPos; ++i)
                 {
-                    var c = key[i];
+                    var c = entry.Key[i];
                     keyBuilder.Append(c);
 
                     if (c == '/') // next parent found
@@ -161,7 +161,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         /// <returns>The node with the specified key.</returns>
         private Node GetNode(string key)
         {
-            _nodes.TryGetValue(key, out Node node);
+            _nodes.TryGetValue(key, out var node);
             if (node == null)
             {
                 node = new Node(key);
