@@ -40,17 +40,17 @@ namespace SimpleZIP_UI.Presentation.Factory
         }
 
         /// <summary>
-        /// Creates a new message dialog titled "Error" that displays the specified message.
+        /// Creates a new message dialog titled with the resource "SomethingWentWrong.Text".
         /// </summary>
         /// <param name="message">The message to be displayed by the dialog.</param>
         /// <returns>The newly created message dialog.</returns>
         public static MessageDialog CreateErrorDialog(string message)
         {
-            return new MessageDialog(message, I18N.Resources.GetString("Error/Text"));
+            return new MessageDialog(message, I18N.Resources.GetString("SomethingWentWrong/Text"));
         }
 
         /// <summary>
-        /// Creates a new message dialog that displays the specified title and message.
+        /// Creates a new message dialog which displays the specified title and message.
         /// </summary>
         /// <param name="title">The title of the dialog.</param>
         /// <param name="message">The message to be displayed by the dialog.</param>
