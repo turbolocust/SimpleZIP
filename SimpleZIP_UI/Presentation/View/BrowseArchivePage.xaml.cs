@@ -24,6 +24,7 @@ using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using SimpleZIP_UI.Application.Compression.Reader;
 using SimpleZIP_UI.Application.Util;
@@ -162,8 +163,11 @@ namespace SimpleZIP_UI.Presentation.View
                 if (!files.IsNullOrEmpty())
                 {
                     // ReSharper disable once AssignNullToNotNullAttribute
-                    // extension method already checks for null
+                    // since extension method already checks for null
                     archive = files.First() as StorageFile;
+                    // add main page to back stack to allow navigation via back button
+                    Frame.BackStack.Add(new PageStackEntry(typeof(MainPage), null,
+                        new CommonNavigationTransitionInfo()));
                 }
             }
             else
@@ -180,13 +184,13 @@ namespace SimpleZIP_UI.Presentation.View
             ProgressBar.Visibility = Visibility.Collapsed;
         }
 
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs args)
         {
             // can only go back in history if stack holds at 
             // least two elements (since first node is root node)
             if (_nodeStack.Count > 1 && !_controller.IsNavigating)
             {
-                e.Cancel = true;
+                args.Cancel = true;
                 _nodeStack.Pop();
                 UpdateListContent(_nodeStack.Pop());
             }

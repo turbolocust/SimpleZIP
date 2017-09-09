@@ -127,10 +127,10 @@ namespace SimpleZIP_UI
         /// <param name="args">Consists of event parameters.</param>
         private static void OnBackRequested(object sender, BackRequestedEventArgs args)
         {
-            if (Window.Current.Content is Frame rootFrame && rootFrame.CanGoBack)
+            if (Window.Current.Content is Frame frame && frame.CanGoBack)
             {
                 args.Handled = true;
-                rootFrame.GoBack();
+                frame.GoBack();
             }
         }
 
