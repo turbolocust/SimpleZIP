@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
+using SharpCompress.Common;
 using SharpCompress.Compressors.Deflate;
 using SharpCompress.Readers;
 using SharpCompress.Writers;
@@ -40,12 +41,13 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         {
             if (archive == null || location == null) return Stream.Null;
 
+            var compressorStream = Stream.Null;
             var compressorOptions = new CompressorOptions { IsCompression = false };
-            Stream archiveStream = null, progressStream = null, compressorStream = Stream.Null;
+            options = options ?? new ReaderOptions { LeaveStreamOpen = false };
             try
             {
-                archiveStream = await archive.OpenStreamForReadAsync();
-                progressStream = new ProgressObservableStream(this, archiveStream);
+                var archiveStream = await archive.OpenStreamForReadAsync();
+                var progressStream = new ProgressObservableStream(this, archiveStream);
                 compressorStream = GetCompressorStream(progressStream, compressorOptions);
 
                 var outputFileName = archive.Name.Substring(0, archive.Name.Length - archive.FileType.Length);
@@ -67,10 +69,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             }
             finally
             {
-                if (options != null && !options.LeaveStreamOpen)
+                if (!options.LeaveStreamOpen)
                 {
-                    archiveStream?.Dispose();
-                    progressStream?.Dispose();
                     compressorStream.Dispose();
                 }
             }
@@ -90,12 +90,13 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             if (files.IsNullOrEmpty() || archive == null || location == null) return Stream.Null;
 
             var file = files[0]; // since multiple files are not supported
+            var compressorStream = Stream.Null;
             var compressorOptions = new CompressorOptions { FileName = file.Name, IsCompression = true };
-            Stream archiveStream = null, progressStream = null, compressorStream = Stream.Null;
+            options = options ?? new WriterOptions(CompressionType.GZip) { LeaveStreamOpen = false };
             try
             {
-                archiveStream = await archive.OpenStreamForWriteAsync();
-                progressStream = new ProgressObservableStream(this, archiveStream);
+                var archiveStream = await archive.OpenStreamForWriteAsync();
+                var progressStream = new ProgressObservableStream(this, archiveStream);
                 compressorStream = GetCompressorStream(progressStream, compressorOptions);
 
                 using (var inputStream = await file.OpenStreamForReadAsync())
@@ -111,14 +112,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             }
             finally
             {
-                if (options != null && !options.LeaveStreamOpen)
+                if (!options.LeaveStreamOpen)
                 {
-                    archiveStream?.Dispose();
-                    progressStream?.Dispose();
                     compressorStream.Dispose();
                 }
             }
-
             return compressorStream;
         }
 

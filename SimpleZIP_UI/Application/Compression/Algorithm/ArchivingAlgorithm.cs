@@ -53,10 +53,10 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             if (archive == null || location == null) return Stream.Null;
 
             options = options ?? new ReaderOptions { LeaveStreamOpen = false };
-            Stream archiveStream = null, progressStream = Stream.Null;
+            var progressStream = Stream.Null;
             try
             {
-                archiveStream = await archive.OpenStreamForReadAsync();
+                var archiveStream = await archive.OpenStreamForReadAsync();
                 progressStream = new ProgressObservableStream(this, archiveStream);
 
                 using (var reader = ReaderFactory.Open(progressStream, options))
@@ -75,11 +75,9 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             {
                 if (!options.LeaveStreamOpen)
                 {
-                    archiveStream?.Dispose();
                     progressStream.Dispose();
                 }
             }
-
             return progressStream;
         }
 
@@ -89,10 +87,10 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             if (archive == null || entries.IsNullOrEmpty() || location == null) return Stream.Null;
 
             options = options ?? new ReaderOptions { LeaveStreamOpen = false };
-            Stream archiveStream = null, progressStream = Stream.Null;
+            var progressStream = Stream.Null;
             try
             {
-                archiveStream = await archive.OpenStreamForReadAsync();
+                var archiveStream = await archive.OpenStreamForReadAsync();
                 progressStream = new ProgressObservableStream(this, archiveStream);
 
                 using (var reader = ReaderFactory.Open(progressStream, options))
@@ -111,11 +109,9 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             {
                 if (!options.LeaveStreamOpen)
                 {
-                    archiveStream?.Dispose();
                     progressStream.Dispose();
                 }
             }
-
             return progressStream;
         }
 
@@ -151,10 +147,10 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                 options.LeaveStreamOpen = false;
             }
 
-            Stream archiveStream = null, progressStream = Stream.Null;
+            var progressStream = Stream.Null;
             try
             {
-                archiveStream = await archive.OpenStreamForWriteAsync();
+                var archiveStream = await archive.OpenStreamForWriteAsync();
                 progressStream = new ProgressObservableStream(this, archiveStream);
 
                 using (var writer = WriterFactory.Open(progressStream, _type, options))
@@ -173,11 +169,9 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             {
                 if (!options.LeaveStreamOpen)
                 {
-                    archiveStream?.Dispose();
                     progressStream.Dispose();
                 }
             }
-
             return progressStream;
         }
 
