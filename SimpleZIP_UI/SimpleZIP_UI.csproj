@@ -94,8 +94,12 @@
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
     <None Include="project.json" />
-    <PRIResource Include="Strings\de-DE\Resources.resw" />
-    <PRIResource Include="Strings\en-US\Resources.resw" />
+    <PRIResource Include="Strings\de-DE\Resources.resw">
+      <SubType>Designer</SubType>
+    </PRIResource>
+    <PRIResource Include="Strings\en-US\Resources.resw">
+      <SubType>Designer</SubType>
+    </PRIResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application\Compression\Algorithm\AbstractAlgorithm.cs" />
@@ -131,6 +135,7 @@
     <Compile Include="Presentation\Controller\BrowseArchivePageController.cs" />
     <Compile Include="Presentation\Controller\SummaryPageController.cs" />
     <Compile Include="Presentation\ProgressManager.cs" />
+    <Compile Include="Presentation\Settings.cs" />
     <Compile Include="Presentation\View\AboutDialog.xaml.cs">
       <DependentUpon>AboutDialog.xaml</DependentUpon>
     </Compile>
@@ -163,6 +168,9 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\View\Model\BrowseArchivePageModel.cs" />
+    <Compile Include="Presentation\View\SettingsDialog.xaml.cs">
+      <DependentUpon>SettingsDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -236,6 +244,10 @@
     <Page Include="Presentation\View\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Presentation\View\SettingsDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup />
