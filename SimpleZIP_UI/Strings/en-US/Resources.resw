@@ -59,6 +59,8 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
+  <!-- ReSharper disable DuplicateResource -->
+  <!-- ReSharper disable DuplicateResource -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -117,15 +119,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <!-- ReSharper disable DuplicateResource -->
-  <!-- ReSharper disable MarkupTextTypo -->
   <data name="Abort.Text" xml:space="preserve">
     <value>Abort</value>
     <comment>Allows the interruption of an operation.</comment>
   </data>
-  <data name="About.Text" xml:space="preserve">
-    <value>About</value>
-    <comment>Information about the person who created the software.</comment>
+  <data name="HelpFeedback.Text" xml:space="preserve">
+    <value>Help &amp; Feedback</value>
+    <comment>Offers help and possibility to give feedback.</comment>
   </data>
   <data name="ArchiveContent.Text" xml:space="preserve">
     <value>Archive Content:</value>
@@ -199,9 +199,9 @@
     <value>minutes</value>
     <comment>Amount of minutes.</comment>
   </data>
-  <data name="NotAllExtracted.Text" xml:space="preserve">
-    <value>Not all files were extracted.</value>
-    <comment>Some file were not extracted.</comment>
+  <data name="NotAllProcessed.Text" xml:space="preserve">
+    <value>Not all files were processed.</value>
+    <comment>Some file were not processed.</comment>
   </data>
   <data name="NoValidFolderSelected.Text" xml:space="preserve">
     <value>No valid output folder selected.</value>
@@ -268,7 +268,7 @@
     <comment>Software was made by...</comment>
   </data>
   <data name="Feedback.Text" xml:space="preserve">
-    <value>Any Feedback?</value>
+    <value>Got questions or any feedback?</value>
     <comment>Aks the user for feedback.</comment>
   </data>
   <data name="License.Text" xml:space="preserve">
@@ -326,5 +326,21 @@
   <data name="Uncompressed.Text" xml:space="preserve">
     <value>Uncompressed</value>
     <comment>An archive that is not compressed.</comment>
+  </data>
+  <data name="Settings.Text" xml:space="preserve">
+    <value>Settings</value>
+    <comment>Adjustments that can be made to the application.</comment>
+  </data>
+  <data name="BrowseArchiveSetting.Text" xml:space="preserve">
+    <value>Browse archive when opened via file explorer</value>
+    <comment>Allows to browse the archive directly when opened via file explorer.</comment>
+  </data>
+  <data name="HideLessCommonArchiveTypesSetting.Text" xml:space="preserve">
+    <value>Hide less common archive types when compressing</value>
+    <comment>Allows to hide some less commonly used archive types.</comment>
+  </data>
+  <data name="SettingsDialog.Title" xml:space="preserve">
+    <value>Settings</value>
+    <comment>Dialog which allows adjustments to behavior of application.</comment>
   </data>
 </root>
