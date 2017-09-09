@@ -26,12 +26,13 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using SimpleZIP_UI.Application.Compression.Reader;
+using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Presentation.Controller;
 using SimpleZIP_UI.Presentation.View.Model;
 
 namespace SimpleZIP_UI.Presentation.View
 {
-    public sealed partial class BrowseArchivePage : Page
+    public sealed partial class BrowseArchivePage
     {
         /// <summary>
         /// The aggregated control instance.
@@ -151,8 +152,28 @@ namespace SimpleZIP_UI.Presentation.View
 
         protected override async void OnNavigatedTo(NavigationEventArgs args)
         {
-            if (!(args.Parameter is StorageFile archive))
+            StorageFile archive = null;
+            // check for file activated event (opened via file explorer)
+            var eventArgs = args.Parameter as Windows.ApplicationModel.Activation.IActivatedEventArgs;
+            if (eventArgs?.Kind == Windows.ApplicationModel.Activation.ActivationKind.File)
+            {
+                var fileArgs = eventArgs as Windows.ApplicationModel.Activation.FileActivatedEventArgs;
+                var files = fileArgs?.Files;
+                if (!files.IsNullOrEmpty())
+                {
+                    // ReSharper disable once AssignNullToNotNullAttribute
+                    // extension method already checks for null
+                    archive = files.First() as StorageFile;
+                }
+            }
+            else
+            {
+                archive = args.Parameter as StorageFile;
+            }
+
+            if (archive == null)
                 throw new NullReferenceException("Cannot handle null parameter.");
+
             UpdateListContent(await _controller.ReadArchive(archive));
             ExtractWholeArchiveButton.IsEnabled = !_controller.IsEmptyArchive();
             ProgressBar.IsEnabled = false;

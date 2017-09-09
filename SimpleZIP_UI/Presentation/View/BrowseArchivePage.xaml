@@ -30,13 +30,13 @@
             </ListBox>
         </ScrollViewer>
         <StackPanel Grid.Row="3" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,8,16,0">
-            <Button x:Name="ExtractWholeArchiveButton" Tapped="ExtractWholeArchiveButton_Tap" IsEnabled="False" MinHeight="44" Height="50" MaxHeight="60" Margin="0,0,16,0" 
-                    Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
-                <TextBlock x:Uid="ExtractAll" Text="" TextWrapping="Wrap" />
-            </Button>
-            <Button x:Name="ExtractSelectedEntriesButton" Tapped="ExtractSelectedEntriesButton_Tap" IsEnabled="False" MinHeight="44" Height="50" MaxHeight="60" 
+            <Button x:Name="ExtractSelectedEntriesButton" Tapped="ExtractSelectedEntriesButton_Tap" IsEnabled="False" MinHeight="44" Height="50" MaxHeight="60" Margin="0,0,16,0" 
                     Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                 <TextBlock x:Uid="ExtractSelected" Text="" TextWrapping="Wrap" />
+            </Button>
+            <Button x:Name="ExtractWholeArchiveButton" Tapped="ExtractWholeArchiveButton_Tap" IsEnabled="False" MinHeight="44" Height="50" MaxHeight="60"
+                    Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+                <TextBlock x:Uid="ExtractAll" Text="" TextWrapping="Wrap" />
             </Button>
         </StackPanel>
     </Grid>

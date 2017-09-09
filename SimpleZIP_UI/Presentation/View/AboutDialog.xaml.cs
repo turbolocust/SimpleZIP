@@ -31,7 +31,8 @@ namespace SimpleZIP_UI.Presentation.View
         }
 
         /// <summary>
-        /// Invoked when the primary button of this dialog has been pressed. This will simply hide the dialog.
+        /// Invoked when the primary button of this dialog has been pressed. 
+        /// This will simply hide the dialog.
         /// </summary>
         /// <param name="sender">The sender of the event.</param>
         /// <param name="args">Consists of event parameters.</param>

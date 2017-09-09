@@ -18,7 +18,6 @@
 // ==--==
 using System;
 using Windows.System;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using SimpleZIP_UI.Presentation.Factory;
@@ -29,7 +28,7 @@ using static SimpleZIP_UI.Presentation.Controller.MainPageController;
 
 namespace SimpleZIP_UI.Presentation.View
 {
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage
     {
         /// <summary>
         /// Constant which defines the preferred width of the view.
@@ -107,6 +106,16 @@ namespace SimpleZIP_UI.Presentation.View
             {
                 await Launcher.LaunchUriAsync(new Uri("https://github.com/turbolocust/SimpleZIP"));
             }
+        }
+
+        /// <summary>
+        /// Shows a settings dialog.
+        /// </summary>
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="args">Consists of event parameters.</param>
+        private async void SettingsMenuButton_Tap(object sender, TappedRoutedEventArgs args)
+        {
+            await new SettingsDialog().ShowAsync();
         }
 
         /// <summary>

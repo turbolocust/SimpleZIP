@@ -16,7 +16,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
-
 using System;
 using System.Text;
 using Windows.System.Display;
@@ -88,7 +87,7 @@ namespace SimpleZIP_UI.Presentation.Controller
                 case Result.Status.PartialFail:
                     {
                         dialog = DialogFactory.CreateErrorDialog(
-                            I18N.Resources.GetString("NotAllExtracted/Text"));
+                            I18N.Resources.GetString("NotAllProcessed/Text"));
                         break;
                     }
                 default: throw new ArgumentOutOfRangeException(nameof(result.StatusCode));

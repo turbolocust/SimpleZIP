@@ -1,5 +1,5 @@
 ﻿<ContentDialog 
-    x:Uid="AboutApplication"
+    x:Uid="AboutDialog"
     x:Class="SimpleZIP_UI.Presentation.View.AboutDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"

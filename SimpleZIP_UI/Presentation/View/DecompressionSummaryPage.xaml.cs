@@ -35,7 +35,7 @@ using SimpleZIP_UI.Presentation.Controller;
 
 namespace SimpleZIP_UI.Presentation.View
 {
-    public sealed partial class DecompressionSummaryPage : Page, IDisposable
+    public sealed partial class DecompressionSummaryPage : IDisposable
     {
         /// <summary>
         /// The aggregated control instance.

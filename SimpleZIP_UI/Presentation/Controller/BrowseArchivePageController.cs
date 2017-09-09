@@ -111,7 +111,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// <returns>True if archive is empty, false otherwise.</returns>
         internal bool IsEmptyArchive()
         {
-            return _rootNode.Children.IsNullOrEmpty();
+            return _rootNode == null || _rootNode.Children.IsNullOrEmpty();
         }
 
         /// <summary>

@@ -33,7 +33,7 @@ using SimpleZIP_UI.Presentation.Controller;
 
 namespace SimpleZIP_UI.Presentation.View
 {
-    public sealed partial class CompressionSummaryPage : Page, IDisposable
+    public sealed partial class CompressionSummaryPage : IDisposable
     {
         /// <summary>
         /// The aggregated control instance.
@@ -68,19 +68,24 @@ namespace SimpleZIP_UI.Presentation.View
             const string gzipText = "GZIP (.gzip)";
             const string tgzText = "TAR+GZIP (.tgz)";
 
-            var tarText = "TAR (.tar) [" + uncompressedText + "]";
-            var tlzText = "TAR+LZMA (.tlz) [" + slowText + "]";
-            var tbz2Text = "TAR+BZIP2 (.tbz2) [" + slowText + "]";
-
             // ReSharper disable once PossibleNullReferenceException
             ArchiveTypeComboBox.Items.Add(CreateItemForComboBox(zipText, ".zip"));
             ArchiveTypeComboBox.Items.Add(CreateItemForComboBox(gzipText, ".gzip"));
-            ArchiveTypeComboBox.Items.Add(CreateItemForComboBox(tarText, ".tar"));
             ArchiveTypeComboBox.Items.Add(CreateItemForComboBox(tgzText, ".tgz"));
-            ArchiveTypeComboBox.Items.Add(CreateItemForComboBox(tlzText, ".tlz"));
-            ArchiveTypeComboBox.Items.Add(CreateItemForComboBox(tbz2Text, ".tbz2"));
-            ArchiveTypeComboBox.SelectedIndex = 0; // selected index on page launch
 
+            Settings.TryGet(Settings.Keys.HideSomeArchiveTypesKey, out bool isHideSome);
+            if (!isHideSome)
+            {
+                var tarText = "TAR (.tar) [" + uncompressedText + "]";
+                var tlzText = "TAR+LZMA (.tlz) [" + slowText + "]";
+                var tbz2Text = "TAR+BZIP2 (.tbz2) [" + slowText + "]";
+
+                ArchiveTypeComboBox.Items.Add(CreateItemForComboBox(tarText, ".tar"));
+                ArchiveTypeComboBox.Items.Add(CreateItemForComboBox(tlzText, ".tlz"));
+                ArchiveTypeComboBox.Items.Add(CreateItemForComboBox(tbz2Text, ".tbz2"));
+            }
+
+            ArchiveTypeComboBox.SelectedIndex = 0; // selected index on page launch
             _controller = new CompressionSummaryPageController(this);
         }
 
@@ -115,8 +120,8 @@ namespace SimpleZIP_UI.Presentation.View
             if (archiveName.Length > 0 && !archiveName.ContainsIllegalChars())
             {
                 // set the algorithm by archive file type
-                FileTypesComboBoxItems.TryGetValue(selectedItem, out string archiveType);
-                Archives.ArchiveFileTypes.TryGetValue(archiveType, out Archives.ArchiveType value);
+                FileTypesComboBoxItems.TryGetValue(selectedItem, out var archiveType);
+                Archives.ArchiveFileTypes.TryGetValue(archiveType, out var value);
 
                 archiveName += archiveType;
                 var result = await InitOperation(value, archiveName);

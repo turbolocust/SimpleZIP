@@ -6,6 +6,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using SimpleZIP_UI.Presentation;
 using SimpleZIP_UI.Presentation.View;
 
 namespace SimpleZIP_UI
@@ -87,7 +88,11 @@ namespace SimpleZIP_UI
         {
             base.OnFileActivated(args);
             var rootFrame = new Frame();
-            rootFrame.Navigate(typeof(DecompressionSummaryPage), args);
+            var destination = Settings.TryGet(Settings.Keys.PreferOpenArchiveKey,
+                out bool isOpenArchive) && isOpenArchive
+                    ? typeof(BrowseArchivePage) 
+                    : typeof(DecompressionSummaryPage);
+            rootFrame.Navigate(destination, args);
             Window.Current.Content = rootFrame;
             Window.Current.Activate();
         }
