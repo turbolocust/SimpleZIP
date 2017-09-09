@@ -1,0 +1,28 @@
+﻿<ContentDialog
+    x:Uid="SettingsDialog"
+    x:Class="SimpleZIP_UI.Presentation.View.SettingsDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    FullSizeDesired="False"
+    Title=""
+    PrimaryButtonText="Close"
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick" 
+    Opened="SettingsDialog_OnOpened">
+
+    <Grid Padding="0,0,0,8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+            <ToggleSwitch x:Name="BrowseArchiveToggleSwitch" Toggled="ToggleSwitch_OnToggled" Margin="0,4,0,8">
+                <TextBlock x:Uid="BrowseArchiveSetting" Text="" TextWrapping="Wrap"/>
+            </ToggleSwitch>
+            <ToggleSwitch x:Name="HideArchiveTypesToggleSwitch" Toggled="ToggleSwitch_OnToggled" Margin="0,0,0,8">
+                <TextBlock x:Uid="HideLessCommonArchiveTypesSetting" Text="" TextWrapping="Wrap"/>
+            </ToggleSwitch>
+        </StackPanel>
+    </Grid>
+</ContentDialog>
