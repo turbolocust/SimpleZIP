@@ -127,6 +127,8 @@
     <Compile Include="Application\Compression\Model\Result.cs" />
     <Compile Include="Application\Compression\Streams\DecoratorStream.cs" />
     <Compile Include="Application\Compression\Streams\ProgressObservableStream.cs" />
+    <Compile Include="Application\Hashing\IMessageDigestAlgorithm.cs" />
+    <Compile Include="Application\Hashing\MessageDigestAlgorithm.cs" />
     <Compile Include="Application\Util\WriterUtils.cs" />
     <Compile Include="Application\Util\CollectionUtils.cs" />
     <Compile Include="Application\Util\TaskUtils.cs" />
