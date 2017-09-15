@@ -60,7 +60,7 @@
             : and then encoded with base64 encoding.
     -->
   <!-- ReSharper disable DuplicateResource -->
-  <!-- ReSharper disable DuplicateResource -->
+  <!-- ReSharper disable MarkupTextTypo -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -177,7 +177,7 @@
   </data>
   <data name="Feedback.Text" xml:space="preserve">
     <value>Offene Fragen oder Feedback?</value>
-    <comment>Aks the user for feedback.</comment>
+    <comment>Asks whether the user has any questions or feedback.</comment>
   </data>
   <data name="FileFormatNotSupported.Text" xml:space="preserve">
     <value>Dateiformat wird nicht unterstützt.</value>

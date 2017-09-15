@@ -60,7 +60,7 @@
             : and then encoded with base64 encoding.
     -->
   <!-- ReSharper disable DuplicateResource -->
-  <!-- ReSharper disable DuplicateResource -->
+  <!-- ReSharper disable MarkupTextTypo -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -268,8 +268,8 @@
     <comment>Software was made by...</comment>
   </data>
   <data name="Feedback.Text" xml:space="preserve">
-    <value>Got questions or any feedback?</value>
-    <comment>Aks the user for feedback.</comment>
+    <value>Got any questions or feedback?</value>
+    <comment>Asks whether the user has any questions or feedback.</comment>
   </data>
   <data name="License.Text" xml:space="preserve">
     <value>This app makes use of the SharpCompress library by Adam Hathcock and is licensed under the {0} without any warranty.</value>
