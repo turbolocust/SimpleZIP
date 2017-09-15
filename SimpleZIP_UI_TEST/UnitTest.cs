@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
@@ -20,7 +21,18 @@ namespace SimpleZIP_UI_TEST
 
         private const string ArchiveName = "simpleZipUiTestArchive";
 
-        private const string FileText = "This is just a test for testing compression and extraction.";
+        private static readonly string FileText = GenerateRandomString(255);
+
+        private static string GenerateRandomString(int length)
+        {
+            var sb = new StringBuilder(length);
+            var rand = new Random();
+            for (var i = 0; i < length; ++i)
+            {
+                sb.Append((char)rand.Next(65, 122));
+            }
+            return sb.ToString();
+        }
 
         /// <summary>
         /// Tests the compression and extraction using ZIP archive type.

@@ -32,8 +32,8 @@ Supported formats for decompression:
 
 # Screenshots
 
-<img src="https://homepages.fhv.at/mfu7609/images/simplezip_main_page.PNG" alt="main page image"/><br />
+<img src="https://homepages.fhv.at/mfu7609/images/simplezip_main.PNG" alt="main page image"/><br />
 <img src="https://homepages.fhv.at/mfu7609/images/simplezip_sidebar.PNG" alt="side bar image"/><br />
-<img src="https://homepages.fhv.at/mfu7609/images/simplezip_compression_page.PNG" alt="compression page image"/><br />
-<img src="https://homepages.fhv.at/mfu7609/images/simplezip_decompression_page.PNG" alt="decompression page image"/><br />
-<img src="https://homepages.fhv.at/mfu7609/images/simplezip_readarchive_page.PNG" alt="read archive page image"/>
+<img src="https://homepages.fhv.at/mfu7609/images/simplezip_compression.PNG" alt="compression page image"/><br />
+<img src="https://homepages.fhv.at/mfu7609/images/simplezip_decompression.PNG" alt="decompression page image"/><br />
+<img src="https://homepages.fhv.at/mfu7609/images/simplezip_readarchive.PNG" alt="read archive page image"/>
