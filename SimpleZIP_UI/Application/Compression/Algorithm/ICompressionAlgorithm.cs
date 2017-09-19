@@ -58,7 +58,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <param name="location">The location where to extract the archive to.</param>
         /// <param name="options">Options for the reader. May be omitted.></param>
         /// <returns>Task which returns a stream that has been used to read the archive. The task will not be 
-        /// disposed if <see cref="OptionsBase.LeaveStreamOpen"/> in <see cref="options"/> is set to true.</returns>
+        /// disposed if <see cref="OptionsBase.LeaveStreamOpen"/> in options is set to true.</returns>
         /// <exception cref="IOException">Thrown on any error when reading from or writing to streams.</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not permitted.</exception>
         Task<Stream> Decompress(StorageFile archive, StorageFolder location, ReaderOptions options = null);
@@ -71,7 +71,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <param name="entries">Entries of the archive to be extracted.</param>
         /// <param name="options">Options for the reader. May be omitted.</param>
         /// <returns>Task which returns a stream that has been used to read the archive. The task will not be 
-        /// disposed if <see cref="OptionsBase.LeaveStreamOpen"/> in <see cref="options"/> is set to true.</returns>
+        /// disposed if <see cref="OptionsBase.LeaveStreamOpen"/> in options is set to true.</returns>
         /// <exception cref="IOException">Thrown on any error when reading from or writing to streams.</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not permitted.</exception>
         Task<Stream> Decompress(StorageFile archive, StorageFolder location,
@@ -86,7 +86,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <param name="location">Where the archive will be created.</param>
         /// <param name="options">Options for the writer. May be omitted.</param>
         /// <returns>Task which returns a stream that has been used to write the archive. The task will not be 
-        /// disposed if <see cref="OptionsBase.LeaveStreamOpen"/> in <see cref="options"/> is set to true.</returns>
+        /// disposed if <see cref="OptionsBase.LeaveStreamOpen"/> in options is set to true.</returns>
         /// <exception cref="IOException">Thrown on any error when reading from or writing to streams.</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not allowed.</exception>
         /// <exception cref="NotSupportedException">Thrown when archive type does not have a writer.</exception>

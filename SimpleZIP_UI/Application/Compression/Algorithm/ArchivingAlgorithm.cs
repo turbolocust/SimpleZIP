@@ -31,6 +31,7 @@ using SimpleZIP_UI.Application.Util;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm
 {
+    /// <inheritdoc />
     /// <summary>
     /// Offers archiving operations using SharpCompress' Reader and Writer API.
     /// </summary>
@@ -41,12 +42,14 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// </summary>
         private readonly ArchiveType _type;
 
+        /// <inheritdoc />
         protected ArchivingAlgorithm(ArchiveType type)
         {
             _type = type;
             Token = CancellationToken.None;
         }
 
+        /// <inheritdoc />
         public override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
             ReaderOptions options = null)
         {
@@ -81,6 +84,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             return progressStream;
         }
 
+        /// <inheritdoc />
         public override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
             IReadOnlyList<FileEntry> entries, ReaderOptions options = null)
         {
@@ -136,6 +140,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             return entry;
         }
 
+        /// <inheritdoc />
         public override async Task<Stream> Compress(IReadOnlyList<StorageFile> files, StorageFile archive,
             StorageFolder location, WriterOptions options = null)
         {

@@ -29,6 +29,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
         {
         }
 
+        /// <inheritdoc />
         protected override WriterOptions GetWriterOptions()
         {
             return new ZipWriterOptions(CompressionType.Deflate)

@@ -29,6 +29,7 @@ using SimpleZIP_UI.Application.Compression.Algorithm.Event;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm
 {
+    /// <inheritdoc cref="ICompressionAlgorithm" />
     public abstract class AbstractAlgorithm : ICompressionAlgorithm, IProgressObserver<long>
     {
         /// <summary>
@@ -36,6 +37,9 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// </summary>
         protected const int DefaultBufferSize = 8192;
 
+        /// <summary>
+        /// Event handler for total bytes processed.
+        /// </summary>
         public event EventHandler<TotalBytesProcessedEventArgs> TotalBytesProcessed;
 
         /// <inheritdoc cref="ICompressionAlgorithm.Token"/>
