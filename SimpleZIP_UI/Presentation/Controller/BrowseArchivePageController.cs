@@ -131,7 +131,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// </summary>
         /// <param name="models">The models to be converted.</param>
         /// <param name="node">The currently active node that holds equivalents of the models.</param>
-        internal void ExtractSelectedEntriesButtonAction(ICollection<BrowseArchivePageModel> models, Node node)
+        internal void ExtractSelectedEntriesButtonAction(ICollection<ArchiveEntryModel> models, Node node)
         {
             var entries = new List<FileEntry>(models.Count);
             foreach (var model in models)

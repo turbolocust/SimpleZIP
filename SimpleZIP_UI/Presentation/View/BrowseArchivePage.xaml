@@ -17,7 +17,7 @@
         <TextBlock x:Uid="ArchiveContent" Text="" Grid.Row="0" FontWeight="Medium" FontSize="16" CharacterSpacing="56" Margin="8,8,0,0" VerticalAlignment="Center" />
         <ProgressBar x:Name="ProgressBar" Grid.Row="1" HorizontalAlignment="Stretch" IsIndeterminate="True" IsEnabled="False" Visibility="Collapsed" />
         <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" Margin="0,16,0,0" VerticalScrollBarVisibility="Auto">
-            <ListBox ItemsSource="{Binding ArchivePageModels}" SelectionChanged="ItemsListBox_OnSelectionChanged" Margin="8,0,8,0" SelectionMode="Multiple" CanDrag="False" 
+            <ListBox ItemsSource="{Binding ArchiveEntryModels}" SelectionChanged="ItemsListBox_OnSelectionChanged" Margin="8,0,8,0" SelectionMode="Multiple" CanDrag="False" 
                      HorizontalContentAlignment="Stretch" Background="Transparent" Height="Auto" Foreground="{ThemeResource ButtonForegroundThemeBrush}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>

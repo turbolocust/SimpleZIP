@@ -23,11 +23,13 @@ using Windows.UI.Xaml.Navigation;
 using SimpleZIP_UI.Presentation.Factory;
 using Windows.UI.ViewManagement;
 using Windows.Foundation;
+using Windows.UI.Xaml.Controls;
 using SimpleZIP_UI.Presentation.Controller;
 using static SimpleZIP_UI.Presentation.Controller.MainPageController;
 
 namespace SimpleZIP_UI.Presentation.View
 {
+    /// <inheritdoc cref="Page" />
     public sealed partial class MainPage
     {
         /// <summary>
@@ -45,6 +47,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// </summary>
         private readonly MainPageController _controller;
 
+        /// <inheritdoc />
         public MainPage()
         {
             InitializeComponent();
@@ -90,6 +93,16 @@ namespace SimpleZIP_UI.Presentation.View
         }
 
         /// <summary>
+        /// Allows the user to select files whose hashes are to be calculated.
+        /// </summary>
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="args">Consists of event parameters.</param>
+        private async void CalculateHashesButton_Tap(object sender, TappedRoutedEventArgs args)
+        {
+            await _controller.PerformAction(MainPageActionType.HashCalculation);
+        }
+
+        /// <summary>
         /// Opens the project's homepage using the <see cref="Launcher"/>.
         /// Brings up a confirmation dialog first to avoid accidental redirection. 
         /// </summary>
@@ -128,6 +141,7 @@ namespace SimpleZIP_UI.Presentation.View
             await new AboutDialog().ShowAsync();
         }
 
+        /// <inheritdoc />
         protected override void OnNavigatedTo(NavigationEventArgs args)
         {
             Frame.BackStack.Clear(); // going back is prohibited after aborting operation

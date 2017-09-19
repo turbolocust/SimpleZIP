@@ -33,12 +33,13 @@ using SimpleZIP_UI.Presentation.Controller;
 
 namespace SimpleZIP_UI.Presentation.View
 {
+    /// <inheritdoc cref="Page" />
     public sealed partial class CompressionSummaryPage : IDisposable
     {
         /// <summary>
         /// The aggregated control instance.
         /// </summary>
-        private readonly CompressionSummaryPageController _controller;
+        private readonly CompressionPageController _controller;
 
         /// <summary>
         /// A list of selected files for compression.
@@ -55,6 +56,7 @@ namespace SimpleZIP_UI.Presentation.View
             FileTypesComboBoxItems = new Dictionary<ComboBoxItem, string>();
         }
 
+        /// <inheritdoc />
         public CompressionSummaryPage()
         {
             InitializeComponent();
@@ -86,7 +88,7 @@ namespace SimpleZIP_UI.Presentation.View
             }
 
             ArchiveTypeComboBox.SelectedIndex = 0; // selected index on page launch
-            _controller = new CompressionSummaryPageController(this);
+            _controller = new CompressionPageController(this);
         }
 
         private static ComboBoxItem CreateItemForComboBox(string content, string fileType)
@@ -278,6 +280,7 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
+        /// <inheritdoc />
         protected override void OnNavigatedTo(NavigationEventArgs args)
         {
             _selectedFiles = args.Parameter as IReadOnlyList<StorageFile>;
@@ -290,11 +293,13 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
+        /// <inheritdoc />
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             e.Cancel = _controller.Operation?.IsRunning ?? false;
         }
 
+        /// <inheritdoc />
         protected override void OnNavigatedFrom(NavigationEventArgs args)
         {
             SetOperationActive(false);
@@ -302,6 +307,7 @@ namespace SimpleZIP_UI.Presentation.View
             ArchiveTypeToolTip.IsOpen = false;
         }
 
+        /// <inheritdoc />
         public void Dispose()
         {
             _controller.Dispose();

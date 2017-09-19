@@ -20,8 +20,10 @@ using Windows.UI.Xaml.Controls;
 
 namespace SimpleZIP_UI.Presentation.View
 {
+    /// <inheritdoc cref="ContentDialog" />
     public sealed partial class AboutDialog
     {
+        /// <inheritdoc />
         public AboutDialog()
         {
             InitializeComponent();
