@@ -23,6 +23,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
 {
     public class TarGzip : Tar
     {
+        /// <inheritdoc />
         protected override WriterOptions GetWriterOptions()
         {
             return new WriterOptions(CompressionType.GZip);

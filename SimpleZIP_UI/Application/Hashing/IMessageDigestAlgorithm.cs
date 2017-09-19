@@ -20,6 +20,9 @@ using Windows.Security.Cryptography.Core;
 
 namespace SimpleZIP_UI.Application.Hashing
 {
+    /// <summary>
+    /// Offers functionality for calculating hash values.
+    /// </summary>
     public interface IMessageDigestAlgorithm
     {
         /// <summary>

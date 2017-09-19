@@ -9,10 +9,23 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="8.0*"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1.5*"/>
+            <RowDefinition Height="7.5*"/>
+            <RowDefinition Height="1.0*"/>
         </Grid.RowDefinitions>
-        <ScrollViewer Grid.Row="0" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <StackPanel Grid.Row="0" VerticalAlignment="Center" Orientation="Horizontal" Margin="16,0,16,0">
+            <ComboBox Margin="0,0,32,0" SelectedIndex="2">
+                <ComboBoxItem Content="MD5"/>
+                <ComboBoxItem Content="SHA1"/>
+                <ComboBoxItem Content="SHA256"/>
+                <ComboBoxItem Content="SHA384"/>
+                <ComboBoxItem Content="SHA512"/>
+            </ComboBox>
+            <Button MinWidth="100" MinHeight="32" BorderBrush="{ThemeResource SystemControlBackgroundAccentBrush}">
+                <TextBlock x:Uid="StartCalculation" Text=""/>
+            </Button>
+        </StackPanel>
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
             <ListBox ItemsSource="{Binding MessageDigestModels}" Margin="4,0,0,0" SelectionMode="Single" CanDrag="False" 
                      HorizontalContentAlignment="Stretch" Background="Transparent" Height="Auto" >
                 <ListBox.ItemTemplate>
@@ -34,8 +47,8 @@
                 </ListBox.ItemTemplate>
             </ListBox>
         </ScrollViewer>
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,8,16,0">
-            <Button Tapped="CopyAllButton_Tap" IsEnabled="True" Width="120" MinHeight="44" Height="50" MaxHeight="60" Margin="0,0,0,0" 
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,16,0">
+            <Button Tapped="CopyAllButton_Tap" IsEnabled="True" Width="120" MinHeight="44" Height="50" MaxHeight="60"
                     Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                 <TextBlock x:Uid="CopyAll" Text="" TextWrapping="Wrap" />
             </Button>

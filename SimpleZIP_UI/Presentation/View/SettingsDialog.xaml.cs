@@ -21,8 +21,10 @@ using Windows.UI.Xaml.Controls;
 
 namespace SimpleZIP_UI.Presentation.View
 {
+    /// <inheritdoc cref="ContentDialog" />
     public sealed partial class SettingsDialog
     {
+        /// <inheritdoc />
         public SettingsDialog()
         {
             InitializeComponent();
@@ -38,7 +40,7 @@ namespace SimpleZIP_UI.Presentation.View
         }
 
 
-        private void SettingsDialog_OnOpened(ContentDialog sender, 
+        private void SettingsDialog_OnOpened(ContentDialog sender,
             ContentDialogOpenedEventArgs args)
         {
             SetToggleButtonsToggledState();

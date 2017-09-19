@@ -24,6 +24,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
 {
     public class GZip : CompressorAlgorithm
     {
+        /// <inheritdoc />
         protected override Stream GetCompressorStream(Stream stream, CompressorOptions options)
         {
             var compressorStream = options.IsCompression
