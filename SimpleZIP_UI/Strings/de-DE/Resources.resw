@@ -230,7 +230,7 @@
     <comment>Negative answer.</comment>
   </data>
   <data name="NotAllProcessed.Text" xml:space="preserve">
-    <value>Not all files were processed.</value>
+    <value>Nicht alle Dateien wurden verarbeitet.</value>
     <comment>Some file were not processed.</comment>
   </data>
   <data name="NoValidFolderSelected.Text" xml:space="preserve">
@@ -341,8 +341,20 @@
     <value>Einstellungen</value>
     <comment>Dialog which allows adjustments to behavior of application.</comment>
   </data>
-  <data name="CalculateHashes.Text" xml:space="preserve">
+  <data name="ComputeHash.Text" xml:space="preserve">
     <value>Hash berechnen. . .</value>
-    <comment>Allows the user to calculate file hashes.</comment>
+    <comment>Allows the user to compute file hashes.</comment>
+  </data>
+  <data name="HashAlgorithm.Header" xml:space="preserve">
+    <value>Hash Algorithmus</value>
+    <comment>An algorithm to compute hashes.</comment>
+  </data>
+  <data name="Copy.Text" xml:space="preserve">
+    <value>Kopieren</value>
+    <comment>Copies only one value.</comment>
+  </data>
+  <data name="CopyAll.Text" xml:space="preserve">
+    <value>Alle kopieren</value>
+    <comment>Copies all values.</comment>
   </data>
 </root>

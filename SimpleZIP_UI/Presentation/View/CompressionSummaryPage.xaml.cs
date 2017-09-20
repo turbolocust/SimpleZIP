@@ -119,7 +119,7 @@ namespace SimpleZIP_UI.Presentation.View
             var selectedItem = (ComboBoxItem)ArchiveTypeComboBox.SelectedItem;
             var archiveName = ArchiveNameTextBox.Text;
 
-            if (archiveName.Length > 0 && !archiveName.ContainsIllegalChars())
+            if (archiveName.Length > 0 && !FileUtils.ContainsIllegalChars(archiveName))
             {
                 // set the algorithm by archive file type
                 FileTypesComboBoxItems.TryGetValue(selectedItem, out var archiveType);
@@ -182,7 +182,7 @@ namespace SimpleZIP_UI.Presentation.View
             {
                 ArchiveNameTextBox.Text = I18N.Resources.GetString("ArchiveName/Text");
             }
-            else if (fileName.ContainsIllegalChars()) // check for illegal characters in file name
+            else if (FileUtils.ContainsIllegalChars(fileName)) // check for illegal characters in file name
             {
                 var content = I18N.Resources.GetString("IllegalCharacters/Text")
                     + "\n" + string.Join(" ", FileUtils.IllegalChars);

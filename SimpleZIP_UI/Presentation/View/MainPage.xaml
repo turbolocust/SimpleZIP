@@ -31,7 +31,7 @@
                         <Button Height="50" Background="Transparent" Tapped="CalculateHashesButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                             <StackPanel Orientation="Horizontal">
                                 <SymbolIcon Symbol="Calculator"/>
-                                <TextBlock x:Uid="CalculateHashes" Text="" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
+                                <TextBlock x:Uid="ComputeHash" Text="" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
                             </StackPanel>
                         </Button>
                         <Button Height="50" Background="Transparent" Tapped="GetSourceButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
