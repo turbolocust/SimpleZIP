@@ -59,8 +59,6 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <!-- ReSharper disable DuplicateResource -->
-  <!-- ReSharper disable DuplicateResource -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -177,7 +175,7 @@
   </data>
   <data name="Feedback.Text" xml:space="preserve">
     <value>Offene Fragen oder Feedback?</value>
-    <comment>Aks the user for feedback.</comment>
+    <comment>Asks whether the user has any questions or feedback.</comment>
   </data>
   <data name="FileFormatNotSupported.Text" xml:space="preserve">
     <value>Dateiformat wird nicht unterstützt.</value>
@@ -232,7 +230,7 @@
     <comment>Negative answer.</comment>
   </data>
   <data name="NotAllProcessed.Text" xml:space="preserve">
-    <value>Not all files were processed.</value>
+    <value>Nicht alle Dateien wurden verarbeitet.</value>
     <comment>Some file were not processed.</comment>
   </data>
   <data name="NoValidFolderSelected.Text" xml:space="preserve">
@@ -342,5 +340,25 @@
   <data name="SettingsDialog.Title" xml:space="preserve">
     <value>Einstellungen</value>
     <comment>Dialog which allows adjustments to behavior of application.</comment>
+  </data>
+  <data name="ComputeHash.Text" xml:space="preserve">
+    <value>Hash berechnen. . .</value>
+    <comment>Allows the user to compute file hashes.</comment>
+  </data>
+  <data name="HashAlgorithm.Header" xml:space="preserve">
+    <value>Hash Algorithmus</value>
+    <comment>An algorithm to compute hashes.</comment>
+  </data>
+  <data name="Copy.Text" xml:space="preserve">
+    <value>Kopieren</value>
+    <comment>Copies only one value.</comment>
+  </data>
+  <data name="CopyAll.Text" xml:space="preserve">
+    <value>Alle kopieren</value>
+    <comment>Copies all values.</comment>
+  </data>
+  <data name="ContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Schließen</value>
+    <comment>Closes the dialog.</comment>
   </data>
 </root>

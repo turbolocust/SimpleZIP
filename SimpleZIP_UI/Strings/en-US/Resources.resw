@@ -59,8 +59,6 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <!-- ReSharper disable DuplicateResource -->
-  <!-- ReSharper disable DuplicateResource -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -268,8 +266,8 @@
     <comment>Software was made by...</comment>
   </data>
   <data name="Feedback.Text" xml:space="preserve">
-    <value>Got questions or any feedback?</value>
-    <comment>Aks the user for feedback.</comment>
+    <value>Got any questions or feedback?</value>
+    <comment>Asks whether the user has any questions or feedback.</comment>
   </data>
   <data name="License.Text" xml:space="preserve">
     <value>This app makes use of the SharpCompress library by Adam Hathcock and is licensed under the {0} without any warranty.</value>
@@ -342,5 +340,25 @@
   <data name="SettingsDialog.Title" xml:space="preserve">
     <value>Settings</value>
     <comment>Dialog which allows adjustments to behavior of application.</comment>
+  </data>
+  <data name="ComputeHash.Text" xml:space="preserve">
+    <value>Compute Hash. . .</value>
+    <comment>Allows the user to compute file hashes.</comment>
+  </data>
+  <data name="HashAlgorithm.Header" xml:space="preserve">
+    <value>Hash Algorithm</value>
+    <comment>An algorithm to compute hashes.</comment>
+  </data>
+  <data name="Copy.Text" xml:space="preserve">
+    <value>Copy</value>
+    <comment>Copies only one value.</comment>
+  </data>
+  <data name="CopyAll.Text" xml:space="preserve">
+    <value>Copy All</value>
+    <comment>Copies all values.</comment>
+  </data>
+  <data name="ContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Close</value>
+    <comment>Closes the dialog.</comment>
   </data>
 </root>

@@ -23,7 +23,7 @@ namespace SimpleZIP_UI.Presentation.View.Model
     /// <summary>
     /// Represents a list box item for the <see cref="BrowseArchivePage"/>.
     /// </summary>
-    public class BrowseArchivePageModel
+    public class ArchiveEntryModel
     {
         /// <summary>
         /// True if this model represents a node.
@@ -31,9 +31,9 @@ namespace SimpleZIP_UI.Presentation.View.Model
         public bool IsNode { get; }
 
         /// <summary>
-        /// A friendly name which will be displayed in the list box.
+        /// A friendly name which will be displayed in the ListBox.
         /// </summary>
-        public string DisplayName { get; set; }
+        public string DisplayName { get; }
 
         /// <summary>
         /// The symbol that will be displayed together with <see cref="DisplayName"/>
@@ -41,9 +41,15 @@ namespace SimpleZIP_UI.Presentation.View.Model
         /// </summary>
         public Symbol Symbol { get; set; }
 
-        public BrowseArchivePageModel(bool isNode)
+        /// <summary>
+        /// Constructs a new model for the ListBox in <see cref="BrowseArchivePage"/>.
+        /// </summary>
+        /// <param name="isNode">True if this model represents a node (folder).</param>
+        /// <param name="displayName">Friendly name of the model to be displayed.</param>
+        public ArchiveEntryModel(bool isNode, string displayName)
         {
             IsNode = isNode;
+            DisplayName = displayName;
         }
     }
 }

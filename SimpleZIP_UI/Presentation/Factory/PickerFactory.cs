@@ -26,63 +26,55 @@ namespace SimpleZIP_UI.Presentation.Factory
     internal static class PickerFactory
     {
         /// <summary>
-        /// Creates a new file open picker to select any file(s) that may be compressed.
+        /// Folder picker which allows to select folders only.
         /// </summary>
-        /// <returns>The newly created file picker.</returns>
-        public static FileOpenPicker CreateCompressFilesOpenPicker()
+        internal static FolderPicker FolderPicker => new FolderPicker
         {
-            var picker = new FileOpenPicker
-            {
-                ViewMode = PickerViewMode.List,
-                SuggestedStartLocation = PickerLocationId.ComputerFolder,
-                FileTypeFilter = { "*" }
-            };
-
-            return picker;
-        }
+            ViewMode = PickerViewMode.List,
+            SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
+            FileTypeFilter = { "*" }
+        };
 
         /// <summary>
-        /// Creates a new file picker to select any archive that may be decompressed.
-        /// Only those files can be picked that are supported by the application (see <see cref="Archives.ArchiveFileTypes"/>).
+        /// Creates a new file open picker to select any file(s).
         /// </summary>
         /// <returns>The newly created file picker.</returns>
-        public static FileOpenPicker CreateDecompressFileOpenPicker()
+        internal static FileOpenPicker FileOpenPickerForAnyFile => new FileOpenPicker
         {
-            var picker = new FileOpenPicker
-            {
-                ViewMode = PickerViewMode.List,
-                SuggestedStartLocation = PickerLocationId.ComputerFolder
-            };
+            ViewMode = PickerViewMode.List,
+            SuggestedStartLocation = PickerLocationId.ComputerFolder,
+            FileTypeFilter = { "*" }
+        };
 
-            foreach (var fileType in GetListOfSupportedFileTypes())
+        /// <summary>
+        /// File picker to select any archive that may be decompressed.
+        /// Only those files can be picked that are supported by the application 
+        /// (see <see cref="Archives.ArchiveFileTypes"/>).
+        /// </summary>
+        internal static FileOpenPicker FileOpenPickerForArchives
+        {
+            get
             {
-                picker.FileTypeFilter.Add(fileType);
+                var picker = new FileOpenPicker
+                {
+                    ViewMode = PickerViewMode.List,
+                    SuggestedStartLocation = PickerLocationId.ComputerFolder
+                };
+
+                foreach (var fileType in GetListOfSupportedFileTypes())
+                {
+                    picker.FileTypeFilter.Add(fileType);
+                }
+
+                return picker;
             }
-
-            return picker;
-        }
-
-        /// <summary>
-        /// Creates a new folder picker to select any folder.
-        /// </summary>
-        /// <returns>The newly created folder picker.</returns>
-        public static FolderPicker CreateFolderPicker()
-        {
-            var picker = new FolderPicker
-            {
-                ViewMode = PickerViewMode.List,
-                SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
-                FileTypeFilter = { "*" }
-            };
-
-            return picker;
         }
 
         /// <summary>
         /// Returns a list consisting of supported file types.
         /// </summary>
         /// <returns>A list of supported file types.</returns>
-        public static IList<string> GetListOfSupportedFileTypes()
+        internal static IList<string> GetListOfSupportedFileTypes()
         {
             return Archives.ArchiveFileTypes.Select(fileType => fileType.Key).ToList();
         }

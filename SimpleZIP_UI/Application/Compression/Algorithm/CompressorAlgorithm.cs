@@ -31,11 +31,13 @@ using SimpleZIP_UI.Application.Util;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm
 {
+    /// <inheritdoc />
     /// <summary>
     /// Offers archiving operations using compressor streams only.
     /// </summary>
     public abstract class CompressorAlgorithm : AbstractAlgorithm
     {
+        /// <inheritdoc />
         public override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
             ReaderOptions options = null)
         {
@@ -77,6 +79,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             return compressorStream;
         }
 
+        /// <inheritdoc />
         public sealed override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
             IReadOnlyList<FileEntry> entries, ReaderOptions options = null)
         {
@@ -84,6 +87,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             return await Decompress(archive, location, options);
         }
 
+        /// <inheritdoc />
         public override async Task<Stream> Compress(IReadOnlyList<StorageFile> files, StorageFile archive,
             StorageFolder location, WriterOptions options = null)
         {
@@ -159,9 +163,9 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             /// </summary>
             internal string FileName;
 
-            /// <summary>
-            /// Comment to be set for compression stream.
-            /// </summary>
+            ///// <summary>
+            ///// Comment to be set for compression stream.
+            ///// </summary>
             //internal string Comment;
 
             /// <summary>

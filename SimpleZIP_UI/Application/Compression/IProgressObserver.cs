@@ -18,6 +18,10 @@
 // ==--==
 namespace SimpleZIP_UI.Application.Compression
 {
+    /// <summary>
+    /// An observer that gets informed on progress updates.
+    /// </summary>
+    /// <typeparam name="T">Type of the progress value.</typeparam>
     public interface IProgressObserver<in T>
     {
         /// <summary>

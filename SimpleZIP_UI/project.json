@@ -2,7 +2,8 @@
   "dependencies": {
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.4.0",
     "Microsoft.Xaml.Behaviors.Uwp.Managed": "2.0.0",
-    "SharpCompress": "0.18.1"
+    "SharpCompress": "0.18.1",
+    "System.ValueTuple": "4.3.0"
   },
   "frameworks": {
     "uap10.0.14393": {}

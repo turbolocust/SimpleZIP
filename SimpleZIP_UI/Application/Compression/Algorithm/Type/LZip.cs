@@ -22,8 +22,13 @@ using SharpCompress.Compressors.LZMA;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
 {
-    internal class LZip : CompressorAlgorithm
+    /// <inheritdoc />
+    /// <summary>
+    /// Represents the LZMA compressor algorithm.
+    /// </summary>
+    public class LZip : CompressorAlgorithm
     {
+        /// <inheritdoc />
         protected override Stream GetCompressorStream(Stream stream, CompressorOptions options)
         {
             return options.IsCompression

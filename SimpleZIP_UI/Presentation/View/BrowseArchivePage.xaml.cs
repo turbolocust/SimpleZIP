@@ -33,6 +33,7 @@ using SimpleZIP_UI.Presentation.View.Model;
 
 namespace SimpleZIP_UI.Presentation.View
 {
+    /// <inheritdoc cref="Page" />
     public sealed partial class BrowseArchivePage
     {
         /// <summary>
@@ -43,7 +44,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// <summary>
         /// Set consisting of selected models in view.
         /// </summary>
-        private readonly ISet<BrowseArchivePageModel> _selectedModels;
+        private readonly ISet<ArchiveEntryModel> _selectedModels;
 
         /// <summary>
         /// Used as a history when navigating back and to determine the currently active node.
@@ -53,14 +54,17 @@ namespace SimpleZIP_UI.Presentation.View
         /// <summary>
         /// Models bound to the list box in view.
         /// </summary>
-        public ObservableCollection<BrowseArchivePageModel> ArchivePageModels { get; }
+        public ObservableCollection<ArchiveEntryModel> ArchiveEntryModels { get; }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
         public BrowseArchivePage()
         {
             InitializeComponent();
             _controller = new BrowseArchivePageController(this);
-            _selectedModels = new HashSet<BrowseArchivePageModel>();
-            ArchivePageModels = new ObservableCollection<BrowseArchivePageModel>();
+            _selectedModels = new HashSet<ArchiveEntryModel>();
+            ArchiveEntryModels = new ObservableCollection<ArchiveEntryModel>();
             ProgressBar.IsEnabled = true;
             ProgressBar.Visibility = Visibility.Visible;
         }
@@ -95,7 +99,7 @@ namespace SimpleZIP_UI.Presentation.View
             // add items from selection
             foreach (var item in args.AddedItems)
             {
-                if (item is BrowseArchivePageModel addItem)
+                if (item is ArchiveEntryModel addItem)
                 {
                     if (addItem.IsNode)
                     {
@@ -115,7 +119,7 @@ namespace SimpleZIP_UI.Presentation.View
             // remove items from selection
             foreach (var item in args.RemovedItems)
             {
-                if (item is BrowseArchivePageModel removeItem)
+                if (item is ArchiveEntryModel removeItem)
                 {
                     _selectedModels.Remove(removeItem);
                 }
@@ -135,22 +139,22 @@ namespace SimpleZIP_UI.Presentation.View
         {
             if (nextNode == null) return;
 
-            ArchivePageModels.Clear();
+            ArchiveEntryModels.Clear();
             _selectedModels.Clear();
             _nodeStack.Push(nextNode);
 
             foreach (var child in nextNode.Children)
             {
                 var isNode = child.IsNode;
-                var model = new BrowseArchivePageModel(isNode)
+                var model = new ArchiveEntryModel(isNode, child.Name)
                 {
-                    Symbol = isNode ? Symbol.Folder : Symbol.Preview,
-                    DisplayName = child.Name
+                    Symbol = isNode ? Symbol.Folder : Symbol.Preview
                 };
-                ArchivePageModels.Add(model);
+                ArchiveEntryModels.Add(model);
             }
         }
 
+        /// <inheritdoc />
         protected override async void OnNavigatedTo(NavigationEventArgs args)
         {
             StorageFile archive = null;
@@ -184,6 +188,7 @@ namespace SimpleZIP_UI.Presentation.View
             ProgressBar.Visibility = Visibility.Collapsed;
         }
 
+        /// <inheritdoc />
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs args)
         {
             // can only go back in history if stack holds at 

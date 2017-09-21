@@ -35,22 +35,24 @@ using SimpleZIP_UI.Presentation.Controller;
 
 namespace SimpleZIP_UI.Presentation.View
 {
+    /// <inheritdoc cref="Page" />
     public sealed partial class DecompressionSummaryPage : IDisposable
     {
         /// <summary>
         /// The aggregated control instance.
         /// </summary>
-        private readonly DecompressionSummaryPageController _controller;
+        private readonly DecompressionPageController _controller;
 
         /// <summary>
         /// A list of selected files for decompression.
         /// </summary>
         private IReadOnlyList<ExtractableItem> _selectedItems;
 
+        /// <inheritdoc />
         public DecompressionSummaryPage()
         {
             InitializeComponent();
-            _controller = new DecompressionSummaryPageController(this);
+            _controller = new DecompressionPageController(this);
         }
 
         /// <summary>
@@ -153,6 +155,7 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
+        /// <inheritdoc />
         protected override void OnNavigatedTo(NavigationEventArgs args)
         {
             // check if file has been opened via file explorer
@@ -197,17 +200,20 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
+        /// <inheritdoc />
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             e.Cancel = _controller.Operation?.IsRunning ?? false;
         }
 
+        /// <inheritdoc />
         protected override void OnNavigatedFrom(NavigationEventArgs args)
         {
             SetOperationActive(false);
             AbortButtonToolTip.IsOpen = false;
         }
 
+        /// <inheritdoc />
         public void Dispose()
         {
             _controller.Dispose();

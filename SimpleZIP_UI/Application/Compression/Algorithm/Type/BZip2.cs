@@ -22,8 +22,13 @@ using SharpCompress.Compressors.BZip2;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
 {
-    internal class BZip2 : CompressorAlgorithm
+    /// <inheritdoc />
+    /// <summary>
+    /// Represents the BZIP2 compressor algorithm.
+    /// </summary>
+    public class BZip2 : CompressorAlgorithm
     {
+        /// <inheritdoc />
         protected override Stream GetCompressorStream(Stream stream, CompressorOptions options)
         {
             return options.IsCompression

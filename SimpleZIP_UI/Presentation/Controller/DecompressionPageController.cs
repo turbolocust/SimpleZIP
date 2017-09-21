@@ -25,9 +25,9 @@ using SimpleZIP_UI.Application.Compression.Operation;
 
 namespace SimpleZIP_UI.Presentation.Controller
 {
-    internal class DecompressionSummaryPageController : SummaryPageController<DecompressionInfo>
+    internal class DecompressionPageController : SummaryPageController<DecompressionInfo>
     {
-        internal DecompressionSummaryPageController(Page parent) : base(parent)
+        internal DecompressionPageController(Page parent) : base(parent)
         {
         }
 

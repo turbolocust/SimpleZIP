@@ -22,40 +22,38 @@
                         <RowDefinition Height="5*" />
                     </Grid.RowDefinitions>
                     <StackPanel Background="Transparent" VerticalAlignment="Top" Grid.Row="0">
-                        <StackPanel Orientation="Horizontal">
-                            <Button Height="50" Background="Transparent" Tapped="OpenArchiveButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
-                                <StackPanel Orientation="Horizontal">
-                                    <SymbolIcon Symbol="OpenFile"/>
-                                    <TextBlock x:Uid="OpenArchive" Text="" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
-                                </StackPanel>
-                            </Button>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <Button Height="50" Background="Transparent" Tapped="GetSourceButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
-                                <StackPanel Orientation="Horizontal">
-                                    <SymbolIcon Symbol="World"/>
-                                    <TextBlock x:Uid="GetSourceCode" Text="" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
-                                </StackPanel>
-                            </Button>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <Button Height="50" Background="Transparent" Tapped="AboutMenuButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
-                                <StackPanel Orientation="Horizontal">
-                                    <SymbolIcon Symbol="ContactInfo"/>
-                                    <TextBlock x:Uid="HelpFeedback" Text="" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
-                                </StackPanel>
-                            </Button>
-                        </StackPanel>
+                        <Button Height="50" Background="Transparent" Tapped="OpenArchiveButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                            <StackPanel Orientation="Horizontal">
+                                <SymbolIcon Symbol="OpenFile"/>
+                                <TextBlock x:Uid="OpenArchive" Text="" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
+                            </StackPanel>
+                        </Button>
+                        <Button Height="50" Background="Transparent" Tapped="CalculateHashesButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                            <StackPanel Orientation="Horizontal">
+                                <SymbolIcon Symbol="Calculator"/>
+                                <TextBlock x:Uid="ComputeHash" Text="" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
+                            </StackPanel>
+                        </Button>
+                        <Button Height="50" Background="Transparent" Tapped="GetSourceButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                            <StackPanel Orientation="Horizontal">
+                                <SymbolIcon Symbol="World"/>
+                                <TextBlock x:Uid="GetSourceCode" Text="" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
+                            </StackPanel>
+                        </Button>
+                        <Button Height="50" Background="Transparent" Tapped="AboutMenuButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                            <StackPanel Orientation="Horizontal">
+                                <SymbolIcon Symbol="ContactInfo"/>
+                                <TextBlock x:Uid="HelpFeedback" Text="" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
+                            </StackPanel>
+                        </Button>
                     </StackPanel>
                     <StackPanel Background="Transparent" VerticalAlignment="Bottom" Grid.Row="1">
-                        <StackPanel Orientation="Horizontal">
-                            <Button Height="50" Background="Transparent" Tapped="SettingsMenuButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
-                                <StackPanel Orientation="Horizontal">
-                                    <SymbolIcon Symbol="Setting"/>
-                                    <TextBlock x:Uid="Settings" Text="" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
-                                </StackPanel>
-                            </Button>
-                        </StackPanel>
+                        <Button Height="50" Background="Transparent" Tapped="SettingsMenuButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                            <StackPanel Orientation="Horizontal">
+                                <SymbolIcon Symbol="Setting"/>
+                                <TextBlock x:Uid="Settings" Text="" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
+                            </StackPanel>
+                        </Button>
                     </StackPanel>
                 </Grid>
             </SplitView.Pane>

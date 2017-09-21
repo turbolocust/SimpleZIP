@@ -144,7 +144,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             try
             {
                 _pickerTriggered = true;
-                var picker = PickerFactory.CreateFolderPicker();
+                var picker = PickerFactory.FolderPicker;
                 folder = await picker.PickSingleFolderAsync();
             }
             catch (Exception)

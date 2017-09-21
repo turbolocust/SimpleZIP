@@ -38,7 +38,7 @@ namespace SimpleZIP_UI.Application.Util
         /// </summary>
         /// <param name="filename">The file name to be validated.</param>
         /// <returns>True if file name contains illegal characters, false otherwise.</returns>
-        public static bool ContainsIllegalChars(this string filename)
+        public static bool ContainsIllegalChars(string filename)
         {
             return IllegalChars.Any(character => filename.IndexOf(character) != -1);
         }
@@ -48,7 +48,7 @@ namespace SimpleZIP_UI.Application.Util
         /// </summary>
         /// <param name="path">The file path.</param>
         /// <returns>True if the path has at least two file name extensions.</returns>
-        public static bool ContainsMultipleFileNameExtensions(this string path)
+        public static bool ContainsMultipleFileNameExtensions(string path)
         {
             return !string.IsNullOrEmpty(path) && path.Split('.').Length - 1 > 1;
         }
@@ -63,7 +63,7 @@ namespace SimpleZIP_UI.Application.Util
         public static string GetFileNameExtension(string path)
         {
             var fileNameExtension = "";
-            if (path.ContainsMultipleFileNameExtensions())
+            if (ContainsMultipleFileNameExtensions(path))
             {
                 foreach (var extendedFileType in Archives.ArchiveExtendedFileTypes)
                 {

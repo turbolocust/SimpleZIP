@@ -21,8 +21,13 @@ using SharpCompress.Writers;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
 {
+    /// <inheritdoc />
+    /// <summary>
+    /// Represents the TAR+BZIP2 archiving algorithm.
+    /// </summary>
     public class TarBzip2 : Tar
     {
+        /// <inheritdoc />
         protected override WriterOptions GetWriterOptions()
         {
             return new WriterOptions(CompressionType.BZip2);

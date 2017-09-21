@@ -35,7 +35,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// </summary>
         internal enum MainPageActionType
         {
-            Compress, Decompress, OpenArchive
+            Compress, Decompress, OpenArchive, HashCalculation
         }
 
         internal MainPageController(Page parent) : base(parent)
@@ -71,6 +71,9 @@ namespace SimpleZIP_UI.Presentation.Controller
                     case MainPageActionType.OpenArchive:
                         success = await OpenArchiveButtonAction();
                         break;
+                    case MainPageActionType.HashCalculation:
+                        success = await CalculateHashesButtonAction();
+                        break;
                     default: throw new ArgumentOutOfRangeException(nameof(type), type, null);
                 }
             }
@@ -85,12 +88,9 @@ namespace SimpleZIP_UI.Presentation.Controller
             return success;
         }
 
-        /// <summary>
-        /// Performs an action when the compress button has been tapped.
-        /// </summary>
         private async Task<bool> CompressButtonAction()
         {
-            var picker = PickerFactory.CreateCompressFilesOpenPicker();
+            var picker = PickerFactory.FileOpenPickerForAnyFile;
             var files = await picker.PickMultipleFilesAsync();
 
             if (!(files?.Count > 0)) return false;
@@ -98,16 +98,33 @@ namespace SimpleZIP_UI.Presentation.Controller
             return true;
         }
 
-        /// <summary>
-        /// Performs an action when the decompress button has been tapped.
-        /// </summary>
         private async Task<bool> DecompressButtonAction()
         {
-            var picker = PickerFactory.CreateDecompressFileOpenPicker();
+            var picker = PickerFactory.FileOpenPickerForArchives;
             var files = await picker.PickMultipleFilesAsync();
 
             if (!(files?.Count > 0)) return false;
             ParentPage.Frame.Navigate(typeof(DecompressionSummaryPage), ConvertFiles(files));
+            return true;
+        }
+
+        private async Task<bool> OpenArchiveButtonAction()
+        {
+            var picker = PickerFactory.FileOpenPickerForArchives;
+            var file = await picker.PickSingleFileAsync();
+
+            if (file == null) return false;
+            ParentPage.Frame.Navigate(typeof(BrowseArchivePage), file);
+            return true;
+        }
+
+        private async Task<bool> CalculateHashesButtonAction()
+        {
+            var picker = PickerFactory.FileOpenPickerForAnyFile;
+            var files = await picker.PickMultipleFilesAsync();
+
+            if (files == null) return false;
+            ParentPage.Frame.Navigate(typeof(MessageDigestPage), files);
             return true;
         }
 
@@ -121,19 +138,6 @@ namespace SimpleZIP_UI.Presentation.Controller
             var items = new List<ExtractableItem>(files.Count);
             items.AddRange(files.Select(file => new ExtractableItem(file.Name, file)));
             return items;
-        }
-
-        /// <summary>
-        /// Performs an action when the button for opening an archive has been tapped.
-        /// </summary>
-        private async Task<bool> OpenArchiveButtonAction()
-        {
-            var picker = PickerFactory.CreateDecompressFileOpenPicker();
-            var file = await picker.PickSingleFileAsync();
-
-            if (file == null) return false;
-            ParentPage.Frame.Navigate(typeof(BrowseArchivePage), file);
-            return true;
         }
     }
 }

@@ -32,6 +32,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
+    <DocumentationFile>bin\x86\Debug\SimpleZIP_UI.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -127,6 +128,8 @@
     <Compile Include="Application\Compression\Model\Result.cs" />
     <Compile Include="Application\Compression\Streams\DecoratorStream.cs" />
     <Compile Include="Application\Compression\Streams\ProgressObservableStream.cs" />
+    <Compile Include="Application\Hashing\IMessageDigestProvider.cs" />
+    <Compile Include="Application\Hashing\MessageDigestProvider.cs" />
     <Compile Include="Application\Util\WriterUtils.cs" />
     <Compile Include="Application\Util\CollectionUtils.cs" />
     <Compile Include="Application\Util\TaskUtils.cs" />
@@ -136,7 +139,7 @@
     <Compile Include="Presentation\Controller\SummaryPageController.cs" />
     <Compile Include="Presentation\ProgressManager.cs" />
     <Compile Include="Presentation\Settings.cs" />
-    <Compile Include="Presentation\View\AboutDialog.xaml.cs">
+    <Compile Include="Presentation\View\Dialog\AboutDialog.xaml.cs">
       <DependentUpon>AboutDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="App.xaml.cs">
@@ -155,20 +158,27 @@
       <DependentUpon>DecompressionSummaryPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Controller\BaseController.cs" />
-    <Compile Include="Presentation\Controller\DecompressionSummaryPageController.cs" />
+    <Compile Include="Presentation\Controller\DecompressionPageController.cs" />
     <Compile Include="Presentation\Factory\DialogFactory.cs" />
     <Compile Include="Presentation\Factory\PickerFactory.cs" />
     <Compile Include="Exceptions\InvalidArchiveTypeException.cs" />
-    <Compile Include="Presentation\Controller\CompressionSummaryPageController.cs" />
+    <Compile Include="Presentation\Controller\CompressionPageController.cs" />
     <Compile Include="Presentation\View\CompressionSummaryPage.xaml.cs">
       <DependentUpon>CompressionSummaryPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Controller\MainPageController.cs" />
+    <Compile Include="Presentation\View\Dialog\ViewTextDialog.xaml.cs">
+      <DependentUpon>ViewTextDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\View\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Presentation\View\Model\BrowseArchivePageModel.cs" />
-    <Compile Include="Presentation\View\SettingsDialog.xaml.cs">
+    <Compile Include="Presentation\View\MessageDigestPage.xaml.cs">
+      <DependentUpon>MessageDigestPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\View\Model\ArchiveEntryModel.cs" />
+    <Compile Include="Presentation\View\Model\MessageDigestModel.cs" />
+    <Compile Include="Presentation\View\Dialog\SettingsDialog.xaml.cs">
       <DependentUpon>SettingsDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -225,7 +235,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Presentation\View\AboutDialog.xaml">
+    <Page Include="Presentation\View\Dialog\AboutDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -241,11 +251,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Presentation\View\Dialog\ViewTextDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Presentation\View\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Presentation\View\SettingsDialog.xaml">
+    <Page Include="Presentation\View\MessageDigestPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\View\Dialog\SettingsDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
