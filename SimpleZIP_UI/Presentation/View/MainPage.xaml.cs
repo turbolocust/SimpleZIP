@@ -128,7 +128,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// <param name="args">Consists of event parameters.</param>
         private async void SettingsMenuButton_Tap(object sender, TappedRoutedEventArgs args)
         {
-            await new SettingsDialog().ShowAsync();
+            await new Dialog.SettingsDialog().ShowAsync();
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// <param name="args">Consists of event parameters.</param>
         private async void AboutMenuButton_Tap(object sender, TappedRoutedEventArgs args)
         {
-            await new AboutDialog().ShowAsync();
+            await new Dialog.AboutDialog().ShowAsync();
         }
 
         /// <inheritdoc />

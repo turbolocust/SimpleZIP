@@ -18,26 +18,23 @@
 // ==--==
 using Windows.UI.Xaml.Controls;
 
-namespace SimpleZIP_UI.Presentation.View
+namespace SimpleZIP_UI.Presentation.View.Dialog
 {
     /// <inheritdoc cref="ContentDialog" />
-    public sealed partial class AboutDialog
+    public sealed partial class ViewTextDialog
     {
+        /// <summary>
+        /// Text which is bound to the text box.
+        /// </summary>
+        public string Text { get; set; }
+
         /// <inheritdoc />
-        public AboutDialog()
+        public ViewTextDialog(string text)
         {
             InitializeComponent();
-            // display following hard coded strings in UI
-            DevelopedByRun.Text = I18N.Resources.GetString("DevelopedBy/Text") + " Matthias Fussenegger";
-            LicenseRun.Text = I18N.Resources.GetString("License/Text", "GNU General Public License 3");
+            Text = text;
         }
 
-        /// <summary>
-        /// Invoked when the primary button of this dialog has been pressed. 
-        /// This will simply hide the dialog.
-        /// </summary>
-        /// <param name="sender">The sender of the event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             sender.Hide();

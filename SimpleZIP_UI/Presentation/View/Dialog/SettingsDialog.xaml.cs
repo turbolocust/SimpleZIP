@@ -16,10 +16,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace SimpleZIP_UI.Presentation.View
+namespace SimpleZIP_UI.Presentation.View.Dialog
 {
     /// <inheritdoc cref="ContentDialog" />
     public sealed partial class SettingsDialog
@@ -29,6 +30,7 @@ namespace SimpleZIP_UI.Presentation.View
         {
             InitializeComponent();
             SetToggleButtonsToggledState();
+            PrimaryButtonText = I18N.Resources.GetString("ContentDialog/PrimaryButtonText");
         }
 
         private void SetToggleButtonsToggledState()

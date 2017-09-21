@@ -139,7 +139,7 @@
     <Compile Include="Presentation\Controller\SummaryPageController.cs" />
     <Compile Include="Presentation\ProgressManager.cs" />
     <Compile Include="Presentation\Settings.cs" />
-    <Compile Include="Presentation\View\AboutDialog.xaml.cs">
+    <Compile Include="Presentation\View\Dialog\AboutDialog.xaml.cs">
       <DependentUpon>AboutDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="App.xaml.cs">
@@ -167,6 +167,9 @@
       <DependentUpon>CompressionSummaryPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Controller\MainPageController.cs" />
+    <Compile Include="Presentation\View\Dialog\ViewTextDialog.xaml.cs">
+      <DependentUpon>ViewTextDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\View\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -175,7 +178,7 @@
     </Compile>
     <Compile Include="Presentation\View\Model\ArchiveEntryModel.cs" />
     <Compile Include="Presentation\View\Model\MessageDigestModel.cs" />
-    <Compile Include="Presentation\View\SettingsDialog.xaml.cs">
+    <Compile Include="Presentation\View\Dialog\SettingsDialog.xaml.cs">
       <DependentUpon>SettingsDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -232,7 +235,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Presentation\View\AboutDialog.xaml">
+    <Page Include="Presentation\View\Dialog\AboutDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -248,6 +251,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Presentation\View\Dialog\ViewTextDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Presentation\View\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -256,7 +263,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Presentation\View\SettingsDialog.xaml">
+    <Page Include="Presentation\View\Dialog\SettingsDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

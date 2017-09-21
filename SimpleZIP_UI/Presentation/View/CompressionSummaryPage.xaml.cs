@@ -182,7 +182,7 @@ namespace SimpleZIP_UI.Presentation.View
             {
                 ArchiveNameTextBox.Text = I18N.Resources.GetString("ArchiveName/Text");
             }
-            else if (FileUtils.ContainsIllegalChars(fileName)) // check for illegal characters in file name
+            else if (FileUtils.ContainsIllegalChars(fileName))
             {
                 var content = I18N.Resources.GetString("IllegalCharacters/Text")
                     + "\n" + string.Join(" ", FileUtils.IllegalChars);
