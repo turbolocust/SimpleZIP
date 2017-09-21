@@ -21,12 +21,18 @@ using SharpCompress.Writers;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
 {
+    /// <inheritdoc />
+    /// <summary>
+    /// Represents the TAR archiving algorithm.
+    /// </summary>
     public class Tar : ArchivingAlgorithm
     {
+        /// <inheritdoc />
         public Tar() : base(ArchiveType.Tar)
         {
         }
 
+        /// <inheritdoc />
         protected override WriterOptions GetWriterOptions()
         {
             return new WriterOptions(CompressionType.None);

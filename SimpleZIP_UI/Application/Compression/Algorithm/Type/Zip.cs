@@ -23,8 +23,13 @@ using SharpCompress.Writers.Zip;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
 {
+    /// <inheritdoc />
+    /// <summary>
+    /// Represents the ZIP archiving algorithm.
+    /// </summary>
     public class Zip : ArchivingAlgorithm
     {
+        /// <inheritdoc />
         public Zip() : base(ArchiveType.Zip)
         {
         }

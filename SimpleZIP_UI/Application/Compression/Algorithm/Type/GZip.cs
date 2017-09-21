@@ -22,6 +22,10 @@ using SharpCompress.Compressors.Deflate;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
 {
+    /// <inheritdoc />
+    /// <summary>
+    /// Represents the GZIP compressor algorithm.
+    /// </summary>
     public class GZip : CompressorAlgorithm
     {
         /// <inheritdoc />

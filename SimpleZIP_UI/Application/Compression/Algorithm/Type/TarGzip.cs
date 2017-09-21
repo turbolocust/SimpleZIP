@@ -21,6 +21,10 @@ using SharpCompress.Writers;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
 {
+    /// <inheritdoc />
+    /// <summary>
+    /// Represents the TAR+GZIP archiving algorithm.
+    /// </summary>
     public class TarGzip : Tar
     {
         /// <inheritdoc />

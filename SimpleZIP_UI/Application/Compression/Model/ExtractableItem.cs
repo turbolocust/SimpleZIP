@@ -22,6 +22,9 @@ using SimpleZIP_UI.Application.Compression.Reader;
 
 namespace SimpleZIP_UI.Application.Compression.Model
 {
+    /// <summary>
+    /// Represents an item that can be extracted.
+    /// </summary>
     public class ExtractableItem
     {
         /// <summary>

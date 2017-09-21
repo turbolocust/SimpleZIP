@@ -21,8 +21,13 @@ using SharpCompress.Writers;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
 {
+    /// <inheritdoc />
+    /// <summary>
+    /// Represents the TAR+LZMA archiving algorithm.
+    /// </summary>
     public class TarLzip : Tar
     {
+        /// <inheritdoc />
         protected override WriterOptions GetWriterOptions()
         {
             return new WriterOptions(CompressionType.LZip);
