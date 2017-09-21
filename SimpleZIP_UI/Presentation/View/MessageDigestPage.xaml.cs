@@ -16,16 +16,20 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
+using Windows.UI.Core;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using SimpleZIP_UI.Application.Hashing;
+using SimpleZIP_UI.Presentation.View.Dialog;
 using SimpleZIP_UI.Presentation.View.Model;
 
 namespace SimpleZIP_UI.Presentation.View
@@ -56,9 +60,9 @@ namespace SimpleZIP_UI.Presentation.View
         /// </summary>
         public MessageDigestPage()
         {
-            InitializeComponent();
             _messageDigestAlgorithm = new MessageDigestProvider();
             MessageDigestModels = new ObservableCollection<MessageDigestModel>();
+            InitializeComponent();
         }
 
         private async Task PopulateListBox()
@@ -72,11 +76,12 @@ namespace SimpleZIP_UI.Presentation.View
                 {
                     var selectedItem = (ComboBoxItem)HashAlgorithmComboBox.SelectedItem;
                     var algorithmName = selectedItem?.Content as string;
+                    // perform this check to avoid exceptions in case something in the UI changes
                     if (_messageDigestAlgorithm.SupportedAlgorithms.Contains(algorithmName))
                     {
                         var hashedData = await _messageDigestAlgorithm.ComputeHashValue(file, algorithmName);
-                        var model = new MessageDigestModel(file.DisplayName, hashedData.HashedValue);
-                        MessageDigestModels.Add(model);
+                        var model = new MessageDigestModel(file.Name, file.Path, hashedData.HashedValue);
+                        await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { MessageDigestModels.Add(model); });
                     }
                 }
             }
@@ -86,14 +91,39 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
+        private static void CopyToClipboard(string text)
+        {
+            var package = new DataPackage
+            {
+                RequestedOperation = DataPackageOperation.Copy
+            };
+            package.SetText(text);
+            Clipboard.SetContent(package);
+        }
+
         private async void HashAlgorithmComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs args)
         {
             await PopulateListBox();
         }
 
+        private async void ViewFullHashButton_Tap(object sender, TappedRoutedEventArgs args)
+        {
+            if (!(args.OriginalSource is FrameworkElement element)) return;
+            if (element.DataContext is MessageDigestModel model)
+            {
+                await new ViewTextDialog(model.HashValue).ShowAsync();
+                args.Handled = true;
+            }
+        }
+
         private void CopyHashButton_Tap(object sender, TappedRoutedEventArgs args)
         {
-            throw new System.NotImplementedException();
+            if (!(args.OriginalSource is FrameworkElement element)) return;
+            if (element.DataContext is MessageDigestModel model)
+            {
+                CopyToClipboard(model.HashValue);
+                args.Handled = true;
+            }
         }
 
         private void CopyAllButton_Tap(object sender, TappedRoutedEventArgs args)
@@ -102,13 +132,11 @@ namespace SimpleZIP_UI.Presentation.View
             foreach (var model in MessageDigestModels)
             {
                 stringBuilder.AppendLine(model.FileName);
+                stringBuilder.AppendLine(model.Location);
                 stringBuilder.AppendLine(model.HashValue);
                 stringBuilder.AppendLine("\r\n");
             }
-            // copy values to clipboard
-            var package = new DataPackage { RequestedOperation = DataPackageOperation.Copy };
-            package.SetText(stringBuilder.ToString());
-            Clipboard.SetContent(package);
+            CopyToClipboard(stringBuilder.ToString());
         }
 
         /// <inheritdoc />

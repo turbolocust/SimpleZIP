@@ -357,4 +357,8 @@
     <value>Alle kopieren</value>
     <comment>Copies all values.</comment>
   </data>
+  <data name="ContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Schließen</value>
+    <comment>Closes the dialog.</comment>
+  </data>
 </root>

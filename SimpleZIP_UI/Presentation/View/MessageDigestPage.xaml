@@ -22,10 +22,12 @@
                 <ComboBoxItem Content="SHA384"/>
                 <ComboBoxItem Content="SHA512"/>
             </ComboBox>
+            <ProgressRing Width="32" Height="32" VerticalAlignment="Bottom" Visibility="Visible"
+                          IsEnabled="{Binding IsEnabled, ElementName=HashAlgorithmComboBox}"/>
         </StackPanel>
-        <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-            <ListBox ItemsSource="{Binding MessageDigestModels}" Margin="8,0,0,0" SelectionMode="Single" CanDrag="False" 
-                     HorizontalContentAlignment="Stretch" Background="Transparent" Height="Auto" >
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <ListBox ItemsSource="{Binding MessageDigestModels}" Margin="0,16,0,0" SelectionMode="Single" CanDrag="False" 
+                     HorizontalContentAlignment="Stretch" Background="Transparent" Height="Auto">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid>
@@ -34,20 +36,27 @@
                                 <RowDefinition Height="5.0*"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="8.0*"/>
-                                <ColumnDefinition Width="2.0*"/>
+                                <ColumnDefinition Width="1.25*"/>
+                                <ColumnDefinition Width="1.25*"/>
+                                <ColumnDefinition Width="7.5*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding FileName}"/>
-                            <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding HashValue}"/>
-                            <Button Tapped="CopyHashButton_Tap" CommandParameter="" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1">
-                                <TextBlock x:Uid="Copy" Text="" TextWrapping="WrapWholeWords" />
+                            <Button Tapped="ViewFullHashButton_Tap" Grid.Row="0" Grid.RowSpan="2" 
+                                    Grid.Column="0" Margin="0,0,8,0" Width="44" Background="Transparent">
+                                <SymbolIcon Symbol="View"/>
                             </Button>
+                            <Button Tapped="CopyHashButton_Tap" Grid.Row="0" Grid.RowSpan="2" 
+                                    Grid.Column="1" Margin="0,0,16,0" Width="44" Background="Transparent">
+                                <SymbolIcon Symbol="Copy"/>
+                            </Button>
+                            <TextBlock Foreground="{ThemeResource SystemControlForegroundAccentBrush}" FontWeight="Medium" 
+                                       CharacterSpacing="32" Grid.Row="0" Grid.Column="2" Text="{Binding FileName}"/>
+                            <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding HashValue}" TextTrimming="CharacterEllipsis"/>
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
         </ScrollViewer>
-        <StackPanel Grid.Row="3" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,16,0">
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,16,0">
             <Button Tapped="CopyAllButton_Tap" IsEnabled="True" Width="120" MinHeight="44" Height="50" MaxHeight="60"
                     Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                 <TextBlock x:Uid="CopyAll" Text="" TextWrapping="Wrap" />

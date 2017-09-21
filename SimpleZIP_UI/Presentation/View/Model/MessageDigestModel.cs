@@ -30,6 +30,11 @@ namespace SimpleZIP_UI.Presentation.View.Model
         public string FileName { get; }
 
         /// <summary>
+        /// The physical location (full path) of the file.
+        /// </summary>
+        public string Location { get; }
+
+        /// <summary>
         /// The calculated hash value of the file.
         /// </summary>
         public string HashValue { get; }
@@ -38,10 +43,12 @@ namespace SimpleZIP_UI.Presentation.View.Model
         /// Constructs a new model for the ListBox in <see cref="MessageDigestPage"/>.
         /// </summary>
         /// <param name="fileName">The name of the file to be displayed.</param>
+        /// <param name="location">The location of the file to be displayed.</param>
         /// <param name="hashValue">The hash value of the file to be displayed.</param>
-        public MessageDigestModel(string fileName, string hashValue)
+        public MessageDigestModel(string fileName, string location, string hashValue)
         {
             FileName = fileName;
+            Location = location;
             HashValue = hashValue;
         }
     }
