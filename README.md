@@ -38,8 +38,8 @@ Supported message digest algorithms:
 
 # Screenshots
 
-<img src="https://homepages.fhv.at/mfu7609/images/simplezip_main.PNG" alt="main page image"/><br />
-<img src="https://homepages.fhv.at/mfu7609/images/simplezip_hashing.PNG" alt="hashing page image"/><br />
-<img src="https://homepages.fhv.at/mfu7609/images/simplezip_compression.PNG" alt="compression page image"/><br />
-<img src="https://homepages.fhv.at/mfu7609/images/simplezip_decompression.PNG" alt="decompression page image"/><br />
-<img src="https://homepages.fhv.at/mfu7609/images/simplezip_readarchive.PNG" alt="read archive page image"/>
+<img src="https://homepages.fhv.at/mfu7609/images/simplezip_main.PNG" width="489" height="870" alt="main page image"/><br />
+<img src="https://homepages.fhv.at/mfu7609/images/simplezip_hashing.PNG" width="489" height="870" alt="hashing page image"/><br />
+<img src="https://homepages.fhv.at/mfu7609/images/simplezip_compression.PNG" width="489" height="870" alt="compression page image"/><br />
+<img src="https://homepages.fhv.at/mfu7609/images/simplezip_decompression.PNG" width="489" height="870" alt="decompression page image"/><br />
+<img src="https://homepages.fhv.at/mfu7609/images/simplezip_readarchive.PNG" width="489" height="870" alt="read archive page image"/>
