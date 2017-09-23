@@ -24,6 +24,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Microsoft.Services.Store.Engagement;
 using SimpleZIP_UI.Presentation;
 using SimpleZIP_UI.Presentation.View;
 
@@ -37,7 +38,7 @@ namespace SimpleZIP_UI
     {
         /// <inheritdoc />
         /// <summary>
-        /// Initializes the singleton application object.  This is the first line of authored code
+        /// Initializes the singleton application object. This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
         public App()
@@ -50,8 +51,8 @@ namespace SimpleZIP_UI
         /// Invoked when the application is launched normally by the end user. Other entry points
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
-        /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        /// <param name="args">Details about the launch request and process.</param>
+        protected override async void OnLaunched(LaunchActivatedEventArgs args)
         {
 #if DEBUG
             if (Debugger.IsAttached)
@@ -59,6 +60,10 @@ namespace SimpleZIP_UI
                 DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
+            // register notification channel to send push notifications to customers
+            var engagementManager = StoreServicesEngagementManager.GetDefault();
+            await engagementManager.RegisterNotificationChannelAsync();
+
             // do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
             if (!(Window.Current.Content is Frame rootFrame))
@@ -69,7 +74,7 @@ namespace SimpleZIP_UI
                 rootFrame.NavigationFailed += OnNavigationFailed;
                 rootFrame.Navigated += OnNavigated;
 
-                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
+                if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
                     // nothing to load
                 }
@@ -86,15 +91,30 @@ namespace SimpleZIP_UI
                 Window.Current.Content = rootFrame;
             }
 
-            if (e.PrelaunchActivated == false)
+            if (args.PrelaunchActivated == false)
             {
                 if (rootFrame.Content == null)
                 {
                     // navigate to the first page, if the navigation stack isn't restored
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    rootFrame.Navigate(typeof(MainPage), args.Arguments);
                 }
                 // Ensure the current window is active
                 Window.Current.Activate();
+            }
+        }
+
+        /// <summary>
+        /// Invoked when application is in foreground.
+        /// </summary>
+        /// <param name="args">Consists of event parameters.</param>
+        protected override void OnActivated(IActivatedEventArgs args)
+        {
+            base.OnActivated(args);
+
+            if (args is ToastNotificationActivatedEventArgs toastActivationArgs)
+            {
+                var engagementManager = StoreServicesEngagementManager.GetDefault();
+                engagementManager.ParseArgumentsAndTrackAppLaunch(toastActivationArgs.Argument);
             }
         }
 

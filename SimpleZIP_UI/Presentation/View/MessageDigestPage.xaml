@@ -62,7 +62,7 @@
                 </ListBox.ItemTemplate>
             </ListBox>
         </ScrollViewer>
-        <StackPanel Grid.Row="2" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,8,16,0">
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,8,16,8">
             <Button Tapped="CopyAllButton_Tap" IsEnabled="True" Width="120" MinHeight="44" Height="50" MaxHeight="60"
                     Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                 <TextBlock x:Uid="CopyAll" Text="" TextWrapping="Wrap" />
