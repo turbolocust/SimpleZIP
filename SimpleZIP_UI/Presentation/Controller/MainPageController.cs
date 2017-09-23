@@ -74,7 +74,8 @@ namespace SimpleZIP_UI.Presentation.Controller
                     case MainPageActionType.HashCalculation:
                         success = await CalculateHashesButtonAction();
                         break;
-                    default: throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(type), type, null);
                 }
             }
             catch (Exception)
@@ -123,7 +124,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             var picker = PickerFactory.FileOpenPickerForAnyFile;
             var files = await picker.PickMultipleFilesAsync();
 
-            if (files == null) return false;
+            if (!(files?.Count > 0)) return false;
             ParentPage.Frame.Navigate(typeof(MessageDigestPage), files);
             return true;
         }
