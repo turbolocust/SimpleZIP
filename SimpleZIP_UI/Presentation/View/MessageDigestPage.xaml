@@ -42,21 +42,21 @@
                                 <RowDefinition Height="5.0*"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1.25*"/>
-                                <ColumnDefinition Width="1.25*"/>
-                                <ColumnDefinition Width="7.5*"/>
+                                <ColumnDefinition Width="1.5*"/>
+                                <ColumnDefinition Width="1.5*"/>
+                                <ColumnDefinition Width="7.0*"/>
                             </Grid.ColumnDefinitions>
                             <Button Tapped="ViewFullHashButton_Tap" Grid.Row="0" Grid.RowSpan="2" 
-                                    Grid.Column="0" Margin="0,0,8,0" Width="44" Background="Transparent">
+                                    Grid.Column="0" Margin="0,0,0,0" Width="40" Background="Transparent">
                                 <SymbolIcon Symbol="View"/>
                             </Button>
                             <Button Tapped="CopyHashButton_Tap" Grid.Row="0" Grid.RowSpan="2" 
-                                    Grid.Column="1" Margin="0,0,16,0" Width="44" Background="Transparent">
+                                    Grid.Column="1" Margin="0,0,0,0" Width="40" Background="Transparent">
                                 <SymbolIcon Symbol="Copy"/>
                             </Button>
                             <TextBlock Foreground="{ThemeResource SystemControlForegroundAccentBrush}" FontWeight="Medium" 
-                                       CharacterSpacing="32" Grid.Row="0" Grid.Column="2" Text="{Binding FileName}"/>
-                            <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding HashValue}" TextTrimming="CharacterEllipsis"/>
+                                       CharacterSpacing="32" Grid.Row="0" Grid.Column="2" Text="{Binding FileName}" Margin="8,0,0,0" />
+                            <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding HashValue}" TextTrimming="CharacterEllipsis" Margin="8,0,0,0"/>
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
