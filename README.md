@@ -27,7 +27,6 @@ Supported formats for decompression:
 # Plans for upcoming releases
 
   - Support for password protected ZIP files
-  - Feature to compute hash values (MD5, SHA256...)
   - Basic RAR support
 
 # Screenshots
