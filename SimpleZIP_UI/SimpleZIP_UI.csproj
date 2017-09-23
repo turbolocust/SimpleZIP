@@ -139,6 +139,7 @@
     <Compile Include="Presentation\Controller\SummaryPageController.cs" />
     <Compile Include="Presentation\ProgressManager.cs" />
     <Compile Include="Presentation\Settings.cs" />
+    <Compile Include="Presentation\View\Converter\NegateBooleanConverter.cs" />
     <Compile Include="Presentation\View\Dialog\AboutDialog.xaml.cs">
       <DependentUpon>AboutDialog.xaml</DependentUpon>
     </Compile>

@@ -65,6 +65,12 @@ namespace SimpleZIP_UI.Presentation.View
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Populates the list box with file names and computed hash values.
+        /// This may only be called once the combo box holding the hash algorithm
+        /// strings is loaded.
+        /// </summary>
+        /// <returns>An awaitable task which returns nothing.</returns>
         private async Task PopulateListBox()
         {
             try
@@ -91,6 +97,10 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
+        /// <summary>
+        /// Copies the specified text to the clipboard.
+        /// </summary>
+        /// <param name="text">The text to be copied to the clipboard.</param>
         private static void CopyToClipboard(string text)
         {
             var package = new DataPackage
@@ -101,11 +111,22 @@ namespace SimpleZIP_UI.Presentation.View
             Clipboard.SetContent(package);
         }
 
+        /// <summary>
+        /// Allows the user to select a specific hash algorithm.
+        /// </summary>
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="args">Consists of event parameters.</param>
         private async void HashAlgorithmComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs args)
         {
             await PopulateListBox();
         }
 
+        /// <summary>
+        /// Brings up a content dialog which shows the full hash value
+        /// and allows the user to select and copy the value.
+        /// </summary>
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="args">Consists of event parameters.</param>
         private async void ViewFullHashButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             if (!(args.OriginalSource is FrameworkElement element)) return;
@@ -116,6 +137,11 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
+        /// <summary>
+        /// Allows the user to copy the selected hash value to the clipboard.
+        /// </summary>
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="args">Consists of event parameters.</param>
         private void CopyHashButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             if (!(args.OriginalSource is FrameworkElement element)) return;
@@ -126,6 +152,12 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
+        /// <summary>
+        /// Copies all the hash values that have been computed to the clipboard
+        /// together with their file name and file path.
+        /// </summary>
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="args">Consists of event parameters.</param>
         private void CopyAllButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             var stringBuilder = new StringBuilder();

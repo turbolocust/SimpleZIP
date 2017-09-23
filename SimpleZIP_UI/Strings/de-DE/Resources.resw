@@ -59,6 +59,8 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
+  <!-- ReSharper disable DuplicateResource -->
+  <!-- ReSharper disable MarkupTextTypo -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -146,7 +148,7 @@
     <comment>The type of the archive. For example ZIP for .zip files.</comment>
   </data>
   <data name="CompressArchive.Text" xml:space="preserve">
-    <value>Komprimiere Datei(en) . . .</value>
+    <value>Komprimiere Datei(en)</value>
     <comment>Allows the user to compress one or multiple archives.</comment>
   </data>
   <data name="DevelopedBy.Text" xml:space="preserve">
@@ -166,7 +168,7 @@
     <comment>Extract all files from an archive.</comment>
   </data>
   <data name="ExtractArchive.Text" xml:space="preserve">
-    <value>Extrahiere Archiv(e) . . .</value>
+    <value>Extrahiere Archiv(e)</value>
     <comment>Allows the user to extract one or multiple archives.</comment>
   </data>
   <data name="ExtractSelected.Text" xml:space="preserve">

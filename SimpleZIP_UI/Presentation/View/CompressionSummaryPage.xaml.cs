@@ -66,25 +66,27 @@ namespace SimpleZIP_UI.Presentation.View
             // to indicate that an algorithm does not use a compressor stream
             var uncompressedText = I18N.Resources.GetString("Uncompressed/Text").ToLower();
 
-            const string zipText = "ZIP (.zip)";
-            const string gzipText = "GZIP (.gzip)";
-            const string tgzText = "TAR+GZIP (.tgz)";
+            Settings.TryGet(Settings.Keys.HideSomeArchiveTypesKey, out bool isHideSome);
 
             // ReSharper disable once PossibleNullReferenceException
-            ArchiveTypeComboBox.Items.Add(CreateItemForComboBox(zipText, ".zip"));
-            ArchiveTypeComboBox.Items.Add(CreateItemForComboBox(gzipText, ".gzip"));
-            ArchiveTypeComboBox.Items.Add(CreateItemForComboBox(tgzText, ".tgz"));
+            ArchiveTypeComboBox.Items.Add(CreateItemForComboBox("ZIP (.zip)", ".zip"));
 
-            Settings.TryGet(Settings.Keys.HideSomeArchiveTypesKey, out bool isHideSome);
             if (!isHideSome)
             {
                 var tarText = "TAR (.tar) [" + uncompressedText + "]";
-                var tlzText = "TAR+LZMA (.tlz) [" + slowText + "]";
-                var tbz2Text = "TAR+BZIP2 (.tbz2) [" + slowText + "]";
-
+                ArchiveTypeComboBox.Items.Add(CreateItemForComboBox("GZIP (.gzip)", ".gzip"));
                 ArchiveTypeComboBox.Items.Add(CreateItemForComboBox(tarText, ".tar"));
+            }
+
+            ArchiveTypeComboBox.Items.Add(CreateItemForComboBox("TAR+GZIP (.tgz)", ".tgz"));
+
+            var tbz2Text = "TAR+BZIP2 (.tbz2) [" + slowText + "]";
+            ArchiveTypeComboBox.Items.Add(CreateItemForComboBox(tbz2Text, ".tbz2"));
+
+            if (!isHideSome)
+            {
+                var tlzText = "TAR+LZMA (.tlz) [" + slowText + "]";
                 ArchiveTypeComboBox.Items.Add(CreateItemForComboBox(tlzText, ".tlz"));
-                ArchiveTypeComboBox.Items.Add(CreateItemForComboBox(tbz2Text, ".tbz2"));
             }
 
             ArchiveTypeComboBox.SelectedIndex = 0; // selected index on page launch

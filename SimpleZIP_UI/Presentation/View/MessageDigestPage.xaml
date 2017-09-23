@@ -4,14 +4,19 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:cv="using:SimpleZIP_UI.Presentation.View.Converter"
     DataContext="{Binding RelativeSource={RelativeSource Self}}"
     mc:Ignorable="d">
+
+    <Page.Resources>
+        <cv:NegateBooleanConverter x:Key="NegateBooleanConverter"/>
+    </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="7.0*"/>
-            <RowDefinition Height="1.0*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" VerticalAlignment="Center" Orientation="Horizontal" Margin="8,0,0,0">
             <ComboBox x:Name="HashAlgorithmComboBox" x:Uid="HashAlgorithm" Header="" Margin="0,0,24,0" SelectedIndex="2"
@@ -23,7 +28,8 @@
                 <ComboBoxItem Content="SHA512"/>
             </ComboBox>
             <ProgressRing Width="32" Height="32" VerticalAlignment="Bottom" Visibility="Visible"
-                          IsEnabled="{Binding IsEnabled, ElementName=HashAlgorithmComboBox}"/>
+                          IsEnabled="{x:Bind HashAlgorithmComboBox.IsEnabled, Mode=OneWay, Converter={StaticResource NegateBooleanConverter}}" 
+                          IsActive="{x:Bind HashAlgorithmComboBox.IsEnabled, Mode=OneWay, Converter={StaticResource NegateBooleanConverter}}"/>
         </StackPanel>
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
             <ListBox ItemsSource="{Binding MessageDigestModels}" Margin="0,16,0,0" SelectionMode="Single" CanDrag="False" 
@@ -56,7 +62,7 @@
                 </ListBox.ItemTemplate>
             </ListBox>
         </ScrollViewer>
-        <StackPanel Grid.Row="2" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,16,0">
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,8,16,0">
             <Button Tapped="CopyAllButton_Tap" IsEnabled="True" Width="120" MinHeight="44" Height="50" MaxHeight="60"
                     Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                 <TextBlock x:Uid="CopyAll" Text="" TextWrapping="Wrap" />
