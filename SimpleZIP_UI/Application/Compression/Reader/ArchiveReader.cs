@@ -24,7 +24,6 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
-using SimpleZIP_UI.Exceptions;
 
 namespace SimpleZIP_UI.Application.Compression.Reader
 {
@@ -144,7 +143,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         /// <summary>
         /// Reads each entry of the archive.
         /// </summary>
-        /// <returns>An enumerator which can be used to iterate over each entry.</returns>
+        /// <returns>An enumerable element of type <see cref="IEntry"/>.</returns>
         private IEnumerable<IEntry> ReadArchive()
         {
             while (!Closed && Reader.MoveToNextEntry())

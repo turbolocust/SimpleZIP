@@ -16,21 +16,23 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
 using System;
+using System.IO;
 
-namespace SimpleZIP_UI.Exceptions
+namespace SimpleZIP_UI.Application
 {
-    internal class InvalidArchiveTypeException : Exception
+    internal class ReadingArchiveException : IOException
     {
-        public InvalidArchiveTypeException()
+        public ReadingArchiveException()
         {
         }
 
-        public InvalidArchiveTypeException(string message) : base(message)
+        public ReadingArchiveException(string message) : base(message)
         {
         }
 
-        public InvalidArchiveTypeException(string message, Exception innerException) : base(message, innerException)
+        public ReadingArchiveException(string message, Exception innerException) : base(message, innerException)
         {
         }
     }

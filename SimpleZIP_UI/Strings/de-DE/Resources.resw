@@ -220,7 +220,7 @@
     <comment>License text.</comment>
   </data>
   <data name="MightTakeWhile.Text" xml:space="preserve">
-    <value>Das könnte etwas dauern. . .</value>
+    <value>Das könnte etwas dauern...</value>
     <comment>Informs the user that something can take some time.</comment>
   </data>
   <data name="minutes.Text" xml:space="preserve">
@@ -244,7 +244,7 @@
     <comment>Informs the user about the fact that Gzip only allows the compression of a single file.</comment>
   </data>
   <data name="OpenArchive.Text" xml:space="preserve">
-    <value>Öffne Archiv . . .</value>
+    <value>Öffne Archiv</value>
     <comment>Allows the user to open an archive.</comment>
   </data>
   <data name="OpenWebBrowserMessage.Text" xml:space="preserve">
@@ -300,16 +300,12 @@
     <comment>Period it took to accomplish something.</comment>
   </data>
   <data name="TryingAbort.Text" xml:space="preserve">
-    <value>Versuche abzubrechen. . .</value>
+    <value>Versuche abzubrechen...</value>
     <comment>Is trying to stop operation.</comment>
   </data>
   <data name="Yes.Text" xml:space="preserve">
     <value>Ja</value>
     <comment>Positive answer.</comment>
-  </data>
-  <data name="ReadingArchive.Text" xml:space="preserve">
-    <value>Lese Archiv. . .</value>
-    <comment>Indicates that an archive is being read.</comment>
   </data>
   <data name="Fast.Text" xml:space="preserve">
     <value>Schnell</value>
@@ -344,7 +340,7 @@
     <comment>Dialog which allows adjustments to behavior of application.</comment>
   </data>
   <data name="ComputeHash.Text" xml:space="preserve">
-    <value>Hash berechnen. . .</value>
+    <value>Hash berechnen</value>
     <comment>Allows the user to compute file hashes.</comment>
   </data>
   <data name="HashAlgorithm.Header" xml:space="preserve">

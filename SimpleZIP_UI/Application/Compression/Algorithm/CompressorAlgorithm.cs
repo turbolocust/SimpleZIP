@@ -132,7 +132,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// </summary>
         /// <param name="file">The file to be renamed.</param>
         /// <param name="stream">The possible <see cref="GZipStream"/> which holds the filename.</param>
-        /// <returns>True if stream is <see cref="GZipStream"/> an file was successfully renamed.</returns>
+        /// <returns>True if stream is <see cref="GZipStream"/> and file was successfully renamed.</returns>
         private static async Task<bool> GZipOutputFileNameWorkaround(IStorageItem file, Stream stream)
         {
             if (stream is GZipStream gzipStream

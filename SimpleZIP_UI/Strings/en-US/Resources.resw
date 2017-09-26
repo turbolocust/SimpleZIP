@@ -192,7 +192,7 @@
     <comment>Something took less than one second.</comment>
   </data>
   <data name="MightTakeWhile.Text" xml:space="preserve">
-    <value>This might take a while. . .</value>
+    <value>This might take a while...</value>
     <comment>Informs the user that something can take some time.</comment>
   </data>
   <data name="minutes.Text" xml:space="preserve">
@@ -212,7 +212,7 @@
     <comment>Informs the user about the fact that Gzip only allows the compression of a single file.</comment>
   </data>
   <data name="OpenArchive.Text" xml:space="preserve">
-    <value>Open Archive . . .</value>
+    <value>Open Archive</value>
     <comment>Allows the user to open an archive.</comment>
   </data>
   <data name="OpenWebBrowserMessage.Text" xml:space="preserve">
@@ -284,7 +284,7 @@
     <comment>Information about this software.</comment>
   </data>
   <data name="TryingAbort.Text" xml:space="preserve">
-    <value>Trying to abort. . .</value>
+    <value>Trying to abort...</value>
     <comment>Is trying to stop operation.</comment>
   </data>
   <data name="ArchiveName.Text" xml:space="preserve">
@@ -310,10 +310,6 @@
   <data name="FileFormatNotSupported.Text" xml:space="preserve">
     <value>The selected file format is not supported.</value>
     <comment>Informs that the file format of the archive is not supported.</comment>
-  </data>
-  <data name="ReadingArchive.Text" xml:space="preserve">
-    <value>Reading archive. . .</value>
-    <comment>Indicates that an archive is being read.</comment>
   </data>
   <data name="Fast.Text" xml:space="preserve">
     <value>Fast</value>
@@ -344,7 +340,7 @@
     <comment>Dialog which allows adjustments to behavior of application.</comment>
   </data>
   <data name="ComputeHash.Text" xml:space="preserve">
-    <value>Compute Hash. . .</value>
+    <value>Compute Hash</value>
     <comment>Allows the user to compute file hashes.</comment>
   </data>
   <data name="HashAlgorithm.Header" xml:space="preserve">

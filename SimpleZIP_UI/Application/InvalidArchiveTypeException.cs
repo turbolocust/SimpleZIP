@@ -17,21 +17,20 @@
 // 
 // ==--==
 using System;
-using System.IO;
 
-namespace SimpleZIP_UI.Exceptions
+namespace SimpleZIP_UI.Application
 {
-    internal class ReadingArchiveException : IOException
+    internal class InvalidArchiveTypeException : Exception
     {
-        public ReadingArchiveException()
+        public InvalidArchiveTypeException()
         {
         }
 
-        public ReadingArchiveException(string message) : base(message)
+        public InvalidArchiveTypeException(string message) : base(message)
         {
         }
 
-        public ReadingArchiveException(string message, Exception innerException) : base(message, innerException)
+        public InvalidArchiveTypeException(string message, Exception innerException) : base(message, innerException)
         {
         }
     }

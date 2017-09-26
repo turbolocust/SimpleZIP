@@ -133,7 +133,7 @@
     <Compile Include="Application\Util\WriterUtils.cs" />
     <Compile Include="Application\Util\CollectionUtils.cs" />
     <Compile Include="Application\Util\TaskUtils.cs" />
-    <Compile Include="Exceptions\ReadingArchiveException.cs" />
+    <Compile Include="Application\ReadingArchiveException.cs" />
     <Compile Include="I18N\Resources.cs" />
     <Compile Include="Presentation\Controller\BrowseArchivePageController.cs" />
     <Compile Include="Presentation\Controller\SummaryPageController.cs" />
@@ -162,7 +162,7 @@
     <Compile Include="Presentation\Controller\DecompressionPageController.cs" />
     <Compile Include="Presentation\Factory\DialogFactory.cs" />
     <Compile Include="Presentation\Factory\PickerFactory.cs" />
-    <Compile Include="Exceptions\InvalidArchiveTypeException.cs" />
+    <Compile Include="Application\InvalidArchiveTypeException.cs" />
     <Compile Include="Presentation\Controller\CompressionPageController.cs" />
     <Compile Include="Presentation\View\CompressionSummaryPage.xaml.cs">
       <DependentUpon>CompressionSummaryPage.xaml</DependentUpon>
@@ -277,6 +277,7 @@
       <Name>Visual C++ 2015 Runtime for Universal Windows Platform Apps</Name>
     </SDKReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

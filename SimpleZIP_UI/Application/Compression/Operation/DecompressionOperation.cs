@@ -24,7 +24,6 @@ using Windows.Storage;
 using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Compression.Reader;
 using SimpleZIP_UI.Application.Util;
-using SimpleZIP_UI.Exceptions;
 
 namespace SimpleZIP_UI.Application.Compression.Operation
 {
