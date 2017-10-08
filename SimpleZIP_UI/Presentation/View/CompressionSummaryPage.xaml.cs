@@ -267,12 +267,12 @@ namespace SimpleZIP_UI.Presentation.View
         internal void OnProgressUpdate(object sender, ProgressUpdateEventArgs args)
         {
             var progress = _controller.ProgressManager.UpdateProgress(sender, args.Progress);
-            if (_controller.ProgressManager.Exchange(progress).Equals(ProgressManager.Sentinel))
+            if (_controller.ProgressManager.Exchange(progress).Equals(_controller.ProgressManager.Sentinel))
             {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    var totalProgress = _controller.ProgressManager.Exchange(ProgressManager.Sentinel);
+                    var totalProgress = _controller.ProgressManager.Exchange(_controller.ProgressManager.Sentinel);
                     if (totalProgress > ProgressBar.Value)
                     {
                         ProgressBar.Value = totalProgress;

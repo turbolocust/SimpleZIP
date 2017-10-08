@@ -62,12 +62,12 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// <summary>
         /// Manages the current progress of the operation.
         /// </summary>
-        internal ProgressManager ProgressManager { get; }
+        internal ProgressManager<int> ProgressManager { get; }
 
         internal SummaryPageController(Page parent) : base(parent)
         {
             DisplayRequest = new DisplayRequest();
-            ProgressManager = new ProgressManager();
+            ProgressManager = ProgressManagers.CreateInexact();
         }
 
         /// <summary>

@@ -19,41 +19,72 @@
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
+using SimpleZIP_UI.Application.Compression.Operation;
 
 namespace SimpleZIP_UI.Presentation
 {
-    internal sealed class ProgressManager
+    /// <summary>
+    /// Offers methods to create new instances of <see cref="ProgressManager{TNumber}"/>.
+    /// </summary>
+    public static class ProgressManagers
+    {
+        /// <summary>
+        /// Creates a new progress manager for inexact progress calculation.
+        /// </summary>
+        /// <returns>A new progress manager for inexact progress calculation.</returns>
+        public static ProgressManager<int> CreateInexact()
+        {
+            return ProgressManagerInexact.CreateInstance();
+        }
+
+        /// <summary>
+        /// Creates a new progress manager for exact progress calculation.
+        /// </summary>
+        /// <returns>A new progress manager for exact progress calculation.</returns>
+        public static ProgressManager<double> CreateExact()
+        {
+            return ProgressManagerExact.CreateInstance();
+        }
+    }
+
+    /// <summary>
+    /// Represents a manager for progress values.
+    /// </summary>
+    /// <typeparam name="TNumber">Any numeric type.</typeparam>
+    public abstract class ProgressManager<TNumber>
     {
         /// <summary>
         /// Placeholder value which can be set if current progress value
         /// has been received. Works like a lock and is used to e.g. 
         /// avoid flooding of the UI thread.
         /// </summary>
-        internal const double Sentinel = -1d;
+        public abstract TNumber Sentinel { get; }
 
         /// <summary>
         /// Holds either the total progress or <see cref="Sentinel"/>.
         /// </summary>
-        private double _totalProgress;
+        protected TNumber TotalProgress;
 
         /// <summary>
-        /// Maps keys to their progress values.
+        /// Maps identifiers (keys) to progression values.
         /// </summary>
-        private readonly ConcurrentDictionary<object, double> _progressValues;
+        protected readonly ConcurrentDictionary<object, TNumber> ProgressValues;
 
-        internal ProgressManager()
+        /// <summary>
+        /// Creates a new ProgressManager instance.
+        /// </summary>
+        protected ProgressManager()
         {
-            _totalProgress = Sentinel;
-            _progressValues = new ConcurrentDictionary<object, double>();
+            ProgressValues = new ConcurrentDictionary<object, TNumber>();
         }
 
         /// <summary>
         /// Resets this instance and clears all mappings.
         /// </summary>
-        internal void Reset()
+        public void Reset()
         {
-            _totalProgress = Sentinel;
-            _progressValues.Clear();
+            TotalProgress = Sentinel;
+            ProgressValues.Clear();
         }
 
         /// <summary>
@@ -62,10 +93,7 @@ namespace SimpleZIP_UI.Presentation
         /// </summary>
         /// <param name="newValue">The value to be exchanged.</param>
         /// <returns>The previously assigned value.</returns>
-        internal double Exchange(double newValue)
-        {
-            return Interlocked.Exchange(ref _totalProgress, newValue);
-        }
+        public abstract TNumber Exchange(TNumber newValue);
 
         /// <summary>
         /// Updates and returns the total progress value considering all mapped
@@ -76,16 +104,103 @@ namespace SimpleZIP_UI.Presentation
         /// <param name="id">Key to which the value is to be mapped.</param>
         /// <param name="newValue">Updated value to be mapped.</param>
         /// <returns>The total progress value considering all mappings.</returns>
-        internal double UpdateProgress(object id, double newValue)
+        public TNumber UpdateProgress(object id, TNumber newValue)
         {
-            return _progressValues.Count > 1
+            return ProgressValues.Count > 1
                 ? CalculateTotalProgress(id, newValue) : newValue;
         }
 
-        private double CalculateTotalProgress(object id, double newValue)
+        /// <summary>
+        /// Updates and returns the total progress value considering all mapped
+        /// values. Each time this method is called with an unknown key, the
+        /// specified value will be mapped to that key. If the key already exists,
+        /// the currently mapped value will be updated. Based on the concrete instance
+        /// of <see cref="ProgressManager{TNumber}"/> the correct progress value
+        /// is being extracted from <see cref="Progress"/>.
+        /// </summary>
+        /// <param name="id">Key to which the value is to be mapped.</param>
+        /// <param name="progress">Holds the progress value to be updated.</param>
+        /// <returns>The total progress value considering all mappings.</returns>
+        internal abstract TNumber UpdateProgress(object id, Progress progress);
+
+        /// <summary>
+        /// Calculates and returns the total progress.
+        /// </summary>
+        /// <param name="id">The id to which the new value shall be mapped.</param>
+        /// <param name="newValue">The updated progress value.</param>
+        /// <returns></returns>
+        protected abstract TNumber CalculateTotalProgress(object id, TNumber newValue);
+    }
+
+    /// <inheritdoc />
+    public sealed class ProgressManagerInexact : ProgressManager<int>
+    {
+        /// <inheritdoc />
+        public override int Sentinel { get; } = -1;
+
+        private ProgressManagerInexact()
         {
-            _progressValues.AddOrUpdate(id, newValue, (key, oldValue) => newValue);
-            return _progressValues.Sum(entry => entry.Value) / _progressValues.Count;
+            TotalProgress = Sentinel;
+        }
+
+        internal static ProgressManager<int> CreateInstance()
+        {
+            return new ProgressManagerInexact();
+        }
+
+        /// <inheritdoc />
+        public override int Exchange(int newValue)
+        {
+            return Interlocked.Exchange(ref TotalProgress, newValue);
+        }
+
+        /// <inheritdoc />
+        internal override int UpdateProgress(object id, Progress progress)
+        {
+            return UpdateProgress(id, progress.Percentage);
+        }
+
+        /// <inheritdoc />
+        protected override int CalculateTotalProgress(object id, int newValue)
+        {
+            ProgressValues.AddOrUpdate(id, newValue, (key, oldValue) => newValue);
+            return ProgressValues.Sum(entry => entry.Value) / ProgressValues.Count;
+        }
+    }
+
+    /// <inheritdoc />
+    public sealed class ProgressManagerExact : ProgressManager<double>
+    {
+        /// <inheritdoc />
+        public override double Sentinel { get; } = -1d;
+
+        private ProgressManagerExact()
+        {
+            TotalProgress = Sentinel;
+        }
+
+        internal static ProgressManager<double> CreateInstance()
+        {
+            return new ProgressManagerExact();
+        }
+
+        /// <inheritdoc />
+        public override double Exchange(double newValue)
+        {
+            return Interlocked.Exchange(ref TotalProgress, newValue);
+        }
+
+        /// <inheritdoc />
+        internal override double UpdateProgress(object id, Progress progress)
+        {
+            return UpdateProgress(id, progress.PercentageExact);
+        }
+
+        /// <inheritdoc />
+        protected override double CalculateTotalProgress(object id, double newValue)
+        {
+            ProgressValues.AddOrUpdate(id, newValue, (key, oldValue) => newValue);
+            return ProgressValues.Sum(entry => entry.Value) / ProgressValues.Count;
         }
     }
 }
