@@ -176,24 +176,4 @@ namespace SimpleZIP_UI.Application.Compression.Operation
             TokenSource.Dispose();
         }
     }
-
-    /// <summary>
-    /// Stores values for progress calculation.
-    /// </summary>
-    public struct Progress
-    {
-        private readonly long _totalBytesToProcess;
-
-        private readonly long _totalBytesProcessed;
-
-        internal double PercentageExact => _totalBytesProcessed / (float)_totalBytesToProcess * 100;
-
-        internal int Percentage => (int)Math.Round(PercentageExact);
-
-        internal Progress(long totalBytesToProcess, long totalBytesProcessed)
-        {
-            _totalBytesToProcess = totalBytesToProcess;
-            _totalBytesProcessed = totalBytesProcessed;
-        }
-    }
 }

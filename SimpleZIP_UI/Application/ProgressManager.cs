@@ -19,9 +19,8 @@
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
-using SimpleZIP_UI.Application.Compression.Operation;
 
-namespace SimpleZIP_UI.Presentation
+namespace SimpleZIP_UI.Application
 {
     /// <summary>
     /// Offers methods to create new instances of <see cref="ProgressManager{TNumber}"/>.

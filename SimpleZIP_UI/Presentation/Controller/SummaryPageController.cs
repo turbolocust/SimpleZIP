@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.System.Display;
 using Windows.UI.Xaml.Controls;
+using SimpleZIP_UI.Application;
 using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Compression.Operation;
 using SimpleZIP_UI.Application.Compression.Operation.Event;

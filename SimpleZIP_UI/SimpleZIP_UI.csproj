@@ -130,6 +130,7 @@
     <Compile Include="Application\Compression\Streams\ProgressObservableStream.cs" />
     <Compile Include="Application\Hashing\IMessageDigestProvider.cs" />
     <Compile Include="Application\Hashing\MessageDigestProvider.cs" />
+    <Compile Include="Application\Progress.cs" />
     <Compile Include="Application\Util\WriterUtils.cs" />
     <Compile Include="Application\Util\CollectionUtils.cs" />
     <Compile Include="Application\Util\TaskUtils.cs" />
@@ -137,7 +138,7 @@
     <Compile Include="I18N\Resources.cs" />
     <Compile Include="Presentation\Controller\BrowseArchivePageController.cs" />
     <Compile Include="Presentation\Controller\SummaryPageController.cs" />
-    <Compile Include="Presentation\ProgressManager.cs" />
+    <Compile Include="Application\ProgressManager.cs" />
     <Compile Include="Presentation\Settings.cs" />
     <Compile Include="Presentation\View\Converter\NegateBooleanConverter.cs" />
     <Compile Include="Presentation\View\Dialog\AboutDialog.xaml.cs">
