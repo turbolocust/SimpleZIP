@@ -75,10 +75,7 @@ namespace SimpleZIP_UI.Application.Util
                 var awaiter = childTask.GetAwaiter();
                 while (!awaiter.IsCompleted)
                 {
-                    if (token.IsCancellationRequested)
-                    {
-                        throw new TaskCanceledException(nameof(childTask));
-                    }
+                    Task.Delay(50, token).Wait(token);
                 }
             }, token);
 
