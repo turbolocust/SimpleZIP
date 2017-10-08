@@ -52,7 +52,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         /// <summary>
         /// Total amount of bytes to be processed.
         /// </summary>
-        private ulong _totalBytesToProcess;
+        private long _totalBytesToProcess;
 
         /// <summary>
         /// Current progress in bytes. Used to calculate difference
@@ -104,7 +104,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         {
             IsRunning = true;
             SetAlgorithm(operationInfo);
-            _totalBytesToProcess = operationInfo.TotalFileSize;
+            _totalBytesToProcess = (long)operationInfo.TotalFileSize;
             try
             {
                 Algorithm.TotalBytesProcessed += OnTotalBytesProcessed;
@@ -143,14 +143,12 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         {
             // calculate difference to update total amount of bytes
             // that have already been processed by this instance
-            var totalBytesProcessed = args.TotalBytesProcessed;
-            TotalBytesProcessed += totalBytesProcessed - _previousBytesProcessed;
-            _previousBytesProcessed = totalBytesProcessed;
-            // actually calculate progress in percentage
-            var progress = TotalBytesProcessed / (double)_totalBytesToProcess * 100;
+            TotalBytesProcessed += args.TotalBytesProcessed - _previousBytesProcessed;
+            _previousBytesProcessed = args.TotalBytesProcessed;
+            // fire event to inform listeners about progress update
             var evtArgs = new ProgressUpdateEventArgs
             {
-                Progress = progress
+                Progress = new Progress(_totalBytesToProcess, TotalBytesProcessed)
             };
             ProgressUpdate?.Invoke(this, evtArgs);
         }
@@ -176,6 +174,26 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         {
             IsRunning = false;
             TokenSource.Dispose();
+        }
+    }
+
+    /// <summary>
+    /// Stores values for progress calculation.
+    /// </summary>
+    public struct Progress
+    {
+        private readonly long _totalBytesToProcess;
+
+        private readonly long _totalBytesProcessed;
+
+        internal double PercentageExact => _totalBytesProcessed / (float)_totalBytesToProcess * 100;
+
+        internal int Percentage => (int)Math.Round(PercentageExact);
+
+        internal Progress(long totalBytesToProcess, long totalBytesProcessed)
+        {
+            _totalBytesToProcess = totalBytesToProcess;
+            _totalBytesProcessed = totalBytesProcessed;
         }
     }
 }

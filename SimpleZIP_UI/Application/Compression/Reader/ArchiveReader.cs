@@ -185,9 +185,9 @@ namespace SimpleZIP_UI.Application.Compression.Reader
                 : trimmedKey.Substring(0, trimmedKey.Length - entryName.Length);
             return new EntryKeyPair
             {
+                SeparatorPos = lastSeparatorIndex,
                 EntryName = entryName,
-                ParentKey = parentKey,
-                SeparatorPos = lastSeparatorIndex
+                ParentKey = parentKey
             };
         }
 
@@ -199,11 +199,11 @@ namespace SimpleZIP_UI.Application.Compression.Reader
 
         private struct EntryKeyPair
         {
+            internal int SeparatorPos;
+
             internal string EntryName;
 
             internal string ParentKey;
-
-            internal int SeparatorPos;
         }
     }
 }

@@ -24,8 +24,8 @@ namespace SimpleZIP_UI.Application.Compression.Operation.Event
     public class ProgressUpdateEventArgs : EventArgs
     {
         /// <summary>
-        /// The updated progress value.
+        /// The updated progress.
         /// </summary>
-        public double Progress { get; set; }
+        public Progress Progress { get; set; }
     }
 }
