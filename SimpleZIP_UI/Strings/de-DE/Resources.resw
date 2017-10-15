@@ -359,4 +359,8 @@
     <value>Schließen</value>
     <comment>Closes the dialog.</comment>
   </data>
+  <data name="CopiedToClipboard.Text" xml:space="preserve">
+    <value>In Zwischenablage kopiert.</value>
+    <comment>Informs the user that data has been copied to the clipboard.</comment>
+  </data>
 </root>

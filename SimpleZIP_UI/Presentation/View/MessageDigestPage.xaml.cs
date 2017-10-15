@@ -29,6 +29,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using SimpleZIP_UI.Application.Hashing;
+using SimpleZIP_UI.Presentation.Controller;
 using SimpleZIP_UI.Presentation.View.Dialog;
 using SimpleZIP_UI.Presentation.View.Model;
 
@@ -46,6 +47,11 @@ namespace SimpleZIP_UI.Presentation.View
         public ObservableCollection<MessageDigestModel> MessageDigestModels { get; }
 
         /// <summary>
+        /// The aggregated controller instance.
+        /// </summary>
+        private readonly MessageDigestPageController _controller;
+
+        /// <summary>
         /// Instance used to compute hashes.
         /// </summary>
         private readonly IMessageDigestProvider _messageDigestAlgorithm;
@@ -60,6 +66,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// </summary>
         public MessageDigestPage()
         {
+            _controller = new MessageDigestPageController(this);
             _messageDigestAlgorithm = new MessageDigestProvider();
             MessageDigestModels = new ObservableCollection<MessageDigestModel>();
             InitializeComponent();
@@ -75,8 +82,8 @@ namespace SimpleZIP_UI.Presentation.View
         {
             try
             {
-                MessageDigestModels.Clear();
                 HashAlgorithmComboBox.IsEnabled = false;
+                MessageDigestModels.Clear();
                 // start computation of hash value for each file
                 foreach (var file in _selectedFiles)
                 {
@@ -169,6 +176,8 @@ namespace SimpleZIP_UI.Presentation.View
                 stringBuilder.AppendLine("\r\n");
             }
             CopyToClipboard(stringBuilder.ToString());
+            _controller.ShowToastNotification("SimpleZIP",
+                I18N.Resources.GetString("CopiedToClipboard/Text"), 4);
         }
 
         /// <inheritdoc />
