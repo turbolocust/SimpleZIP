@@ -65,7 +65,7 @@
                         <RowDefinition Height="2.5*"/>
                     </Grid.RowDefinitions>
                     <!-- ReSharper disable once MarkupAttributeTypo -->
-                    <TextBlock Text="v2.0.0" Grid.Row="0" FontFamily="Consolas" FontStyle="Normal" FontWeight="Medium" HorizontalAlignment="Center"
+                    <TextBlock Text="v2.1.1" Grid.Row="0" FontFamily="Consolas" FontStyle="Normal" FontWeight="Medium" HorizontalAlignment="Center"
                                Foreground="{ThemeResource SystemControlForegroundAccentBrush}" VerticalAlignment="Top" Margin="0,68,0,32" />
                     <TextBlock Text="SimpleZIP" Grid.Row="0" FontFamily="Default" FontSize="54" CharacterSpacing="32" FontStyle="Normal" FontWeight="Medium" 
                                Foreground="{ThemeResource SystemControlForegroundAccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="-16,16,0,32" />
