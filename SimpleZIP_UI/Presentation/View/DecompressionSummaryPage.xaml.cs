@@ -39,7 +39,7 @@ namespace SimpleZIP_UI.Presentation.View
     public sealed partial class DecompressionSummaryPage : IDisposable
     {
         /// <summary>
-        /// The aggregated control instance.
+        /// The aggregated controller instance.
         /// </summary>
         private readonly DecompressionPageController _controller;
 

@@ -37,7 +37,7 @@ namespace SimpleZIP_UI.Presentation.View
     public sealed partial class CompressionSummaryPage : IDisposable
     {
         /// <summary>
-        /// The aggregated control instance.
+        /// The aggregated controller instance.
         /// </summary>
         private readonly CompressionPageController _controller;
 
@@ -198,22 +198,23 @@ namespace SimpleZIP_UI.Presentation.View
         }
 
         /// <summary>
-        /// Invoked when any tooltip has been opened.
+        /// Invoked when the tooltip for "ArchiveTypeButton" has been opened.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
         /// <param name="args">Consists of event parameters.</param>
-        private void ToolTip_Opened(object sender, RoutedEventArgs args)
+        private void ArchiveTypeToolTip_OnOpened(object sender, RoutedEventArgs args)
         {
             var toolTip = (ToolTip)sender;
-
-            // use timer to close tooltip after 8 seconds
-            var timer = new DispatcherTimer { Interval = new TimeSpan(0, 0, 8) };
-            timer.Tick += (s, evt) =>
+            if (!toolTip.IsOpen)
             {
-                toolTip.IsOpen = false;
-                timer.Stop();
-            };
-            timer.Start();
+                var timer = new DispatcherTimer { Interval = new TimeSpan(0, 0, 8) };
+                timer.Tick += (s, evt) => // close tooltip after 8 seconds
+                {
+                    toolTip.IsOpen = false;
+                    timer.Stop();
+                };
+                timer.Start();
+            }
         }
 
         /// <summary>

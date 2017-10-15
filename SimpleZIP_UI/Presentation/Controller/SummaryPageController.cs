@@ -72,6 +72,20 @@ namespace SimpleZIP_UI.Presentation.Controller
         }
 
         /// <summary>
+        /// Validates the specified size and displays a toast notification 
+        /// if a threshold has been passed (<see cref="FileSizeWarningThreshold"/>).
+        /// </summary>
+        /// <param name="totalSize">The total size to be validated.</param>
+        private void ValidateFileSizes(ulong totalSize)
+        {
+            if (totalSize >= FileSizeWarningThreshold)
+            {
+                ShowToastNotification(I18N.Resources.GetString("PleaseBePatient/Text"),
+                    I18N.Resources.GetString("MightTakeWhile/Text"));
+            }
+        }
+
+        /// <summary>
         /// Performs an action when the start button has been tapped.
         /// </summary>
         /// <param name="listener">Listener to be attached to the operation's 
@@ -195,7 +209,7 @@ namespace SimpleZIP_UI.Presentation.Controller
                 {
                     totalSize += await FileUtils.GetFileSizeAsync(item.Archive);
                 }
-            } 
+            }
             ValidateFileSizes(totalSize);
             return totalSize;
         }
@@ -211,20 +225,6 @@ namespace SimpleZIP_UI.Presentation.Controller
             var totalSize = await FileUtils.GetFileSizesAsync(files);
             ValidateFileSizes(totalSize);
             return totalSize;
-        }
-
-        /// <summary>
-        /// Validates the specified size and displays a toast notification 
-        /// if a threshold has been passed (<see cref="FileSizeWarningThreshold"/>).
-        /// </summary>
-        /// <param name="totalSize">The total size to be validated.</param>
-        private void ValidateFileSizes(ulong totalSize)
-        {
-            if (totalSize >= FileSizeWarningThreshold)
-            {
-                ShowToastNotification(I18N.Resources.GetString("PleaseBePatient/Text"),
-                    I18N.Resources.GetString("MightTakeWhile/Text"));
-            }
         }
 
         /// <summary>

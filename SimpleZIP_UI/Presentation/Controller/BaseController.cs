@@ -28,6 +28,9 @@ using SimpleZIP_UI.Presentation.View;
 
 namespace SimpleZIP_UI.Presentation.Controller
 {
+    /// <summary>
+    /// Base GUI controller. Other GUI controllers may derive from this one.
+    /// </summary>
     internal abstract class BaseController
     {
         /// <summary>

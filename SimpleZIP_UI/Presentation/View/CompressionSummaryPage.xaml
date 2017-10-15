@@ -19,7 +19,7 @@
             <ComboBox x:Uid="ArchiveType" x:Name="ArchiveTypeComboBox" DropDownClosed="ArchiveTypeComboBox_DropDownClosed" Width="225" 
                       Margin="0,0,0,16" Header="" Foreground="{ThemeResource ButtonForegroundThemeBrush}">
                 <ToolTipService.ToolTip>
-                    <ToolTip x:Name="ArchiveTypeToolTip" FontSize="13" HorizontalOffset="20" VerticalOffset="10" Opened="ToolTip_Opened" />
+                    <ToolTip x:Name="ArchiveTypeToolTip" FontSize="13" HorizontalOffset="20" VerticalOffset="10" Opened="ArchiveTypeToolTip_OnOpened" />
                 </ToolTipService.ToolTip>
             </ComboBox>
             <TextBox x:Uid="ArchiveName" x:Name="ArchiveNameTextBox" TextChanged="ArchiveNameTextBox_TextChanged" AcceptsReturn="False" 

@@ -43,7 +43,7 @@ namespace SimpleZIP_UI.Presentation.View
         private const double PreferredLaunchSizeHeight = 600d;
 
         /// <summary>
-        /// The aggregated control instance.
+        /// The aggregated controller instance.
         /// </summary>
         private readonly MainPageController _controller;
 

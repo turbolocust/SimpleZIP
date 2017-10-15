@@ -37,7 +37,7 @@ namespace SimpleZIP_UI.Presentation.View
     public sealed partial class BrowseArchivePage
     {
         /// <summary>
-        /// The aggregated control instance.
+        /// The aggregated controller instance.
         /// </summary>
         private readonly BrowseArchivePageController _controller;
 
