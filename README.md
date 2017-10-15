@@ -1,6 +1,6 @@
 # SimpleZIP
 
-<b>A very simple archiving/hash tool for the Windows UWP platform</b> *(optimized for mobile phones)*.
+<b>A very simple archiving/hash tool for the Windows UWP platform</b>.
 
 This app can be found in the Windows Store: https://www.microsoft.com/en-us/store/p/simplezip/9nz7l8c54zln
 
@@ -38,7 +38,6 @@ Supported message digest algorithms:
 
 # Screenshots
 
-<img src="https://homepages.fhv.at/mfu7609/images/simplezip_main.PNG" width="489" height="870" alt="main page image"/><br />
 <img src="https://homepages.fhv.at/mfu7609/images/simplezip_hashing.PNG" width="489" height="870" alt="hashing page image"/><br />
 <img src="https://homepages.fhv.at/mfu7609/images/simplezip_compression.PNG" width="489" height="870" alt="compression page image"/><br />
 <img src="https://homepages.fhv.at/mfu7609/images/simplezip_decompression.PNG" width="489" height="870" alt="decompression page image"/><br />
