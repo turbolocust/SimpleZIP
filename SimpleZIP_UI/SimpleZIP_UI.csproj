@@ -137,6 +137,7 @@
     <Compile Include="Application\ReadingArchiveException.cs" />
     <Compile Include="I18N\Resources.cs" />
     <Compile Include="Presentation\Controller\BrowseArchivePageController.cs" />
+    <Compile Include="Presentation\Controller\MessageDigestPageController.cs" />
     <Compile Include="Presentation\Controller\SummaryPageController.cs" />
     <Compile Include="Application\ProgressManager.cs" />
     <Compile Include="Presentation\Settings.cs" />
