@@ -12,9 +12,12 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition MinHeight="100"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <TextBox Text="{Binding Text}" Grid.Row="0" TextWrapping="Wrap" 
+        <TextBlock Text="{Binding Header}" Grid.Row="0" IsTextSelectionEnabled="False" 
+                   TextWrapping="Wrap" Margin="0,0,0,8" />
+        <TextBox Text="{Binding Text}" Grid.Row="1" TextWrapping="Wrap" 
                  IsReadOnly="False" IsSpellCheckEnabled="False"/>
     </Grid>
 </ContentDialog>

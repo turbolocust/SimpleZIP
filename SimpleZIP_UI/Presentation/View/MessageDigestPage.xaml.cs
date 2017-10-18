@@ -62,14 +62,12 @@ namespace SimpleZIP_UI.Presentation.View
         private IReadOnlyList<StorageFile> _selectedFiles = new StorageFile[] { };
 
         /// <inheritdoc />
-        /// <summary>
-        /// </summary>
         public MessageDigestPage()
         {
             _controller = new MessageDigestPageController(this);
             _messageDigestAlgorithm = new MessageDigestProvider();
             MessageDigestModels = new ObservableCollection<MessageDigestModel>();
-            InitializeComponent();
+            InitializeComponent(); // has to be last call
         }
 
         /// <summary>
@@ -139,7 +137,7 @@ namespace SimpleZIP_UI.Presentation.View
             if (!(args.OriginalSource is FrameworkElement element)) return;
             if (element.DataContext is MessageDigestModel model)
             {
-                await new ViewTextDialog(model.HashValue).ShowAsync();
+                await new ViewTextDialog(model.FileName, model.HashValue).ShowAsync();
                 args.Handled = true;
             }
         }
@@ -176,6 +174,7 @@ namespace SimpleZIP_UI.Presentation.View
                 stringBuilder.AppendLine("\r\n");
             }
             CopyToClipboard(stringBuilder.ToString());
+            // show toast and hide it after 4 seconds
             _controller.ShowToastNotification("SimpleZIP",
                 I18N.Resources.GetString("CopiedToClipboard/Text"), 4);
         }

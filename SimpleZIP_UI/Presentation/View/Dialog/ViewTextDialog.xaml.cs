@@ -24,14 +24,20 @@ namespace SimpleZIP_UI.Presentation.View.Dialog
     public sealed partial class ViewTextDialog
     {
         /// <summary>
+        /// The title to be displayed.
+        /// </summary>
+        public string Header { get; set; }
+
+        /// <summary>
         /// Text which is bound to the text box.
         /// </summary>
         public string Text { get; set; }
 
         /// <inheritdoc />
-        public ViewTextDialog(string text)
+        public ViewTextDialog(string header, string text)
         {
             InitializeComponent();
+            Header = header;
             Text = text;
         }
 
