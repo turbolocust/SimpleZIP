@@ -66,7 +66,7 @@ namespace SimpleZIP_UI.Presentation
             var val = LocalSettings.Values[key];
             if (val?.GetType() == typeof(T))
             {
-                value = (T) val;
+                value = (T)val;
                 return true;
             }
             value = default(T);
@@ -78,9 +78,11 @@ namespace SimpleZIP_UI.Presentation
         /// </summary>
         internal static class Keys
         {
-            internal const string PreferOpenArchiveKey = "PreferOpenArchive";
+            internal const string ApplicationThemeKey = "ApplicationTheme";
 
             internal const string HideSomeArchiveTypesKey = "HideSomeArchiveTypes";
+
+            internal const string PreferOpenArchiveKey = "PreferOpenArchive";
         }
     }
 }

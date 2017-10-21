@@ -301,7 +301,7 @@
   </data>
   <data name="TryingAbort.Text" xml:space="preserve">
     <value>Versuche abzubrechen...</value>
-    <comment>Is trying to stop operation.</comment>
+    <comment>Will try to stop operation.</comment>
   </data>
   <data name="Yes.Text" xml:space="preserve">
     <value>Ja</value>
@@ -362,5 +362,29 @@
   <data name="CopiedToClipboard.Text" xml:space="preserve">
     <value>In Zwischenablage kopiert.</value>
     <comment>Informs the user that data has been copied to the clipboard.</comment>
+  </data>
+  <data name="Dark.Text" xml:space="preserve">
+    <value>Dunkel</value>
+    <comment>Used for e.g. the selection of the Dark theme.</comment>
+  </data>
+  <data name="General.Text" xml:space="preserve">
+    <value>Allgemein</value>
+    <comment>Indicates something which may not be classified.</comment>
+  </data>
+  <data name="Light.Text" xml:space="preserve">
+    <value>Hell</value>
+    <comment>Used for e.g. the selection of the Light theme.</comment>
+  </data>
+  <data name="System.Text" xml:space="preserve">
+    <value>System</value>
+    <comment>Platform on which the app is being executed.</comment>
+  </data>
+  <data name="Theme.Text" xml:space="preserve">
+    <value>Thema</value>
+    <comment>The visual appearance of the application.</comment>
+  </data>
+  <data name="requiresRestart.Text" xml:space="preserve">
+    <value>benötigt einen Neustart</value>
+    <comment>Informs the user that any action will have no effect until a restart of the app.</comment>
   </data>
 </root>

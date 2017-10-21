@@ -48,7 +48,7 @@
                 <TextBlock x:Uid="Start" Text="" TextWrapping="Wrap" />
             </Button>
             <Button Tapped="AbortButton_Tap" Width="120" MinHeight="44" Height="50" MaxHeight="60" Foreground="{ThemeResource ButtonForegroundThemeBrush}" 
-                    Background="DarkRed" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+                    Background="IndianRed" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                 <TextBlock x:Uid="Abort" Text="" TextWrapping="Wrap" />
             </Button>
             <ToolTipService.ToolTip>

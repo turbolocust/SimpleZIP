@@ -13,16 +13,27 @@
     Opened="SettingsDialog_OnOpened">
 
     <Grid Padding="0,0,0,8">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Top">
-            <ToggleSwitch x:Name="BrowseArchiveToggleSwitch" Toggled="ToggleSwitch_OnToggled" Margin="0,4,0,8">
-                <TextBlock x:Uid="BrowseArchiveSetting" Text="" TextWrapping="Wrap"/>
-            </ToggleSwitch>
-            <ToggleSwitch x:Name="HideArchiveTypesToggleSwitch" Toggled="ToggleSwitch_OnToggled" Margin="0,0,0,8">
-                <TextBlock x:Uid="HideLessCommonArchiveTypesSetting" Text="" TextWrapping="Wrap"/>
-            </ToggleSwitch>
-        </StackPanel>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" VerticalScrollMode="Enabled">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                <TextBlock x:Uid="General" Text="" FontSize="16" Margin="0,8,0,8"/>
+                <ToggleSwitch x:Name="BrowseArchiveToggleSwitch" Toggled="ToggleSwitch_OnToggled" Margin="0,4,0,8">
+                    <TextBlock x:Uid="BrowseArchiveSetting" Text="" TextWrapping="Wrap"/>
+                </ToggleSwitch>
+                <ToggleSwitch x:Name="HideArchiveTypesToggleSwitch" Toggled="ToggleSwitch_OnToggled" Margin="0,0,0,8">
+                    <TextBlock x:Uid="HideLessCommonArchiveTypesSetting" Text="" TextWrapping="Wrap"/>
+                </ToggleSwitch>
+                <TextBlock x:Uid="Theme" Text="" FontSize="16" Margin="0,8,0,4"/>
+                <TextBlock x:Uid="requiresRestart" Text="" FontSize="14" FontStyle="Italic" Margin="0,8,0,8"/>
+                <RadioButton x:Name="LightThemeRadioButton" Checked="ThemeGroupToggleButton_OnChecked" GroupName="ThemeGroup">
+                    <TextBlock x:Uid="Light" Text=""/>
+                </RadioButton>
+                <RadioButton x:Name="DarkThemeRadioButton" Checked="ThemeGroupToggleButton_OnChecked" GroupName="ThemeGroup">
+                    <TextBlock x:Uid="Dark" Text=""/>
+                </RadioButton>
+                <RadioButton x:Name="SystemThemeRadioButton" Checked="ThemeGroupToggleButton_OnChecked" GroupName="ThemeGroup">
+                    <TextBlock x:Uid="System" Text=""/>
+                </RadioButton>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </ContentDialog>

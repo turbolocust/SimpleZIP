@@ -16,7 +16,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
-
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -30,6 +29,7 @@ namespace SimpleZIP_UI.Presentation.View.Dialog
         {
             InitializeComponent();
             SetToggleButtonsToggledState();
+            SetThemeGroupToggleButton();
             PrimaryButtonText = I18N.Resources.GetString("ContentDialog/PrimaryButtonText");
         }
 
@@ -41,6 +41,16 @@ namespace SimpleZIP_UI.Presentation.View.Dialog
             HideArchiveTypesToggleSwitch.IsOn = isHideSome;
         }
 
+        private void SetThemeGroupToggleButton()
+        {
+            Settings.TryGet(Settings.Keys.ApplicationThemeKey, out string themeKey);
+            LightThemeRadioButton.IsChecked = themeKey?.Equals(ApplicationTheme.Light.ToString());
+            DarkThemeRadioButton.IsChecked = themeKey?.Equals(ApplicationTheme.Dark.ToString());
+            SystemThemeRadioButton.IsChecked = LightThemeRadioButton.IsChecked == null ||
+                                               LightThemeRadioButton.IsChecked == false &&
+                                               DarkThemeRadioButton.IsChecked == null ||
+                                               DarkThemeRadioButton.IsChecked == false;
+        }
 
         private void SettingsDialog_OnOpened(ContentDialog sender,
             ContentDialogOpenedEventArgs args)
@@ -78,6 +88,25 @@ namespace SimpleZIP_UI.Presentation.View.Dialog
                 Settings.PushOrUpdate(Settings.Keys.HideSomeArchiveTypesKey,
                     HideArchiveTypesToggleSwitch.IsOn);
             }
+        }
+
+        /// <summary>
+        /// Invoked when a toggle button belonging to the theme group has been checked. 
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="args">Consists of event parameters.</param>
+        private void ThemeGroupToggleButton_OnChecked(object sender, RoutedEventArgs args)
+        {
+            string theme = null;
+            if (sender.Equals(LightThemeRadioButton))
+            {
+                theme = ApplicationTheme.Light.ToString();
+            }
+            else if (sender.Equals(DarkThemeRadioButton))
+            {
+                theme = ApplicationTheme.Dark.ToString();
+            }
+            Settings.PushOrUpdate(Settings.Keys.ApplicationThemeKey, theme);
         }
     }
 }

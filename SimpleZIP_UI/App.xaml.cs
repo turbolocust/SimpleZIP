@@ -43,6 +43,7 @@ namespace SimpleZIP_UI
         /// </summary>
         public App()
         {
+            RequestApplicationTheme();
             InitializeComponent();
             Suspending += OnSuspending;
         }
@@ -110,7 +111,6 @@ namespace SimpleZIP_UI
         protected override void OnActivated(IActivatedEventArgs args)
         {
             base.OnActivated(args);
-
             if (args is ToastNotificationActivatedEventArgs toastActivationArgs)
             {
                 var engagementManager = StoreServicesEngagementManager.GetDefault();
@@ -133,6 +133,26 @@ namespace SimpleZIP_UI
             rootFrame.Navigate(destination, args);
             Window.Current.Content = rootFrame;
             Window.Current.Activate();
+        }
+
+        /// <summary>
+        /// Requests the application theme based on the user setting. If the
+        /// system's default theme is set, then no theme will be requested.
+        /// </summary>
+        private void RequestApplicationTheme()
+        {
+            Settings.TryGet(Settings.Keys.ApplicationThemeKey, out string theme);
+            if (theme != null)
+            {
+                if (theme.Equals(ApplicationTheme.Light.ToString()))
+                {
+                    RequestedTheme = ApplicationTheme.Light;
+                }
+                else if (theme.Equals(ApplicationTheme.Dark.ToString()))
+                {
+                    RequestedTheme = ApplicationTheme.Dark;
+                }
+            }
         }
 
         /// <summary>
