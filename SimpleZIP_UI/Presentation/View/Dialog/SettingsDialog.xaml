@@ -15,14 +15,14 @@
     <Grid Padding="0,0,0,8">
         <ScrollViewer VerticalScrollBarVisibility="Auto" VerticalScrollMode="Enabled">
             <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Top">
-                <TextBlock x:Uid="General" Text="" FontSize="16" Margin="0,8,0,8"/>
+                <TextBlock x:Uid="General" Text="" FontSize="16" FontWeight="Medium" CharacterSpacing="36" Margin="0,8,0,8"/>
                 <ToggleSwitch x:Name="BrowseArchiveToggleSwitch" Toggled="ToggleSwitch_OnToggled" Margin="0,4,0,8">
                     <TextBlock x:Uid="BrowseArchiveSetting" Text="" TextWrapping="Wrap"/>
                 </ToggleSwitch>
                 <ToggleSwitch x:Name="HideArchiveTypesToggleSwitch" Toggled="ToggleSwitch_OnToggled" Margin="0,0,0,8">
                     <TextBlock x:Uid="HideLessCommonArchiveTypesSetting" Text="" TextWrapping="Wrap"/>
                 </ToggleSwitch>
-                <TextBlock x:Uid="Theme" Text="" FontSize="16" Margin="0,8,0,4"/>
+                <TextBlock x:Uid="Theme" Text="" FontSize="16" FontWeight="Medium" CharacterSpacing="36" Margin="0,8,0,4"/>
                 <TextBlock x:Uid="requiresRestart" Text="" FontSize="14" FontStyle="Italic" Margin="0,8,0,8"/>
                 <RadioButton x:Name="LightThemeRadioButton" Checked="ThemeGroupToggleButton_OnChecked" GroupName="ThemeGroup">
                     <TextBlock x:Uid="Light" Text=""/>
