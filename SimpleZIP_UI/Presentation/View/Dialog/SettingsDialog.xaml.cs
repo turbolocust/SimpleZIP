@@ -43,13 +43,26 @@ namespace SimpleZIP_UI.Presentation.View.Dialog
 
         private void SetThemeGroupToggleButton()
         {
-            Settings.TryGet(Settings.Keys.ApplicationThemeKey, out string themeKey);
-            LightThemeRadioButton.IsChecked = themeKey?.Equals(ApplicationTheme.Light.ToString());
-            DarkThemeRadioButton.IsChecked = themeKey?.Equals(ApplicationTheme.Dark.ToString());
-            SystemThemeRadioButton.IsChecked = LightThemeRadioButton.IsChecked == null ||
-                                               LightThemeRadioButton.IsChecked == false &&
-                                               DarkThemeRadioButton.IsChecked == null ||
-                                               DarkThemeRadioButton.IsChecked == false;
+            Settings.TryGet(Settings.Keys.ApplicationThemeKey, out string theme);
+            if (theme == null) // system theme
+            {
+                LightThemeRadioButton.IsChecked = false;
+                DarkThemeRadioButton.IsChecked = false;
+                SystemThemeRadioButton.IsChecked = true;
+            }
+            else if (theme.Equals(ApplicationTheme.Light.ToString()))
+            {
+                LightThemeRadioButton.IsChecked = true;
+                DarkThemeRadioButton.IsChecked = false;
+                SystemThemeRadioButton.IsChecked = false;
+
+            }
+            else if (theme.Equals(ApplicationTheme.Dark.ToString()))
+            {
+                LightThemeRadioButton.IsChecked = false;
+                DarkThemeRadioButton.IsChecked = true;
+                SystemThemeRadioButton.IsChecked = false;
+            }
         }
 
         private void SettingsDialog_OnOpened(ContentDialog sender,
@@ -97,7 +110,7 @@ namespace SimpleZIP_UI.Presentation.View.Dialog
         /// <param name="args">Consists of event parameters.</param>
         private void ThemeGroupToggleButton_OnChecked(object sender, RoutedEventArgs args)
         {
-            string theme = null;
+            string theme;
             if (sender.Equals(LightThemeRadioButton))
             {
                 theme = ApplicationTheme.Light.ToString();
@@ -105,6 +118,10 @@ namespace SimpleZIP_UI.Presentation.View.Dialog
             else if (sender.Equals(DarkThemeRadioButton))
             {
                 theme = ApplicationTheme.Dark.ToString();
+            }
+            else // system theme
+            {
+                theme = null;
             }
             Settings.PushOrUpdate(Settings.Keys.ApplicationThemeKey, theme);
         }
