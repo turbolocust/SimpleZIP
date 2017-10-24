@@ -1,6 +1,7 @@
 ﻿{
   "dependencies": {
     "Microsoft.NETCore.UniversalWindowsPlatform": "6.0.1",
+    "Microsoft.Services.Store.Engagement": "10.1706.16001",
     "Microsoft.Xaml.Behaviors.Uwp.Managed": "2.0.0",
     "SharpCompress": "0.18.2",
     "System.ValueTuple": "4.4.0"
