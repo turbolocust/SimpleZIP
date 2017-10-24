@@ -56,7 +56,7 @@ namespace SimpleZIP_UI.Application.Util
         {
             if (token.IsCancellationRequested) return Task.FromCanceled(token);
 
-            var task = Task.Run(() =>
+            var task = Task.Run(async () =>
             {
                 // execute actual write option in child task
                 var childTask = Task.Factory.StartNew(() =>
@@ -75,7 +75,7 @@ namespace SimpleZIP_UI.Application.Util
                 var awaiter = childTask.GetAwaiter();
                 while (!awaiter.IsCompleted)
                 {
-                    Task.Delay(50, token).Wait(token);
+                    await Task.Delay(50, token);
                 }
             }, token);
 
