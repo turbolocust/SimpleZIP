@@ -24,7 +24,9 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+#if RELEASE
 using Microsoft.Services.Store.Engagement;
+#endif
 using SimpleZIP_UI.Presentation;
 using SimpleZIP_UI.Presentation.View;
 
@@ -48,12 +50,14 @@ namespace SimpleZIP_UI
             Suspending += OnSuspending;
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         /// <summary>
         /// Invoked when the application is launched normally by the end user. Other entry points
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="args">Details about the launch request and process.</param>
         protected override async void OnLaunched(LaunchActivatedEventArgs args)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
 #if DEBUG
             if (Debugger.IsAttached)
@@ -61,10 +65,11 @@ namespace SimpleZIP_UI
                 DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
+#if RELEASE
             // register notification channel to send push notifications to customers
             var engagementManager = StoreServicesEngagementManager.GetDefault();
             await engagementManager.RegisterNotificationChannelAsync();
-
+#endif
             // do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
             if (!(Window.Current.Content is Frame rootFrame))
@@ -111,11 +116,13 @@ namespace SimpleZIP_UI
         protected override void OnActivated(IActivatedEventArgs args)
         {
             base.OnActivated(args);
+#if RELEASE
             if (args is ToastNotificationActivatedEventArgs toastActivationArgs)
             {
                 var engagementManager = StoreServicesEngagementManager.GetDefault();
                 engagementManager.ParseArgumentsAndTrackAppLaunch(toastActivationArgs.Argument);
             }
+#endif
         }
 
         /// <summary>
