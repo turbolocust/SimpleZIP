@@ -1,0 +1,36 @@
+version: '{build}'
+branches:
+  only:
+  - master
+skip_tags: true
+skip_commits:
+  files:
+    - SimpleZIP_UI/Assets/*
+    - .gitattributes
+    - .gitignore
+    - LICENSE.md
+    - README.md
+image: Visual Studio 2017
+configuration: Debug
+platform:
+  - x86
+  - x64
+  - ARM
+before_build:
+- ps: >-
+    appveyor DownloadFile https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
+
+    appveyor-retry nuget restore
+
+    Write-Host "Installing Microsoft Store Services SDK..."
+
+    $msiPath = "$($env:USERPROFILE)\MicrosoftStoreServicesSDK.msi"
+
+    (New-Object Net.WebClient).DownloadFile('https://homepages.fhv.at/mfu7609/mirror/MicrosoftStoreServicesSDK.msi', $msiPath)
+
+    cmd /c start /wait msiexec /i $msiPath /quiet
+
+    Write-Host "Installed" -ForegroundColor green
+build:
+  project: SimpleZIP_UI.sln
+  verbosity: normal
