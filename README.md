@@ -1,5 +1,7 @@
 # SimpleZIP
 
+[![Build status](https://ci.appveyor.com/api/projects/status/ofso840eiw7woaq2?svg=true)](https://ci.appveyor.com/project/turbolocust/simplezip)
+
 <b>A very simple archiving/hash tool for the Windows UWP platform</b>.
 
 This app can be found in the Windows Store: https://www.microsoft.com/en-us/store/p/simplezip/9nz7l8c54zln
