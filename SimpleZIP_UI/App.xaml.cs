@@ -17,14 +17,16 @@
 // 
 // ==--==
 using System;
+#if DEBUG
 using System.Diagnostics;
+#endif
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-#if RELEASE
+#if !DEBUG
 using Microsoft.Services.Store.Engagement;
 #endif
 using SimpleZIP_UI.Presentation;
@@ -65,7 +67,7 @@ namespace SimpleZIP_UI
                 DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
-#if RELEASE
+#if !DEBUG
             // register notification channel to send push notifications to customers
             var engagementManager = StoreServicesEngagementManager.GetDefault();
             await engagementManager.RegisterNotificationChannelAsync();
@@ -116,7 +118,7 @@ namespace SimpleZIP_UI
         protected override void OnActivated(IActivatedEventArgs args)
         {
             base.OnActivated(args);
-#if RELEASE
+#if !DEBUG
             if (args is ToastNotificationActivatedEventArgs toastActivationArgs)
             {
                 var engagementManager = StoreServicesEngagementManager.GetDefault();
