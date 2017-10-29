@@ -174,9 +174,9 @@ namespace SimpleZIP_UI.Presentation.View
                 stringBuilder.AppendLine("\r\n");
             }
             CopyToClipboard(stringBuilder.ToString());
-            // show toast and hide it after 4 seconds
+            // show toast (without audio) and hide it after 4 seconds
             _controller.ShowToastNotification("SimpleZIP",
-                I18N.Resources.GetString("CopiedToClipboard/Text"), 4);
+                I18N.Resources.GetString("CopiedToClipboard/Text"), 4, true);
         }
 
         /// <inheritdoc />

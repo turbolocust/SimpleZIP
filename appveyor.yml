@@ -11,11 +11,6 @@ skip_commits:
     - LICENSE.md
     - README.md
 image: Visual Studio 2017
-configuration: Debug
-platform:
-  - x86
-  - x64
-  - ARM
 build_script:
 - ps: >-
     Write-Host "Downloading latest Nuget executable..."

@@ -104,7 +104,8 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// <param name="title">The title of the toast notification.</param>
         /// <param name="content">The content of the toast notification.</param>
         /// <param name="seconds">Timer in seconds after which toast will disappear. Defaults to <code>8</code>.</param>
-        internal void ShowToastNotification(string title, string content, uint seconds = 8)
+        /// <param name="muteAudio">True to mute audio, false otherwise. Defaults to <code>false</code>.</param>
+        internal void ShowToastNotification(string title, string content, uint seconds = 8, bool muteAudio = false)
         {
             var notifier = ToastNotificationManager.CreateToastNotifier();
             var toastXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastText02);
@@ -114,7 +115,10 @@ namespace SimpleZIP_UI.Presentation.Controller
             toastXml.SelectSingleNode("/toast");
             var audio = toastXml.CreateElement("audio");
             audio.SetAttribute("src", "ms-winsoundevent:Notification.SMS");
-
+            if (muteAudio)
+            {
+                audio.SetAttribute("silent", "true");
+            }
             var toast = new ToastNotification(toastXml)
             {
                 ExpirationTime = DateTime.Now.AddSeconds(seconds)
