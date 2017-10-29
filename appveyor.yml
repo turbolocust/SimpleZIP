@@ -16,11 +16,20 @@ platform:
   - x86
   - x64
   - ARM
-before_build:
+build_script:
 - ps: >-
+    Write-Host "Downloading latest Nuget executable..."
+
     appveyor DownloadFile https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
 
+    Write-Host "Downloaded" -ForegroundColor green
+
+    Write-Host "Performing Nuget restore..."
+
     appveyor-retry nuget restore
+
+    Write-Host "Restore complete" -ForegroundColor green
+
 
     Write-Host "Installing Microsoft Store Services SDK..."
 
@@ -31,6 +40,6 @@ before_build:
     cmd /c start /wait msiexec /i $msiPath /quiet
 
     Write-Host "Installed" -ForegroundColor green
-build:
-  project: SimpleZIP_UI.sln
-  verbosity: normal
+
+
+    msbuild "C:\projects\simplezip\SimpleZIP_UI.sln" /t:Rebuild /p:AppxBundle=Never /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
