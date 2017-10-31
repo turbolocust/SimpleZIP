@@ -26,15 +26,19 @@ build_script:
     Write-Host "Restore complete" -ForegroundColor green
 
 
-    Write-Host "Installing Microsoft Store Services SDK..."
+    Write-Host "Downloading Microsoft Store Services SDK from private mirror..."
 
     $msiPath = "$($env:USERPROFILE)\MicrosoftStoreServicesSDK.msi"
 
     (New-Object Net.WebClient).DownloadFile('https://homepages.fhv.at/mfu7609/mirror/MicrosoftStoreServicesSDK.msi', $msiPath)
+
+    Write-Host "Installing Microsoft Store Services SDK..."
 
     cmd /c start /wait msiexec /i $msiPath /quiet
 
     Write-Host "Installed" -ForegroundColor green
 
 
-    msbuild "C:\projects\simplezip\SimpleZIP_UI.sln" /t:Rebuild /p:AppxBundle=Never /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+    Write-Host "Starting to build using MSBuild..."
+
+    msbuild "C:\projects\simplezip\SimpleZIP_UI.sln" /t:Rebuild /p:Configuration=Release /p:Platform=x86 /p:AppxPackage=false /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
