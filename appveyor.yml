@@ -41,4 +41,4 @@ build_script:
 
     Write-Host "Starting to build using MSBuild..."
 
-    msbuild "C:\projects\simplezip\SimpleZIP_UI.sln" /t:Rebuild /p:Configuration=Release /p:Platform=x86 /p:AppxPackage=false /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+    msbuild "C:\projects\simplezip\SimpleZIP_UI.sln" /t:Build /p:Configuration=Release /p:Platform=x86 /p:AppxPackage=false /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"

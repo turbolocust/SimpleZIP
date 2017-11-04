@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("SimpleZIP_UI")]
-[assembly: AssemblyDescription("Create and extract archives using ZIP, GZIP, TAR+GZ or TAR+BZ2.")]
+[assembly: AssemblyDescription("Create and extract archives using ZIP, GZIP, TAR+GZIP, TAR+BZIP2 or TAR+LZMA.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Matthias Fussenegger")]
 [assembly: AssemblyProduct("SimpleZIP_UI")]
-[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyCopyright("Copyright © 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
