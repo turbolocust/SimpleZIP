@@ -11,6 +11,18 @@ skip_commits:
     - LICENSE.md
     - README.md
 image: Visual Studio 2017
+environment:
+  secret_storeKey:
+    secure: iGyhcOxgR6HeJ2sNLrgqSdF5u0ux+m2K+fb4pWF8xgE=
+  secret_storeAssociation:
+    secure: xjfRZSCdwPQ+BEUp5WI8umiNB9VdpPSQ6H5HvFpvEPI=
+install:
+- ps: >-
+    nuget install secure-file -ExcludeVersion
+
+    secure-file\tools\secure-file -decrypt SimpleZIP_UI\SimpleZIP_UI_StoreKey.pfx.enc -secret %secret_storeKey%
+
+    secure-file\tools\secure-file -decrypt SimpleZIP_UI\Package.StoreAssociation.xml.enc -secret %secret_storeAssociation%
 build_script:
 - ps: >-
     Write-Host "Downloading latest Nuget executable..."
