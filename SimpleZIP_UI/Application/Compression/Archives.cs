@@ -30,7 +30,7 @@ namespace SimpleZIP_UI.Application.Compression
         /// </summary>
         public enum ArchiveType
         {
-            Zip, GZip, BZip2, LZip, Tar, TarGz, TarBz2, TarLz
+            Zip, GZip, BZip2, LZip, Tar, TarGz, TarBz2, TarLz, Rar
         }
 
         /// <summary>
@@ -59,7 +59,8 @@ namespace SimpleZIP_UI.Application.Compression
                 {".lz", ArchiveType.LZip },
                 {".lzip", ArchiveType.LZip },
                 {".lzma", ArchiveType.LZip },
-                {".tlz", ArchiveType.TarLz}
+                {".tlz", ArchiveType.TarLz},
+                {".rar", ArchiveType.Rar }
             };
 
             // populate dictionary that maps extended file types to archive types
@@ -109,6 +110,9 @@ namespace SimpleZIP_UI.Application.Compression
                     break;
                 case ArchiveType.TarLz:
                     algorithm = new TarLzip();
+                    break;
+                case ArchiveType.Rar:
+                    algorithm = new Rar();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(value), value, null);
