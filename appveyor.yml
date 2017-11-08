@@ -17,7 +17,7 @@ environment:
   secret_storeAssociation:
     secure: xjfRZSCdwPQ+BEUp5WI8umiNB9VdpPSQ6H5HvFpvEPI=
 install:
-- ps: >-
+- cmd: >-
     nuget install secure-file -ExcludeVersion
 
     secure-file\tools\secure-file -decrypt SimpleZIP_UI\SimpleZIP_UI_StoreKey.pfx.enc -secret %secret_storeKey%
