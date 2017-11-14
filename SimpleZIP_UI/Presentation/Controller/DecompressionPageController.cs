@@ -43,6 +43,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             var subMessage = new StringBuilder();
             var resultMessage = new StringBuilder();
             var statusCode = Result.Status.Fail;
+            var isVerbose = false;
             var successCount = 0;
 
             foreach (var operationInfo in operationInfos)
@@ -55,6 +56,7 @@ namespace SimpleZIP_UI.Presentation.Controller
                     var subResult = await Operation.Perform(operationInfo, false);
                     if (subResult.StatusCode != Result.Status.Success)
                     {
+                        isVerbose = true;
                         statusCode = Result.Status.PartialFail;
                         subMessage.AppendLine(I18N.Resources
                             .GetString("ArchiveNotExtracted/Text", item.DisplayName));
@@ -88,7 +90,8 @@ namespace SimpleZIP_UI.Presentation.Controller
             return new Result
             {
                 StatusCode = statusCode,
-                Message = resultMessage.ToString()
+                Message = resultMessage.ToString(),
+                VerboseFlag = isVerbose
             };
         }
     }

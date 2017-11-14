@@ -37,6 +37,8 @@ namespace SimpleZIP_UI.Application.Compression.Model
 
         internal TimeSpan ElapsedTime { get; set; }
 
+        internal bool VerboseFlag { get; set; } = false;
+
         public enum Status
         {
             Fail, PartialFail, Success, Interrupt

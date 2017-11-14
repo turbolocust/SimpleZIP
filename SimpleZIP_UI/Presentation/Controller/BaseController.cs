@@ -89,8 +89,10 @@ namespace SimpleZIP_UI.Presentation.Controller
                     }
                 case Result.Status.PartialFail:
                     {
-                        dialog = DialogFactory.CreateErrorDialog(
-                            I18N.Resources.GetString("NotAllProcessed/Text"));
+                        var message = result.VerboseFlag 
+                                ? result.Message 
+                                : I18N.Resources.GetString("NotAllProcessed/Text");
+                        dialog = DialogFactory.CreateErrorDialog(message);
                         break;
                     }
                 default: throw new ArgumentOutOfRangeException(nameof(result.StatusCode));

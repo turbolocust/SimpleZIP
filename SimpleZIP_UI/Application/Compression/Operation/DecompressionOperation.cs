@@ -50,6 +50,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
             {
                 var message = string.Empty;
                 var isSuccess = false;
+                var isVerbose = false;
 
                 try
                 {
@@ -61,14 +62,23 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                 }
                 catch (Exception ex)
                 {
-                    if (ex is OperationCanceledException)
+                    switch (ex)
                     {
-                        throw;
+                        case OperationCanceledException _:
+                            throw;
+                        case InvalidOperationException _:
+                            // indicate that file format is not supported,
+                            // e.g. when user tries to extract RAR5 file
+                            message = I18N.Resources.GetString("FileFormatNotSupported/Text");
+                            isVerbose = true;
+                            break;
+                        default:
+                            message = ex.Message;
+                            break;
                     }
-                    message = ex.Message;
                 }
 
-                return EvaluateResult(message, isSuccess);
+                return EvaluateResult(message, isSuccess, isVerbose);
 
             }, token);
         }
