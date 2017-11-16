@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
+using SharpCompress.Common;
 using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Compression.Reader;
 using SimpleZIP_UI.Application.Util;
@@ -66,10 +67,17 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                     {
                         case OperationCanceledException _:
                             throw;
+                        case CryptographicException _:
+                            // encrypted files are currently not supported
+                            message = I18N.Resources.GetString("FileEncryptedMessage/Text");
+                            isVerbose = true;
+                            break;
                         case InvalidOperationException _:
-                            // indicate that file format is not supported,
+                            // to inform that file format is not supported,
                             // e.g. when user tries to extract RAR5 file
-                            message = I18N.Resources.GetString("FileFormatNotSupported/Text");
+                            message = await Archives.IsRarArchive(archiveFile)
+                                    ? I18N.Resources.GetString("RAR5FormatNotSupported/Text")
+                                    : I18N.Resources.GetString("FileFormatNotSupported/Text");
                             isVerbose = true;
                             break;
                         default:
@@ -88,7 +96,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         {
             var fileType = FileUtils.GetFileNameExtension(info.Item.Archive.Name);
             // try to get enum type by filename extension, which is the key
-            if (Archives.ArchiveFileTypes.TryGetValue(fileType, out Archives.ArchiveType value)
+            if (Archives.ArchiveFileTypes.TryGetValue(fileType, out var value)
                 || Archives.ArchiveExtendedFileTypes.TryGetValue(fileType, out value))
             {
                 Algorithm = Archives.DetermineAlgorithm(value);

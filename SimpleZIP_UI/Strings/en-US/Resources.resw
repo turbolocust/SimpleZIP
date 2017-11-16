@@ -59,8 +59,6 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <!-- ReSharper disable DuplicateResource -->
-  <!-- ReSharper disable MarkupTextTypo -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -386,5 +384,13 @@
   <data name="requiresRestart.Text" xml:space="preserve">
     <value>this requires a restart</value>
     <comment>Informs the user that any action will have no effect until a restart of the app.</comment>
+  </data>
+  <data name="RAR5FormatNotSupported.Text" xml:space="preserve">
+    <value>Note that the RAR5 format is currently not supported.</value>
+    <comment>Informs the user that the RAR5 archive format is not supported.</comment>
+  </data>
+  <data name="FileEncryptedMessage.Text" xml:space="preserve">
+    <value>File seems to be encrypted. This is currently not supported.</value>
+    <comment>Informs the user that ecrypted files are not supported.</comment>
   </data>
 </root>

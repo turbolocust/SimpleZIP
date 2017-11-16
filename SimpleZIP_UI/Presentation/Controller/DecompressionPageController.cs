@@ -56,7 +56,7 @@ namespace SimpleZIP_UI.Presentation.Controller
                     var subResult = await Operation.Perform(operationInfo, false);
                     if (subResult.StatusCode != Result.Status.Success)
                     {
-                        isVerbose = true;
+                        isVerbose = subResult.VerboseFlag;
                         statusCode = Result.Status.PartialFail;
                         subMessage.AppendLine(I18N.Resources
                             .GetString("ArchiveNotExtracted/Text", item.DisplayName));
