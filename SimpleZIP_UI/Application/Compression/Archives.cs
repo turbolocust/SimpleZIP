@@ -20,6 +20,9 @@ using SimpleZIP_UI.Application.Compression.Algorithm;
 using SimpleZIP_UI.Application.Compression.Algorithm.Type;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+using Windows.Storage;
 
 namespace SimpleZIP_UI.Application.Compression
 {
@@ -30,16 +33,18 @@ namespace SimpleZIP_UI.Application.Compression
         /// </summary>
         public enum ArchiveType
         {
-            Zip, GZip, BZip2, LZip, Tar, TarGz, TarBz2, TarLz
+            Zip, GZip, BZip2, LZip, Tar, TarGz, TarBz2, TarLz, Rar
         }
 
         /// <summary>
-        /// Maps file types for each archive. Consists only of file types with a single file name extension.
+        /// Maps file types for each archive. Consists only of 
+        /// file types with a single file name extension.
         /// </summary>
         internal static readonly IDictionary<string, ArchiveType> ArchiveFileTypes;
 
         /// <summary>
-        /// Maps file types for each archive. Consists only of file types with multiple file name extensions.
+        /// Maps file types for each archive. Consists only of 
+        /// file types with multiple file name extensions.
         /// </summary>
         internal static readonly IDictionary<string, ArchiveType> ArchiveExtendedFileTypes;
 
@@ -59,7 +64,8 @@ namespace SimpleZIP_UI.Application.Compression
                 {".lz", ArchiveType.LZip },
                 {".lzip", ArchiveType.LZip },
                 {".lzma", ArchiveType.LZip },
-                {".tlz", ArchiveType.TarLz}
+                {".tlz", ArchiveType.TarLz},
+                {".rar", ArchiveType.Rar }
             };
 
             // populate dictionary that maps extended file types to archive types
@@ -76,11 +82,11 @@ namespace SimpleZIP_UI.Application.Compression
         }
 
         /// <summary>
-        /// Determines the corresponding algorithm instance by evaluating the specified archive type.
+        /// Returns the algorithm instance that is mapped to the specified archive type.
         /// </summary>
-        /// <param name="value">The enum value of the archive type.</param>
+        /// <param name="value">The enum value of the archive type to be determined.</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when archive type matched no algorithm.</exception>
-        /// <returns>An instance of the compression algorithm that matches the specified value.</returns>
+        /// <returns>An instance of the compressor algorithm that is mapped to the specified value.</returns>
         internal static ICompressionAlgorithm DetermineAlgorithm(ArchiveType value)
         {
             ICompressionAlgorithm algorithm;
@@ -110,10 +116,35 @@ namespace SimpleZIP_UI.Application.Compression
                 case ArchiveType.TarLz:
                     algorithm = new TarLzip();
                     break;
+                case ArchiveType.Rar:
+                    algorithm = new Rar();
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(value), value, null);
             }
             return algorithm;
+        }
+
+        internal static async Task<bool> IsRarArchive(StorageFile file)
+        {
+            bool isRarArchive;
+            try
+            {
+                using (var stream = await file.OpenStreamForReadAsync())
+                {
+                    isRarArchive = SharpCompress.Archives.Rar.RarArchive.IsRarFile(stream);
+                    if (!isRarArchive) // check file extension as well (since RAR5 is not supported)
+                    {
+                        ArchiveFileTypes.TryGetValue(file.FileType, out var archiveType);
+                        isRarArchive = archiveType == ArchiveType.Rar;
+                    }
+                }
+            }
+            catch (IOException)
+            {
+                isRarArchive = false;
+            }
+            return isRarArchive;
         }
     }
 }

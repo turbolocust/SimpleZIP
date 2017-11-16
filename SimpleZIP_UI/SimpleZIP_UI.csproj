@@ -108,6 +108,7 @@
     <Compile Include="Application\Compression\Algorithm\Event\TotalBytesProcessedEventArgs.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\BZip2.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\LZip.cs" />
+    <Compile Include="Application\Compression\Algorithm\Type\Rar.cs" />
     <Compile Include="Application\Compression\Archives.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\TarGzip.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\TarLzip.cs" />

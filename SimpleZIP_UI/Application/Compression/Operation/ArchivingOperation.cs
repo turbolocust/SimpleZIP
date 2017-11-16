@@ -158,16 +158,17 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         /// </summary>
         /// <param name="message">The message to be evaluated.</param>
         /// <param name="isSuccess">True if operation was successful, false otherwise.</param>
+        /// <param name="isVerbose">True if original message should be considered.</param>
         /// <returns>An object that consists of result parameters.</returns>
         /// <exception cref="OperationCanceledException">Thrown if operation has been canceled.</exception>
-        protected Result EvaluateResult(string message, bool isSuccess)
+        protected Result EvaluateResult(string message, bool isSuccess, bool isVerbose = false)
         {
             if (TokenSource.IsCancellationRequested)
             {
                 throw new OperationCanceledException();
             }
             var status = isSuccess ? Result.Status.Success : Result.Status.Fail;
-            return new Result { StatusCode = status, Message = message };
+            return new Result { StatusCode = status, Message = message, VerboseFlag = isVerbose };
         }
 
         public void Dispose()

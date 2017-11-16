@@ -16,32 +16,28 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
-using System;
 
-namespace SimpleZIP_UI.Application.Compression.Model
+using System;
+using SharpCompress.Common;
+using SharpCompress.Writers;
+
+namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
 {
-    internal class Result
+    /// <inheritdoc />
+    /// <summary>
+    /// Represents the RAR archiving algorithm. Supports RAR4 only.
+    /// </summary>
+    public class Rar : ArchivingAlgorithm
     {
-        /// <summary>
-        /// Constructs a new instance of this class with status 
-        /// code set to <see cref="Status.Success"/>.
-        /// </summary>
-        internal Result()
+        /// <inheritdoc />
+        public Rar() : base(ArchiveType.Rar)
         {
-            StatusCode = Status.Success;
         }
 
-        internal Status StatusCode { get; set; }
-
-        internal string Message { get; set; }
-
-        internal TimeSpan ElapsedTime { get; set; }
-
-        internal bool VerboseFlag { get; set; } = false;
-
-        public enum Status
+        /// <inheritdoc />
+        protected override WriterOptions GetWriterOptions()
         {
-            Fail, PartialFail, Success, Interrupt
+            throw new NotSupportedException("Writing not supported for RAR.");
         }
     }
 }
