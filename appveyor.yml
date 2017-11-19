@@ -16,6 +16,8 @@ environment:
     secure: iGyhcOxgR6HeJ2sNLrgqSdF5u0ux+m2K+fb4pWF8xgE=
   secret_storeAssociation:
     secure: xjfRZSCdwPQ+BEUp5WI8umiNB9VdpPSQ6H5HvFpvEPI=
+  secret_testTempKey:
+    secure: MwhPsHlpRf0zVmlCt1V+RRBbzg2h0j+cqHvz3jYXQsA=
 install:
 - cmd: >-
     nuget install secure-file -ExcludeVersion
@@ -23,6 +25,8 @@ install:
     secure-file\tools\secure-file -decrypt SimpleZIP_UI\SimpleZIP_UI_StoreKey.pfx.enc -secret %secret_storeKey%
 
     secure-file\tools\secure-file -decrypt SimpleZIP_UI\Package.StoreAssociation.xml.enc -secret %secret_storeAssociation%
+
+    secure-file\tools\secure-file -decrypt SimpleZIP_UI_TEST\SimpleZIP_UI_TEST_TemporaryKey.pfx.enc -secret %secret_testTempKey%
 build_script:
 - ps: >-
     Write-Host "Downloading latest Nuget executable..."
@@ -53,4 +57,4 @@ build_script:
 
     Write-Host "Starting to build using MSBuild..."
 
-    msbuild "C:\projects\simplezip\SimpleZIP_UI.sln" /t:Build /p:Configuration=Release /p:Platform=x86 /p:AppxPackage=false /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+    msbuild "C:\projects\simplezip\SimpleZIP_UI.sln" /t:Build /p:Configuration=Debug /p:Platform=x86 /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
