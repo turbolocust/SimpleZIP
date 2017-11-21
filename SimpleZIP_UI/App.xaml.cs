@@ -160,6 +160,7 @@ namespace SimpleZIP_UI
             }
         }
 
+#if !DEBUG
         /// <summary>
         /// Registers the app for engagement services.
         /// </summary>
@@ -168,6 +169,7 @@ namespace SimpleZIP_UI
             var engagementManager = StoreServicesEngagementManager.GetDefault();
             await engagementManager.RegisterNotificationChannelAsync();
         }
+#endif
 
         /// <summary>
         /// Each time a navigation event occurs, update the Back button's visibility.
