@@ -2,7 +2,7 @@
 
 [![Build status](https://ci.appveyor.com/api/projects/status/ofso840eiw7woaq2?svg=true)](https://ci.appveyor.com/project/turbolocust/simplezip)
 
-<b>A very simple archiving/hash tool for the Windows UWP platform</b>.
+<b>A very simple archiving application and hash tool for the Universal Windows Platform</b>.
 
 This app can be found in the Windows Store: https://www.microsoft.com/en-us/store/p/simplezip/9nz7l8c54zln
 
@@ -22,6 +22,7 @@ Supported formats for decompression:
   - TAR+GZIP
   - TAR+BZIP2
   - TAR+LZMA
+  - RAR4
 
 Supported message digest algorithms:
   - MD5
@@ -30,13 +31,21 @@ Supported message digest algorithms:
   - SHA384
   - SHA512
 
-<br />This app makes use of the <a href="https://github.com/adamhathcock/sharpcompress">SharpCompress</a> library and depends on its quality when it comes to compression and decompression. While this app also runs on the desktop, the UI is mainly optimized for phones.
+<br />This app makes use of the <a href="https://github.com/adamhathcock/sharpcompress">SharpCompress</a> library and depends on its quality when it comes to compression and decompression. While this app also runs on the desktop, the UI is (currently) optimized for smaller devices.
 <br /><br />
 
 # Plans for upcoming releases
 
   - Support for password protected ZIP files
-  - Basic RAR support
+
+# Development requirements
+
+The minimum requirements for this project are currently as follows:
+
+  - Visual Studio 2017
+  - Microsoft Windows 1709 (Fall Creators Update)
+
+If you are planning to fork this application you may want to change this in the project configuration file.
 
 # Screenshots
 
