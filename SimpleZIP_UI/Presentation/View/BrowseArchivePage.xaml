@@ -7,46 +7,62 @@
     DataContext="{Binding RelativeSource={RelativeSource Self}}"
     mc:Ignorable="d">
 
-    <Grid Background="Transparent" Padding="0,0,0,8">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="7.8*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <TextBlock x:Uid="ArchiveContent" Text="" Grid.Row="0" FontWeight="Medium" FontSize="16" CharacterSpacing="56" Margin="8,8,0,0" VerticalAlignment="Center" />
-        <ProgressBar x:Name="ProgressBar" Grid.Row="1" HorizontalAlignment="Stretch" IsIndeterminate="True" IsEnabled="False" Visibility="Collapsed" />
-        <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" Margin="0,16,0,0" VerticalScrollBarVisibility="Auto">
-            <ListBox ItemsSource="{Binding ArchiveEntryModels}" SelectionChanged="ItemsListBox_OnSelectionChanged" Margin="8,0,8,0" SelectionMode="Multiple" CanDrag="False" 
-                     HorizontalContentAlignment="Stretch" Background="Transparent" Height="Auto" Foreground="{ThemeResource ButtonForegroundThemeBrush}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-                            <SymbolIcon Symbol="{Binding Symbol}" Margin="0,0,8,0" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" />
-                            <TextBlock FontSize="20" IsTextSelectionEnabled="False" TextWrapping="NoWrap" Text="{Binding DisplayName}" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </ScrollViewer>
-        <StackPanel Grid.Row="3" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,8,16,0">
-            <Button x:Name="ExtractSelectedEntriesButton" Tapped="ExtractSelectedEntriesButton_Tap" IsEnabled="False" MinHeight="44" Height="50" MaxHeight="60" Margin="0,0,16,0" 
-                    Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
-                <TextBlock x:Uid="ExtractSelected" Text="" TextWrapping="Wrap" />
-            </Button>
-            <Button x:Name="ExtractWholeArchiveButton" Tapped="ExtractWholeArchiveButton_Tap" IsEnabled="False" MinHeight="44" Height="50" MaxHeight="60"
-                    Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
-                <TextBlock x:Uid="ExtractAll" Text="" TextWrapping="Wrap" />
-            </Button>
-        </StackPanel>
+  <Grid Background="Transparent" Padding="0,0,0,8">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="7.8*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+    <Grid Background="Transparent">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto"/>
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="40"/>
+      </Grid.ColumnDefinitions>
+      <TextBox x:Name="AddressBar" TextWrapping="NoWrap" Grid.Row="0" Grid.Column="0" Padding="8,0,0,0"
+               HorizontalAlignment="Stretch" Height="40" TextAlignment="Left" IsReadOnly="True" Text="/"
+               VerticalContentAlignment="Center" HorizontalContentAlignment="Left" IsRightTapEnabled="True"
+               IsSpellCheckEnabled="False" IsTextPredictionEnabled="False" AcceptsReturn="False" FontSize="20" />
+      <Button Grid.Row="0" Grid.Column="1" Visibility="Visible" FontFamily="Segoe MDL2 Assets" Content="&#xE752;"
+              FontSize="20" Tapped="NavigateUpButton_Tap" Margin="0,1,0,0"
+              Width="40" Height="40" Background="Transparent" Foreground="{ThemeResource ButtonForegroundThemeBrush}"
+              BorderBrush="{ThemeResource ButtonBorderThemeBrush}" BorderThickness="2" />
     </Grid>
-    <Page.Transitions>
-        <TransitionCollection>
-            <NavigationThemeTransition>
-                <NavigationThemeTransition.DefaultNavigationTransitionInfo>
-                    <EntranceNavigationTransitionInfo/>
-                </NavigationThemeTransition.DefaultNavigationTransitionInfo>
-            </NavigationThemeTransition>
-        </TransitionCollection>
-    </Page.Transitions>
+    <ProgressBar x:Name="ProgressBar" Grid.Row="1" HorizontalAlignment="Stretch" IsIndeterminate="True" IsEnabled="False" Visibility="Collapsed" />
+    <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" Margin="0,16,0,0" VerticalScrollBarVisibility="Auto">
+      <ListBox ItemsSource="{Binding ArchiveEntryModels}" SelectionChanged="ItemsListBox_OnSelectionChanged" Margin="8,0,8,0" SelectionMode="Multiple" CanDrag="False"
+               HorizontalContentAlignment="Stretch" Background="Transparent" Height="Auto" Foreground="{ThemeResource ButtonForegroundThemeBrush}">
+        <ListBox.ItemTemplate>
+          <DataTemplate>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+              <SymbolIcon Symbol="{Binding Symbol}" Margin="0,0,8,0" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" />
+              <TextBlock FontSize="20" IsTextSelectionEnabled="False" TextWrapping="NoWrap" Text="{Binding DisplayName}" />
+            </StackPanel>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+    </ScrollViewer>
+    <StackPanel Grid.Row="3" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,8,16,0">
+      <Button x:Name="ExtractSelectedEntriesButton" Tapped="ExtractSelectedEntriesButton_Tap" IsEnabled="False" MinHeight="44" Height="50" MaxHeight="60" Margin="0,0,16,0"
+              Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+        <TextBlock x:Uid="ExtractSelected" Text="" TextWrapping="Wrap" />
+      </Button>
+      <Button x:Name="ExtractWholeArchiveButton" Tapped="ExtractWholeArchiveButton_Tap" IsEnabled="False" MinHeight="44" Height="50" MaxHeight="60"
+              Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+        <TextBlock x:Uid="ExtractAll" Text="" TextWrapping="Wrap" />
+      </Button>
+    </StackPanel>
+  </Grid>
+  <Page.Transitions>
+    <TransitionCollection>
+      <NavigationThemeTransition>
+        <NavigationThemeTransition.DefaultNavigationTransitionInfo>
+          <EntranceNavigationTransitionInfo/>
+        </NavigationThemeTransition.DefaultNavigationTransitionInfo>
+      </NavigationThemeTransition>
+    </TransitionCollection>
+  </Page.Transitions>
 </Page>

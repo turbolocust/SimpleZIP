@@ -127,10 +127,6 @@
     <value>Über diese Anwendung</value>
     <comment>Information about this software.</comment>
   </data>
-  <data name="ArchiveContent.Text" xml:space="preserve">
-    <value>Archivinhalt:</value>
-    <comment>The content (compressed files) of an archive.</comment>
-  </data>
   <data name="ArchiveName.Header" xml:space="preserve">
     <value>Archivname</value>
     <comment>A name for the archive to be compressed.</comment>
