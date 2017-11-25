@@ -92,6 +92,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
 
             await OpenArchiveAsync(archive);
 
+            var separator = DetermineFileSeparator();
             var rootNode = new Node(RootNodeName);
             var keyBuilder = new StringBuilder();
             var nameBuilder = new StringBuilder();
@@ -102,7 +103,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
                 // directories are considered anyway
                 if (entry.IsDirectory || entry.Key == null) continue;
 
-                var pair = GetEntryKeyPair(entry.Key);
+                var pair = GetEntryKeyPair(entry.Key, separator);
                 var parentNode = rootNode;
 
                 for (var i = 0; i <= pair.SeparatorPos; ++i)
@@ -110,7 +111,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
                     var c = entry.Key[i];
                     keyBuilder.Append(c);
 
-                    if (c == '/') // next parent found
+                    if (c == separator) // next parent found
                     {
                         var node = GetNode(keyBuilder.ToString());
                         if (parentNode.Children.Add(node))
@@ -170,22 +171,31 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         }
 
         /// <summary>
+        /// Determines the file separator character used by the specific archive type.
+        /// </summary>
+        /// <returns>The correct file separator character.</returns>
+        private char DetermineFileSeparator()
+        {
+            return Reader.ArchiveType == ArchiveType.Rar ? '\\' : '/';
+        }
+
+        /// <summary>
         /// Returns an <see cref="EntryKeyPair"/> which holds the name of the entry 
         /// and the key of its parent node, also considering the root node.
         /// </summary>
         /// <param name="key">The full key of the entry.</param>
+        /// <param name="separator">File separator character.</param>
         /// <returns>An <see cref="EntryKeyPair"/>.</returns>
-        private static EntryKeyPair GetEntryKeyPair(string key)
+        private static EntryKeyPair GetEntryKeyPair(string key, char separator)
         {
-            var trimmedKey = key.TrimEnd('/');
-            var lastSeparatorIndex = trimmedKey.LastIndexOf('/');
-            var entryName = trimmedKey.Substring(lastSeparatorIndex + 1);
-            var parentKey = lastSeparatorIndex == -1 // is in root directory
-                ? RootNodeName
+            var trimmedKey = key.TrimEnd(separator);
+            var lastSeparatorPos = trimmedKey.LastIndexOf(separator);
+            var entryName = trimmedKey.Substring(lastSeparatorPos + 1);
+            var parentKey = lastSeparatorPos == -1 ? RootNodeName
                 : trimmedKey.Substring(0, trimmedKey.Length - entryName.Length);
             return new EntryKeyPair
             {
-                SeparatorPos = lastSeparatorIndex,
+                SeparatorPos = lastSeparatorPos,
                 EntryName = entryName,
                 ParentKey = parentKey
             };

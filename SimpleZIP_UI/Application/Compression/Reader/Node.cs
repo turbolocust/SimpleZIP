@@ -27,7 +27,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
     {
         /// <inheritdoc />
         /// <summary>
-        /// Friendly name of this node. Can be set differently but should optimally 
+        /// Friendly name of this node. Can be set differently but should ideally
         /// consist of the <see cref="P:SimpleZIP_UI.Application.Compression.Reader.Node.Id" /> 
         /// without path and file separators.
         /// </summary>
@@ -40,12 +40,12 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         public bool IsNode { get; } = true;
 
         /// <summary>
-        /// The identifier of this node including file separators.
+        /// The identifier of this node, including file separators.
         /// </summary>
         internal string Id { get; }
 
         /// <summary>
-        /// Children of this node, which are nodes and entries.
+        /// Children of this node, which can be nodes and entries.
         /// </summary>
         internal ISet<IArchiveEntry> Children { get; }
 
