@@ -73,10 +73,9 @@ namespace SimpleZIP_UI.Presentation.Controller
                 }
                 catch (Exception ex)
                 {
-                    var resource = ex is InvalidOperationException
-                        ? "FileFormatNotSupported/Text" : "ErrorReadingArchive/Text";
-                    var resourceText = I18N.Resources.GetString(resource);
-                    var dialog = DialogFactory.CreateErrorDialog(resourceText);
+                    var message = await I18N.ExceptionMessageHandler
+                                            .GetStringFrom(ex, true, archive);
+                    var dialog = DialogFactory.CreateErrorDialog(message);
                     dialog.ShowAsync().AsTask().Forget();
                     ParentPage.Frame.Navigate(typeof(MainPage));
                 }

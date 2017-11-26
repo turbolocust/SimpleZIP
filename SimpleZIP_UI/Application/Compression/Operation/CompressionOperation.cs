@@ -72,9 +72,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                         }
                     }
                 }
-
                 return EvaluateResult(message, isSuccess);
-
             }, token);
         }
 

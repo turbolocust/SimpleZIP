@@ -21,7 +21,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
-using SharpCompress.Common;
 using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Compression.Reader;
 using SimpleZIP_UI.Application.Util;
@@ -63,31 +62,24 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                 }
                 catch (Exception ex)
                 {
-                    switch (ex)
+                    if (ex is OperationCanceledException)
                     {
-                        case OperationCanceledException _:
-                            throw;
-                        case CryptographicException _:
-                            // encrypted files are currently not supported
-                            message = I18N.Resources.GetString("FileEncryptedMessage/Text");
-                            isVerbose = true;
-                            break;
-                        case InvalidOperationException _:
-                            // to inform that file format is not supported,
-                            // e.g. when user tries to extract RAR5 file
-                            message = await Archives.IsRarArchive(archiveFile)
-                                    ? I18N.Resources.GetString("RAR5FormatNotSupported/Text")
-                                    : I18N.Resources.GetString("FileFormatNotSupported/Text");
-                            isVerbose = true;
-                            break;
-                        default:
-                            message = ex.Message;
-                            break;
+                        throw; // simply re-throw
+                    }
+
+                    message = await I18N.ExceptionMessageHandler
+                                    .GetStringFrom(ex, false, archiveFile);
+
+                    if (message.Length > 0)
+                    {
+                        isVerbose = true;
+                    }
+                    else
+                    {
+                        message = ex.Message; // default message not accepted
                     }
                 }
-
                 return EvaluateResult(message, isSuccess, isVerbose);
-
             }, token);
         }
 
