@@ -22,14 +22,14 @@
         <ColumnDefinition Width="*"/>
         <ColumnDefinition Width="40"/>
       </Grid.ColumnDefinitions>
-      <TextBox x:Name="AddressBar" TextWrapping="NoWrap" Grid.Row="0" Grid.Column="0" Padding="8,0,0,0"
+      <TextBox x:Name="AddressBar" TextWrapping="NoWrap" Grid.Row="0" Grid.Column="0" Padding="8,2,0,0"
                HorizontalAlignment="Stretch" Height="40" TextAlignment="Left" IsReadOnly="True" Text="/"
                VerticalContentAlignment="Center" HorizontalContentAlignment="Left" IsRightTapEnabled="True"
-               IsSpellCheckEnabled="False" IsTextPredictionEnabled="False" AcceptsReturn="False" FontSize="20" />
+               IsSpellCheckEnabled="False" IsTextPredictionEnabled="False" AcceptsReturn="False" FontSize="20"
+               FontFamily="Segoe UI" FontStretch="Normal" FontStyle="Normal" FontWeight="SemiLight" />
       <Button Grid.Row="0" Grid.Column="1" Visibility="Visible" FontFamily="Segoe MDL2 Assets" Content="&#xE752;"
-              FontSize="20" Tapped="NavigateUpButton_Tap" Margin="0,1,0,0"
-              Width="40" Height="40" Background="Transparent" Foreground="{ThemeResource ButtonForegroundThemeBrush}"
-              BorderBrush="{ThemeResource ButtonBorderThemeBrush}" BorderThickness="2" />
+              FontSize="20" Tapped="NavigateUpButton_Tap" Width="40" Height="40" Background="Transparent" 
+              Foreground="{ThemeResource ButtonForegroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}" BorderThickness="1" />
     </Grid>
     <ProgressBar x:Name="ProgressBar" Grid.Row="1" HorizontalAlignment="Stretch" IsIndeterminate="True" IsEnabled="False" Visibility="Collapsed" />
     <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" Margin="0,16,0,0" VerticalScrollBarVisibility="Auto">
