@@ -60,8 +60,8 @@ namespace SimpleZIP_UI.I18N
     internal static class ExceptionMessageHandler
     {
         /// <summary>
-        /// Gets an internationalized string from the specified exception. The string
-        /// is a friendly error message which can be shown to users.
+        /// Gets an internationalized string for the specified exception. 
+        /// The string is a friendly error message which can be shown to users.
         /// </summary>
         /// <param name="ex">Exception from which to receive an internationalized message.</param>
         /// <param name="acceptDefault">Returns a generic error message instead of
@@ -69,7 +69,7 @@ namespace SimpleZIP_UI.I18N
         /// of the specified exception.</param>
         /// <param name="file">File that was processed when exception occurred.</param>
         /// <returns>String value of a resource.</returns>
-        internal static async Task<string> GetStringFrom(Exception ex, bool acceptDefault, StorageFile file = null)
+        internal static async Task<string> GetStringFor(Exception ex, bool acceptDefault, StorageFile file = null)
         {
             var message = string.Empty;
             switch (ex)

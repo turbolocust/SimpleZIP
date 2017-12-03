@@ -74,7 +74,7 @@ namespace SimpleZIP_UI.Presentation.Controller
                 catch (Exception ex)
                 {
                     var message = await I18N.ExceptionMessageHandler
-                                            .GetStringFrom(ex, true, archive);
+                                            .GetStringFor(ex, true, archive);
                     var dialog = DialogFactory.CreateErrorDialog(message);
                     dialog.ShowAsync().AsTask().Forget();
                     ParentPage.Frame.Navigate(typeof(MainPage));

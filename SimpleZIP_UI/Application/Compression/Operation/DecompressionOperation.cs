@@ -68,7 +68,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                     }
 
                     message = await I18N.ExceptionMessageHandler
-                                    .GetStringFrom(ex, false, archiveFile);
+                                    .GetStringFor(ex, false, archiveFile);
 
                     if (message.Length > 0)
                     {
