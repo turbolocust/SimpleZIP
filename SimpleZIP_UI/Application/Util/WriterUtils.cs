@@ -58,7 +58,7 @@ namespace SimpleZIP_UI.Application.Util
 
             var task = Task.Run(async () =>
             {
-                // execute actual write option in child task
+                // execute actual operation in child task
                 var childTask = Task.Factory.StartNew(() =>
                 {
                     try

@@ -59,7 +59,7 @@ namespace SimpleZIP_UI.Application.Hashing
         }
 
         /// <summary>
-        /// Converts the specified byte array to a hexadecimal string representation (in upper case).
+        /// Converts the specified byte array to a hexadecimal string representation (upper case).
         /// </summary>
         /// <param name="hashedBytes">The byte array to be converted.</param>
         /// <returns>The hexadecimal string representation of the specified byte array.</returns>

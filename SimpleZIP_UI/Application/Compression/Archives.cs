@@ -125,6 +125,13 @@ namespace SimpleZIP_UI.Application.Compression
             return algorithm;
         }
 
+        /// <summary>
+        /// Basic check for RAR archive format. If the file is not a RAR4 archive 
+        /// (by checking its header) and the file extension equals ".rar", then it 
+        /// is still assumed to be a RAR archive (could be RAR5 then).
+        /// </summary>
+        /// <param name="file">The file to be checked.</param>
+        /// <returns>True if file is considered a RAR file, false otherwise.</returns>
         internal static async Task<bool> IsRarArchive(StorageFile file)
         {
             bool isRarArchive;
