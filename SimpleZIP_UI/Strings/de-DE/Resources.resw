@@ -148,7 +148,7 @@
     <comment>Allows the user to compress one or multiple archives.</comment>
   </data>
   <data name="DevelopedBy.Text" xml:space="preserve">
-    <value>Entwickelt von</value>
+    <value>Entwickelt von {0}</value>
     <comment>Software was made by...</comment>
   </data>
   <data name="Error.Text" xml:space="preserve">

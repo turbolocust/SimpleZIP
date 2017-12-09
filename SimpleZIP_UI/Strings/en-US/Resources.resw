@@ -260,7 +260,7 @@
     <comment>Period it took to accomplish something.</comment>
   </data>
   <data name="DevelopedBy.Text" xml:space="preserve">
-    <value>Developed by</value>
+    <value>Developed by {0}</value>
     <comment>Software was made by...</comment>
   </data>
   <data name="Feedback.Text" xml:space="preserve">

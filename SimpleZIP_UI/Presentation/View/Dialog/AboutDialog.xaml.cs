@@ -24,12 +24,15 @@ namespace SimpleZIP_UI.Presentation.View.Dialog
     /// <inheritdoc cref="ContentDialog" />
     public sealed partial class AboutDialog
     {
+        private const string Author = "Matthias Fussenegger";
+        private const string License = "GNU General Public License 3";
+
         /// <inheritdoc />
         public AboutDialog()
         {
             InitializeComponent();
-            DevelopedByRun.Text = I18N.Resources.GetString("DevelopedBy/Text") + " Matthias Fussenegger";
-            LicenseRun.Text = I18N.Resources.GetString("License/Text", "GNU General Public License 3");
+            DevelopedByRun.Text = I18N.Resources.GetString("DevelopedBy/Text", Author);
+            LicenseRun.Text = I18N.Resources.GetString("License/Text", License);
             PrimaryButtonText = I18N.Resources.GetString("ContentDialog/PrimaryButtonText");
         }
 
