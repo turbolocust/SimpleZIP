@@ -1,7 +1,7 @@
 ﻿{
   "dependencies": {
-    "Microsoft.NETCore.UniversalWindowsPlatform": "6.0.2",
-    "SharpCompress": "0.18.2",
+    "Microsoft.NETCore.UniversalWindowsPlatform": "6.0.5",
+    "SharpCompress": "0.19.2",
     "System.ValueTuple": "4.4.0"
   },
   "frameworks": {

@@ -282,7 +282,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.0.2</Version>
+      <Version>6.0.5</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Services.Store.Engagement">
       <Version>10.1711.28001</Version>
@@ -291,7 +291,7 @@
       <Version>1.0.31</Version>
     </PackageReference>
     <PackageReference Include="SharpCompress">
-      <Version>0.18.2</Version>
+      <Version>0.19.2</Version>
     </PackageReference>
     <PackageReference Include="System.ValueTuple">
       <Version>4.4.0</Version>
