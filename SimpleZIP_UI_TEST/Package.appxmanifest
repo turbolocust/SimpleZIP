@@ -4,7 +4,7 @@
   <mp:PhoneIdentity PhoneProductId="17f39e0d-f68a-432a-a65c-d879bd9821c2" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>SimpleZIP_UI_TEST</DisplayName>
-    <PublisherDisplayName>Matthias</PublisherDisplayName>
+    <PublisherDisplayName>Matthias Fussenegger</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>
