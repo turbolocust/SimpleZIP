@@ -21,6 +21,7 @@ using SimpleZIP_UI.Application.Compression.Algorithm.Type;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 
@@ -28,6 +29,10 @@ namespace SimpleZIP_UI.Application.Compression
 {
     internal static class Archives
     {
+        private const int Rar5HeaderSize = 8;
+
+        private const string Rar5HeaderSignature = "526172211A070100";
+
         /// <summary>
         /// Enumeration to identify archive types.
         /// </summary>
@@ -126,12 +131,10 @@ namespace SimpleZIP_UI.Application.Compression
         }
 
         /// <summary>
-        /// Basic check for RAR archive format. If the file is not a RAR4 archive 
-        /// (by checking its header) and the file extension equals ".rar", then it 
-        /// is still assumed to be a RAR archive (could be RAR5 then).
+        /// Checks whether the file is a RAR4 or RAR5 archive.
         /// </summary>
         /// <param name="file">The file to be checked.</param>
-        /// <returns>True if file is considered a RAR file, false otherwise.</returns>
+        /// <returns>True if file is RAR4 or RAR5 archive, false otherwise.</returns>
         internal static async Task<bool> IsRarArchive(StorageFile file)
         {
             bool isRarArchive;
@@ -140,10 +143,22 @@ namespace SimpleZIP_UI.Application.Compression
                 using (var stream = await file.OpenStreamForReadAsync())
                 {
                     isRarArchive = SharpCompress.Archives.Rar.RarArchive.IsRarFile(stream);
-                    if (!isRarArchive) // check file extension as well (since RAR5 is not supported)
+                }
+                if (!isRarArchive) // check if RAR5 format
+                {
+                    using (var stream = await file.OpenStreamForReadAsync())
                     {
-                        ArchiveFileTypes.TryGetValue(file.FileType, out var archiveType);
-                        isRarArchive = archiveType == ArchiveType.Rar;
+                        var buffer = new byte[Rar5HeaderSize];
+                        var readBytes = stream.Read(buffer, 0, Rar5HeaderSize);
+                        if (readBytes > 0)
+                        {
+                            var header = new StringBuilder(Rar5HeaderSize * 2);
+                            foreach (var value in buffer)
+                            {
+                                header.AppendFormat("{0:X2}", value); // convert to HEX
+                            }
+                            isRarArchive = header.ToString().Equals(Rar5HeaderSignature);
+                        }
                     }
                 }
             }
