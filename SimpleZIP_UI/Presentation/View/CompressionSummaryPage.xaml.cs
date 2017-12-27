@@ -85,7 +85,7 @@ namespace SimpleZIP_UI.Presentation.View
 
             if (!isHideSome)
             {
-                var tlzText = "TAR+LZMA (.tlz) [" + slowText + "]";
+                var tlzText = "TAR+LZIP (.tlz) [" + slowText + "]";
                 ArchiveTypeComboBox.Items.Add(CreateItemForComboBox(tlzText, ".tlz"));
             }
 
