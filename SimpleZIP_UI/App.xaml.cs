@@ -115,10 +115,17 @@ namespace SimpleZIP_UI
         {
             base.OnActivated(args);
 #if !DEBUG
-            if (args is ToastNotificationActivatedEventArgs toastActivationArgs)
+            try
             {
-                var engagementManager = StoreServicesEngagementManager.GetDefault();
-                engagementManager.ParseArgumentsAndTrackAppLaunch(toastActivationArgs.Argument);
+                if (args is ToastNotificationActivatedEventArgs toastActivationArgs)
+                {
+                    var engagementManager = StoreServicesEngagementManager.GetDefault();
+                    engagementManager.ParseArgumentsAndTrackAppLaunch(toastActivationArgs.Argument);
+                }
+            }
+            catch (Exception)
+            {
+                // ignore
             }
 #endif
         }
