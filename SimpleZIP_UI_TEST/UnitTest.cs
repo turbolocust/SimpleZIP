@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2018 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -59,7 +59,15 @@ namespace SimpleZIP_UI_TEST
         public async Task ZipCompressionExtractionTest()
         {
             var options = new WriterOptions(CompressionType.Deflate) { LeaveStreamOpen = false };
-            Assert.IsTrue(await PerformArchiveOperations(new Zip(), ".zip", options));
+            try
+            {
+                Assert.IsTrue(await PerformArchiveOperations(new Zip(), ".zip", options));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                Assert.Fail();
+            }
         }
 
         /// <summary>
@@ -69,7 +77,15 @@ namespace SimpleZIP_UI_TEST
         public async Task TarGzipCompressionExtractionTest()
         {
             var options = new WriterOptions(CompressionType.GZip) { LeaveStreamOpen = false };
-            Assert.IsTrue(await PerformArchiveOperations(new TarGzip(), ".tgz", options));
+            try
+            {
+                Assert.IsTrue(await PerformArchiveOperations(new TarGzip(), ".tgz", options));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                Assert.Fail();
+            }
         }
 
         /// <summary>
@@ -79,7 +95,15 @@ namespace SimpleZIP_UI_TEST
         public async Task TarBzip2CompressionExtractionTest()
         {
             var options = new WriterOptions(CompressionType.BZip2) { LeaveStreamOpen = false };
-            Assert.IsTrue(await PerformArchiveOperations(new TarBzip2(), ".tbz2", options));
+            try
+            {
+                Assert.IsTrue(await PerformArchiveOperations(new TarBzip2(), ".tbz2", options));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                Assert.Fail();
+            }
         }
 
         /// <summary>
@@ -89,37 +113,48 @@ namespace SimpleZIP_UI_TEST
         public async Task TarLzipCompressionExtractionTest()
         {
             var options = new WriterOptions(CompressionType.LZip) { LeaveStreamOpen = false };
-            Assert.IsTrue(await PerformArchiveOperations(new TarLzip(), ".tlz", options));
+            try
+            {
+                Assert.IsTrue(await PerformArchiveOperations(new TarLzip(), ".tlz", options));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                Assert.Fail();
+            }
         }
 
-        private async Task<bool> PerformArchiveOperations(ICompressionAlgorithm compressionAlgorithm, string fileType, WriterOptions options)
+        private async Task<bool> PerformArchiveOperations(
+            ICompressionAlgorithm compressionAlgorithm, string fileType, WriterOptions options)
         {
             return await Task.Run(async () =>
             {
-                var tempFile = await _workingDir.CreateFileAsync("tempFile");
-                Assert.IsNotNull(tempFile);
-
+                var tempFile = await _workingDir.CreateFileAsync(
+                    "SimpleZIP_testFile", CreationCollisionOption.GenerateUniqueName);
                 using (var streamWriter = new StreamWriter(await tempFile.OpenStreamForWriteAsync()))
                 {
-                    streamWriter.AutoFlush = true;
-                    streamWriter.WriteLine(FileText);
+                    streamWriter.Write(FileText);
+                    streamWriter.Flush();
                 }
 
                 _files = new[] { tempFile };
-                var archive = await _workingDir.CreateFileAsync(ArchiveName + fileType);
+                string archiveName = ArchiveName + fileType;
+                var archive = await _workingDir.CreateFileAsync(
+                    archiveName, CreationCollisionOption.GenerateUniqueName);
                 Assert.AreNotEqual(await compressionAlgorithm.Compress(_files, archive, _workingDir, options), Stream.Null);
 
-                return await ArchiveExtraction(compressionAlgorithm, fileType); // extract archive after creation
+                // extract archive after creation
+                return await ArchiveExtraction(compressionAlgorithm, archive.Name);
             });
         }
 
-        private async Task<bool> ArchiveExtraction(ICompressionAlgorithm compressionAlgorithm, string fileType)
+        private async Task<bool> ArchiveExtraction(ICompressionAlgorithm compressionAlgorithm, string archiveName)
         {
-            var archive = await _workingDir.GetFileAsync(ArchiveName + fileType);
+            var archive = await _workingDir.GetFileAsync(archiveName);
             Assert.IsNotNull(archive);
 
-            var outputFolder = await _workingDir.CreateFolderAsync("simpleZipUiTempOutput");
-            Assert.IsNotNull(outputFolder);
+            var outputFolder = await _workingDir.CreateFolderAsync(
+                "simpleZipUiTempOutput", CreationCollisionOption.OpenIfExists);
 
             // extract archive
             Assert.AreNotEqual(await compressionAlgorithm.Decompress(archive, outputFolder), Stream.Null);
