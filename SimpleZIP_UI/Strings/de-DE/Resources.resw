@@ -59,8 +59,6 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <!-- ReSharper disable DuplicateResource -->
-  <!-- ReSharper disable MarkupTextTypo -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -390,5 +388,17 @@
   <data name="FileEncryptedMessage.Text" xml:space="preserve">
     <value>Die Datei scheint verschlüsselt zu sein. Das wird momentan nicht unterstützt.</value>
     <comment>Informs the user that ecrypted files are not supported.</comment>
+  </data>
+  <data name="RecentPivot.Header" xml:space="preserve">
+    <value>Zuletzt</value>
+    <comment>Been created not long ago.</comment>
+  </data>
+  <data name="RecentlyUsedArchives.Text" xml:space="preserve">
+    <value>Zuletzt erstellte Archive</value>
+    <comment>Items that have recently been used.</comment>
+  </data>
+  <data name="StartPivot.Header" xml:space="preserve">
+    <value>Start</value>
+    <comment>Main entry point.</comment>
   </data>
 </root>

@@ -6,97 +6,114 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
 
-  <Grid Background="Transparent">
-    <Grid.RowDefinitions>
-      <RowDefinition Height="Auto"/>
-      <RowDefinition Height="7*"/>
-    </Grid.RowDefinitions>
-    <Button Visibility="Visible" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" FontSize="20" Grid.Row="0"
+    <Grid Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="7*"/>
+        </Grid.RowDefinitions>
+        <Button Visibility="Visible" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" FontSize="20" Grid.Row="0"
             Width="50" Height="50" Background="Transparent" Tapped="HamburgerButton_Tap" Foreground="{ThemeResource ButtonForegroundThemeBrush}"/>
-    <SplitView x:Name="MenuSplitView" DisplayMode="CompactOverlay" IsPaneOpen="False" Grid.Row="1"
+        <SplitView x:Name="MenuSplitView" DisplayMode="CompactInline" IsPaneOpen="True" Grid.Row="1"
                CompactPaneLength="0" VerticalContentAlignment="Stretch" VerticalAlignment="Stretch" OpenPaneLength="320">
-      <SplitView.Pane>
-        <Grid>
-          <Grid.RowDefinitions>
-            <RowDefinition Height="5*" />
-            <RowDefinition Height="5*" />
-          </Grid.RowDefinitions>
-          <StackPanel Background="Transparent" VerticalAlignment="Top" Grid.Row="0">
-            <Button Height="50" Background="Transparent" Tapped="OpenArchiveButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
-              <StackPanel Orientation="Horizontal">
-                <SymbolIcon Symbol="OpenFile"/>
-                <TextBlock x:Uid="OpenArchive" Text="" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
-              </StackPanel>
-            </Button>
-            <Button Height="50" Background="Transparent" Tapped="CalculateHashesButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
-              <StackPanel Orientation="Horizontal">
-                <SymbolIcon Symbol="Calculator"/>
-                <TextBlock x:Uid="ComputeHash" Text="" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
-              </StackPanel>
-            </Button>
-            <Button Height="50" Background="Transparent" Tapped="GetSourceButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
-              <StackPanel Orientation="Horizontal">
-                <SymbolIcon Symbol="World"/>
-                <TextBlock x:Uid="GetSourceCode" Text="" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
-              </StackPanel>
-            </Button>
-            <Button Height="50" Background="Transparent" Tapped="AboutMenuButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
-              <StackPanel Orientation="Horizontal">
-                <SymbolIcon Symbol="ContactInfo"/>
-                <TextBlock x:Uid="HelpFeedback" Text="" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
-              </StackPanel>
-            </Button>
-          </StackPanel>
-          <StackPanel Background="Transparent" VerticalAlignment="Bottom" Grid.Row="1">
-            <Button Height="50" Background="Transparent" Tapped="SettingsMenuButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
-              <StackPanel Orientation="Horizontal">
-                <SymbolIcon Symbol="Setting"/>
-                <TextBlock x:Uid="Settings" Text="" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
-              </StackPanel>
-            </Button>
-          </StackPanel>
-        </Grid>
-      </SplitView.Pane>
-      <SplitView.Content>
-        <Grid Background="Transparent" HorizontalAlignment="Center" VerticalAlignment="Top" Padding="0,32,0,0">
-          <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-          </Grid.RowDefinitions>
-          <Canvas MinHeight="256" Height="Auto" Grid.Row="0">
-            <TextBlock Text="SimpleZIP" FontFamily="Default" FontSize="54" CharacterSpacing="32"
-                    FontStyle="Normal" FontWeight="Medium" Foreground="{ThemeResource SystemControlForegroundAccentBrush}" />
-            <!-- ReSharper disable once MarkupAttributeTypo -->
-            <TextBlock Text="v2.2.10" FontFamily="Consolas" FontStyle="Normal" FontWeight="Medium"
-                Foreground="{ThemeResource SystemControlForegroundAccentBrush}" Margin="116,54,0,0" />
-          </Canvas>
-          <Button Grid.Row="1" Width="280" Height="64" MaxHeight="75" Margin="0,0,0,16" Tapped="CompressButton_Tap" VerticalContentAlignment="Center"
-              Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
-            <StackPanel Orientation="Horizontal">
-              <TextBlock FontSize="20" FontFamily="Segoe MDL2 Assets" Text="&#xE73F;" Margin="0,0,32,0" />
-              <TextBlock x:Uid="CompressArchive" FontWeight="Normal" FontSize="16" CharacterSpacing="32" Text="" TextWrapping="Wrap" />
-            </StackPanel>
-          </Button>
-          <Button Grid.Row="2" Width="280" Height="64" MaxHeight="75" Margin="0,16,0,0" Tapped="ExtractButton_Tap" VerticalContentAlignment="Center"
-              Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
-            <StackPanel Orientation="Horizontal">
-              <TextBlock FontSize="20" FontFamily="Segoe MDL2 Assets" Text="&#xEE71;" Margin="0,0,32,0" />
-              <TextBlock x:Uid="ExtractArchive" FontWeight="Normal" FontSize="16" CharacterSpacing="32" Text="" TextWrapping="Wrap" />
-            </StackPanel>
-          </Button>
-        </Grid>
-      </SplitView.Content>
-    </SplitView>
-  </Grid>
-  <Page.Transitions>
-    <TransitionCollection>
-      <NavigationThemeTransition>
-        <NavigationThemeTransition.DefaultNavigationTransitionInfo>
-          <CommonNavigationTransitionInfo />
-        </NavigationThemeTransition.DefaultNavigationTransitionInfo>
-      </NavigationThemeTransition>
-    </TransitionCollection>
-  </Page.Transitions>
+            <SplitView.Pane>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="5*" />
+                        <RowDefinition Height="5*" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Background="Transparent" VerticalAlignment="Top" Grid.Row="0">
+                        <Button Height="50" Background="Transparent" Tapped="OpenArchiveButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                            <StackPanel Orientation="Horizontal">
+                                <SymbolIcon Symbol="OpenFile"/>
+                                <TextBlock x:Uid="OpenArchive" Text="" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
+                            </StackPanel>
+                        </Button>
+                        <Button Height="50" Background="Transparent" Tapped="CalculateHashesButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                            <StackPanel Orientation="Horizontal">
+                                <SymbolIcon Symbol="Calculator"/>
+                                <TextBlock x:Uid="ComputeHash" Text="" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
+                            </StackPanel>
+                        </Button>
+                        <Button Height="50" Background="Transparent" Tapped="GetSourceButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                            <StackPanel Orientation="Horizontal">
+                                <SymbolIcon Symbol="World"/>
+                                <TextBlock x:Uid="GetSourceCode" Text="" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
+                            </StackPanel>
+                        </Button>
+                        <Button Height="50" Background="Transparent" Tapped="AboutMenuButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                            <StackPanel Orientation="Horizontal">
+                                <SymbolIcon Symbol="ContactInfo"/>
+                                <TextBlock x:Uid="HelpFeedback" Text="" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                    <StackPanel Background="Transparent" VerticalAlignment="Bottom" Grid.Row="1">
+                        <Button Height="50" Background="Transparent" Tapped="SettingsMenuButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                            <StackPanel Orientation="Horizontal">
+                                <SymbolIcon Symbol="Setting"/>
+                                <TextBlock x:Uid="Settings" Text="" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </SplitView.Pane>
+            <SplitView.Content>
+                <Pivot Margin="32,0,0,0" Padding="0,32,0,0">
+                    <Pivot.Title>
+                        <TextBlock Text="SimpleZIP" FontSize="24" FontStyle="Normal" CharacterSpacing="32" FontWeight="Bold" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
+                    </Pivot.Title>
+                    <PivotItem x:Uid="StartPivot" Header="">
+                        <StackPanel Background="Transparent" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,32,0,0">
+                            <Button Width="280" Height="64" MaxHeight="75" Margin="0,0,32,0" Tapped="CompressButton_Tap" VerticalContentAlignment="Center"
+                                    Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontSize="20" FontFamily="Segoe MDL2 Assets" Text="&#xE73F;" Margin="0,0,32,0" />
+                                    <TextBlock x:Uid="CompressArchive" FontWeight="Normal" FontSize="16" CharacterSpacing="32" Text="" TextWrapping="Wrap" />
+                                </StackPanel>
+                            </Button>
+                            <Button Width="280" Height="64" MaxHeight="75" Tapped="ExtractButton_Tap" VerticalContentAlignment="Center"
+                                    Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontSize="20" FontFamily="Segoe MDL2 Assets" Text="&#xEE71;" Margin="0,0,32,0" />
+                                    <TextBlock x:Uid="ExtractArchive" FontWeight="Normal" FontSize="16" CharacterSpacing="32" Text="" TextWrapping="Wrap" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </PivotItem>
+                    <PivotItem x:Uid="RecentPivot" Header="">
+                        <ListView>
+                            <ListView.Header>
+                                <TextBlock x:Uid="RecentlyUsedArchives" Text=""/>
+                            </ListView.Header>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Grid.Row="0" Text="{Binding UsedOn}" />
+                                        <TextBlock Foreground="{ThemeResource SystemControlForegroundAccentBrush}" FontWeight="Medium"
+                                                   CharacterSpacing="32" Grid.Row="1" Text="{Binding FileName}" />
+                                        <TextBlock Grid.Row="2" Text="{Binding FilePath}" TextTrimming="CharacterEllipsis"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </PivotItem>
+                </Pivot>
+            </SplitView.Content>
+        </SplitView>
+    </Grid>
+    <Page.Transitions>
+        <TransitionCollection>
+            <NavigationThemeTransition>
+                <NavigationThemeTransition.DefaultNavigationTransitionInfo>
+                    <CommonNavigationTransitionInfo />
+                </NavigationThemeTransition.DefaultNavigationTransitionInfo>
+            </NavigationThemeTransition>
+        </TransitionCollection>
+    </Page.Transitions>
 </Page>
 
