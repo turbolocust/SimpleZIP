@@ -93,10 +93,10 @@
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
-                                        <TextBlock Grid.Row="0" Text="{Binding UsedOn}" />
+                                        <TextBlock Grid.Row="0" Text="{Binding WhenUsed}" />
                                         <TextBlock Foreground="{ThemeResource SystemControlForegroundAccentBrush}" FontWeight="Medium"
                                                    CharacterSpacing="32" Grid.Row="1" Text="{Binding FileName}" />
-                                        <TextBlock Grid.Row="2" Text="{Binding FilePath}" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Grid.Row="2" Text="{Binding Location}" TextTrimming="CharacterEllipsis"/>
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
