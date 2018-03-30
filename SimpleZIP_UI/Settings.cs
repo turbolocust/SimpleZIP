@@ -16,9 +16,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
 using Windows.Storage;
 
-namespace SimpleZIP_UI.Presentation
+namespace SimpleZIP_UI
 {
     internal static class Settings
     {
