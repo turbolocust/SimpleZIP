@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2018 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@ using Windows.UI.Xaml.Navigation;
 using SimpleZIP_UI.Presentation.Factory;
 using Windows.UI.ViewManagement;
 using Windows.Foundation;
+using Windows.System.Profile;
 using Windows.UI.Xaml.Controls;
 using SimpleZIP_UI.Presentation.Controller;
 using static SimpleZIP_UI.Presentation.Controller.MainPageController;
@@ -35,12 +36,12 @@ namespace SimpleZIP_UI.Presentation.View
         /// <summary>
         /// Constant which defines the preferred width of the view.
         /// </summary>
-        private const double PreferredLaunchSizeWidth = 400d;
+        private const double PreferredLaunchSizeWidth = 1024d;
 
         /// <summary>
         /// Constant which defines the preferred height of the view.
         /// </summary>
-        private const double PreferredLaunchSizeHeight = 600d;
+        private const double PreferredLaunchSizeHeight = 780d;
 
         /// <summary>
         /// The aggregated controller instance.
@@ -52,9 +53,20 @@ namespace SimpleZIP_UI.Presentation.View
         {
             InitializeComponent();
             _controller = new MainPageController(this);
-            // set default launch size (will have no effect on phones)
-            ApplicationView.PreferredLaunchViewSize = new Size(PreferredLaunchSizeWidth, PreferredLaunchSizeHeight);
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+
+            if (AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile")
+            {
+                StackPanelStart.Orientation = Orientation.Vertical;
+                // configure split view for smaller screens
+                MenuSplitView.DisplayMode = SplitViewDisplayMode.CompactOverlay;
+                MenuSplitView.IsPaneOpen = false;
+            }
+            else
+            {
+                // set default launch size (will have no effect on phones)
+                ApplicationView.PreferredLaunchViewSize = new Size(PreferredLaunchSizeWidth, PreferredLaunchSizeHeight);
+                ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+            }
         }
 
         private void HamburgerButton_Tap(object sender, TappedRoutedEventArgs e)

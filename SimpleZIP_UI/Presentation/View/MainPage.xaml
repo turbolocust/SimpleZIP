@@ -63,15 +63,15 @@
                         <TextBlock Text="SimpleZIP" FontSize="24" FontStyle="Normal" CharacterSpacing="32" FontWeight="Bold" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
                     </Pivot.Title>
                     <PivotItem x:Uid="StartPivot" Header="">
-                        <StackPanel Background="Transparent" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,32,0,0">
-                            <Button Width="280" Height="64" MaxHeight="75" Margin="0,0,32,0" Tapped="CompressButton_Tap" VerticalContentAlignment="Center"
+                        <StackPanel x:Name="StackPanelStart" Background="Transparent" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+                            <Button Width="280" Height="64" MaxHeight="75" Margin="0,32,32,0" Tapped="CompressButton_Tap" VerticalContentAlignment="Center"
                                     Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock FontSize="20" FontFamily="Segoe MDL2 Assets" Text="&#xE73F;" Margin="0,0,32,0" />
                                     <TextBlock x:Uid="CompressArchive" FontWeight="Normal" FontSize="16" CharacterSpacing="32" Text="" TextWrapping="Wrap" />
                                 </StackPanel>
                             </Button>
-                            <Button Width="280" Height="64" MaxHeight="75" Tapped="ExtractButton_Tap" VerticalContentAlignment="Center"
+                            <Button Width="280" Height="64" MaxHeight="75" Margin="0,32,0,0" Tapped="ExtractButton_Tap" VerticalContentAlignment="Center"
                                     Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock FontSize="20" FontFamily="Segoe MDL2 Assets" Text="&#xEE71;" Margin="0,0,32,0" />
