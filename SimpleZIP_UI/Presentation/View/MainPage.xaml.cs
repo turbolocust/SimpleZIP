@@ -16,16 +16,23 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
 using System;
+using System.Collections.ObjectModel;
+using System.Globalization;
 using Windows.System;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using SimpleZIP_UI.Presentation.Factory;
 using Windows.UI.ViewManagement;
 using Windows.Foundation;
+using Windows.Storage;
 using Windows.System.Profile;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using SimpleZIP_UI.Presentation.Controller;
+using SimpleZIP_UI.Presentation.Handler;
+using SimpleZIP_UI.Presentation.View.Model;
 using static SimpleZIP_UI.Presentation.Controller.MainPageController;
 
 namespace SimpleZIP_UI.Presentation.View
@@ -48,11 +55,17 @@ namespace SimpleZIP_UI.Presentation.View
         /// </summary>
         private readonly MainPageController _controller;
 
+        /// <summary>
+        /// Models bound to the list view.
+        /// </summary>
+        public ObservableCollection<RecentArchiveModel> RecentArchiveModels { get; }
+
         /// <inheritdoc />
         public MainPage()
         {
-            InitializeComponent();
             _controller = new MainPageController(this);
+            RecentArchiveModels = new ObservableCollection<RecentArchiveModel>();
+            InitializeComponent();
 
             if (AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile")
             {
@@ -69,7 +82,41 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        private void HamburgerButton_Tap(object sender, TappedRoutedEventArgs e)
+        private void PopulateOrUpdateRecentArchivesList()
+        {
+            var collection = RecentArchivesHistoryHandler.GetHistory();
+            if (collection.Models.Length > 0)
+            {
+                RecentArchiveModels.Clear(); // important
+
+                var culture = Windows.System.UserProfile.GlobalizationPreferences.Languages[0];
+                var cultureInfo = new CultureInfo(culture);
+
+                foreach (var model in collection.Models)
+                {
+                    try
+                    {
+                        // format to culture specific date
+                        var dateTime = DateTime.ParseExact(model.WhenUsed,
+                            RecentArchivesHistoryHandler.DefaultDateFormat,
+                            CultureInfo.InvariantCulture);
+                        model.WhenUsed = dateTime.ToString(cultureInfo);
+                    }
+                    catch (FormatException)
+                    {
+                        // use date string unformatted
+                    }
+                    RecentArchiveModels.Add(model);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handles the event for the hamburger button (of split view).
+        /// </summary>
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="args">Consists of event parameters.</param>
+        private void HamburgerButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             MenuSplitView.IsPaneOpen = !MenuSplitView.IsPaneOpen;
         }
@@ -151,6 +198,78 @@ namespace SimpleZIP_UI.Presentation.View
         private async void AboutMenuButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             await new Dialog.AboutDialog().ShowAsync();
+        }
+
+        /// <summary>
+        /// Reacts to the selection change of pivot items.
+        /// </summary>
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="args">Consists of event parameters.</param>
+        private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs args)
+        {
+            if (sender is Pivot pivot)
+            {
+                // ReSharper disable once SwitchStatementMissingSomeCases
+                switch (pivot.SelectedIndex)
+                {
+                    case 0: // StartPivot
+                        ClearListButton.IsEnabled = false;
+                        ClearListButton.Visibility = Visibility.Collapsed;
+                        break;
+                    case 1: // RecentPivot
+                        PopulateOrUpdateRecentArchivesList();
+                        ClearListButton.IsEnabled = RecentArchiveModels.Count > 0;
+                        ClearListButton.Visibility = Visibility.Visible;
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Clears the history of recently created archives.
+        /// </summary>
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="args">Consists of event parameters.</param>
+        private void ClearListButton_Click(object sender, RoutedEventArgs args)
+        {
+            RecentArchiveModels.Clear();
+            Settings.PushOrUpdate(Settings.Keys.RecentArchivesKey, string.Empty);
+        }
+
+        /// <summary>
+        /// Reveals the selected file in the file explorer.
+        /// </summary>
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="args">Consists of event parameters.</param>
+        private async void RevealInExplorerButton_Tap(object sender, TappedRoutedEventArgs args)
+        {
+            if (!(args.OriginalSource is FrameworkElement element)) return;
+            if (element.DataContext is RecentArchiveModel model)
+            {
+                try
+                {
+                    var folder = await StorageFolder.GetFolderFromPathAsync(model.Location);
+                    if (!await Launcher.LaunchFolderAsync(folder))
+                    {
+                        var title = I18N.Resources.GetString("Error/Text");
+                        var message = I18N.Resources.GetString("ErrorOpeningExplorer/Text");
+                        var dialog = DialogFactory.CreateConfirmationDialog(title, message);
+                        var result = await dialog.ShowAsync();
+                        if (result.Id.Equals(0)) // user has confirmed
+                        {
+                            RecentArchiveModels.Remove(model);
+                            RecentArchivesHistoryHandler.RemoveFromHistory(model);
+                        }
+                    }
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    var errorMessage = I18N.Resources.GetString("ErrorNoAuthorization/Text");
+                    var errorDialog = DialogFactory.CreateErrorDialog(errorMessage);
+                    await errorDialog.ShowAsync();
+                }
+                args.Handled = true;
+            }
         }
 
         /// <inheritdoc />

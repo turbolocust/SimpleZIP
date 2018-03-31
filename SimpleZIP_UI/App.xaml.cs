@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2018 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,6 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
 using System;
 #if DEBUG
 using System.Diagnostics;
@@ -29,7 +30,6 @@ using Windows.UI.Xaml.Navigation;
 #if !DEBUG
 using Microsoft.Services.Store.Engagement;
 #endif
-using SimpleZIP_UI.Presentation;
 using SimpleZIP_UI.Presentation.View;
 
 namespace SimpleZIP_UI

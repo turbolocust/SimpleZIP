@@ -401,4 +401,16 @@
     <value>Start</value>
     <comment>Main entry point.</comment>
   </data>
+  <data name="ClearList.Label" xml:space="preserve">
+    <value>Clear List</value>
+    <comment>Operation to delete all elements in a list.</comment>
+  </data>
+  <data name="ErrorOpeningExplorer.Text" xml:space="preserve">
+    <value>File does not exist anymore. Do you wish to delete it?</value>
+    <comment>Informs the user that the file does not exist anymore and offers to delete it.</comment>
+  </data>
+  <data name="ErrorNoAuthorization.Text" xml:space="preserve">
+    <value>No authorization to perform operation.</value>
+    <comment>Application has no authorization to perform requested operation.</comment>
+  </data>
 </root>

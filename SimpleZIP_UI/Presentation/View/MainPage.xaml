@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    DataContext="{Binding RelativeSource={RelativeSource Self}}"
     mc:Ignorable="d" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
 
     <Grid Background="Transparent">
@@ -58,10 +59,15 @@
                 </Grid>
             </SplitView.Pane>
             <SplitView.Content>
-                <Pivot Margin="32,0,0,0" Padding="0,32,0,0">
+                <Pivot Margin="32,0,0,0" Padding="0,32,0,0" SelectionChanged="Pivot_SelectionChanged">
                     <Pivot.Title>
-                        <TextBlock Text="SimpleZIP" FontSize="24" FontStyle="Normal" CharacterSpacing="32" FontWeight="Bold" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
+                        <TextBlock Text="SimpleZIP" FontSize="28" FontStyle="Normal" CharacterSpacing="32" FontWeight="Bold" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
                     </Pivot.Title>
+                    <Pivot.RightHeader>
+                        <CommandBar ClosedDisplayMode="Compact" Background="Transparent">
+                            <AppBarButton x:Name="ClearListButton" x:Uid="ClearList" Icon="Delete" Label="" Click="ClearListButton_Click"/>
+                        </CommandBar>
+                    </Pivot.RightHeader>
                     <PivotItem x:Uid="StartPivot" Header="">
                         <StackPanel x:Name="StackPanelStart" Background="Transparent" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
                             <Button Width="280" Height="64" MaxHeight="75" Margin="0,32,32,0" Tapped="CompressButton_Tap" VerticalContentAlignment="Center"
@@ -81,22 +87,32 @@
                         </StackPanel>
                     </PivotItem>
                     <PivotItem x:Uid="RecentPivot" Header="">
-                        <ListView>
+                        <ListView ItemsSource="{Binding RecentArchiveModels}" SelectionMode="Single" CanDrag="False" Background="Transparent" 
+                                  HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                             <ListView.Header>
-                                <TextBlock x:Uid="RecentlyUsedArchives" Text=""/>
+                                <TextBlock x:Uid="RecentlyUsedArchives" Text="" Margin="0,0,0,16"/>
                             </ListView.Header>
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid>
+                                    <Grid Background="Transparent" Margin="0,8,0,8">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
-                                        <TextBlock Grid.Row="0" Text="{Binding WhenUsed}" />
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2.0*"/>
+                                            <ColumnDefinition Width="8.0*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <!-- Not possible on UWP -->
+                                        <Button Tapped="RevealInExplorerButton_Tap" Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" 
+                                                Margin="0,0,16,0" Width="40" Background="Transparent" Visibility="Collapsed">
+                                            <SymbolIcon Symbol="Folder"/>
+                                        </Button>
                                         <TextBlock Foreground="{ThemeResource SystemControlForegroundAccentBrush}" FontWeight="Medium"
-                                                   CharacterSpacing="32" Grid.Row="1" Text="{Binding FileName}" />
-                                        <TextBlock Grid.Row="2" Text="{Binding Location}" TextTrimming="CharacterEllipsis"/>
+                                                   CharacterSpacing="32" Grid.Row="0" Grid.Column="1" Text="{Binding FileName}" />
+                                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding WhenUsed}" />
+                                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Location}" TextTrimming="CharacterEllipsis" />
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>

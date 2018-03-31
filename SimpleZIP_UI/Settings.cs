@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2018 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -84,6 +84,8 @@ namespace SimpleZIP_UI
             internal const string HideSomeArchiveTypesKey = "HideSomeArchiveTypes";
 
             internal const string PreferOpenArchiveKey = "PreferOpenArchive";
+
+            internal const string RecentArchivesKey = "RecentArchives";
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2018 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,6 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -90,8 +91,8 @@ namespace SimpleZIP_UI.Presentation.View
                     // perform this check to avoid exceptions in case something in the UI changes
                     if (_messageDigestAlgorithm.SupportedAlgorithms.Contains(algorithmName))
                     {
-                        var hashedData = await _messageDigestAlgorithm.ComputeHashValue(file, algorithmName);
-                        var model = new MessageDigestModel(file.Name, file.Path, hashedData.HashedValue);
+                        var (_, hashedValue) = await _messageDigestAlgorithm.ComputeHashValue(file, algorithmName);
+                        var model = new MessageDigestModel(file.Name, file.Path, hashedValue);
                         await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { MessageDigestModels.Add(model); });
                     }
                 }

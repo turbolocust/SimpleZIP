@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2018 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@ using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Compression.Operation.Event;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Presentation.Controller;
+using SimpleZIP_UI.Presentation.Handler;
 
 namespace SimpleZIP_UI.Presentation.View
 {
@@ -100,6 +101,13 @@ namespace SimpleZIP_UI.Presentation.View
             return item;
         }
 
+        private void FinishOperation()
+        {
+            SetOperationActive(false);
+            AbortButtonToolTip.IsOpen = false;
+            ArchiveTypeToolTip.IsOpen = false;
+        }
+
         /// <summary>
         /// Invoked when the abort button has been tapped.
         /// </summary>
@@ -130,8 +138,14 @@ namespace SimpleZIP_UI.Presentation.View
                 archiveName += archiveType;
                 var result = await InitOperation(value, archiveName);
 
+                if (result.StatusCode == Result.Status.Success)
+                {
+                    RecentArchivesHistoryHandler.SaveToHistory(archiveName, _controller.OutputFolder.Path);
+                }
+
                 _controller.CreateResultDialog(result).ShowAsync().AsTask().Forget();
-                Frame.Navigate(typeof(MainPage));
+                //Frame.Navigate(typeof(MainPage));
+                FinishOperation();
             }
         }
 
@@ -305,9 +319,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// <inheritdoc />
         protected override void OnNavigatedFrom(NavigationEventArgs args)
         {
-            SetOperationActive(false);
-            AbortButtonToolTip.IsOpen = false;
-            ArchiveTypeToolTip.IsOpen = false;
+            FinishOperation();
         }
 
         /// <inheritdoc />

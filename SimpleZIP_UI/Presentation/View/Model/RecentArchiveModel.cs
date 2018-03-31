@@ -17,24 +17,38 @@
 // 
 // ==--==
 
+using System.IO;
+using System.Xml;
+using System.Xml.Serialization;
+
 namespace SimpleZIP_UI.Presentation.View.Model
 {
-    internal class RecentArchiveModel
+    public class RecentArchiveModel
     {
         /// <summary>
         /// The last time the archive was used as date/time.
         /// </summary>
-        public string WhenUsed { get; }
+        [XmlElement("WhenUsed")]
+        public string WhenUsed { get; set; }
 
         /// <summary>
         /// The name of the file to be displayed.
         /// </summary>
-        public string FileName { get; }
+        [XmlElement("FileName")]
+        public string FileName { get; set; }
 
         /// <summary>
         /// The physical location (full path) of the file.
         /// </summary>
-        public string Location { get; }
+        [XmlElement("Location")]
+        public string Location { get; set; }
+
+        /// <summary>
+        /// Constructs a new model for the ListBox in <see cref="MainPage"/>.
+        /// </summary>
+        public RecentArchiveModel()
+        {
+        }
 
         /// <summary>
         /// Constructs a new model for the ListBox in <see cref="MainPage"/>.
@@ -47,6 +61,50 @@ namespace SimpleZIP_UI.Presentation.View.Model
             WhenUsed = whenUsed;
             FileName = fileName;
             Location = location;
+        }
+
+        [XmlRoot("RecentArchivesCollection")]
+        public class RecentArchiveModelCollection : ISerializable
+        {
+            [XmlArray("RecentArchives")]
+            [XmlArrayItem("RecentArchive", typeof(RecentArchiveModel))]
+            public RecentArchiveModel[] Models { get; set; } = new RecentArchiveModel[0];
+
+            /// <summary>
+            /// Factory method to deserialize the specified XML string.
+            /// </summary>
+            /// <param name="xml">The XML string to be deserialized.</param>
+            /// <returns>The deserialized XML string as <see cref="RecentArchiveModelCollection"/>.</returns>
+            public static RecentArchiveModelCollection From(string xml)
+            {
+                if (!string.IsNullOrEmpty(xml))
+                {
+                    var serializer = new XmlSerializer(typeof(RecentArchiveModelCollection));
+                    var stringReader = new StringReader(xml);
+                    using (var xmlReader = XmlReader.Create(stringReader))
+                    {
+                        if (serializer.CanDeserialize(xmlReader))
+                        {
+                            return (RecentArchiveModelCollection)serializer.Deserialize(xmlReader);
+                        }
+                    }
+                }
+                return new RecentArchiveModelCollection();
+            }
+
+            /// <inheritdoc />
+            public string Serialize()
+            {
+                string xml; // may be empty at return
+                var serializer = new XmlSerializer(typeof(RecentArchiveModelCollection));
+                var stringWriter = new StringWriter();
+                using (var xmlWriter = XmlWriter.Create(stringWriter))
+                {
+                    serializer.Serialize(xmlWriter, this);
+                    xml = stringWriter.ToString();
+                }
+                return xml;
+            }
         }
     }
 }
