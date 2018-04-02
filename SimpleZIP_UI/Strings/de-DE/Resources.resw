@@ -413,4 +413,12 @@
     <value>Keine Authorisierung für diese Operation.</value>
     <comment>Application has no authorization to perform requested operation.</comment>
   </data>
+  <data name="CopyPath.Label" xml:space="preserve">
+    <value>Pfad kopieren</value>
+    <comment>Copy file path to clipboard.</comment>
+  </data>
+  <data name="ArchiveHistorySize.Text" xml:space="preserve">
+    <value>Elemente in Archiv-Historie</value>
+    <comment>Maximum allowed entries in archive history.</comment>
+  </data>
 </root>
