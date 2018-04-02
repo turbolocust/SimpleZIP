@@ -16,17 +16,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
-
 using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using SimpleZIP_UI.Presentation.Factory;
 using Windows.UI.ViewManagement;
 using Windows.Foundation;
-using Windows.Storage;
 using Windows.System.Profile;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -84,13 +83,23 @@ namespace SimpleZIP_UI.Presentation.View
 
         private void PopulateOrUpdateRecentArchivesList()
         {
-            var collection = RecentArchivesHistoryHandler.GetHistory();
+            var collection = ArchiveHistoryHandler.GetHistory();
             if (collection.Models.Length > 0)
             {
                 RecentArchiveModels.Clear(); // important
+                CultureInfo cultureInfo;
 
-                var culture = Windows.System.UserProfile.GlobalizationPreferences.Languages[0];
-                var cultureInfo = new CultureInfo(culture);
+                try
+                {
+                    var culture = Windows.System.UserProfile
+                        .GlobalizationPreferences.Languages[0];
+                    cultureInfo = new CultureInfo(culture);
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    // fall-back, although assertion error
+                    cultureInfo = new CultureInfo("en-US");
+                }
 
                 foreach (var model in collection.Models)
                 {
@@ -98,7 +107,7 @@ namespace SimpleZIP_UI.Presentation.View
                     {
                         // format to culture specific date
                         var dateTime = DateTime.ParseExact(model.WhenUsed,
-                            RecentArchivesHistoryHandler.DefaultDateFormat,
+                            ArchiveHistoryHandler.DefaultDateFormat,
                             CultureInfo.InvariantCulture);
                         model.WhenUsed = dateTime.ToString(cultureInfo);
                     }
@@ -215,11 +224,14 @@ namespace SimpleZIP_UI.Presentation.View
                     case 0: // StartPivot
                         ClearListButton.IsEnabled = false;
                         ClearListButton.Visibility = Visibility.Collapsed;
+                        CopyPathButton.IsEnabled = false;
+                        CopyPathButton.Visibility = Visibility.Collapsed;
                         break;
                     case 1: // RecentPivot
                         PopulateOrUpdateRecentArchivesList();
                         ClearListButton.IsEnabled = RecentArchiveModels.Count > 0;
                         ClearListButton.Visibility = Visibility.Visible;
+                        CopyPathButton.Visibility = Visibility.Visible;
                         break;
                 }
             }
@@ -237,39 +249,36 @@ namespace SimpleZIP_UI.Presentation.View
         }
 
         /// <summary>
-        /// Reveals the selected file in the file explorer.
+        /// Copies the path of the selected file to the clipboard.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
         /// <param name="args">Consists of event parameters.</param>
-        private async void RevealInExplorerButton_Tap(object sender, TappedRoutedEventArgs args)
+        private void CopyPathButton_Click(object sender, RoutedEventArgs args)
         {
-            if (!(args.OriginalSource is FrameworkElement element)) return;
-            if (element.DataContext is RecentArchiveModel model)
+            if (RecentArchivesListView.SelectedItem is RecentArchiveModel model)
             {
-                try
+                var package = new DataPackage
                 {
-                    var folder = await StorageFolder.GetFolderFromPathAsync(model.Location);
-                    if (!await Launcher.LaunchFolderAsync(folder))
-                    {
-                        var title = I18N.Resources.GetString("Error/Text");
-                        var message = I18N.Resources.GetString("ErrorOpeningExplorer/Text");
-                        var dialog = DialogFactory.CreateConfirmationDialog(title, message);
-                        var result = await dialog.ShowAsync();
-                        if (result.Id.Equals(0)) // user has confirmed
-                        {
-                            RecentArchiveModels.Remove(model);
-                            RecentArchivesHistoryHandler.RemoveFromHistory(model);
-                        }
-                    }
-                }
-                catch (UnauthorizedAccessException)
-                {
-                    var errorMessage = I18N.Resources.GetString("ErrorNoAuthorization/Text");
-                    var errorDialog = DialogFactory.CreateErrorDialog(errorMessage);
-                    await errorDialog.ShowAsync();
-                }
-                args.Handled = true;
+                    RequestedOperation = DataPackageOperation.Copy
+                };
+
+                string path = model.Location.EndsWith("\\")
+                    ? model.Location
+                    : model.Location + "\\";
+
+                package.SetText(path + model.FileName);
+                Clipboard.SetContent(package);
             }
+        }
+
+        /// <summary>
+        /// Handles the selection change of items in the list view consisting of recently created archives.
+        /// </summary>
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="args">Consists of event parameters.</param>
+        private void RecentArchivesListView_SelectionChanged(object sender, SelectionChangedEventArgs args)
+        {
+            CopyPathButton.IsEnabled = ((ListView)sender)?.SelectedItem != null;
         }
 
         /// <inheritdoc />

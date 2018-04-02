@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2018 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -44,12 +44,14 @@ namespace SimpleZIP_UI.Application.Compression.Operation
             return await Task.Run(async () => // execute compression asynchronously
             {
                 var message = string.Empty;
+                var name = archiveName;
                 var isSuccess = false;
 
                 if (files.Count > 0)
                 {
                     var archive = await location.CreateFileAsync(archiveName,
                         CreationCollisionOption.GenerateUniqueName);
+                    name = archive.Name; // might have changed because of creation collision option
                     try
                     {
                         Algorithm.Token = token;
@@ -72,7 +74,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                         }
                     }
                 }
-                return EvaluateResult(message, isSuccess);
+                return EvaluateResult(name, message, isSuccess);
             }, token);
         }
 

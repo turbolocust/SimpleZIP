@@ -16,19 +16,20 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
-
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Presentation.View.Model;
 using static SimpleZIP_UI.Presentation.View.Model.RecentArchiveModel;
 
 namespace SimpleZIP_UI.Presentation.Handler
 {
-    internal class RecentArchivesHistoryHandler
+    internal class ArchiveHistoryHandler
     {
         public const string DefaultDateFormat = @"dd/MM/yyyy - hh:mm";
 
-        internal static int MaxHistoryItems { get; } = 25;
+        internal static int MaxHistoryItems { get; } = 128;
 
         internal static RecentArchiveModelCollection GetHistory()
         {
@@ -37,8 +38,10 @@ namespace SimpleZIP_UI.Presentation.Handler
                 : new RecentArchiveModelCollection();
         }
 
-        internal static void SaveToHistory(string fileName, string location)
+        internal static void SaveToHistory(string location, params string[] fileNames)
         {
+            if (fileNames.IsNullOrEmpty()) return;
+
             if (!Settings.TryGet(Settings.Keys.RecentArchivesKey, out string xml))
             {
                 xml = string.Empty;
@@ -46,15 +49,17 @@ namespace SimpleZIP_UI.Presentation.Handler
 
             var collection = RecentArchiveModelCollection.From(xml);
             var whenUsed = DateTime.Now.ToString(DefaultDateFormat);
-            var model = new RecentArchiveModel(whenUsed, fileName, location);
-            var history = collection.Models.ToList();
+            var models = new List<RecentArchiveModel>(fileNames.Length);
+            models.AddRange(fileNames.Select(name => new RecentArchiveModel(whenUsed, name, location)));
 
+            var history = collection.Models.ToList();
             if (history.Count == MaxHistoryItems)
             {
-                history.RemoveAt(history.Count - 1); // remove last
+                int modelsDiff = models.Count;
+                history.RemoveRange(history.Count - modelsDiff, modelsDiff);
             }
 
-            history.Insert(0, model); // insert new element at first position
+            history.InsertRange(0, models); // insert from start
             collection.Models = history.ToArray(); // update models
 
             if (!string.IsNullOrEmpty(xml = collection.Serialize()))

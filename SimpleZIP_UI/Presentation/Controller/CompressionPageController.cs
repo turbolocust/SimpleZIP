@@ -43,17 +43,19 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// <inheritdoc cref="SummaryPageController{T}.PerformOperation"/>
         protected override async Task<Result> PerformOperation(CompressionInfo[] operationInfos)
         {
-            var operationInfo = operationInfos[0]; // since use case does not support multiple operations
-            var key = operationInfo.ArchiveType;
+            var operationInfo = operationInfos[0]; // since use case doesn't support multiple operations
+            string[] archiveNames; // names might change in case of file collision
             var resultMessage = new StringBuilder();
             Result.Status statusCode;
 
             try
             {
+                var key = operationInfo.ArchiveType;
                 var result = key.Equals(Archives.ArchiveType.GZip)
                             || key.Equals(Archives.ArchiveType.BZip2)
                     ? await CompressSeparately(operationInfo)
                     : await Operation.Perform(operationInfo);
+                archiveNames = result.ArchiveNames;
                 resultMessage.Append(result.Message);
                 statusCode = result.StatusCode;
             }
@@ -68,10 +70,11 @@ namespace SimpleZIP_UI.Presentation.Controller
                 {
                     statusCode = Result.Status.Fail;
                 }
+                archiveNames = new string[0];
                 resultMessage.AppendLine(ex.Message);
             }
 
-            return new Result
+            return new Result(archiveNames)
             {
                 StatusCode = statusCode,
                 Message = resultMessage.ToString()
@@ -84,6 +87,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             var successCount = 0;
             var statusCode = Result.Status.Fail;
             var selectedFiles = new List<StorageFile>(operationInfo.SelectedFiles);
+            var archiveNames = new List<string>(operationInfo.SelectedFiles.Count);
 
             try
             {
@@ -93,6 +97,7 @@ namespace SimpleZIP_UI.Presentation.Controller
 
                     operationInfo.SelectedFiles = new[] { file };
                     var subResult = await Operation.Perform(operationInfo, false);
+                    archiveNames.AddRange(subResult.ArchiveNames);
 
                     if (subResult.StatusCode != Result.Status.Success)
                     {
@@ -116,7 +121,7 @@ namespace SimpleZIP_UI.Presentation.Controller
                 operationInfo.SelectedFiles = selectedFiles;
             }
 
-            return new Result
+            return new Result(archiveNames.ToArray())
             {
                 StatusCode = statusCode,
                 Message = subMessage.ToString()

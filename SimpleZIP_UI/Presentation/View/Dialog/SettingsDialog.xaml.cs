@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2018 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 // ==--==
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using SimpleZIP_UI.Presentation.Handler;
 
 namespace SimpleZIP_UI.Presentation.View.Dialog
 {
@@ -31,6 +32,17 @@ namespace SimpleZIP_UI.Presentation.View.Dialog
             SetToggleButtonsToggledState();
             SetThemeGroupToggleButton();
             PrimaryButtonText = I18N.Resources.GetString("ContentDialog/PrimaryButtonText");
+            ArchiveHistorySizeTextBlock.Text += " (0-" + ArchiveHistoryHandler.MaxHistoryItems + "):";
+            ArchiveHistorySizeTextBox.Text = GetCurrentSizeLimit().ToString();
+        }
+
+        private static int GetCurrentSizeLimit()
+        {
+            if (!Settings.TryGet(Settings.Keys.ArchiveHistorySize, out int curValue))
+            {
+                curValue = ArchiveHistoryHandler.MaxHistoryItems;
+            }
+            return curValue;
         }
 
         private void SetToggleButtonsToggledState()
@@ -104,7 +116,7 @@ namespace SimpleZIP_UI.Presentation.View.Dialog
         }
 
         /// <summary>
-        /// Invoked when a toggle button belonging to the theme group has been checked. 
+        /// Invoked when a toggle button belonging to the theme group has been toggled. 
         /// </summary>
         /// <param name="sender">The sender of the event.</param>
         /// <param name="args">Consists of event parameters.</param>
@@ -124,6 +136,27 @@ namespace SimpleZIP_UI.Presentation.View.Dialog
                 theme = null;
             }
             Settings.PushOrUpdate(Settings.Keys.ApplicationThemeKey, theme);
+        }
+
+        /// <summary>
+        /// Invoked when text has been changed in the textbox for archive history size.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="args">Consists of event parameters.</param>
+        private void ArchiveHistorySizeTextBox_OnTextChanged(object sender, TextChangedEventArgs args)
+        {
+            if (sender is TextBox textBox)
+            {
+                if (int.TryParse(textBox.Text, out int value) &&
+                    value >= 0 && value <= ArchiveHistoryHandler.MaxHistoryItems)
+                {
+                    Settings.PushOrUpdate(Settings.Keys.ArchiveHistorySize, value);
+                }
+                else
+                {
+                    textBox.Text = GetCurrentSizeLimit().ToString(); // reset
+                }
+            }
         }
     }
 }

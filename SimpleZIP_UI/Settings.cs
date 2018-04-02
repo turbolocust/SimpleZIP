@@ -16,7 +16,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
-
 using Windows.Storage;
 
 namespace SimpleZIP_UI
@@ -80,12 +79,10 @@ namespace SimpleZIP_UI
         internal static class Keys
         {
             internal const string ApplicationThemeKey = "ApplicationTheme";
-
             internal const string HideSomeArchiveTypesKey = "HideSomeArchiveTypes";
-
             internal const string PreferOpenArchiveKey = "PreferOpenArchive";
-
             internal const string RecentArchivesKey = "RecentArchives";
+            internal const string ArchiveHistorySize = "ArchiveHistorySize";
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2018 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,6 +20,9 @@ using System;
 
 namespace SimpleZIP_UI.Application.Compression.Model
 {
+    /// <summary>
+    /// Represents the result of an archiving operation.
+    /// </summary>
     internal class Result
     {
         /// <summary>
@@ -30,6 +33,18 @@ namespace SimpleZIP_UI.Application.Compression.Model
         {
             StatusCode = Status.Success;
         }
+
+        /// <summary>
+        /// Constructs a new instance of this class with status 
+        /// code set to <see cref="Status.Success"/>.
+        /// </summary>
+        internal Result(params string[] archiveNames)
+        {
+            ArchiveNames = archiveNames;
+            StatusCode = Status.Success;
+        }
+
+        internal string[] ArchiveNames { get; }
 
         internal Status StatusCode { get; set; }
 

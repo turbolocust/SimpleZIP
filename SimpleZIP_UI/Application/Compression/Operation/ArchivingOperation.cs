@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2018 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -156,19 +156,27 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         /// <summary>
         /// Evaluates the operation and returns the result.
         /// </summary>
+        /// <param name="name">The name of the archive.</param>
         /// <param name="message">The message to be evaluated.</param>
         /// <param name="isSuccess">True if operation was successful, false otherwise.</param>
         /// <param name="isVerbose">True if original message should be considered.</param>
         /// <returns>An object that consists of result parameters.</returns>
         /// <exception cref="OperationCanceledException">Thrown if operation has been canceled.</exception>
-        protected Result EvaluateResult(string message, bool isSuccess, bool isVerbose = false)
+        protected Result EvaluateResult(string name, string message, bool isSuccess, bool isVerbose = false)
         {
             if (TokenSource.IsCancellationRequested)
             {
                 throw new OperationCanceledException();
             }
-            var status = isSuccess ? Result.Status.Success : Result.Status.Fail;
-            return new Result { StatusCode = status, Message = message, VerboseFlag = isVerbose };
+            var status = isSuccess
+                ? Result.Status.Success
+                : Result.Status.Fail;
+            return new Result(name)
+            {
+                StatusCode = status,
+                Message = message,
+                VerboseFlag = isVerbose
+            };
         }
 
         public void Dispose()

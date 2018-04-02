@@ -65,20 +65,24 @@
                     </Pivot.Title>
                     <Pivot.RightHeader>
                         <CommandBar ClosedDisplayMode="Compact" Background="Transparent">
+                            <AppBarButton x:Name="CopyPathButton" x:Uid="CopyPath" Icon="Copy" Label="" Click="CopyPathButton_Click"/>
+                            <AppBarSeparator />
                             <AppBarButton x:Name="ClearListButton" x:Uid="ClearList" Icon="Delete" Label="" Click="ClearListButton_Click"/>
                         </CommandBar>
                     </Pivot.RightHeader>
                     <PivotItem x:Uid="StartPivot" Header="">
                         <StackPanel x:Name="StackPanelStart" Background="Transparent" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
                             <Button Width="280" Height="64" MaxHeight="75" Margin="0,32,32,0" Tapped="CompressButton_Tap" VerticalContentAlignment="Center"
-                                    Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+                                    Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" 
+                                    BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock FontSize="20" FontFamily="Segoe MDL2 Assets" Text="&#xE73F;" Margin="0,0,32,0" />
                                     <TextBlock x:Uid="CompressArchive" FontWeight="Normal" FontSize="16" CharacterSpacing="32" Text="" TextWrapping="Wrap" />
                                 </StackPanel>
                             </Button>
                             <Button Width="280" Height="64" MaxHeight="75" Margin="0,32,0,0" Tapped="ExtractButton_Tap" VerticalContentAlignment="Center"
-                                    Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+                                    Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" 
+                                    BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock FontSize="20" FontFamily="Segoe MDL2 Assets" Text="&#xEE71;" Margin="0,0,32,0" />
                                     <TextBlock x:Uid="ExtractArchive" FontWeight="Normal" FontSize="16" CharacterSpacing="32" Text="" TextWrapping="Wrap" />
@@ -87,8 +91,8 @@
                         </StackPanel>
                     </PivotItem>
                     <PivotItem x:Uid="RecentPivot" Header="">
-                        <ListView ItemsSource="{Binding RecentArchiveModels}" SelectionMode="Single" CanDrag="False" Background="Transparent" 
-                                  HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                        <ListView x:Name="RecentArchivesListView" ItemsSource="{Binding RecentArchiveModels}" SelectionMode="Single" CanDrag="False" Background="Transparent" 
+                                  HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" SelectionChanged="RecentArchivesListView_SelectionChanged">
                             <ListView.Header>
                                 <TextBlock x:Uid="RecentlyUsedArchives" Text="" Margin="0,0,0,16"/>
                             </ListView.Header>
@@ -104,11 +108,6 @@
                                             <ColumnDefinition Width="2.0*"/>
                                             <ColumnDefinition Width="8.0*"/>
                                         </Grid.ColumnDefinitions>
-                                        <!-- Not possible on UWP -->
-                                        <Button Tapped="RevealInExplorerButton_Tap" Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" 
-                                                Margin="0,0,16,0" Width="40" Background="Transparent" Visibility="Collapsed">
-                                            <SymbolIcon Symbol="Folder"/>
-                                        </Button>
                                         <TextBlock Foreground="{ThemeResource SystemControlForegroundAccentBrush}" FontWeight="Medium"
                                                    CharacterSpacing="32" Grid.Row="0" Grid.Column="1" Text="{Binding FileName}" />
                                         <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding WhenUsed}" />
