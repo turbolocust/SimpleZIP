@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2018 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         internal string Id { get; }
 
         /// <summary>
-        /// Children of this node, which can be nodes and entries.
+        /// Children of this node, which can be nodes, entries or both.
         /// </summary>
         internal ISet<IArchiveEntry> Children { get; }
 
@@ -62,7 +62,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
             return obj.GetType() == GetType() && Equals((Node)obj);
         }

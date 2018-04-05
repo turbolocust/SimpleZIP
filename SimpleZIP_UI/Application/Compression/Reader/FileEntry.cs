@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2018 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -23,9 +23,6 @@ namespace SimpleZIP_UI.Application.Compression.Reader
     /// </summary>
     public class FileEntry : IArchiveEntry
     {
-        /// <summary>
-        /// The key the entry.
-        /// </summary>
         internal string Key { get; }
 
         /// <inheritdoc />

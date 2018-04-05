@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2018 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
     internal class ArchiveReader : IDisposable
     {
         /// <summary>
-        /// The defined name of the root node.
+        /// Pre-defined name of the root node.
         /// </summary>
         public const string RootNodeName = "root";
 
@@ -52,8 +52,8 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         private IReader Reader { get; set; }
 
         /// <summary>
-        /// True if this reader is closed and therefore, cannot be used anymore. 
-        /// Once this object gets disposed this variable will always evaluate to true.
+        /// True if this reader is closed and thus cannot be used anymore. 
+        /// Once this instance is disposed, this value will always be true.
         /// </summary>
         internal bool Closed { get; private set; }
 
@@ -93,9 +93,9 @@ namespace SimpleZIP_UI.Application.Compression.Reader
             await OpenArchiveAsync(archive);
 
             var separator = DetermineFileSeparator();
-            var rootNode = new Node(RootNodeName);
             var keyBuilder = new StringBuilder();
             var nameBuilder = new StringBuilder();
+            var rootNode = new Node(RootNodeName);
             _nodes.Add(rootNode.Id, rootNode);
 
             foreach (var entry in ReadArchive())
@@ -173,7 +173,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         /// <summary>
         /// Determines the file separator character used by the specific archive type.
         /// </summary>
-        /// <returns>The correct file separator character.</returns>
+        /// <returns>The correct file separator character for the archive type.</returns>
         private char DetermineFileSeparator()
         {
             return Reader.ArchiveType == ArchiveType.Rar ? '\\' : '/';
