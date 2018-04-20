@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2018 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -74,9 +74,12 @@ namespace SimpleZIP_UI.Presentation.View
         /// <exception cref="ArgumentOutOfRangeException">Thrown on fatal error.</exception>
         private async void StartButton_Tap(object sender, TappedRoutedEventArgs args)
         {
-            var result = await InitOperation();
-            _controller.CreateResultDialog(result).ShowAsync().AsTask().Forget();
-            Frame.Navigate(typeof(MainPage));
+            if (_controller.CheckOutputFolder())
+            {
+                var result = await InitOperation();
+                _controller.CreateResultDialog(result).ShowAsync().AsTask().Forget();
+                Frame.Navigate(typeof(MainPage));
+            }
         }
 
         /// <summary>
@@ -93,7 +96,6 @@ namespace SimpleZIP_UI.Presentation.View
             {
                 OutputPathButton.Content = text;
             }
-            StartButton.IsEnabled = _controller.OutputFolder != null;
         }
 
         /// <summary>

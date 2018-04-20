@@ -421,4 +421,12 @@
     <value>Elemente in Archiv-Historie</value>
     <comment>Maximum allowed entries in archive history.</comment>
   </data>
+  <data name="OutputFolderMissing.Text" xml:space="preserve">
+    <value>Ausgabeordner fehlt</value>
+    <comment>The output folder has not been specified.</comment>
+  </data>
+  <data name="SelectOutputFolder.Text" xml:space="preserve">
+    <value>Bitte Ausgabeordner wählen.</value>
+    <comment>Asks the user to select the output folder.</comment>
+  </data>
 </root>

@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2018 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -227,11 +227,22 @@ namespace SimpleZIP_UI.Presentation.Controller
             return totalSize;
         }
 
-        /// <summary>
-        /// Performs various tasks before the start of the archiving operation.
-        /// </summary>
-        /// <param name="operationInfos">The amount of operations to be performed.</param>
-        /// <exception cref="NullReferenceException">Thrown if output folder is <code>null</code>.</exception>
+        internal bool CheckOutputFolder(bool showDialogIfInvalid = true)
+        {
+            if (OutputFolder != null)
+            {
+                return true;
+            }
+            if (showDialogIfInvalid)
+            {
+                var dialog = DialogFactory.CreateInformationDialog(
+                    I18N.Resources.GetString("OutputFolderMissing/Text"),
+                    I18N.Resources.GetString("SelectOutputFolder/Text"));
+                dialog.ShowAsync();
+            }
+            return false;
+        }
+
         protected void InitOperation(params T[] operationInfos)
         {
             if (OutputFolder == null)

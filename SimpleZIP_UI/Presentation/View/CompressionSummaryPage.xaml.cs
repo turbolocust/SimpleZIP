@@ -126,27 +126,30 @@ namespace SimpleZIP_UI.Presentation.View
         /// <param name="args">Consists of event parameters.</param>
         private async void StartButton_Tap(object sender, TappedRoutedEventArgs args)
         {
-            var selectedItem = (ComboBoxItem)ArchiveTypeComboBox.SelectedItem;
-            var archiveName = ArchiveNameTextBox.Text;
-
-            if (archiveName.Length > 0 && !FileUtils.ContainsIllegalChars(archiveName))
+            if (_controller.CheckOutputFolder())
             {
-                // set the algorithm by archive file type
-                FileTypesComboBoxItems.TryGetValue(selectedItem, out var archiveType);
-                Archives.ArchiveFileTypes.TryGetValue(archiveType, out var value);
+                var selectedItem = (ComboBoxItem)ArchiveTypeComboBox.SelectedItem;
+                var archiveName = ArchiveNameTextBox.Text;
 
-                archiveName += archiveType;
-                var result = await InitOperation(value, archiveName);
-
-                if (result.StatusCode == Result.Status.Success)
+                if (archiveName.Length > 0 && !FileUtils.ContainsIllegalChars(archiveName))
                 {
-                    ArchiveHistoryHandler.SaveToHistory(
-                        _controller.OutputFolder.Path, result.ArchiveNames);
-                }
+                    // set the algorithm by archive file type
+                    FileTypesComboBoxItems.TryGetValue(selectedItem, out var archiveType);
+                    Archives.ArchiveFileTypes.TryGetValue(archiveType, out var value);
 
-                _controller.CreateResultDialog(result).ShowAsync().AsTask().Forget();
-                //Frame.Navigate(typeof(MainPage));
-                FinishOperation();
+                    archiveName += archiveType;
+                    var result = await InitOperation(value, archiveName);
+
+                    if (result.StatusCode == Result.Status.Success)
+                    {
+                        ArchiveHistoryHandler.SaveToHistory(
+                            _controller.OutputFolder.Path, result.ArchiveNames);
+                    }
+
+                    _controller.CreateResultDialog(result).ShowAsync().AsTask().Forget();
+                    //Frame.Navigate(typeof(MainPage));
+                    FinishOperation();
+                }
             }
         }
 
@@ -165,7 +168,6 @@ namespace SimpleZIP_UI.Presentation.View
             {
                 OutputPathButton.Content = text;
             }
-            StartButton.IsEnabled = _controller.OutputFolder != null;
         }
 
         /// <summary>
