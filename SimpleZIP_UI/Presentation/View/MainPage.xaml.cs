@@ -81,9 +81,9 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        private void PopulateOrUpdateRecentArchivesList()
+        private async void PopulateOrUpdateRecentArchivesList()
         {
-            var collection = ArchiveHistoryHandler.GetHistory();
+            var collection = await ArchiveHistoryHandler.GetHistoryAsync();
             if (collection.Models.Length > 0)
             {
                 RecentArchiveModels.Clear(); // important

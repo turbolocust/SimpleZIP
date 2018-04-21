@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Presentation.View.Model;
 using static SimpleZIP_UI.Presentation.View.Model.RecentArchiveModel;
@@ -29,13 +30,22 @@ namespace SimpleZIP_UI.Presentation.Handler
     {
         public const string DefaultDateFormat = @"dd/MM/yyyy - hh:mm";
 
-        internal static int MaxHistoryItems { get; } = 128;
+        internal static int MaxHistoryItems { get; } = 64;
 
         internal static RecentArchiveModelCollection GetHistory()
         {
-            return Settings.TryGet(Settings.Keys.RecentArchivesKey, out string xml)
+            const string key = Settings.Keys.RecentArchivesKey;
+            return Settings.TryGet(key, out string xml)
                 ? RecentArchiveModelCollection.From(xml)
                 : new RecentArchiveModelCollection();
+        }
+
+        internal static async Task<RecentArchiveModelCollection> GetHistoryAsync()
+        {
+            const string key = Settings.Keys.RecentArchivesKey;
+            return await Task.Run(() => Settings.TryGet(key, out string xml)
+                ? RecentArchiveModelCollection.From(xml)
+                : new RecentArchiveModelCollection());
         }
 
         internal static void SaveToHistory(string location, params string[] fileNames)
@@ -48,19 +58,18 @@ namespace SimpleZIP_UI.Presentation.Handler
             }
 
             var collection = RecentArchiveModelCollection.From(xml);
+            var history = collection.Models.ToList();
             var whenUsed = DateTime.Now.ToString(DefaultDateFormat);
             var models = new List<RecentArchiveModel>(fileNames.Length);
             models.AddRange(fileNames.Select(name => new RecentArchiveModel(whenUsed, name, location)));
 
-            var history = collection.Models.ToList();
-            if (history.Count == MaxHistoryItems)
+            // get maximum history size specified by user
+            if (!Settings.TryGet(Settings.Keys.ArchiveHistorySize, out int size) || size > MaxHistoryItems)
             {
-                int modelsDiff = models.Count;
-                history.RemoveRange(history.Count - modelsDiff, modelsDiff);
+                size = MaxHistoryItems;
             }
 
-            history.InsertRange(0, models); // insert from start
-            collection.Models = history.ToArray(); // update models
+            collection.Models = UpdateHistory(history, models, size);
 
             if (!string.IsNullOrEmpty(xml = collection.Serialize()))
             {
@@ -82,6 +91,43 @@ namespace SimpleZIP_UI.Presentation.Handler
                     Settings.PushOrUpdate(Settings.Keys.RecentArchivesKey, xml);
                 }
             }
+        }
+
+        private static RecentArchiveModel[] UpdateHistory(List<RecentArchiveModel> history,
+            List<RecentArchiveModel> models, int maxItems)
+        {
+            if (maxItems == 0)
+            {
+                history.Clear();
+            }
+            else
+            {
+                int numHistory = history.Count;
+                int numModels = models.Count, newSize;
+
+                if (numModels > maxItems) // strip away models
+                {
+                    int diff = numModels - maxItems;
+                    models.RemoveRange(numModels - diff, diff);
+                }
+                if (numHistory > maxItems) // history got smaller
+                {
+                    int diff = numHistory - maxItems;
+                    history.RemoveRange(maxItems - 1, diff);
+                }
+                // remove elements if new size exceeds specified one
+                if ((newSize = numHistory + numModels) > maxItems)
+                {
+                    int overflow = newSize - maxItems;
+                    for (int i = 0; i < overflow; ++i)
+                    {
+                        history.RemoveAt(history.Count - 1);
+                    }
+                }
+                history.InsertRange(0, models); // insert from start
+            }
+
+            return history.ToArray();
         }
     }
 }
