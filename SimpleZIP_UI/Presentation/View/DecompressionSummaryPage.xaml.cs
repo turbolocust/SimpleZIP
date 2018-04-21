@@ -84,7 +84,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// <exception cref="ArgumentOutOfRangeException">Thrown on fatal error.</exception>
         private async void StartButton_Tap(object sender, TappedRoutedEventArgs args)
         {
-            if (_controller.CheckOutputFolder())
+            if (await _controller.CheckOutputFolder())
             {
                 var result = await InitOperation();
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed

@@ -136,7 +136,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// <param name="args">Consists of event parameters.</param>
         private async void StartButton_Tap(object sender, TappedRoutedEventArgs args)
         {
-            if (_controller.CheckOutputFolder())
+            if (await _controller.CheckOutputFolder())
             {
                 var selectedItem = (ComboBoxItem)ArchiveTypeComboBox.SelectedItem;
                 var archiveName = ArchiveNameTextBox.Text;

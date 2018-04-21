@@ -422,7 +422,7 @@
     <comment>Maximum allowed entries in archive history.</comment>
   </data>
   <data name="OutputFolderMissing.Text" xml:space="preserve">
-    <value>Output Folder missing</value>
+    <value>Output Folder is missing</value>
     <comment>The output folder has not been specified.</comment>
   </data>
   <data name="SelectOutputFolder.Text" xml:space="preserve">
