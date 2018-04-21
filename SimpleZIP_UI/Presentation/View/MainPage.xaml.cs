@@ -26,7 +26,6 @@ using Windows.UI.Xaml.Navigation;
 using SimpleZIP_UI.Presentation.Factory;
 using Windows.UI.ViewManagement;
 using Windows.Foundation;
-using Windows.System.Profile;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using SimpleZIP_UI.Presentation.Controller;
@@ -66,10 +65,11 @@ namespace SimpleZIP_UI.Presentation.View
             RecentArchiveModels = new ObservableCollection<RecentArchiveModel>();
             InitializeComponent();
 
-            if (AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile")
+            if (Settings.IsMobileDevice)
             {
+                // configure page elements for smaller screens
+                CompressButton.Margin = new Thickness(0, 32, 0, 0);
                 StackPanelStart.Orientation = Orientation.Vertical;
-                // configure split view for smaller screens
                 MenuSplitView.DisplayMode = SplitViewDisplayMode.CompactOverlay;
                 MenuSplitView.IsPaneOpen = false;
             }
@@ -222,16 +222,18 @@ namespace SimpleZIP_UI.Presentation.View
                 switch (pivot.SelectedIndex)
                 {
                     case 0: // StartPivot
-                        ClearListButton.IsEnabled = false;
-                        ClearListButton.Visibility = Visibility.Collapsed;
-                        CopyPathButton.IsEnabled = false;
-                        CopyPathButton.Visibility = Visibility.Collapsed;
+                        {
+                            CommandBar.ClosedDisplayMode = AppBarClosedDisplayMode.Hidden;
+                        }
                         break;
                     case 1: // RecentPivot
-                        PopulateOrUpdateRecentArchivesList();
-                        ClearListButton.IsEnabled = RecentArchiveModels.Count > 0;
-                        ClearListButton.Visibility = Visibility.Visible;
-                        CopyPathButton.Visibility = Visibility.Visible;
+                        {
+                            PopulateOrUpdateRecentArchivesList();
+                            CommandBar.ClosedDisplayMode = Settings.IsMobileDevice
+                                ? AppBarClosedDisplayMode.Minimal
+                                : AppBarClosedDisplayMode.Compact;
+                            ClearListButton.IsEnabled = RecentArchiveModels.Count > 0;
+                        }
                         break;
                 }
             }

@@ -6,49 +6,49 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-  <Grid Background="Transparent" Padding="0,0,0,8">
-    <Grid.RowDefinitions>
-      <RowDefinition Height="Auto" />
-      <RowDefinition Height="Auto" />
-      <RowDefinition Height="6.4*" />
-      <RowDefinition Height="Auto" />
-      <RowDefinition Height="Auto" />
-    </Grid.RowDefinitions>
-    <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="8,8,0,20" Background="Transparent">
-      <TextBlock x:Uid="OutputPath" Text="" IsTapEnabled="False" FontSize="16" Margin="0,0,0,12" FocusVisualPrimaryBrush="Transparent" FocusVisualSecondaryBrush="Transparent" />
-      <Button x:Name="OutputPathButton" AllowFocusWhenDisabled="False" Width="Auto" Height="40" FontWeight="Normal" BorderBrush="{ThemeResource SystemControlBackgroundAccentBrush}"
-              BorderThickness="2" IsTapEnabled="True" Background="Transparent" IsHoldingEnabled="False" IsDoubleTapEnabled="False" Tapped="OutputPathButton_Tap">
-        <TextBlock x:Uid="TapToChoose" Text="" TextWrapping="NoWrap" />
-      </Button>
-    </StackPanel>
-    <TextBlock x:Uid="FilesToDecompress" Text="" Grid.Row="1" FontWeight="Medium" FontSize="16" CharacterSpacing="56" Margin="8,0,0,8" VerticalAlignment="Center" />
-    <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-      <ListBox x:Name="ItemsListBox" Margin="4,0,0,0" SelectionMode="Single" CanDrag="False" HorizontalContentAlignment="Stretch" Background="Transparent" Height="Auto" />
-    </ScrollViewer>
-    <ProgressBar x:Name="ProgressBar" Grid.Row="3" HorizontalAlignment="Stretch" IsIndeterminate="False" IsEnabled="False" Visibility="Collapsed" />
-    <StackPanel Grid.Row="4" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,8,16,0">
-      <Button x:Name="StartButton" Tapped="StartButton_Tap" IsEnabled="True" Width="120" MinHeight="44" Height="50" MaxHeight="60" Margin="0,0,16,0"
-              Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
-        <TextBlock x:Uid="Start" Text="" TextWrapping="Wrap" />
-      </Button>
-      <Button Tapped="AbortButton_Tap" Width="120" MinHeight="44" Height="50" MaxHeight="60" Foreground="{ThemeResource ButtonForegroundThemeBrush}"
-              Background="IndianRed" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
-        <TextBlock x:Uid="Abort" Text="" TextWrapping="Wrap" />
-      </Button>
-      <ToolTipService.ToolTip>
-        <ToolTip x:Name="AbortButtonToolTip" FontSize="13" HorizontalOffset="20" VerticalOffset="20">
-          <TextBlock x:Uid="TryingAbort" Text="" TextWrapping="WrapWholeWords" />
-        </ToolTip>
-      </ToolTipService.ToolTip>
-    </StackPanel>
-  </Grid>
-  <Page.Transitions>
-    <TransitionCollection>
-      <NavigationThemeTransition>
-        <NavigationThemeTransition.DefaultNavigationTransitionInfo>
-          <EntranceNavigationTransitionInfo/>
-        </NavigationThemeTransition.DefaultNavigationTransitionInfo>
-      </NavigationThemeTransition>
-    </TransitionCollection>
-  </Page.Transitions>
+    <Grid Background="Transparent" Padding="0,0,0,8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="6.4*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="8,8,0,20" Background="Transparent">
+            <TextBlock x:Uid="OutputFolder" Text="" IsTapEnabled="False" FontSize="16" Margin="0,0,0,12" FocusVisualPrimaryBrush="Transparent" FocusVisualSecondaryBrush="Transparent" />
+            <Button x:Name="OutputPathButton" AllowFocusWhenDisabled="False" Width="Auto" Height="40" FontWeight="Normal" BorderBrush="{ThemeResource SystemControlBackgroundAccentBrush}"
+                    BorderThickness="2" IsTapEnabled="True" Background="Transparent" IsHoldingEnabled="False" IsDoubleTapEnabled="False" Tapped="OutputPathButton_Tap">
+                <TextBlock x:Uid="TapToChoose" Text="" TextWrapping="NoWrap" />
+            </Button>
+        </StackPanel>
+        <TextBlock x:Uid="FilesToDecompress" Text="" Grid.Row="1" FontWeight="Medium" FontSize="16" CharacterSpacing="56" Margin="8,0,0,8" VerticalAlignment="Center" />
+        <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <ListBox x:Name="ItemsListBox" Margin="4,0,0,0" SelectionMode="Single" CanDrag="False" HorizontalContentAlignment="Stretch" Background="Transparent" Height="Auto" />
+        </ScrollViewer>
+        <ProgressBar x:Name="ProgressBar" Grid.Row="3" HorizontalAlignment="Stretch" IsIndeterminate="False" IsEnabled="False" Visibility="Collapsed" />
+        <StackPanel Grid.Row="4" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,8,16,0">
+            <Button x:Name="StartButton" Tapped="StartButton_Tap" IsEnabled="True" Width="120" MinHeight="44" Height="50" MaxHeight="60" Margin="0,0,16,0"
+                    Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+                <TextBlock x:Uid="Start" Text="" TextWrapping="Wrap" />
+            </Button>
+            <Button Tapped="AbortButton_Tap" Width="120" MinHeight="44" Height="50" MaxHeight="60" Foreground="{ThemeResource ButtonForegroundThemeBrush}"
+                    Background="IndianRed" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+                <TextBlock x:Uid="Abort" Text="" TextWrapping="Wrap" />
+            </Button>
+            <ToolTipService.ToolTip>
+                <ToolTip x:Name="AbortButtonToolTip" FontSize="13" HorizontalOffset="20" VerticalOffset="20">
+                    <TextBlock x:Uid="TryingAbort" Text="" TextWrapping="WrapWholeWords" />
+                </ToolTip>
+            </ToolTipService.ToolTip>
+        </StackPanel>
+    </Grid>
+    <Page.Transitions>
+        <TransitionCollection>
+            <NavigationThemeTransition>
+                <NavigationThemeTransition.DefaultNavigationTransitionInfo>
+                    <EntranceNavigationTransitionInfo/>
+                </NavigationThemeTransition.DefaultNavigationTransitionInfo>
+            </NavigationThemeTransition>
+        </TransitionCollection>
+    </Page.Transitions>
 </Page>

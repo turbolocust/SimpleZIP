@@ -59,20 +59,20 @@
                 </Grid>
             </SplitView.Pane>
             <SplitView.Content>
-                <Pivot Margin="32,0,0,0" Padding="0,32,0,0" SelectionChanged="Pivot_SelectionChanged">
+                <Pivot Margin="0,0,0,0" Padding="0,8,0,0" SelectionChanged="Pivot_SelectionChanged" IsHeaderItemsCarouselEnabled="True">
                     <Pivot.Title>
                         <TextBlock Text="SimpleZIP" FontSize="28" FontStyle="Normal" CharacterSpacing="32" FontWeight="Bold" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
                     </Pivot.Title>
                     <Pivot.RightHeader>
-                        <CommandBar ClosedDisplayMode="Compact" Background="Transparent">
+                        <CommandBar x:Name="CommandBar" ClosedDisplayMode="Compact" Background="Transparent">
                             <AppBarButton x:Name="CopyPathButton" x:Uid="CopyPath" Icon="Copy" Label="" Click="CopyPathButton_Click"/>
-                            <AppBarSeparator />
+                            <AppBarSeparator Visibility="Visible" />
                             <AppBarButton x:Name="ClearListButton" x:Uid="ClearList" Icon="Delete" Label="" Click="ClearListButton_Click"/>
                         </CommandBar>
                     </Pivot.RightHeader>
                     <PivotItem x:Uid="StartPivot" Header="">
                         <StackPanel x:Name="StackPanelStart" Background="Transparent" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
-                            <Button Width="280" Height="64" MaxHeight="75" Margin="0,32,32,0" Tapped="CompressButton_Tap" VerticalContentAlignment="Center"
+                            <Button x:Name="CompressButton" Width="280" Height="64" MaxHeight="75" Margin="0,32,32,0" Tapped="CompressButton_Tap" VerticalContentAlignment="Center"
                                     Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" 
                                     BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                                 <StackPanel Orientation="Horizontal">

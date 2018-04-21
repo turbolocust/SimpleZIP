@@ -108,6 +108,16 @@ namespace SimpleZIP_UI.Presentation.View
             ArchiveTypeToolTip.IsOpen = false;
         }
 
+        private async void PickOutputFolder()
+        {
+            if (ProgressBar.IsEnabled) return;
+            var text = await _controller.PickOutputPath();
+            if (!string.IsNullOrEmpty(text))
+            {
+                OutputPathButton.Content = text;
+            }
+        }
+
         /// <summary>
         /// Invoked when the abort button has been tapped.
         /// </summary>
@@ -145,11 +155,17 @@ namespace SimpleZIP_UI.Presentation.View
                         ArchiveHistoryHandler.SaveToHistory(
                             _controller.OutputFolder.Path, result.ArchiveNames);
                     }
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    _controller.CreateResultDialog(result).ShowAsync();
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-                    _controller.CreateResultDialog(result).ShowAsync().AsTask().Forget();
-                    //Frame.Navigate(typeof(MainPage));
                     FinishOperation();
+                    //Frame.Navigate(typeof(MainPage));
                 }
+            }
+            else
+            {
+                PickOutputFolder();
             }
         }
 
@@ -158,16 +174,11 @@ namespace SimpleZIP_UI.Presentation.View
         /// Invoked when the button holding the output path has been tapped.
         /// As a result, the user can pick an output folder for the archive.
         /// </summary>
-        /// <param name="sender"></param>
+        /// <param name="sender">The sender of this event.</param>
         /// <param name="args">Consists of event parameters.</param>
-        private async void OutputPathButton_Tap(object sender, TappedRoutedEventArgs args)
+        private void OutputPathButton_Tap(object sender, TappedRoutedEventArgs args)
         {
-            if (ProgressBar.IsEnabled) return;
-            var text = await _controller.PickOutputPath();
-            if (!string.IsNullOrEmpty(text))
-            {
-                OutputPathButton.Content = text;
-            }
+            PickOutputFolder();
         }
 
         /// <summary>

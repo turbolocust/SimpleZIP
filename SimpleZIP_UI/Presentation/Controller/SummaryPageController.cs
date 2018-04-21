@@ -149,7 +149,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         }
 
         /// <summary>
-        /// Opens a picker to select a folder and returns it. May be 
+        /// Opens a picker to select a folder and returns it. It may be 
         /// <code>null</code> on cancellation or if picker is already showing.
         /// </summary>
         internal async Task<StorageFolder> OutputPathPanelAction()
@@ -227,6 +227,13 @@ namespace SimpleZIP_UI.Presentation.Controller
             return totalSize;
         }
 
+        /// <summary>
+        /// Checks the output folder and optionally shows an information dialog
+        /// if the output folder is not set and thus <code>null</code>.
+        /// </summary>
+        /// <param name="showDialogIfInvalid">True to show an information dialog
+        /// if the output folder is not set.</param>
+        /// <returns>True if output folder is set.</returns>
         internal bool CheckOutputFolder(bool showDialogIfInvalid = true)
         {
             if (OutputFolder != null)
@@ -238,7 +245,9 @@ namespace SimpleZIP_UI.Presentation.Controller
                 var dialog = DialogFactory.CreateInformationDialog(
                     I18N.Resources.GetString("OutputFolderMissing/Text"),
                     I18N.Resources.GetString("SelectOutputFolder/Text"));
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 dialog.ShowAsync();
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             }
             return false;
         }
