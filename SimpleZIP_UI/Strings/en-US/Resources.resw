@@ -219,7 +219,7 @@
   </data>
   <data name="OutputPath.Text" xml:space="preserve">
     <value>Output Path</value>
-    <comment>The path where to store the compressed or decompressed files.</comment>
+    <comment>The path where compressed or decompressed files are to be stored.</comment>
   </data>
   <data name="PleaseBePatient.Text" xml:space="preserve">
     <value>Please be patient.</value>
@@ -428,5 +428,9 @@
   <data name="SelectOutputFolder.Text" xml:space="preserve">
     <value>Please select an output folder.</value>
     <comment>Asks the user to select the output folder.</comment>
+  </data>
+  <data name="OutputFolder.Text" xml:space="preserve">
+    <value>Output Folder</value>
+    <comment>The folder where compressed or decompressed files are to be stored.</comment>
   </data>
 </root>
