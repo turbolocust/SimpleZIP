@@ -39,7 +39,6 @@ namespace SimpleZIP_UI
         {
             DeviceFamily = AnalyticsInfo.VersionInfo.DeviceFamily;
             LocalSettings = ApplicationData.Current.LocalSettings;
-
         }
 
         /// <summary>

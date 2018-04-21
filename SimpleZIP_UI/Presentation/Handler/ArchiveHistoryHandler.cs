@@ -32,6 +32,10 @@ namespace SimpleZIP_UI.Presentation.Handler
 
         internal static int MaxHistoryItems { get; } = 64;
 
+        /// <summary>
+        /// Reads the history of recently created archives synchronously.
+        /// </summary>
+        /// <returns>Collection of <see cref="RecentArchiveModel"/>.</returns>
         internal static RecentArchiveModelCollection GetHistory()
         {
             const string key = Settings.Keys.RecentArchivesKey;
@@ -40,14 +44,22 @@ namespace SimpleZIP_UI.Presentation.Handler
                 : new RecentArchiveModelCollection();
         }
 
+        /// <summary>
+        /// Reads the history of recently created archives asynchronously.
+        /// </summary>
+        /// <returns>A task which returns <see cref="RecentArchiveModelCollection"/>.</returns>
         internal static async Task<RecentArchiveModelCollection> GetHistoryAsync()
         {
-            const string key = Settings.Keys.RecentArchivesKey;
-            return await Task.Run(() => Settings.TryGet(key, out string xml)
-                ? RecentArchiveModelCollection.From(xml)
-                : new RecentArchiveModelCollection());
+            return await Task.Run(() => GetHistory());
         }
 
+        /// <summary>
+        /// Stores a new entry to the history for each item in the specified array
+        /// consisting of file names. Each entry holds the specified <code>location</code>
+        /// as well as the current datetime with the format as specified in <see cref="DefaultDateFormat"/>.
+        /// </summary>
+        /// <param name="location">The location to be stored with each entry.</param>
+        /// <param name="fileNames">File names to be stored.</param>
         internal static void SaveToHistory(string location, params string[] fileNames)
         {
             if (fileNames.IsNullOrEmpty()) return;
@@ -77,6 +89,10 @@ namespace SimpleZIP_UI.Presentation.Handler
             }
         }
 
+        /// <summary>
+        /// Removes the specified model from the history (if exists).
+        /// </summary>
+        /// <param name="model">The model to be removed.</param>
         internal static void RemoveFromHistory(RecentArchiveModel model)
         {
             if (Settings.TryGet(Settings.Keys.RecentArchivesKey, out string xml))
@@ -109,11 +125,13 @@ namespace SimpleZIP_UI.Presentation.Handler
                 {
                     int diff = numModels - maxItems;
                     models.RemoveRange(numModels - diff, diff);
+                    numModels = models.Count;
                 }
                 if (numHistory > maxItems) // history got smaller
                 {
                     int diff = numHistory - maxItems;
-                    history.RemoveRange(maxItems - 1, diff);
+                    history.RemoveRange(maxItems, diff);
+                    numHistory = history.Count;
                 }
                 // remove elements if new size exceeds specified one
                 if ((newSize = numHistory + numModels) > maxItems)
@@ -124,7 +142,7 @@ namespace SimpleZIP_UI.Presentation.Handler
                         history.RemoveAt(history.Count - 1);
                     }
                 }
-                history.InsertRange(0, models); // insert from start
+                history.InsertRange(0, models); // insert from start to keep order
             }
 
             return history.ToArray();
