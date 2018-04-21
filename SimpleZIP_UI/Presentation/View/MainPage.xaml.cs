@@ -68,6 +68,7 @@ namespace SimpleZIP_UI.Presentation.View
             if (Settings.IsMobileDevice)
             {
                 // configure page elements for smaller screens
+                Pivot.Margin = new Thickness(0);
                 CompressButton.Margin = new Thickness(0, 32, 0, 0);
                 StackPanelStart.Orientation = Orientation.Vertical;
                 MenuSplitView.DisplayMode = SplitViewDisplayMode.CompactOverlay;
@@ -117,6 +118,8 @@ namespace SimpleZIP_UI.Presentation.View
                     }
                     RecentArchiveModels.Add(model);
                 }
+                // only enable button to clear list if at least one item is present
+                ClearListButton.IsEnabled = RecentArchiveModels.Count > 0;
             }
         }
 
@@ -218,7 +221,7 @@ namespace SimpleZIP_UI.Presentation.View
         {
             if (sender is Pivot pivot)
             {
-                // ReSharper disable once SwitchStatementMissingSomeCases
+                // ReSharper disable once RedundantEmptySwitchSection
                 switch (pivot.SelectedIndex)
                 {
                     case 0: // StartPivot
@@ -232,8 +235,9 @@ namespace SimpleZIP_UI.Presentation.View
                             CommandBar.ClosedDisplayMode = Settings.IsMobileDevice
                                 ? AppBarClosedDisplayMode.Minimal
                                 : AppBarClosedDisplayMode.Compact;
-                            ClearListButton.IsEnabled = RecentArchiveModels.Count > 0;
                         }
+                        break;
+                    default:
                         break;
                 }
             }
@@ -246,8 +250,11 @@ namespace SimpleZIP_UI.Presentation.View
         /// <param name="args">Consists of event parameters.</param>
         private void ClearListButton_Click(object sender, RoutedEventArgs args)
         {
-            RecentArchiveModels.Clear();
-            Settings.PushOrUpdate(Settings.Keys.RecentArchivesKey, string.Empty);
+            if (RecentArchiveModels.Count > 0)
+            {
+                RecentArchiveModels.Clear();
+                Settings.PushOrUpdate(Settings.Keys.RecentArchivesKey, string.Empty);
+            }
         }
 
         /// <summary>

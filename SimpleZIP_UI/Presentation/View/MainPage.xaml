@@ -59,7 +59,7 @@
                 </Grid>
             </SplitView.Pane>
             <SplitView.Content>
-                <Pivot Margin="0,0,0,0" Padding="0,8,0,0" SelectionChanged="Pivot_SelectionChanged" IsHeaderItemsCarouselEnabled="True">
+                <Pivot x:Name="Pivot" Margin="32,0,0,0" Padding="0,8,0,0" SelectionChanged="Pivot_SelectionChanged" IsHeaderItemsCarouselEnabled="True">
                     <Pivot.Title>
                         <TextBlock Text="SimpleZIP" FontSize="28" FontStyle="Normal" CharacterSpacing="32" FontWeight="Bold" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
                     </Pivot.Title>
