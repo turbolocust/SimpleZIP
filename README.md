@@ -31,13 +31,13 @@ Supported message digest algorithms:
   - SHA384
   - SHA512
 
-<br />This app makes use of the <a href="https://github.com/adamhathcock/sharpcompress">SharpCompress</a> library and depends on its quality when it comes to compression and decompression. While this app also runs on the desktop, the UI is (currently) optimized for smaller devices.
+<br />This application makes use of the <a href="https://github.com/adamhathcock/sharpcompress">SharpCompress</a> library and depends on its quality when it comes to compression and decompression.
 <br /><br />
 
 # Plans for upcoming releases
 
   - Support for password protected ZIP files
-  - Optimize UI for bigger screens
+  - ~~Optimize UI for bigger screens~~ (done)
 
 # Development requirements
 
