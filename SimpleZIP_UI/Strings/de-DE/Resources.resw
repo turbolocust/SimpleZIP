@@ -286,7 +286,7 @@
     <comment>Positive result.</comment>
   </data>
   <data name="TapToChoose.Text" xml:space="preserve">
-    <value>Antippen zum wählen</value>
+    <value>Antippen zum Wählen</value>
     <comment>Allows further interaction with the software after a tap.</comment>
   </data>
   <data name="TotalDuration.Text" xml:space="preserve">
@@ -322,7 +322,7 @@
     <comment>Adjustments that can be made to the application.</comment>
   </data>
   <data name="BrowseArchiveSetting.Text" xml:space="preserve">
-    <value>Archivinhalt zeigen wenn geöffnet via Datei-Explorer</value>
+    <value>Archivinhalt zeigen, wenn geöffnet via Datei-Explorer</value>
     <comment>Allows to browse the archive directly when opened via file explorer.</comment>
   </data>
   <data name="HideLessCommonArchiveTypesSetting.Text" xml:space="preserve">
@@ -382,7 +382,7 @@
     <comment>Informs the user that any action will have no effect until a restart of the app.</comment>
   </data>
   <data name="RAR5FormatNotSupported.Text" xml:space="preserve">
-    <value>Beachten Sie, dass das RAR5 Format derzeit nicht unterstützt wird.</value>
+    <value>Beachte, dass das RAR5 Format derzeit nicht unterstützt wird.</value>
     <comment>Informs the user that the RAR5 archive format is not supported.</comment>
   </data>
   <data name="FileEncryptedMessage.Text" xml:space="preserve">
