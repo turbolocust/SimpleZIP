@@ -65,8 +65,8 @@
                     </Pivot.Title>
                     <Pivot.RightHeader>
                         <CommandBar x:Name="CommandBar" ClosedDisplayMode="Compact" Background="Transparent">
-                            <AppBarButton x:Name="CopyPathButton" x:Uid="CopyPath" Icon="Copy" Label="" Click="CopyPathButton_Click"/>
-                            <AppBarSeparator Visibility="Visible" />
+                            <AppBarButton x:Name="CopyPathButton" x:Uid="CopyPath" Icon="Copy" Label="" IsEnabled="False" Click="CopyPathButton_Click"/>
+                            <!-- <AppBarSeparator Visibility="Visible" /> -->
                             <AppBarButton x:Name="ClearListButton" x:Uid="ClearList" Icon="Delete" Label="" Click="ClearListButton_Click"/>
                         </CommandBar>
                     </Pivot.RightHeader>
