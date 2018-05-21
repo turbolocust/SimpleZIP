@@ -32,8 +32,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
         protected override Stream GetCompressorStream(Stream stream, CompressorOptions options)
         {
             return options.IsCompression
-                ? new BZip2Stream(stream, CompressionMode.Compress)
-                : new BZip2Stream(stream, CompressionMode.Decompress);
+                ? new BZip2Stream(stream, CompressionMode.Compress, false)
+                : new BZip2Stream(stream, CompressionMode.Decompress, true);
         }
     }
 }
