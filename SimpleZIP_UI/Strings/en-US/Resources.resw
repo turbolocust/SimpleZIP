@@ -382,7 +382,7 @@
     <comment>Informs the user that any action will have no effect until a restart of the app.</comment>
   </data>
   <data name="RAR5FormatNotSupported.Text" xml:space="preserve">
-    <value>Note that the RAR5 format is currently not supported.</value>
+    <value>Note that the RAR5 format is currently not fully supported.</value>
     <comment>Informs the user that the RAR5 archive format is not supported.</comment>
   </data>
   <data name="FileEncryptedMessage.Text" xml:space="preserve">
