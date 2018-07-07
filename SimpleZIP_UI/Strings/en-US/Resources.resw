@@ -433,4 +433,8 @@
     <value>Output Folder</value>
     <comment>The folder where compressed or decompressed files are to be stored.</comment>
   </data>
+  <data name="LaunchFolderButton.Text" xml:space="preserve">
+    <value>Reveal in Explorer</value>
+    <comment>Reveals the selected element in the file explorer.</comment>
+  </data>
 </root>
