@@ -19,6 +19,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.IO;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
 using Windows.UI.Xaml.Input;
@@ -28,6 +29,7 @@ using Windows.UI.ViewManagement;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using SimpleZIP_UI.Presentation.Controller;
 using SimpleZIP_UI.Presentation.Handler;
 using SimpleZIP_UI.Presentation.View.Model;
@@ -248,11 +250,12 @@ namespace SimpleZIP_UI.Presentation.View
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
         /// <param name="args">Consists of event parameters.</param>
-        private void ClearListButton_Click(object sender, RoutedEventArgs args)
+        private void ClearListButton_Tap(object sender, RoutedEventArgs args)
         {
             if (RecentArchiveModels.Count > 0)
             {
                 RecentArchiveModels.Clear();
+                ArchiveHistoryHandler.MruList.Clear();
                 Settings.PushOrUpdate(Settings.Keys.RecentArchivesKey, string.Empty);
             }
         }
@@ -262,7 +265,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
         /// <param name="args">Consists of event parameters.</param>
-        private void CopyPathButton_Click(object sender, RoutedEventArgs args)
+        private void CopyPathButton_Tap(object sender, RoutedEventArgs args)
         {
             if (RecentArchivesListView.SelectedItem is RecentArchiveModel model)
             {
@@ -288,6 +291,51 @@ namespace SimpleZIP_UI.Presentation.View
         private void RecentArchivesListView_SelectionChanged(object sender, SelectionChangedEventArgs args)
         {
             CopyPathButton.IsEnabled = ((ListView)sender)?.SelectedItem != null;
+        }
+
+        /// <summary>
+        /// Handles a right tap on an item in the list consisting of most recently created archives.
+        /// </summary>
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="args">Consists of event parameters.</param>
+        private void RecentArchivesGrid_RightTapped(object sender, RightTappedRoutedEventArgs args)
+        {
+            if (sender is FrameworkElement elem)
+            {
+                var flyoutBase = FlyoutBase.GetAttachedFlyout(elem);
+                flyoutBase.ShowAt(elem);
+            }
+        }
+
+        /// <summary>
+        /// Handles a tap on the button in flyout which reveals the selected item in the file explorer.
+        /// </summary>
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="args">Consists of event parameters.</param>
+        private async void LaunchFolderButton_Tapped(object sender, RoutedEventArgs args)
+        {
+            if (sender is MenuFlyoutItem flyoutItem)
+            {
+                var model = (RecentArchiveModel)flyoutItem.DataContext;
+                var mru = ArchiveHistoryHandler.MruList;
+                if (!mru.ContainsItem(model.MruToken)) return;
+                var folder = await mru.GetFolderAsync(model.MruToken);
+                if (folder == null) return; // shouldn't be null
+                var options = new FolderLauncherOptions();
+                try
+                {
+                    var file = await folder.GetFileAsync(model.FileName);
+                    options.ItemsToSelect.Add(file);
+                }
+                catch (FileNotFoundException)
+                {
+                    // file probably got deleted by someone;
+                    // thus, ignore and just launch directory
+                }
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                Launcher.LaunchFolderAsync(folder, options);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            }
         }
 
         /// <inheritdoc />

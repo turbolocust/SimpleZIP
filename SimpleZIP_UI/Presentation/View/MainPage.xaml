@@ -65,9 +65,9 @@
                     </Pivot.Title>
                     <Pivot.RightHeader>
                         <CommandBar x:Name="CommandBar" ClosedDisplayMode="Compact" Background="Transparent">
-                            <AppBarButton x:Name="CopyPathButton" x:Uid="CopyPath" Icon="Copy" Label="" IsEnabled="False" Click="CopyPathButton_Click"/>
+                            <AppBarButton x:Name="CopyPathButton" x:Uid="CopyPath" Icon="Copy" Label="" IsEnabled="False" Tapped="CopyPathButton_Tap"/>
                             <!-- <AppBarSeparator Visibility="Visible" /> -->
-                            <AppBarButton x:Name="ClearListButton" x:Uid="ClearList" Icon="Delete" Label="" Click="ClearListButton_Click"/>
+                            <AppBarButton x:Name="ClearListButton" x:Uid="ClearList" Icon="Delete" Label="" Tapped="ClearListButton_Tap"/>
                         </CommandBar>
                     </Pivot.RightHeader>
                     <PivotItem x:Uid="StartPivot" Header="">
@@ -98,7 +98,12 @@
                             </ListView.Header>
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid Background="Transparent" Margin="0,8,0,8">
+                                    <Grid x:Name="RecentArchivesGrid" Background="Transparent" Margin="0,8,0,8" RightTapped="RecentArchivesGrid_RightTapped">
+                                        <FlyoutBase.AttachedFlyout>
+                                            <MenuFlyout>
+                                                <MenuFlyoutItem x:Uid="LaunchFolderButton" Text="" Tapped="LaunchFolderButton_Tapped" />
+                                            </MenuFlyout>
+                                        </FlyoutBase.AttachedFlyout>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="Auto"/>

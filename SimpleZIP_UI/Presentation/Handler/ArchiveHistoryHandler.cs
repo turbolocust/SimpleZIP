@@ -20,6 +20,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.Storage.AccessCache;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Presentation.View.Model;
 using static SimpleZIP_UI.Presentation.View.Model.RecentArchiveModel;
@@ -28,9 +30,11 @@ namespace SimpleZIP_UI.Presentation.Handler
 {
     internal class ArchiveHistoryHandler
     {
-        public const string DefaultDateFormat = @"dd/MM/yyyy - hh:mm";
+        public const string DefaultDateFormat = @"dd/MM/yyyy - hh:mm tt";
 
-        internal static int MaxHistoryItems { get; } = 64;
+        internal static StorageItemMostRecentlyUsedList MruList => StorageApplicationPermissions.MostRecentlyUsedList;
+
+        internal static uint MaxHistoryItems { get; } = MruList.MaximumItemsAllowed;
 
         /// <summary>
         /// Reads the history of recently created archives synchronously.
@@ -58,9 +62,9 @@ namespace SimpleZIP_UI.Presentation.Handler
         /// consisting of file names. Each entry holds the specified <code>location</code>
         /// as well as the current datetime with the format as specified in <see cref="DefaultDateFormat"/>.
         /// </summary>
-        /// <param name="location">The location to be stored with each entry.</param>
-        /// <param name="fileNames">File names to be stored.</param>
-        internal static void SaveToHistory(string location, params string[] fileNames)
+        /// <param name="location">The location to be associated with each entry.</param>
+        /// <param name="fileNames">File names to be stored in history.</param>
+        internal static void SaveToHistory(StorageFolder location, params string[] fileNames)
         {
             if (fileNames.IsNullOrEmpty()) return;
 
@@ -73,16 +77,24 @@ namespace SimpleZIP_UI.Presentation.Handler
             var history = collection.Models.ToList();
             var whenUsed = DateTime.Now.ToString(DefaultDateFormat);
             var models = new List<RecentArchiveModel>(fileNames.Length);
-            models.AddRange(fileNames.Select(name => new RecentArchiveModel(whenUsed, name, location)));
+            string mruToken = location.Path.Replace('\\', '|'); // causes exception when adding to MRU list otherwise
+            models.AddRange(fileNames.Select(name => new RecentArchiveModel(whenUsed, name, location.Path, mruToken)));
 
             // get maximum history size specified by user
             if (!Settings.TryGet(Settings.Keys.ArchiveHistorySize, out int size) || size > MaxHistoryItems)
             {
-                size = MaxHistoryItems;
+                size = (int)MaxHistoryItems;
             }
 
             collection.Models = UpdateHistory(history, models, size);
+            MruList.Clear(); // always clear first
 
+            // save folder to Most Recently Used list
+            foreach (var model in collection.Models)
+            {
+                MruList.AddOrReplace(model.MruToken, location);
+            }
+            // also serialize separately to an XML file
             if (!string.IsNullOrEmpty(xml = collection.Serialize()))
             {
                 Settings.PushOrUpdate(Settings.Keys.RecentArchivesKey, xml);
@@ -100,6 +112,7 @@ namespace SimpleZIP_UI.Presentation.Handler
                 var collection = RecentArchiveModelCollection.From(xml);
                 var models = collection.Models.ToList();
                 models.Remove(model); // ignore return value
+                MruList.Remove(model.MruToken);
                 collection.Models = models.ToArray();
                 // store away updated history
                 if (!string.IsNullOrEmpty(xml = collection.Serialize()))
@@ -144,7 +157,6 @@ namespace SimpleZIP_UI.Presentation.Handler
                 }
                 history.InsertRange(0, models); // insert from start to keep order
             }
-
             return history.ToArray();
         }
     }

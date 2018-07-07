@@ -40,7 +40,7 @@ namespace SimpleZIP_UI.Presentation.View.Dialog
         {
             if (!Settings.TryGet(Settings.Keys.ArchiveHistorySize, out int curValue))
             {
-                curValue = ArchiveHistoryHandler.MaxHistoryItems;
+                curValue = (int) ArchiveHistoryHandler.MaxHistoryItems;
             }
             return curValue;
         }

@@ -43,6 +43,12 @@ namespace SimpleZIP_UI.Presentation.View.Model
         public string Location { get; set; }
 
         /// <summary>
+        /// The token used in the Most Recently Used list.
+        /// </summary>
+        [XmlElement("Token")]
+        public string MruToken { get; set; }
+
+        /// <summary>
         /// Constructs a new model for the ListBox in <see cref="MainPage"/>.
         /// </summary>
         public RecentArchiveModel()
@@ -55,11 +61,13 @@ namespace SimpleZIP_UI.Presentation.View.Model
         /// <param name="whenUsed">Date/Time when archive was used.</param>
         /// <param name="fileName">The name of the file to be displayed.</param>
         /// <param name="location">The location of the file to be displayed.</param>
-        public RecentArchiveModel(string whenUsed, string fileName, string location)
+        /// <param name="mruToken">The token used in the Most Recently Used list.</param>
+        public RecentArchiveModel(string whenUsed, string fileName, string location, string mruToken)
         {
             WhenUsed = whenUsed;
             FileName = fileName;
             Location = location;
+            MruToken = mruToken;
         }
 
         [XmlRoot("RecentArchivesCollection")]
