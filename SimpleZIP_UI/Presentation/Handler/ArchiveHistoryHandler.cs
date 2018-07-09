@@ -89,7 +89,7 @@ namespace SimpleZIP_UI.Presentation.Handler
             collection.Models = UpdateHistory(history, models, size);
             MruList.Clear(); // always clear first
 
-            // save folder to Most Recently Used list
+            // save folder (location) to Most Recently Used list
             foreach (var model in collection.Models)
             {
                 MruList.AddOrReplace(model.MruToken, location);

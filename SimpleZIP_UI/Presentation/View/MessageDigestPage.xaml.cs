@@ -16,7 +16,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -103,10 +102,12 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        /// <summary>
-        /// Copies the specified text to the clipboard.
-        /// </summary>
-        /// <param name="text">The text to be copied to the clipboard.</param>
+        private void RefreshListBox()
+        {
+            MessageDigestModelsListBox.ItemsSource = null;
+            MessageDigestModelsListBox.ItemsSource = MessageDigestModels;
+        }
+
         private static void CopyToClipboard(string text)
         {
             var package = new DataPackage
@@ -178,6 +179,22 @@ namespace SimpleZIP_UI.Presentation.View
             // show toast (without audio) and hide it after 4 seconds
             _controller.ShowToastNotification("SimpleZIP",
                 I18N.Resources.GetString("CopiedToClipboard/Text"), 4, true);
+        }
+
+        /// <summary>
+        /// Converts all hash values in list to lower case.
+        /// </summary>
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="args">Consists of event parameters.</param>
+        private void LowercaseHashToggleSwitch_Toggled(object sender, RoutedEventArgs args)
+        {
+            foreach (var model in MessageDigestModels)
+            {
+                model.HashValue = LowercaseHashToggleSwitch.IsOn
+                    ? model.HashValue.ToLowerInvariant()
+                    : model.HashValue.ToUpperInvariant();
+            }
+            RefreshListBox();
         }
 
         /// <inheritdoc />
