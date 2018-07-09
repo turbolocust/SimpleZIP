@@ -437,4 +437,8 @@
     <value>Anzeigen in Explorer</value>
     <comment>Reveals the selected element in the file explorer.</comment>
   </data>
+  <data name="LowerCaseHashToggleSwitch.Text" xml:space="preserve">
+    <value>Kleinschreibung (Hash)</value>
+    <comment>Converts a hash value to lower case when toggled.</comment>
+  </data>
 </root>
