@@ -145,6 +145,7 @@
     <Compile Include="Presentation\Controller\SummaryPageController.cs" />
     <Compile Include="Application\ProgressManager.cs" />
     <Compile Include="Presentation\Handler\ArchiveHistoryHandler.cs" />
+    <Compile Include="Presentation\View\Converter\InverseBoolToVisibilityConverter.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Presentation\View\Converter\NegateBooleanConverter.cs" />
     <Compile Include="Presentation\View\Dialog\AboutDialog.xaml.cs">
