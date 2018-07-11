@@ -98,7 +98,8 @@
                             </ListView.Header>
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid x:Name="RecentArchivesGrid" Background="Transparent" Margin="0,8,0,8" RightTapped="RecentArchivesGrid_RightTapped">
+                                    <Grid x:Name="RecentArchivesGrid" Background="Transparent" Margin="0,8,0,8" 
+                                          Holding="RecentArchivesGrid_Holding" RightTapped="RecentArchivesGrid_RightTapped">
                                         <FlyoutBase.AttachedFlyout>
                                             <MenuFlyout>
                                                 <MenuFlyoutItem x:Uid="LaunchFolderButton" Text="" Tapped="LaunchFolderButton_Tapped" />

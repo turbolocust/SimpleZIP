@@ -21,12 +21,14 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Devices.Input;
 using Windows.System;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using SimpleZIP_UI.Presentation.Factory;
 using Windows.UI.ViewManagement;
 using Windows.Foundation;
+using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -300,10 +302,26 @@ namespace SimpleZIP_UI.Presentation.View
         /// <param name="args">Consists of event parameters.</param>
         private void RecentArchivesGrid_RightTapped(object sender, RightTappedRoutedEventArgs args)
         {
-            if (sender is FrameworkElement elem)
+            if (args.PointerDeviceType == PointerDeviceType.Mouse
+                && sender is FrameworkElement elem)
             {
-                var flyoutBase = FlyoutBase.GetAttachedFlyout(elem);
-                flyoutBase.ShowAt(elem);
+                FlyoutBase.GetAttachedFlyout(elem).ShowAt(elem);
+                args.Handled = true;
+            }
+        }
+
+        /// <summary>
+        /// Handles a holding event on an item in the list consisting of most recently created archives.
+        /// </summary>
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="args">Consists of event parameters.</param>
+        private void RecentArchivesGrid_Holding(object sender, HoldingRoutedEventArgs args)
+        {
+            if (args.HoldingState == HoldingState.Started
+                && sender is FrameworkElement elem)
+            {
+                FlyoutBase.GetAttachedFlyout(elem).ShowAt(elem);
+                args.Handled = true;
             }
         }
 
