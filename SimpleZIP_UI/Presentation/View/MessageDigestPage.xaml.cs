@@ -87,10 +87,14 @@ namespace SimpleZIP_UI.Presentation.View
                 {
                     var selectedItem = (ComboBoxItem)HashAlgorithmComboBox.SelectedItem;
                     var algorithmName = selectedItem?.Content as string;
-                    // perform this check to avoid exceptions in case something in the UI changes
+                    // key for algorithm is text in combo box item
                     if (_messageDigestAlgorithm.SupportedAlgorithms.Contains(algorithmName))
                     {
                         var (_, hashedValue) = await _messageDigestAlgorithm.ComputeHashValue(file, algorithmName);
+                        if (LowercaseHashToggleSwitch.IsOn)
+                        {
+                            hashedValue = hashedValue.ToLowerInvariant();
+                        }
                         var model = new MessageDigestModel(file.Name, file.Path, hashedValue);
                         await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { MessageDigestModels.Add(model); });
                     }
