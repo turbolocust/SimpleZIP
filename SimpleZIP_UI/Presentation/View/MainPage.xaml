@@ -102,7 +102,8 @@
                                           Holding="RecentArchivesGrid_Holding" RightTapped="RecentArchivesGrid_RightTapped">
                                         <FlyoutBase.AttachedFlyout>
                                             <MenuFlyout>
-                                                <MenuFlyoutItem x:Uid="LaunchFolderButton" Text="" Tapped="LaunchFolderButton_Tapped" />
+                                                <MenuFlyoutItem x:Uid="LaunchFolderFlyoutItem" Text="" Tapped="LaunchFolderFlyoutItem_Tapped" />
+                                                <MenuFlyoutItem x:Uid="RemoveFromHistoryFlyoutItem" Text="" Tapped="RemoveFromHistoryFlyOutItem_Tapped"/>
                                             </MenuFlyout>
                                         </FlyoutBase.AttachedFlyout>
                                         <Grid.RowDefinitions>

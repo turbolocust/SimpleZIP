@@ -286,7 +286,7 @@ namespace SimpleZIP_UI.Presentation.View
         }
 
         /// <summary>
-        /// Handles the selection change of items in the list view consisting of recently created archives.
+        /// Handles selection change of items in the list consisting of recently created archives.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
         /// <param name="args">Consists of event parameters.</param>
@@ -296,7 +296,7 @@ namespace SimpleZIP_UI.Presentation.View
         }
 
         /// <summary>
-        /// Handles a right tap on an item in the list consisting of most recently created archives.
+        /// Handles a right tap on an item in the list consisting of recently created archives.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
         /// <param name="args">Consists of event parameters.</param>
@@ -311,7 +311,7 @@ namespace SimpleZIP_UI.Presentation.View
         }
 
         /// <summary>
-        /// Handles a holding event on an item in the list consisting of most recently created archives.
+        /// Handles the holding event on an item in the list consisting of recently created archives.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
         /// <param name="args">Consists of event parameters.</param>
@@ -326,11 +326,11 @@ namespace SimpleZIP_UI.Presentation.View
         }
 
         /// <summary>
-        /// Handles a tap on the button in flyout which reveals the selected item in the file explorer.
+        /// Reveals the selected archive in the file explorer.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
         /// <param name="args">Consists of event parameters.</param>
-        private async void LaunchFolderButton_Tapped(object sender, RoutedEventArgs args)
+        private async void LaunchFolderFlyoutItem_Tapped(object sender, RoutedEventArgs args)
         {
             if (sender is MenuFlyoutItem flyoutItem)
             {
@@ -353,6 +353,21 @@ namespace SimpleZIP_UI.Presentation.View
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 Launcher.LaunchFolderAsync(folder, options);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            }
+        }
+
+        /// <summary>
+        /// Removes the selected archive from the history consisting of created archives.
+        /// </summary>
+        /// <param name="sender">The sender of this event.</param>
+        /// <param name="args">Consists of event parameters.</param>
+        private void RemoveFromHistoryFlyOutItem_Tapped(object sender, TappedRoutedEventArgs args)
+        {
+            if (sender is MenuFlyoutItem flyoutItem)
+            {
+                var model = (RecentArchiveModel)flyoutItem.DataContext;
+                ArchiveHistoryHandler.RemoveFromHistory(model);
+                RecentArchiveModels.Remove(model);
             }
         }
 

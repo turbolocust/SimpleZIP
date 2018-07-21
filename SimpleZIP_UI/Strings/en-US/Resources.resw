@@ -433,12 +433,16 @@
     <value>Output Folder</value>
     <comment>The folder where compressed or decompressed files are to be stored.</comment>
   </data>
-  <data name="LaunchFolderButton.Text" xml:space="preserve">
+  <data name="LaunchFolderFlyoutItem.Text" xml:space="preserve">
     <value>Reveal in Explorer</value>
     <comment>Reveals the selected element in the file explorer.</comment>
   </data>
   <data name="LowerCaseHashToggleSwitch.Text" xml:space="preserve">
     <value>Lower Case (Hash)</value>
     <comment>Converts a hash value to lower case when toggled.</comment>
+  </data>
+  <data name="RemoveFromHistoryFlyoutItem.Text" xml:space="preserve">
+    <value>Remove from List</value>
+    <comment>Remove a currently selected item from a list.</comment>
   </data>
 </root>

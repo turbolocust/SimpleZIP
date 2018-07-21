@@ -111,8 +111,22 @@ namespace SimpleZIP_UI.Presentation.Handler
             {
                 var collection = RecentArchiveModelCollection.From(xml);
                 var models = collection.Models.ToList();
-                models.Remove(model); // ignore return value
-                MruList.Remove(model.MruToken);
+                try
+                {
+                    var modelRemove = models.SingleOrDefault(m =>
+                        m.Location.Equals(model.Location) &&
+                        m.FileName.Equals(model.FileName));
+                    models.Remove(modelRemove);
+                    // check if contains first to avoid exception
+                    if (MruList.ContainsItem(model.MruToken))
+                    {
+                        MruList.Remove(model.MruToken);
+                    }
+                }
+                catch
+                {
+                    // already removed, hence ignore
+                }
                 collection.Models = models.ToArray();
                 // store away updated history
                 if (!string.IsNullOrEmpty(xml = collection.Serialize()))
