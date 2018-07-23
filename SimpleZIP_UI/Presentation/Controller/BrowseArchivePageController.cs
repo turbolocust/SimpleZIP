@@ -64,38 +64,52 @@ namespace SimpleZIP_UI.Presentation.Controller
             if (_archiveFile != null && _archiveFile.IsEqual(archive)) return _rootNode;
 
             _archiveFile = archive;
-            using (var reader = new ArchiveReader())
+            bool passwordSet = false;
+            Node rootNode = null;
+            try
             {
-                Node rootNode = null;
                 try
                 {
-                    rootNode = await reader.Read(archive);
-                }
-                catch (Exception ex)
-                {
-                    var message = await I18N.ExceptionMessageHandler
-                                            .GetStringFor(ex, true, false, archive);
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    DialogFactory.CreateErrorDialog(message).ShowAsync();
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    ParentPage.Frame.Navigate(typeof(MainPage));
-                }
-                finally
-                {
-                    if (rootNode == null)
+                    using (var reader = new ArchiveReader())
                     {
-                        _archiveFile = null;
+                        rootNode = await reader.Read(archive);
                     }
                 }
-                return _rootNode = rootNode;
+                catch (SharpCompress.Common.CryptographicException)
+                {
+                    // archive is encrypted, ask for password and try again
+                    string password = await RequestPassword(archive.DisplayName);
+                    passwordSet = password != null;
+                    using (var reader = new ArchiveReader())
+                    {
+                        rootNode = await reader.Read(archive, password);
+                    }
+                }
             }
+            catch (Exception ex)
+            {
+                var message = await I18N.ExceptionMessageHandler
+                    .GetStringFor(ex, true, passwordSet, archive);
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                DialogFactory.CreateErrorDialog(message).ShowAsync();
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                ParentPage.Frame.Navigate(typeof(MainPage));
+            }
+            finally
+            {
+                if (rootNode == null)
+                {
+                    _archiveFile = null;
+                }
+            }
+
+            return _rootNode = rootNode;
         }
 
         /// <summary>
         /// Checks whether the currently opened archive only consists
         /// of one file entry. This evaluates to true if the opened 
-        /// archive is e.g. a GZIP file which only supports the
-        /// compression of a single file.
+        /// archive is e.g. a GZIP compressed file.
         /// </summary>
         /// <returns>True if archive only consists of one file entry.</returns>
         internal bool IsSingleFileEntryArchive()

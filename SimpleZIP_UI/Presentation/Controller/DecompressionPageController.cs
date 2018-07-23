@@ -22,7 +22,6 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Compression.Operation;
-using SimpleZIP_UI.Presentation.View;
 
 namespace SimpleZIP_UI.Presentation.Controller
 {

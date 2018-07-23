@@ -66,14 +66,18 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         /// Opens the specified archive file asynchronously.
         /// </summary>
         /// <param name="archive">The archive to be opened.</param>
-        /// <param name="options">Options for the <see cref="IReader"/>.</param>
+        /// <param name="password">The password for the archive (if encrypted).</param>
         /// <returns>The stream used to read the archive.</returns>
-        private async Task<Stream> OpenArchiveAsync(IStorageFile archive, ReaderOptions options = null)
+        private async Task<Stream> OpenArchiveAsync(IStorageFile archive, string password = null)
         {
-            options = options ?? new ReaderOptions
+            var options = new ReaderOptions
             {
                 LeaveStreamOpen = false
             };
+            if (password != null)
+            {
+                options.Password = password;
+            }
 
             var stream = await archive.OpenStreamForReadAsync();
             Reader = ReaderFactory.Open(stream, options);
@@ -84,13 +88,14 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         /// Reads the entire archive and builds up a tree representing its hierarchy.
         /// </summary>
         /// <param name="archive">The archive to be read.</param>
+        /// <param name="password">The password for the archive (if encrypted).</param>
         /// <returns>The root node of the tree, which represents the root directory.</returns>
         /// <exception cref="IOException">Thrown when an error while reading the archive occurred.</exception>
-        public async Task<Node> Read(StorageFile archive)
+        public async Task<Node> Read(StorageFile archive, string password = null)
         {
             if (Closed) throw new ObjectDisposedException(GetType().FullName);
 
-            await OpenArchiveAsync(archive);
+            await OpenArchiveAsync(archive, password);
 
             var separator = DetermineFileSeparator();
             var keyBuilder = new StringBuilder();

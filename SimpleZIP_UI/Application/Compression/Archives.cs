@@ -144,10 +144,10 @@ namespace SimpleZIP_UI.Application.Compression
         }
 
         /// <summary>
-        /// 
+        /// Tries to determine the <see cref="ArchiveType"/> of the specified file.
         /// </summary>
         /// <param name="file">The archive to be checked.</param>
-        /// <param name="password">The password of the file if encrypted.</param>
+        /// <param name="password">The password for the file if encrypted.</param>
         /// <returns></returns>
         /// <exception cref="CryptographicException">
         /// Thrown if no or wrong password has been provided.</exception>
