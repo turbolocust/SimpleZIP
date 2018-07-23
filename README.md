@@ -34,11 +34,6 @@ Supported message digest algorithms:
 <br />This application makes use of the <a href="https://github.com/adamhathcock/sharpcompress">SharpCompress</a> library and depends on its quality when it comes to compression and decompression.
 <br /><br />
 
-# Plans for upcoming releases
-
-  - Support for password protected ZIP files
-  - ~~Optimize UI for bigger screens~~ (done)
-
 # Development requirements
 
 The minimum requirements for this project are currently as follows:
