@@ -32,6 +32,7 @@ using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Compression.Operation.Event;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Presentation.Controller;
+using SimpleZIP_UI.Presentation.View.Dialog;
 
 namespace SimpleZIP_UI.Presentation.View
 {
@@ -143,6 +144,18 @@ namespace SimpleZIP_UI.Presentation.View
                 StartButton.IsEnabled = true;
                 OutputPathButton.IsEnabled = true;
             }
+        }
+
+        /// <summary>
+        /// Requests a password string from the user.
+        /// </summary>
+        /// <param name="fileName">Name of the encrypted file.</param>
+        /// <returns>The password entered by the user.</returns>
+        internal async Task<string> RequestPassword(string fileName)
+        {
+            var dialog = new EnterPasswordDialog(fileName);
+            await dialog.ShowAsync();
+            return dialog.Password;
         }
 
         /// <summary>

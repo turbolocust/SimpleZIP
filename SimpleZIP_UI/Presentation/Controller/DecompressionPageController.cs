@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2018 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Compression.Operation;
+using SimpleZIP_UI.Presentation.View;
 
 namespace SimpleZIP_UI.Presentation.Controller
 {
@@ -50,10 +51,23 @@ namespace SimpleZIP_UI.Presentation.Controller
             {
                 if (IsCancelRequest) break;
                 var item = operationInfo.Item;
-                
+
                 try
                 {
-                    var subResult = await Operation.Perform(operationInfo, false);
+                    Result subResult;
+                    try
+                    {
+                        subResult = await Operation.Perform(operationInfo, false);
+                    }
+                    catch (SharpCompress.Common.CryptographicException)
+                    {
+                        // archive is encrypted, ask for password and try again
+                        var parent = (DecompressionSummaryPage)ParentPage;
+                        string password = await parent.RequestPassword(operationInfo.Item.DisplayName);
+                        operationInfo.Item.Password = password;
+                        subResult = await Operation.Perform(operationInfo, false);
+                    }
+
                     if (subResult.StatusCode != Result.Status.Success)
                     {
                         isVerbose = subResult.VerboseFlag;

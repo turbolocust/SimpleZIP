@@ -67,9 +67,11 @@ namespace SimpleZIP_UI.I18N
         /// <param name="acceptDefault">Returns a generic error message instead of
         /// an empty string when there is no friendly message defined for the concrete type
         /// of the specified exception.</param>
+        /// <param name="passwordSet">True to indicate that passwort is set.</param>
         /// <param name="file">File that was processed when exception occurred.</param>
         /// <returns>String value of a resource.</returns>
-        internal static async Task<string> GetStringFor(Exception ex, bool acceptDefault, StorageFile file = null)
+        internal static async Task<string> GetStringFor(Exception ex,
+            bool acceptDefault, bool passwordSet, StorageFile file = null)
         {
             var message = string.Empty;
             switch (ex)
@@ -81,8 +83,7 @@ namespace SimpleZIP_UI.I18N
                 case InvalidOperationException _:
                     if (file != null)
                     {
-                        // to inform that file format is not supported,
-                        // e.g. when user tries to extract RAR5 file
+                        // to inform that file format is not supported
                         message = await Archives.IsRarArchive(file)
                             ? "RAR5FormatNotSupported/Text"
                             : "FileFormatNotSupported/Text";
@@ -93,7 +94,11 @@ namespace SimpleZIP_UI.I18N
                     }
                     break;
                 default:
-                    if (acceptDefault)
+                    if (passwordSet)
+                    {
+                        message = "ErrorReadingArchiveWithPassword/Text";
+                    }
+                    else if (acceptDefault)
                     {
                         message = "ErrorReadingArchive/Text";
                     }

@@ -17,12 +17,11 @@
 // 
 // ==--==
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Windows.Storage;
+using SharpCompress.Common;
+using SharpCompress.Readers;
 using SimpleZIP_UI.Application.Compression.Model;
-using SimpleZIP_UI.Application.Compression.Reader;
 using SimpleZIP_UI.Application.Util;
 
 namespace SimpleZIP_UI.Application.Compression.Operation
@@ -32,19 +31,21 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         /// <summary>
         /// Extracts files from an archive to the specified location.
         /// </summary>
-        /// <param name="archiveFile">The archive to be extracted.</param>
-        /// <param name="location">The location where to extract the archive's content.</param>
-        /// <param name="entries">Optional entries to be extracted from the archive.</param>
+        /// <param name="info">Consists of information required for extraction.</param>
         /// <returns>An object that consists of result parameters.</returns>
         /// <exception cref="InvalidArchiveTypeException">Thrown if the file type of the selected 
         /// file is not supported or unknown.</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown if extraction at the archive's 
         /// location is not allowed.</exception>
         /// <exception cref="OperationCanceledException">Thrown if operation has been canceled.</exception>
-        private async Task<Result> ExtractFromArchive(StorageFile archiveFile, StorageFolder location,
-            IReadOnlyList<FileEntry> entries = null)
+        private async Task<Result> ExtractFromArchive(DecompressionInfo info)
         {
             var token = TokenSource.Token;
+
+            var archiveFile = info.Item.Archive;
+            var location = info.OutputFolder;
+            var entries = info.Item.Entries;
+            string password = info.Item.Password;
 
             return await Task.Run(async () => // execute extraction asynchronously
             {
@@ -52,23 +53,31 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                 var isSuccess = false;
                 var isVerbose = false;
 
+                var options = new ReaderOptions
+                {
+                    LeaveStreamOpen = false,
+                    Password = password
+                };
+
                 try
                 {
                     Algorithm.Token = token;
                     var stream = entries == null
-                        ? await Algorithm.Decompress(archiveFile, location)
-                        : await Algorithm.Decompress(archiveFile, location, entries);
+                        ? await Algorithm.Decompress(archiveFile, location, options)
+                        : await Algorithm.Decompress(archiveFile, location, entries, options);
                     isSuccess = stream != Stream.Null;
                 }
                 catch (Exception ex)
                 {
-                    if (ex is OperationCanceledException)
+                    bool passwordSet = password != null;
+                    if (ex is OperationCanceledException ||
+                        ex is CryptographicException && !passwordSet)
                     {
-                        throw; // simply re-throw
+                        throw; // simply re-throw, but only if password not set
                     }
 
                     message = await I18N.ExceptionMessageHandler
-                                    .GetStringFor(ex, false, archiveFile);
+                                    .GetStringFor(ex, false, passwordSet, archiveFile);
 
                     if (message.Length > 0)
                     {
@@ -93,19 +102,36 @@ namespace SimpleZIP_UI.Application.Compression.Operation
             {
                 Algorithm = Archives.DetermineAlgorithm(value);
             }
-            else
+            else // try to detect archive by reading headers
             {
-                throw new InvalidArchiveTypeException(
-                    I18N.Resources.GetString("FileFormatNotSupported/Text"));
+                string errMsg = I18N.Resources
+                    .GetString("FileFormatNotSupported/Text");
+                try
+                {
+                    var task = Archives.DetermineArchiveType(
+                        info.Item.Archive, info.Item.Password);
+                    task.RunSynchronously();
+
+                    if (task.Result != Archives.ArchiveType.Unknown)
+                    {
+                        Algorithm = Archives.DetermineAlgorithm(task.Result);
+                    }
+                    else
+                    {
+                        throw new InvalidArchiveTypeException(errMsg);
+                    }
+                }
+                catch (InvalidArchiveTypeException ex)
+                {
+                    throw new InvalidArchiveTypeException(errMsg, ex);
+                }
             }
         }
 
         /// <inheritdoc cref="ArchivingOperation{T}.StartOperation"/>
         protected override async Task<Result> StartOperation(DecompressionInfo info)
         {
-            var archive = info.Item.Archive;
-            var entries = info.Item.Entries;
-            return await ExtractFromArchive(archive, info.OutputFolder, entries);
+            return await ExtractFromArchive(info);
         }
     }
 }

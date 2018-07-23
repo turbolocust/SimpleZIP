@@ -16,18 +16,26 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
-namespace SimpleZIP_UI.Application.Compression.Model
-{
-    internal class DecompressionInfo : OperationInfo
-    {
-        /// <summary>
-        /// Aggregated item which is to be extracted.
-        /// </summary>
-        internal ExtractableItem Item { get; }
+using Windows.UI.Xaml.Controls;
 
-        internal DecompressionInfo(ExtractableItem item, ulong size) : base(size)
+namespace SimpleZIP_UI.Presentation.View.Dialog
+{
+    public sealed partial class EnterPasswordDialog
+    {
+        public string FileName { get; set; }
+
+        public string Password { get; set; }
+
+        public EnterPasswordDialog(string fileName)
         {
-            Item = item;
+            InitializeComponent();
+            FileName = fileName;
+        }
+
+        private void ContentDialog_PrimaryButtonClick(ContentDialog sender,
+            ContentDialogButtonClickEventArgs args)
+        {
+            sender.Hide();
         }
     }
 }

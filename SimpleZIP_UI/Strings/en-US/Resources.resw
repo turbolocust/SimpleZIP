@@ -445,4 +445,12 @@
     <value>Remove from List</value>
     <comment>Remove a currently selected item from a list.</comment>
   </data>
+  <data name="EnterPasswordDialog.Title" xml:space="preserve">
+    <value>Enter Password</value>
+    <comment>Asks user to enter a password in this dialog.</comment>
+  </data>
+  <data name="ErrorReadingArchiveWithPassword.Text" xml:space="preserve">
+    <value>Error reading archive. This may be caused by an invalid password or an unsupported encryption.</value>
+    <comment>Informs the user that there has been an error reading an archive with a set password.</comment>
+  </data>
 </root>

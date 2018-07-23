@@ -38,6 +38,11 @@ namespace SimpleZIP_UI.Application.Compression.Model
         internal StorageFile Archive { get; }
 
         /// <summary>
+        /// The password of the archive.
+        /// </summary>
+        internal string Password { get; set; }
+
+        /// <summary>
         /// Optional list of entries to be extracted. If this is not 
         /// <code>null</code>, then only these entries will be extracted.
         /// </summary>

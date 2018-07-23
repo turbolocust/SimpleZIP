@@ -146,6 +146,9 @@
     <Compile Include="Application\ProgressManager.cs" />
     <Compile Include="Presentation\Handler\ArchiveHistoryHandler.cs" />
     <Compile Include="Presentation\View\Converter\InverseBoolToVisibilityConverter.cs" />
+    <Compile Include="Presentation\View\Dialog\EnterPasswordDialog.xaml.cs">
+      <DependentUpon>EnterPasswordDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="Presentation\View\Converter\NegateBooleanConverter.cs" />
     <Compile Include="Presentation\View\Dialog\AboutDialog.xaml.cs">
@@ -259,6 +262,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Presentation\View\DecompressionSummaryPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\View\Dialog\EnterPasswordDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
