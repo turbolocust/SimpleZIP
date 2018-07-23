@@ -62,8 +62,7 @@ namespace SimpleZIP_UI.Presentation.Controller
                     catch (SharpCompress.Common.CryptographicException)
                     {
                         // archive is encrypted, ask for password and try again
-                        var parent = (DecompressionSummaryPage)ParentPage;
-                        string password = await parent.RequestPassword(operationInfo.Item.DisplayName);
+                        string password = await RequestPassword(operationInfo.Item.DisplayName);
                         operationInfo.Item.Password = password;
                         subResult = await Operation.Perform(operationInfo, false);
                     }

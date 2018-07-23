@@ -18,6 +18,7 @@
 // ==--==
 using System;
 using System.Text;
+using System.Threading.Tasks;
 using Windows.System.Display;
 using Windows.UI.Notifications;
 using Windows.UI.Popups;
@@ -25,6 +26,7 @@ using Windows.UI.Xaml.Controls;
 using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Presentation.Factory;
 using SimpleZIP_UI.Presentation.View;
+using SimpleZIP_UI.Presentation.View.Dialog;
 
 namespace SimpleZIP_UI.Presentation.Controller
 {
@@ -54,6 +56,18 @@ namespace SimpleZIP_UI.Presentation.Controller
         protected void NavigateBackHome()
         {
             ParentPage.Frame.Navigate(typeof(MainPage));
+        }
+
+        /// <summary>
+        /// Requests a password string from the user.
+        /// </summary>
+        /// <param name="fileName">Name of the encrypted file.</param>
+        /// <returns>The password entered by the user.</returns>
+        protected async Task<string> RequestPassword(string fileName)
+        {
+            var dialog = new EnterPasswordDialog(fileName);
+            await dialog.ShowAsync();
+            return dialog.Password;
         }
 
         /// <summary>
