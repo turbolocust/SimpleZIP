@@ -16,7 +16,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
+using Windows.System;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 namespace SimpleZIP_UI.Presentation.View.Dialog
 {
@@ -36,6 +39,14 @@ namespace SimpleZIP_UI.Presentation.View.Dialog
             ContentDialogButtonClickEventArgs args)
         {
             sender.Hide();
+        }
+
+        private void PasswordBox_OnKeyDown(object sender, KeyRoutedEventArgs args)
+        {
+            if (sender.Equals(PasswordBox) && args.Key == VirtualKey.Enter)
+            {
+                ContentDialog.Hide();
+            }
         }
     }
 }
