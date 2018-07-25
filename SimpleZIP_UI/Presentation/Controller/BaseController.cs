@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2018 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer.ShareTarget;
 using Windows.System.Display;
 using Windows.UI.Notifications;
 using Windows.UI.Popups;
@@ -45,17 +46,14 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// </summary>
         protected DisplayRequest DisplayRequest { get; set; }
 
+        /// <summary>
+        /// The aggregated <see cref="ShareOperation"/>.
+        /// </summary>
+        internal ShareOperation ShareOperation { private get; set; }
+
         protected BaseController(Page parent)
         {
             ParentPage = parent;
-        }
-
-        /// <summary>
-        /// Navigates back to the main page.
-        /// </summary>
-        protected void NavigateBackHome()
-        {
-            ParentPage.Frame.Navigate(typeof(MainPage));
         }
 
         /// <summary>
@@ -68,6 +66,30 @@ namespace SimpleZIP_UI.Presentation.Controller
             var dialog = new EnterPasswordDialog(fileName);
             await dialog.ShowAsync();
             return dialog.Password;
+        }
+
+        /// <summary>
+        /// Checks if this controller was created for a share target event.
+        /// </summary>
+        /// <returns>True if share target is active, false otherwise.</returns>
+        internal bool IsShareTargetActivated()
+        {
+            return ShareOperation != null;
+        }
+
+        /// <summary>
+        /// Navigates back to the main page considering <see cref="ShareOperation"/>.
+        /// </summary>
+        internal void NavigateBackHome()
+        {
+            if (ShareOperation != null)
+            {
+                ShareOperation.ReportCompleted();
+            }
+            else
+            {
+                ParentPage.Frame.Navigate(typeof(MainPage));
+            }
         }
 
         /// <summary>
@@ -103,8 +125,8 @@ namespace SimpleZIP_UI.Presentation.Controller
                     }
                 case Result.Status.PartialFail:
                     {
-                        var message = result.VerboseFlag 
-                                ? result.Message 
+                        var message = result.VerboseFlag
+                                ? result.Message
                                 : I18N.Resources.GetString("NotAllProcessed/Text");
                         dialog = DialogFactory.CreateErrorDialog(message);
                         break;

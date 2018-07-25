@@ -1,0 +1,49 @@
+﻿<Page
+    x:Class="SimpleZIP_UI.Presentation.View.ShareTargetOptionsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" 
+          VerticalAlignment="Center" HorizontalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" x:Uid="WhatWouldYouLikeToDo" Text="" TextWrapping="NoWrap" FontSize="20px" FontWeight="Bold"/>
+        <Button Grid.Row="1" Width="280" Height="64" MaxHeight="75" Margin="0,32,32,0" 
+                VerticalContentAlignment="Center" Tapped="CompressFilesButton_OnTapped"
+                Foreground="{ThemeResource ButtonForegroundThemeBrush}" 
+                Background="{ThemeResource ButtonBackgroundThemeBrush}" 
+                BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontSize="20" FontFamily="Segoe MDL2 Assets" Text="&#xE73F;" Margin="0,0,32,0" />
+                <TextBlock x:Uid="CompressArchive" FontWeight="Normal" FontSize="16" CharacterSpacing="32" Text="" TextWrapping="Wrap" />
+            </StackPanel>
+        </Button>
+        <Button x:Name="ExtractButton" Grid.Row="2" Width="280" Height="64" MaxHeight="75" Margin="0,32,0,0" 
+                VerticalContentAlignment="Center" Tapped="ExtractButton_OnTapped" Visibility="Collapsed"
+                Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" 
+                BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontSize="20" FontFamily="Segoe MDL2 Assets" Text="&#xEE71;" Margin="0,0,32,0" />
+                <TextBlock x:Uid="ExtractArchive" FontWeight="Normal" FontSize="16" CharacterSpacing="32" Text="" TextWrapping="Wrap" />
+            </StackPanel>
+        </Button>
+        <Button Grid.Row="3" Width="280" Height="64" MaxHeight="75" Margin="0,32,0,0" 
+                VerticalContentAlignment="Center" Tapped="ComputeHashes_OnTapped"
+                Foreground="{ThemeResource ButtonForegroundThemeBrush}" 
+                Background="{ThemeResource ButtonBackgroundThemeBrush}" 
+                BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontSize="20" FontFamily="Segoe MDL2 Assets" Text="&#xEDAD;" Margin="0,0,32,0" />
+                <TextBlock x:Uid="ComputeHash" FontWeight="Normal" FontSize="16" CharacterSpacing="32" Text="" TextWrapping="Wrap" />
+            </StackPanel>
+        </Button>
+    </Grid>
+</Page>

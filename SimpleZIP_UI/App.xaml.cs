@@ -23,10 +23,12 @@ using System.Diagnostics;
 #endif
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using SimpleZIP_UI.Presentation.Handler;
 #if !DEBUG
 using Microsoft.Services.Store.Engagement;
 #endif
@@ -123,17 +125,14 @@ namespace SimpleZIP_UI
                     engagementManager.ParseArgumentsAndTrackAppLaunch(toastActivationArgs.Argument);
                 }
             }
-            catch (Exception)
+            catch
             {
                 // ignore
             }
 #endif
         }
 
-        /// <summary>
-        /// Invoked when file has been opened via file explorer.
-        /// </summary>
-        /// <param name="args">Consists of event parameters.</param>
+        /// <inheritdoc />
         protected override void OnFileActivated(FileActivatedEventArgs args)
         {
             base.OnFileActivated(args);
@@ -145,6 +144,25 @@ namespace SimpleZIP_UI
             rootFrame.Navigate(destination, args);
             Window.Current.Content = rootFrame;
             Window.Current.Activate();
+        }
+
+        /// <inheritdoc />
+        protected override async void OnShareTargetActivated(ShareTargetActivatedEventArgs args)
+        {
+            base.OnShareTargetActivated(args);
+            var shareOperation = args.ShareOperation;
+            // only StorageItems are supported, hence return if none are present
+            if (!shareOperation.Data.Contains(StandardDataFormats.StorageItems)) return;
+
+            var handler = new ShareTargetHandler();
+            string message = await handler.Handle(shareOperation);
+
+            if (!string.IsNullOrEmpty(message))
+            {
+                shareOperation.ReportCompleted();
+                // Error message doesn't seem to be displayed.
+                //shareOperation.ReportError(message);
+            }
         }
 
         /// <summary>

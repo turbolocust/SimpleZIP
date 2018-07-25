@@ -53,6 +53,7 @@ namespace SimpleZIP_UI.Presentation.View
         {
             InitializeComponent();
             _controller = new DecompressionPageController(this);
+            _selectedItems = new List<ExtractableItem>(0);
         }
 
         private async void PickOutputFolder()
@@ -90,7 +91,7 @@ namespace SimpleZIP_UI.Presentation.View
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 _controller.CreateResultDialog(result).ShowAsync();
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                Frame.Navigate(typeof(MainPage));
+                _controller.NavigateBackHome();
             }
             else
             {
@@ -187,9 +188,10 @@ namespace SimpleZIP_UI.Presentation.View
                 }
             }
             // navigated from MainPage
-            else if (args.Parameter is IReadOnlyList<ExtractableItem> items)
+            else if (args.Parameter is NavigationArgs navigationArgs)
             {
-                _selectedItems = items;
+                _selectedItems = navigationArgs.ExtractableItems;
+                _controller.ShareOperation = navigationArgs.ShareOperation;
             }
             // populate list
             foreach (var item in _selectedItems)

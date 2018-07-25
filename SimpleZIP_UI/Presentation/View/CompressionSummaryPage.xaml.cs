@@ -160,7 +160,12 @@ namespace SimpleZIP_UI.Presentation.View
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                     FinishOperation();
-                    //Frame.Navigate(typeof(MainPage));
+                    if (_controller.IsShareTargetActivated()
+                        && result.StatusCode == Result.Status.Success)
+                    {
+                        // leave if share target activated and success
+                        _controller.NavigateBackHome();
+                    }
                 }
             }
             else
@@ -314,7 +319,10 @@ namespace SimpleZIP_UI.Presentation.View
         /// <inheritdoc />
         protected override void OnNavigatedTo(NavigationEventArgs args)
         {
-            _selectedFiles = args.Parameter as IReadOnlyList<StorageFile>;
+            if (!(args.Parameter is NavigationArgs navigationArgs)) return;
+
+            _selectedFiles = navigationArgs.StorageFiles;
+            _controller.ShareOperation = navigationArgs.ShareOperation;
 
             if (_selectedFiles == null) return;
 

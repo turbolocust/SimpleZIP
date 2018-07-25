@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2018 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,12 +17,8 @@
 // 
 // ==--==
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Windows.Storage;
 using Windows.UI.Xaml.Controls;
-using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Presentation.Factory;
 using SimpleZIP_UI.Presentation.View;
 
@@ -86,6 +82,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             {
                 _actionTriggered = false;
             }
+
             return success;
         }
 
@@ -95,7 +92,10 @@ namespace SimpleZIP_UI.Presentation.Controller
             var files = await picker.PickMultipleFilesAsync();
 
             if (!(files?.Count > 0)) return false;
-            ParentPage.Frame.Navigate(typeof(CompressionSummaryPage), files);
+
+            var args = new NavigationArgs(files);
+            ParentPage.Frame.Navigate(typeof(CompressionSummaryPage), args);
+
             return true;
         }
 
@@ -105,7 +105,10 @@ namespace SimpleZIP_UI.Presentation.Controller
             var files = await picker.PickMultipleFilesAsync();
 
             if (!(files?.Count > 0)) return false;
-            ParentPage.Frame.Navigate(typeof(DecompressionSummaryPage), ConvertFiles(files));
+
+            var args = NavigationArgs.ForDecompressionSummaryPage(files);
+            ParentPage.Frame.Navigate(typeof(DecompressionSummaryPage), args);
+
             return true;
         }
 
@@ -116,6 +119,7 @@ namespace SimpleZIP_UI.Presentation.Controller
 
             if (file == null) return false;
             ParentPage.Frame.Navigate(typeof(BrowseArchivePage), file);
+
             return true;
         }
 
@@ -125,20 +129,11 @@ namespace SimpleZIP_UI.Presentation.Controller
             var files = await picker.PickMultipleFilesAsync();
 
             if (!(files?.Count > 0)) return false;
-            ParentPage.Frame.Navigate(typeof(MessageDigestPage), files);
-            return true;
-        }
 
-        /// <summary>
-        /// Converts the specified collection to objects of type <see cref="ExtractableItem"/>.
-        /// </summary>
-        /// <param name="files">The files to be converted.</param>
-        /// <returns>A list which consists of <see cref="ExtractableItem"/> objects.</returns>
-        private static IReadOnlyList<ExtractableItem> ConvertFiles(IReadOnlyCollection<StorageFile> files)
-        {
-            var items = new List<ExtractableItem>(files.Count);
-            items.AddRange(files.Select(file => new ExtractableItem(file.Name, file)));
-            return items;
+            var args = new NavigationArgs(files);
+            ParentPage.Frame.Navigate(typeof(MessageDigestPage), args);
+
+            return true;
         }
     }
 }

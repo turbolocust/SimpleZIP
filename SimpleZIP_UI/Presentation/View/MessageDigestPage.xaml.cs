@@ -204,9 +204,10 @@ namespace SimpleZIP_UI.Presentation.View
         /// <inheritdoc />
         protected override async void OnNavigatedTo(NavigationEventArgs args)
         {
-            if (args.Parameter is IReadOnlyList<StorageFile> files)
+            if (args.Parameter is NavigationArgs navigationArgs)
             {
-                _selectedFiles = files;
+                _selectedFiles = navigationArgs.StorageFiles;
+                _controller.ShareOperation = navigationArgs.ShareOperation;
                 await PopulateListBox();
             }
         }

@@ -145,9 +145,14 @@
     <Compile Include="Presentation\Controller\SummaryPageController.cs" />
     <Compile Include="Application\ProgressManager.cs" />
     <Compile Include="Presentation\Handler\ArchiveHistoryHandler.cs" />
+    <Compile Include="Presentation\Handler\ShareTargetHandler.cs" />
+    <Compile Include="Presentation\NavigationArgs.cs" />
     <Compile Include="Presentation\View\Converter\InverseBoolToVisibilityConverter.cs" />
     <Compile Include="Presentation\View\Dialog\EnterPasswordDialog.xaml.cs">
       <DependentUpon>EnterPasswordDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\View\ShareTargetOptionsPage.xaml.cs">
+      <DependentUpon>ShareTargetOptionsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="Presentation\View\Converter\NegateBooleanConverter.cs" />
@@ -282,6 +287,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Presentation\View\Dialog\SettingsDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\View\ShareTargetOptionsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
