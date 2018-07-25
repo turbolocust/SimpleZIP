@@ -28,7 +28,7 @@ using static SimpleZIP_UI.Presentation.View.Model.RecentArchiveModel;
 
 namespace SimpleZIP_UI.Presentation.Handler
 {
-    internal class ArchiveHistoryHandler
+    internal static class ArchiveHistoryHandler
     {
         public const string DefaultDateFormat = @"dd/MM/yyyy - hh:mm tt";
 
