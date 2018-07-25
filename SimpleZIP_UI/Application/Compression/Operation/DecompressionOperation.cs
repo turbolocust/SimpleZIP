@@ -96,9 +96,9 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         protected override void SetAlgorithm(DecompressionInfo info)
         {
             var fileType = FileUtils.GetFileNameExtension(info.Item.Archive.Name);
-            // try to get enum type by filename extension, which is the key
-            if (Archives.ArchiveFileTypes.TryGetValue(fileType, out var value)
-                || Archives.ArchiveExtendedFileTypes.TryGetValue(fileType, out value))
+            var value = Archives.DetermineArchiveTypeByFileExtension(fileType);
+
+            if (value != Archives.ArchiveType.Unknown)
             {
                 Algorithm = Archives.DetermineAlgorithm(value);
             }

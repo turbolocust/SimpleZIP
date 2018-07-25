@@ -45,7 +45,7 @@ namespace SimpleZIP_UI.Presentation.View.Dialog
         {
             if (sender.Equals(PasswordBox) && args.Key == VirtualKey.Enter)
             {
-                ContentDialog.Hide();
+                ThisDialog.Hide();
             }
         }
     }
