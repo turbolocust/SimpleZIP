@@ -453,4 +453,12 @@
     <value>Archiv konnte nicht gelesen werden. Wahrscheinlich stimmt das Passwort nicht oder die Verschlüsselung wird nicht unterstützt.</value>
     <comment>Informs the user that there has been an error reading an archive with a set password.</comment>
   </data>
+  <data name="ErrorNoFilesProvided.Text" xml:space="preserve">
+    <value>No valid files provided.</value>
+    <comment>Tells the user that no valid files have been provided.</comment>
+  </data>
+  <data name="WhatWouldYouLikeToDo.Text" xml:space="preserve">
+    <value>Was möchtest du tun?</value>
+    <comment>Asks the user what he/she would like to do.</comment>
+  </data>
 </root>
