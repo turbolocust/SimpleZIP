@@ -144,11 +144,11 @@ namespace SimpleZIP_UI.Application.Compression
         }
 
         /// <summary>
-        /// Tries to determine the <see cref="ArchiveType"/> of the specified file.
+        /// Determines the <see cref="ArchiveType"/> of the specified file.
         /// </summary>
         /// <param name="file">The archive to be checked.</param>
         /// <param name="password">The password for the file if encrypted.</param>
-        /// <returns></returns>
+        /// <returns>A task which returns the determined <see cref="ArchiveType"/>.</returns>
         /// <exception cref="CryptographicException">
         /// Thrown if no or wrong password has been provided.</exception>
         /// <exception cref="InvalidArchiveTypeException">
@@ -182,6 +182,23 @@ namespace SimpleZIP_UI.Application.Compression
             }
 
             return archiveType;
+        }
+
+        /// <summary>
+        /// Determines the <see cref="ArchiveType"/> of the specified file
+        /// only considering its filename extension.
+        /// </summary>
+        /// <param name="ext">The filename extension of the archive.</param>
+        /// <returns>The determined <see cref="ArchiveType"/>.</returns>
+        internal static ArchiveType DetermineArchiveTypeByFileExtension(string ext)
+        {
+            bool isArchive;
+            if (!(isArchive = ArchiveFileTypes.TryGetValue(ext, out var archiveType)))
+            {
+                isArchive = ArchiveExtendedFileTypes.TryGetValue(ext, out archiveType);
+            }
+
+            return isArchive ? archiveType : ArchiveType.Unknown;
         }
 
         /// <summary>
