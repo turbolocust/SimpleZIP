@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     DataContext="{Binding RelativeSource={RelativeSource Self}}"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
 
     <Grid Background="Transparent">
@@ -13,11 +14,13 @@
             <RowDefinition Height="7*"/>
         </Grid.RowDefinitions>
         <Button Visibility="Visible" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" FontSize="20" Grid.Row="0"
-            Width="50" Height="50" Background="Transparent" Tapped="HamburgerButton_OnTapped" Foreground="{ThemeResource ButtonForegroundThemeBrush}"/>
+                Width="50" Height="50" Background="Transparent" Tapped="HamburgerButton_OnTapped" 
+                Foreground="{ThemeResource ButtonForegroundThemeBrush}"/>
         <SplitView x:Name="MenuSplitView" DisplayMode="CompactInline" IsPaneOpen="True" Grid.Row="1"
-               CompactPaneLength="0" VerticalContentAlignment="Stretch" VerticalAlignment="Stretch" OpenPaneLength="320">
+                   CompactPaneLength="0" VerticalContentAlignment="Stretch" VerticalAlignment="Stretch" 
+                   OpenPaneLength="320" Background="Transparent" PaneBackground="{ThemeResource SystemControlAcrylicElementBrush}">
             <SplitView.Pane>
-                <Grid>
+                <Grid Background="Transparent">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="5*" />
                         <RowDefinition Height="5*" />
