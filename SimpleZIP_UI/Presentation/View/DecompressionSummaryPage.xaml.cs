@@ -66,13 +66,13 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        private void AbortButton_Tap(object sender, TappedRoutedEventArgs args)
+        private void AbortButton_OnTapped(object sender, TappedRoutedEventArgs args)
         {
             AbortButtonToolTip.IsOpen = true;
             _controller.AbortButtonAction();
         }
 
-        private async void StartButton_Tap(object sender, TappedRoutedEventArgs args)
+        private async void StartButton_OnTapped(object sender, TappedRoutedEventArgs args)
         {
             if (await _controller.CheckOutputFolder())
             {
@@ -88,7 +88,7 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        private void OutputPathButton_Tap(object sender, TappedRoutedEventArgs args)
+        private void OutputPathButton_OnTapped(object sender, TappedRoutedEventArgs args)
         {
             PickOutputFolder();
         }

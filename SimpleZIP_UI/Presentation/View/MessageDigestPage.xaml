@@ -29,7 +29,7 @@
                 <ComboBoxItem Content="SHA384"/>
                 <ComboBoxItem Content="SHA512"/>
             </ComboBox>
-            <ToggleSwitch x:Name="LowercaseHashToggleSwitch" Toggled="LowercaseHashToggleSwitch_Toggled" Margin="0,0,24,0">
+            <ToggleSwitch x:Name="LowercaseHashToggleSwitch" Toggled="LowercaseHashToggleSwitch_OnToggled" Margin="0,0,24,0">
                 <TextBlock x:Uid="LowerCaseHashToggleSwitch" Text="" TextWrapping="Wrap"/>
             </ToggleSwitch>
         </StackPanel>
@@ -51,11 +51,11 @@
                                 <ColumnDefinition Width="1.5*"/>
                                 <ColumnDefinition Width="7.0*"/>
                             </Grid.ColumnDefinitions>
-                            <Button Tapped="ViewFullHashButton_Tap" Grid.Row="0" Grid.RowSpan="2"
+                            <Button Tapped="ViewFullHashButton_OnTapped" Grid.Row="0" Grid.RowSpan="2"
                                     Grid.Column="0" Margin="0,0,0,0" Width="40" Background="Transparent">
                                 <SymbolIcon Symbol="View"/>
                             </Button>
-                            <Button Tapped="CopyHashButton_Tap" Grid.Row="0" Grid.RowSpan="2"
+                            <Button Tapped="CopyHashButton_OnTapped" Grid.Row="0" Grid.RowSpan="2"
                                     Grid.Column="1" Margin="0,0,0,0" Width="40" Background="Transparent">
                                 <SymbolIcon Symbol="Copy"/>
                             </Button>
@@ -68,7 +68,7 @@
             </ListBox>
         </ScrollViewer>
         <StackPanel Grid.Row="3" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,8,16,8">
-            <Button Tapped="CopyAllButton_Tap" IsEnabled="True" Width="120" MinHeight="44" Height="50" MaxHeight="60"
+            <Button Tapped="CopyAllButton_OnTapped" IsEnabled="True" Width="120" MinHeight="44" Height="50" MaxHeight="60"
                     Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                 <TextBlock x:Uid="CopyAll" Text="" TextWrapping="Wrap" />
             </Button>

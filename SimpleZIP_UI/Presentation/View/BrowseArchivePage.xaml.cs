@@ -69,17 +69,17 @@ namespace SimpleZIP_UI.Presentation.View
             ProgressBar.Visibility = Visibility.Visible;
         }
 
-        private void ExtractWholeArchiveButton_Tap(object sender, TappedRoutedEventArgs args)
+        private void ExtractWholeArchiveButton_OnTapped(object sender, TappedRoutedEventArgs args)
         {
             _controller.ExtractWholeArchiveButtonAction();
         }
 
-        private void ExtractSelectedEntriesButton_Tap(object sender, TappedRoutedEventArgs args)
+        private void ExtractSelectedEntriesButton_OnTapped(object sender, TappedRoutedEventArgs args)
         {
             _controller.ExtractSelectedEntriesButtonAction(_selectedModels, _nodeStack.Peek());
         }
 
-        private void NavigateUpButton_Tap(object sender, TappedRoutedEventArgs args)
+        private void NavigateUpButton_OnTapped(object sender, TappedRoutedEventArgs args)
         {
             if (Window.Current.Content is Frame frame && frame.CanGoBack)
             {

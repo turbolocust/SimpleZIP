@@ -130,7 +130,7 @@ namespace SimpleZIP_UI.Presentation.View
             await PopulateListBox();
         }
 
-        private async void ViewFullHashButton_Tap(object sender, TappedRoutedEventArgs args)
+        private async void ViewFullHashButton_OnTapped(object sender, TappedRoutedEventArgs args)
         {
             if (!(args.OriginalSource is FrameworkElement element)) return;
             if (element.DataContext is MessageDigestModel model)
@@ -140,7 +140,7 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        private void CopyHashButton_Tap(object sender, TappedRoutedEventArgs args)
+        private void CopyHashButton_OnTapped(object sender, TappedRoutedEventArgs args)
         {
             if (!(args.OriginalSource is FrameworkElement element)) return;
             if (element.DataContext is MessageDigestModel model)
@@ -150,7 +150,7 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        private void CopyAllButton_Tap(object sender, TappedRoutedEventArgs args)
+        private void CopyAllButton_OnTapped(object sender, TappedRoutedEventArgs args)
         {
             var stringBuilder = new StringBuilder();
             foreach (var model in MessageDigestModels)
@@ -166,7 +166,7 @@ namespace SimpleZIP_UI.Presentation.View
                 I18N.Resources.GetString("CopiedToClipboard/Text"), 4, true);
         }
 
-        private void LowercaseHashToggleSwitch_Toggled(object sender, RoutedEventArgs args)
+        private void LowercaseHashToggleSwitch_OnToggled(object sender, RoutedEventArgs args)
         {
             foreach (var model in MessageDigestModels)
             {

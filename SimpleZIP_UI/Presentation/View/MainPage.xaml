@@ -13,7 +13,7 @@
             <RowDefinition Height="7*"/>
         </Grid.RowDefinitions>
         <Button Visibility="Visible" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" FontSize="20" Grid.Row="0"
-            Width="50" Height="50" Background="Transparent" Tapped="HamburgerButton_Tap" Foreground="{ThemeResource ButtonForegroundThemeBrush}"/>
+            Width="50" Height="50" Background="Transparent" Tapped="HamburgerButton_OnTapped" Foreground="{ThemeResource ButtonForegroundThemeBrush}"/>
         <SplitView x:Name="MenuSplitView" DisplayMode="CompactInline" IsPaneOpen="True" Grid.Row="1"
                CompactPaneLength="0" VerticalContentAlignment="Stretch" VerticalAlignment="Stretch" OpenPaneLength="320">
             <SplitView.Pane>
@@ -23,25 +23,25 @@
                         <RowDefinition Height="5*" />
                     </Grid.RowDefinitions>
                     <StackPanel Background="Transparent" VerticalAlignment="Top" Grid.Row="0">
-                        <Button Height="50" Background="Transparent" Tapped="OpenArchiveButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                        <Button Height="50" Background="Transparent" Tapped="OpenArchiveButton_OnTapped" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                             <StackPanel Orientation="Horizontal">
                                 <SymbolIcon Symbol="OpenFile"/>
                                 <TextBlock x:Uid="OpenArchive" Text="" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
                             </StackPanel>
                         </Button>
-                        <Button Height="50" Background="Transparent" Tapped="CalculateHashesButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                        <Button Height="50" Background="Transparent" Tapped="CalculateHashesButton_OnTapped" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                             <StackPanel Orientation="Horizontal">
                                 <SymbolIcon Symbol="Calculator"/>
                                 <TextBlock x:Uid="ComputeHash" Text="" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
                             </StackPanel>
                         </Button>
-                        <Button Height="50" Background="Transparent" Tapped="GetSourceButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                        <Button Height="50" Background="Transparent" Tapped="GetSourceButton_OnTapped" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                             <StackPanel Orientation="Horizontal">
                                 <SymbolIcon Symbol="World"/>
                                 <TextBlock x:Uid="GetSourceCode" Text="" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
                             </StackPanel>
                         </Button>
-                        <Button Height="50" Background="Transparent" Tapped="AboutMenuButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                        <Button Height="50" Background="Transparent" Tapped="AboutMenuButton_OnTapped" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                             <StackPanel Orientation="Horizontal">
                                 <SymbolIcon Symbol="ContactInfo"/>
                                 <TextBlock x:Uid="HelpFeedback" Text="" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
@@ -49,7 +49,7 @@
                         </Button>
                     </StackPanel>
                     <StackPanel Background="Transparent" VerticalAlignment="Bottom" Grid.Row="1">
-                        <Button Height="50" Background="Transparent" Tapped="SettingsMenuButton_Tap" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                        <Button Height="50" Background="Transparent" Tapped="SettingsMenuButton_OnTapped" Width="320" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                             <StackPanel Orientation="Horizontal">
                                 <SymbolIcon Symbol="Setting"/>
                                 <TextBlock x:Uid="Settings" Text="" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" />
@@ -59,20 +59,20 @@
                 </Grid>
             </SplitView.Pane>
             <SplitView.Content>
-                <Pivot x:Name="Pivot" Margin="32,0,0,0" Padding="0,8,0,0" SelectionChanged="Pivot_SelectionChanged" IsHeaderItemsCarouselEnabled="True">
+                <Pivot x:Name="Pivot" Margin="32,0,0,0" Padding="0,8,0,0" SelectionChanged="Pivot_OnSelectionChanged" IsHeaderItemsCarouselEnabled="True">
                     <Pivot.Title>
                         <TextBlock Text="SimpleZIP" FontSize="28" FontStyle="Normal" CharacterSpacing="32" FontWeight="Bold" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
                     </Pivot.Title>
                     <Pivot.RightHeader>
                         <CommandBar x:Name="CommandBar" ClosedDisplayMode="Compact" Background="Transparent">
-                            <AppBarButton x:Name="CopyPathButton" x:Uid="CopyPath" Icon="Copy" Label="" IsEnabled="False" Tapped="CopyPathButton_Tap"/>
+                            <AppBarButton x:Name="CopyPathButton" x:Uid="CopyPath" Icon="Copy" Label="" IsEnabled="False" Tapped="CopyPathButton_OnTapped"/>
                             <!-- <AppBarSeparator Visibility="Visible" /> -->
-                            <AppBarButton x:Name="ClearListButton" x:Uid="ClearList" Icon="Delete" Label="" Tapped="ClearListButton_Tap"/>
+                            <AppBarButton x:Name="ClearListButton" x:Uid="ClearList" Icon="Delete" Label="" Tapped="ClearListButton_OnTapped"/>
                         </CommandBar>
                     </Pivot.RightHeader>
                     <PivotItem x:Uid="StartPivot" Header="">
                         <StackPanel x:Name="StackPanelStart" Background="Transparent" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
-                            <Button x:Name="CompressButton" Width="280" Height="64" MaxHeight="75" Margin="0,32,32,0" Tapped="CompressButton_Tap" VerticalContentAlignment="Center"
+                            <Button x:Name="CompressButton" Width="280" Height="64" MaxHeight="75" Margin="0,32,32,0" Tapped="CompressButton_OnTapped" VerticalContentAlignment="Center"
                                     Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" 
                                     BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                                 <StackPanel Orientation="Horizontal">
@@ -80,7 +80,7 @@
                                     <TextBlock x:Uid="CompressArchive" FontWeight="Normal" FontSize="16" CharacterSpacing="32" Text="" TextWrapping="Wrap" />
                                 </StackPanel>
                             </Button>
-                            <Button Width="280" Height="64" MaxHeight="75" Margin="0,32,0,0" Tapped="ExtractButton_Tap" VerticalContentAlignment="Center"
+                            <Button Width="280" Height="64" MaxHeight="75" Margin="0,32,0,0" Tapped="ExtractButton_OnTapped" VerticalContentAlignment="Center"
                                     Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" 
                                     BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                                 <StackPanel Orientation="Horizontal">
@@ -92,18 +92,18 @@
                     </PivotItem>
                     <PivotItem x:Uid="RecentPivot" Header="">
                         <ListView x:Name="RecentArchivesListView" ItemsSource="{Binding RecentArchiveModels}" SelectionMode="Single" CanDrag="False" Background="Transparent" 
-                                  HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" SelectionChanged="RecentArchivesListView_SelectionChanged">
+                                  HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" SelectionChanged="RecentArchivesListView_OnSelectionChanged">
                             <ListView.Header>
                                 <TextBlock x:Uid="RecentlyUsedArchives" Text="" Margin="0,0,0,16"/>
                             </ListView.Header>
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid x:Name="RecentArchivesGrid" Background="Transparent" Margin="0,8,0,8" 
-                                          Holding="RecentArchivesGrid_Holding" RightTapped="RecentArchivesGrid_RightTapped">
+                                          Holding="RecentArchivesGrid_OnHolding" RightTapped="RecentArchivesGrid_OnRightTapped">
                                         <FlyoutBase.AttachedFlyout>
                                             <MenuFlyout>
-                                                <MenuFlyoutItem x:Uid="LaunchFolderFlyoutItem" Text="" Tapped="LaunchFolderFlyoutItem_Tapped" />
-                                                <MenuFlyoutItem x:Uid="RemoveFromHistoryFlyoutItem" Text="" Tapped="RemoveFromHistoryFlyOutItem_Tapped"/>
+                                                <MenuFlyoutItem x:Uid="LaunchFolderFlyoutItem" Text="" Tapped="LaunchFolderFlyoutItem_OnTapped" />
+                                                <MenuFlyoutItem x:Uid="RemoveFromHistoryFlyoutItem" Text="" Tapped="RemoveFromHistoryFlyOutItem_OnTapped"/>
                                             </MenuFlyout>
                                         </FlyoutBase.AttachedFlyout>
                                         <Grid.RowDefinitions>

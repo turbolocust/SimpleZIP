@@ -127,32 +127,32 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        private void HamburgerButton_Tap(object sender, TappedRoutedEventArgs args)
+        private void HamburgerButton_OnTapped(object sender, TappedRoutedEventArgs args)
         {
             MenuSplitView.IsPaneOpen = !MenuSplitView.IsPaneOpen;
         }
 
-        private async void CompressButton_Tap(object sender, TappedRoutedEventArgs args)
+        private async void CompressButton_OnTapped(object sender, TappedRoutedEventArgs args)
         {
             await _controller.PerformAction(MainPageActionType.Compress);
         }
 
-        private async void ExtractButton_Tap(object sender, TappedRoutedEventArgs args)
+        private async void ExtractButton_OnTapped(object sender, TappedRoutedEventArgs args)
         {
             await _controller.PerformAction(MainPageActionType.Decompress);
         }
 
-        private async void OpenArchiveButton_Tap(object sender, TappedRoutedEventArgs args)
+        private async void OpenArchiveButton_OnTapped(object sender, TappedRoutedEventArgs args)
         {
             await _controller.PerformAction(MainPageActionType.OpenArchive);
         }
 
-        private async void CalculateHashesButton_Tap(object sender, TappedRoutedEventArgs args)
+        private async void CalculateHashesButton_OnTapped(object sender, TappedRoutedEventArgs args)
         {
             await _controller.PerformAction(MainPageActionType.HashCalculation);
         }
 
-        private async void GetSourceButton_Tap(object sender, TappedRoutedEventArgs args)
+        private async void GetSourceButton_OnTapped(object sender, TappedRoutedEventArgs args)
         {
             var dialog = DialogFactory.CreateConfirmationDialog(
                 I18N.Resources.GetString("OpenWebBrowserMessage/Text"),
@@ -165,17 +165,17 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        private async void SettingsMenuButton_Tap(object sender, TappedRoutedEventArgs args)
+        private async void SettingsMenuButton_OnTapped(object sender, TappedRoutedEventArgs args)
         {
             await new Dialog.SettingsDialog().ShowAsync();
         }
 
-        private async void AboutMenuButton_Tap(object sender, TappedRoutedEventArgs args)
+        private async void AboutMenuButton_OnTapped(object sender, TappedRoutedEventArgs args)
         {
             await new Dialog.AboutDialog().ShowAsync();
         }
 
-        private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs args)
+        private void Pivot_OnSelectionChanged(object sender, SelectionChangedEventArgs args)
         {
             if (sender is Pivot pivot)
             {
@@ -201,7 +201,7 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        private void ClearListButton_Tap(object sender, RoutedEventArgs args)
+        private void ClearListButton_OnTapped(object sender, RoutedEventArgs args)
         {
             if (RecentArchiveModels.Count > 0)
             {
@@ -211,7 +211,7 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        private void CopyPathButton_Tap(object sender, RoutedEventArgs args)
+        private void CopyPathButton_OnTapped(object sender, RoutedEventArgs args)
         {
             if (RecentArchivesListView.SelectedItem is RecentArchiveModel model)
             {
@@ -229,12 +229,12 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        private void RecentArchivesListView_SelectionChanged(object sender, SelectionChangedEventArgs args)
+        private void RecentArchivesListView_OnSelectionChanged(object sender, SelectionChangedEventArgs args)
         {
             CopyPathButton.IsEnabled = ((ListView)sender)?.SelectedItem != null;
         }
 
-        private void RecentArchivesGrid_RightTapped(object sender, RightTappedRoutedEventArgs args)
+        private void RecentArchivesGrid_OnRightTapped(object sender, RightTappedRoutedEventArgs args)
         {
             if (args.PointerDeviceType == PointerDeviceType.Mouse
                 && sender is FrameworkElement elem)
@@ -244,7 +244,7 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        private void RecentArchivesGrid_Holding(object sender, HoldingRoutedEventArgs args)
+        private void RecentArchivesGrid_OnHolding(object sender, HoldingRoutedEventArgs args)
         {
             if (args.HoldingState == HoldingState.Started
                 && sender is FrameworkElement elem)
@@ -254,7 +254,7 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        private async void LaunchFolderFlyoutItem_Tapped(object sender, RoutedEventArgs args)
+        private async void LaunchFolderFlyoutItem_OnTapped(object sender, RoutedEventArgs args)
         {
             if (sender is MenuFlyoutItem flyoutItem)
             {
@@ -280,7 +280,7 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        private void RemoveFromHistoryFlyOutItem_Tapped(object sender, TappedRoutedEventArgs args)
+        private void RemoveFromHistoryFlyOutItem_OnTapped(object sender, TappedRoutedEventArgs args)
         {
             if (sender is MenuFlyoutItem flyoutItem)
             {

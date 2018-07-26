@@ -124,7 +124,7 @@ namespace SimpleZIP_UI.Presentation.View
             _controller.AbortButtonAction();
         }
 
-        private async void StartButton_Tap(object sender, TappedRoutedEventArgs args)
+        private async void StartButton_OnTapped(object sender, TappedRoutedEventArgs args)
         {
             if (await _controller.CheckOutputFolder())
             {
@@ -164,12 +164,12 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        private void OutputPathButton_Tap(object sender, TappedRoutedEventArgs args)
+        private void OutputPathButton_OnTapped(object sender, TappedRoutedEventArgs args)
         {
             PickOutputFolder();
         }
 
-        private void ArchiveTypeComboBox_DropDownClosed(object sender, object e)
+        private void ArchiveTypeComboBox_OnDropDownClosed(object sender, object evtArgs)
         {
             if (_selectedFiles.Count <= 1) return;
             var selectedItem = (ComboBoxItem)ArchiveTypeComboBox.SelectedItem;
@@ -182,7 +182,7 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        private void ArchiveNameTextBox_TextChanged(object sender, TextChangedEventArgs args)
+        private void ArchiveNameTextBox_OnTextChanged(object sender, TextChangedEventArgs args)
         {
             var fileName = ArchiveNameTextBox.Text;
 
@@ -301,9 +301,9 @@ namespace SimpleZIP_UI.Presentation.View
         }
 
         /// <inheritdoc />
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs args)
         {
-            e.Cancel = _controller.Operation?.IsRunning ?? false;
+            args.Cancel = _controller.Operation?.IsRunning ?? false;
         }
 
         /// <inheritdoc />
