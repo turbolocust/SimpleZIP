@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2018 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -70,7 +70,7 @@ namespace SimpleZIP_UI_TEST
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
-                    //TODO: Load state from previously suspended application
+                    // ignore
                 }
 
                 // Place the frame in the current Window
@@ -105,7 +105,6 @@ namespace SimpleZIP_UI_TEST
         private static void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
-            //TODO: Save application state and stop any background activity
             deferral.Complete();
         }
     }
