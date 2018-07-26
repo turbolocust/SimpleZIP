@@ -141,10 +141,12 @@
     <Compile Include="I18N\Resources.cs" />
     <Compile Include="ISerializable.cs" />
     <Compile Include="Presentation\Controller\BrowseArchivePageController.cs" />
+    <Compile Include="Presentation\Controller\IGuiController.cs" />
     <Compile Include="Presentation\Controller\MessageDigestPageController.cs" />
     <Compile Include="Presentation\Controller\SummaryPageController.cs" />
     <Compile Include="Application\ProgressManager.cs" />
     <Compile Include="Presentation\Handler\ArchiveHistoryHandler.cs" />
+    <Compile Include="Presentation\INavigation.cs" />
     <Compile Include="Presentation\Handler\ShareTargetHandler.cs" />
     <Compile Include="Presentation\NavigationArgs.cs" />
     <Compile Include="Presentation\View\Converter\InverseBoolToVisibilityConverter.cs" />
