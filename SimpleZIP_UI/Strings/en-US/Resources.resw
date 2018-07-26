@@ -387,7 +387,7 @@
   </data>
   <data name="FileEncryptedMessage.Text" xml:space="preserve">
     <value>File seems to be encrypted. This is currently not supported.</value>
-    <comment>Informs the user that ecrypted files are not supported.</comment>
+    <comment>Informs the user that encrypted files are not supported.</comment>
   </data>
   <data name="RecentPivot.Header" xml:space="preserve">
     <value>Recent</value>
@@ -454,7 +454,7 @@
     <comment>Informs the user that there has been an error reading an archive with a set password.</comment>
   </data>
   <data name="ErrorNoFilesProvided.Text" xml:space="preserve">
-    <value>Keine gültigen Dateien zur Verfügung gestellt.</value>
+    <value>No valid files have been provided.</value>
     <comment>Tells the user that no valid files have been provided.</comment>
   </data>
   <data name="WhatWouldYouLikeToDo.Text" xml:space="preserve">
