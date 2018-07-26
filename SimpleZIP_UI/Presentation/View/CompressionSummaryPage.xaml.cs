@@ -35,7 +35,7 @@ using SimpleZIP_UI.Presentation.Handler;
 namespace SimpleZIP_UI.Presentation.View
 {
     /// <inheritdoc cref="Page" />
-    public sealed partial class CompressionSummaryPage : IDisposable
+    public sealed partial class CompressionSummaryPage : IDisposable, INavigation
     {
         /// <summary>
         /// The aggregated controller instance.
@@ -323,6 +323,19 @@ namespace SimpleZIP_UI.Presentation.View
         public void Dispose()
         {
             _controller.Dispose();
+        }
+
+        /// <inheritdoc />
+        public void Navigate(Type destinationPageType, object parameter = null)
+        {
+            if (parameter == null)
+            {
+                Frame.Navigate(destinationPageType);
+            }
+            else
+            {
+                Frame.Navigate(destinationPageType, parameter);
+            }
         }
     }
 }

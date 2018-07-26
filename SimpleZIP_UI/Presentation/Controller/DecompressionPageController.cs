@@ -19,7 +19,6 @@
 using System;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Controls;
 using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Compression.Operation;
 
@@ -27,7 +26,7 @@ namespace SimpleZIP_UI.Presentation.Controller
 {
     internal class DecompressionPageController : SummaryPageController<DecompressionInfo>
     {
-        internal DecompressionPageController(Page parent) : base(parent)
+        internal DecompressionPageController(INavigation navHandler) : base(navHandler)
         {
         }
 

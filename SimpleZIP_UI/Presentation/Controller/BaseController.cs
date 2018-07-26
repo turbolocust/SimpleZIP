@@ -23,7 +23,6 @@ using Windows.ApplicationModel.DataTransfer.ShareTarget;
 using Windows.System.Display;
 using Windows.UI.Notifications;
 using Windows.UI.Popups;
-using Windows.UI.Xaml.Controls;
 using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Presentation.Factory;
 using SimpleZIP_UI.Presentation.View;
@@ -31,15 +30,14 @@ using SimpleZIP_UI.Presentation.View.Dialog;
 
 namespace SimpleZIP_UI.Presentation.Controller
 {
+    /// <inheritdoc />
     /// <summary>
-    /// Base GUI controller. Other GUI controllers may derive from this one.
+    /// Base GUI controller. Other GUI controllers should derive from this one.
     /// </summary>
-    internal abstract class BaseController
+    internal abstract class BaseController : IGuiController
     {
-        /// <summary>
-        /// The parent page to whom this control belongs to.
-        /// </summary>
-        protected Page ParentPage { get; }
+        /// <inheritdoc />
+        public INavigation Navigation { get; }
 
         /// <summary>
         /// Display request which can be used to keep screen active.
@@ -51,9 +49,9 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// </summary>
         internal ShareOperation ShareOperation { private get; set; }
 
-        protected BaseController(Page parent)
+        protected BaseController(INavigation navHandler)
         {
-            ParentPage = parent;
+            Navigation = navHandler;
         }
 
         /// <summary>
@@ -88,7 +86,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             }
             else
             {
-                ParentPage.Frame.Navigate(typeof(MainPage));
+                Navigation.Navigate(typeof(MainPage));
             }
         }
 

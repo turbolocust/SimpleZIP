@@ -16,6 +16,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
+using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -27,7 +29,7 @@ namespace SimpleZIP_UI.Presentation.View
     /// <summary>
     /// Page which exists to let user choose the operation on a share event.
     /// </summary>
-    public sealed partial class ShareTargetOptionsPage
+    public sealed partial class ShareTargetOptionsPage : INavigation
     {
         private NavigationArgs _navigationArgs;
 
@@ -61,6 +63,19 @@ namespace SimpleZIP_UI.Presentation.View
             if (_navigationArgs != null && _navigationArgs.IsArchivesOnly)
             {
                 ExtractButton.Visibility = Visibility.Visible;
+            }
+        }
+
+        /// <inheritdoc />
+        public void Navigate(Type destinationPageType, object parameter = null)
+        {
+            if (parameter == null)
+            {
+                Frame.Navigate(destinationPageType);
+            }
+            else
+            {
+                Frame.Navigate(destinationPageType, parameter);
             }
         }
     }

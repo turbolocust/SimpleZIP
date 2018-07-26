@@ -34,7 +34,7 @@ using SimpleZIP_UI.Presentation.View.Model;
 namespace SimpleZIP_UI.Presentation.View
 {
     /// <inheritdoc cref="Page" />
-    public sealed partial class BrowseArchivePage
+    public sealed partial class BrowseArchivePage : INavigation
     {
         /// <summary>
         /// The aggregated controller instance.
@@ -194,6 +194,19 @@ namespace SimpleZIP_UI.Presentation.View
                 args.Cancel = true;
                 _nodeStack.Pop();
                 UpdateListContent(_nodeStack.Pop());
+            }
+        }
+
+        /// <inheritdoc />
+        public void Navigate(Type destinationPageType, object parameter = null)
+        {
+            if (parameter == null)
+            {
+                Frame.Navigate(destinationPageType);
+            }
+            else
+            {
+                Frame.Navigate(destinationPageType, parameter);
             }
         }
     }

@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2018 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.UI.Xaml.Controls;
 using SimpleZIP_UI.Application.Compression;
 using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Compression.Operation;
@@ -30,7 +29,7 @@ namespace SimpleZIP_UI.Presentation.Controller
 {
     internal class CompressionPageController : SummaryPageController<CompressionInfo>
     {
-        internal CompressionPageController(Page parent) : base(parent)
+        internal CompressionPageController(INavigation navHandler) : base(navHandler)
         {
         }
 

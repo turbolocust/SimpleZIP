@@ -40,7 +40,7 @@ using static SimpleZIP_UI.Presentation.Controller.MainPageController;
 namespace SimpleZIP_UI.Presentation.View
 {
     /// <inheritdoc cref="Page" />
-    public sealed partial class MainPage
+    public sealed partial class MainPage : INavigation
     {
         /// <summary>
         /// Constant which defines the preferred width of the view.
@@ -294,6 +294,19 @@ namespace SimpleZIP_UI.Presentation.View
         protected override void OnNavigatedTo(NavigationEventArgs args)
         {
             Frame.BackStack.Clear(); // going back is prohibited after aborting operation
+        }
+
+        /// <inheritdoc />
+        public void Navigate(Type destinationPageType, object parameter = null)
+        {
+            if (parameter == null)
+            {
+                Frame.Navigate(destinationPageType);
+            }
+            else
+            {
+                Frame.Navigate(destinationPageType, parameter);
+            }
         }
     }
 }

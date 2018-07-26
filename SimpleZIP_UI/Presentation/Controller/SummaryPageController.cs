@@ -22,7 +22,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.System.Display;
-using Windows.UI.Xaml.Controls;
 using SimpleZIP_UI.Application;
 using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Compression.Operation;
@@ -65,7 +64,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// </summary>
         internal ProgressManager<int> ProgressManager { get; }
 
-        internal SummaryPageController(Page parent) : base(parent)
+        internal SummaryPageController(INavigation navHandler) : base(navHandler)
         {
             DisplayRequest = new DisplayRequest();
             ProgressManager = ProgressManagers.CreateInexact();

@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2018 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,13 +16,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
-using Windows.UI.Xaml.Controls;
 
 namespace SimpleZIP_UI.Presentation.Controller
 {
     internal class MessageDigestPageController : BaseController
     {
-        internal MessageDigestPageController(Page parent) : base(parent)
+        internal MessageDigestPageController(
+            INavigation navHandler) : base(navHandler)
         {
         }
     }

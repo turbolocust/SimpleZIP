@@ -18,7 +18,6 @@
 // ==--==
 using System;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Controls;
 using SimpleZIP_UI.Presentation.Factory;
 using SimpleZIP_UI.Presentation.View;
 
@@ -34,7 +33,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             Compress, Decompress, OpenArchive, HashCalculation
         }
 
-        internal MainPageController(Page parent) : base(parent)
+        internal MainPageController(INavigation navHandler) : base(navHandler)
         {
         }
 
@@ -94,7 +93,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             if (!(files?.Count > 0)) return false;
 
             var args = new NavigationArgs(files);
-            ParentPage.Frame.Navigate(typeof(CompressionSummaryPage), args);
+            Navigation.Navigate(typeof(CompressionSummaryPage), args);
 
             return true;
         }
@@ -107,7 +106,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             if (!(files?.Count > 0)) return false;
 
             var args = new NavigationArgs(files);
-            ParentPage.Frame.Navigate(typeof(DecompressionSummaryPage), args);
+            Navigation.Navigate(typeof(DecompressionSummaryPage), args);
 
             return true;
         }
@@ -118,7 +117,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             var file = await picker.PickSingleFileAsync();
 
             if (file == null) return false;
-            ParentPage.Frame.Navigate(typeof(BrowseArchivePage), file);
+            Navigation.Navigate(typeof(BrowseArchivePage), file);
 
             return true;
         }
@@ -131,7 +130,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             if (!(files?.Count > 0)) return false;
 
             var args = new NavigationArgs(files);
-            ParentPage.Frame.Navigate(typeof(MessageDigestPage), args);
+            Navigation.Navigate(typeof(MessageDigestPage), args);
 
             return true;
         }

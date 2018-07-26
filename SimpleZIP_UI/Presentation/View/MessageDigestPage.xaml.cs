@@ -39,7 +39,7 @@ namespace SimpleZIP_UI.Presentation.View
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MessageDigestPage
+    public sealed partial class MessageDigestPage : INavigation
     {
         /// <summary>
         /// Models bound to the list box in view.
@@ -185,6 +185,19 @@ namespace SimpleZIP_UI.Presentation.View
                 _selectedFiles = navigationArgs.StorageFiles;
                 _controller.ShareOperation = navigationArgs.ShareOperation;
                 await PopulateListBox();
+            }
+        }
+
+        /// <inheritdoc />
+        public void Navigate(Type destinationPageType, object parameter = null)
+        {
+            if (parameter == null)
+            {
+                Frame.Navigate(destinationPageType);
+            }
+            else
+            {
+                Frame.Navigate(destinationPageType, parameter);
             }
         }
     }

@@ -21,7 +21,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.UI.Xaml.Controls;
 using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Compression.Reader;
 using SimpleZIP_UI.Application.Util;
@@ -50,7 +49,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// </summary>
         internal bool IsNavigating { get; private set; }
 
-        internal BrowseArchivePageController(Page parent) : base(parent)
+        internal BrowseArchivePageController(INavigation navHandler) : base(navHandler)
         {
         }
 
@@ -93,7 +92,7 @@ namespace SimpleZIP_UI.Presentation.Controller
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 DialogFactory.CreateErrorDialog(message).ShowAsync();
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                ParentPage.Frame.Navigate(typeof(MainPage));
+                Navigation.Navigate(typeof(MainPage));
             }
             finally
             {
@@ -136,7 +135,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         {
             IsNavigating = true;
             var args = new NavigationArgs(new[] { _archiveFile });
-            ParentPage.Frame.Navigate(typeof(DecompressionSummaryPage), args);
+            Navigation.Navigate(typeof(DecompressionSummaryPage), args);
         }
 
         /// <summary>
@@ -166,7 +165,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             {
                 IsNavigating = true;
                 var item = new ExtractableItem(_archiveFile.Name, _archiveFile, entries);
-                ParentPage.Frame.Navigate(typeof(DecompressionSummaryPage), new[] { item });
+                Navigation.Navigate(typeof(DecompressionSummaryPage), new[] { item });
             }
         }
     }
