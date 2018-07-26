@@ -118,22 +118,12 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        /// <summary>
-        /// Invoked when the abort button has been tapped.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private void AbortButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             AbortButtonToolTip.IsOpen = true;
             _controller.AbortButtonAction();
         }
 
-        /// <summary>
-        /// Invoked when the start button has been tapped.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private async void StartButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             if (await _controller.CheckOutputFolder())
@@ -174,23 +164,11 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-
-        /// <summary>
-        /// Invoked when the button holding the output path has been tapped.
-        /// As a result, the user can pick an output folder for the archive.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private void OutputPathButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             PickOutputFolder();
         }
 
-        /// <summary>
-        /// Invoked when combo box for choosing the archive type has been closed.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="e">The event object.</param>
         private void ArchiveTypeComboBox_DropDownClosed(object sender, object e)
         {
             if (_selectedFiles.Count <= 1) return;
@@ -204,11 +182,6 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        /// <summary>
-        /// Invoked when the text of the archive name input has beend modified.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private void ArchiveNameTextBox_TextChanged(object sender, TextChangedEventArgs args)
         {
             var fileName = ArchiveNameTextBox.Text;
@@ -230,11 +203,6 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        /// <summary>
-        /// Invoked when the tooltip for "ArchiveTypeButton" has been opened.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private void ArchiveTypeToolTip_OnOpened(object sender, RoutedEventArgs args)
         {
             var toolTip = (ToolTip)sender;

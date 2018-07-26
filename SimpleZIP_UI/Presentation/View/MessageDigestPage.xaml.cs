@@ -90,13 +90,15 @@ namespace SimpleZIP_UI.Presentation.View
                     // key for algorithm is text in combo box item
                     if (_messageDigestAlgorithm.SupportedAlgorithms.Contains(algorithmName))
                     {
-                        var (_, hashedValue) = await _messageDigestAlgorithm.ComputeHashValue(file, algorithmName);
+                        var (_, hashedValue) = await _messageDigestAlgorithm
+                            .ComputeHashValue(file, algorithmName);
                         if (LowercaseHashToggleSwitch.IsOn)
                         {
                             hashedValue = hashedValue.ToLowerInvariant();
                         }
                         var model = new MessageDigestModel(file.Name, file.Path, hashedValue);
-                        await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { MessageDigestModels.Add(model); });
+                        await Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                            () => { MessageDigestModels.Add(model); });
                     }
                 }
             }
@@ -122,22 +124,12 @@ namespace SimpleZIP_UI.Presentation.View
             Clipboard.SetContent(package);
         }
 
-        /// <summary>
-        /// Allows the user to select a specific hash algorithm.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
-        private async void HashAlgorithmComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs args)
+        private async void HashAlgorithmComboBox_OnSelectionChanged(
+            object sender, SelectionChangedEventArgs args)
         {
             await PopulateListBox();
         }
 
-        /// <summary>
-        /// Brings up a content dialog which shows the full hash value
-        /// and allows the user to select and copy the value.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private async void ViewFullHashButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             if (!(args.OriginalSource is FrameworkElement element)) return;
@@ -148,11 +140,6 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        /// <summary>
-        /// Allows the user to copy the selected hash value to the clipboard.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private void CopyHashButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             if (!(args.OriginalSource is FrameworkElement element)) return;
@@ -163,12 +150,6 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        /// <summary>
-        /// Copies all the hash values that have been computed to the clipboard
-        /// together with their file name and file path.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private void CopyAllButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             var stringBuilder = new StringBuilder();
@@ -185,11 +166,6 @@ namespace SimpleZIP_UI.Presentation.View
                 I18N.Resources.GetString("CopiedToClipboard/Text"), 4, true);
         }
 
-        /// <summary>
-        /// Converts all hash values in list to lower case.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private void LowercaseHashToggleSwitch_Toggled(object sender, RoutedEventArgs args)
         {
             foreach (var model in MessageDigestModels)

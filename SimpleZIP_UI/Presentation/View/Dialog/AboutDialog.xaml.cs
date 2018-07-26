@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2018 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -36,13 +36,8 @@ namespace SimpleZIP_UI.Presentation.View.Dialog
             PrimaryButtonText = I18N.Resources.GetString("ContentDialog/PrimaryButtonText");
         }
 
-        /// <summary>
-        /// Invoked when the primary button of this dialog has been pressed. 
-        /// This will simply hide the dialog.
-        /// </summary>
-        /// <param name="sender">The sender of the event.</param>
-        /// <param name="args">Consists of event parameters.</param>
-        private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        private void ContentDialog_PrimaryButtonClick(
+            ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             sender.Hide();
         }

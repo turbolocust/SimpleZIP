@@ -40,7 +40,7 @@ namespace SimpleZIP_UI.Presentation.View.Dialog
         {
             if (!Settings.TryGet(Settings.Keys.ArchiveHistorySize, out int curValue))
             {
-                curValue = (int) ArchiveHistoryHandler.MaxHistoryItems;
+                curValue = (int)ArchiveHistoryHandler.MaxHistoryItems;
             }
             return curValue;
         }
@@ -83,23 +83,12 @@ namespace SimpleZIP_UI.Presentation.View.Dialog
             SetToggleButtonsToggledState();
         }
 
-        /// <summary>
-        /// Invoked when the primary button of this dialog has been pressed. 
-        /// This will simply hide the dialog.
-        /// </summary>
-        /// <param name="sender">The sender of the event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender,
             ContentDialogButtonClickEventArgs args)
         {
             sender.Hide();
         }
 
-        /// <summary>
-        /// Invoked when a toggle button has been toggled. 
-        /// </summary>
-        /// <param name="sender">The sender of the event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private void ToggleSwitch_OnToggled(object sender, RoutedEventArgs args)
         {
             if (sender.Equals(BrowseArchiveToggleSwitch))
@@ -115,11 +104,6 @@ namespace SimpleZIP_UI.Presentation.View.Dialog
             }
         }
 
-        /// <summary>
-        /// Invoked when a toggle button belonging to the theme group has been toggled. 
-        /// </summary>
-        /// <param name="sender">The sender of the event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private void ThemeGroupToggleButton_OnChecked(object sender, RoutedEventArgs args)
         {
             string theme;
@@ -138,11 +122,6 @@ namespace SimpleZIP_UI.Presentation.View.Dialog
             Settings.PushOrUpdate(Settings.Keys.ApplicationThemeKey, theme);
         }
 
-        /// <summary>
-        /// Invoked when text has been changed in the textbox for archive history size.
-        /// </summary>
-        /// <param name="sender">The sender of the event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private void ArchiveHistorySizeTextBox_OnTextChanged(object sender, TextChangedEventArgs args)
         {
             if (sender is TextBox textBox)

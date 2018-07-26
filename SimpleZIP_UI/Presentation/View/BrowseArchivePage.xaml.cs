@@ -69,31 +69,16 @@ namespace SimpleZIP_UI.Presentation.View
             ProgressBar.Visibility = Visibility.Visible;
         }
 
-        /// <summary>
-        /// Invoked when the button to extract the whole archive has been tapped.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private void ExtractWholeArchiveButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             _controller.ExtractWholeArchiveButtonAction();
         }
 
-        /// <summary>
-        /// Invoked when the button to only extract the selected entries has been tapped.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private void ExtractSelectedEntriesButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             _controller.ExtractSelectedEntriesButtonAction(_selectedModels, _nodeStack.Peek());
         }
 
-        /// <summary>
-        /// Invoked when the button to navigate to previous parent (in hierarchy) has been tapped.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private void NavigateUpButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             if (Window.Current.Content is Frame frame && frame.CanGoBack)
@@ -103,11 +88,6 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        /// <summary>
-        /// Invoked when the selection in the list box has changed.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private void ItemsListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs args)
         {
             // add items from selection

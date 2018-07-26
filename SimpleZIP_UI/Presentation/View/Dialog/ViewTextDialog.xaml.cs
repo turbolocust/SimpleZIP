@@ -41,8 +41,8 @@ namespace SimpleZIP_UI.Presentation.View.Dialog
             Text = text;
         }
 
-        private void ContentDialog_PrimaryButtonClick(ContentDialog sender, 
-            ContentDialogButtonClickEventArgs args)
+        private void ContentDialog_PrimaryButtonClick(
+            ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             sender.Hide();
         }

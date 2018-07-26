@@ -127,62 +127,31 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        /// <summary>
-        /// Handles the event for the hamburger button (of split view).
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private void HamburgerButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             MenuSplitView.IsPaneOpen = !MenuSplitView.IsPaneOpen;
         }
 
-        /// <summary>
-        /// Allows the user to select files for compression.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private async void CompressButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             await _controller.PerformAction(MainPageActionType.Compress);
         }
 
-        /// <summary>
-        /// Allows the user to select archives for decompression.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private async void ExtractButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             await _controller.PerformAction(MainPageActionType.Decompress);
         }
 
-        /// <summary>
-        /// Allows the user to open an archive for exploring.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private async void OpenArchiveButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             await _controller.PerformAction(MainPageActionType.OpenArchive);
         }
 
-        /// <summary>
-        /// Allows the user to select files whose hashes are to be calculated.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private async void CalculateHashesButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             await _controller.PerformAction(MainPageActionType.HashCalculation);
         }
 
-        /// <summary>
-        /// Opens the project's homepage using the <see cref="Launcher"/>.
-        /// Brings up a confirmation dialog first to avoid accidental redirection. 
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private async void GetSourceButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             var dialog = DialogFactory.CreateConfirmationDialog(
@@ -196,31 +165,16 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        /// <summary>
-        /// Shows a settings dialog.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private async void SettingsMenuButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             await new Dialog.SettingsDialog().ShowAsync();
         }
 
-        /// <summary>
-        /// Shows a dialog with information about the application.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private async void AboutMenuButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             await new Dialog.AboutDialog().ShowAsync();
         }
 
-        /// <summary>
-        /// Reacts to the selection change of pivot items.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs args)
         {
             if (sender is Pivot pivot)
@@ -247,11 +201,6 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        /// <summary>
-        /// Clears the history of recently created archives.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private void ClearListButton_Tap(object sender, RoutedEventArgs args)
         {
             if (RecentArchiveModels.Count > 0)
@@ -262,11 +211,6 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        /// <summary>
-        /// Copies the path of the selected file to the clipboard.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private void CopyPathButton_Tap(object sender, RoutedEventArgs args)
         {
             if (RecentArchivesListView.SelectedItem is RecentArchiveModel model)
@@ -285,21 +229,11 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        /// <summary>
-        /// Handles selection change of items in the list consisting of recently created archives.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private void RecentArchivesListView_SelectionChanged(object sender, SelectionChangedEventArgs args)
         {
             CopyPathButton.IsEnabled = ((ListView)sender)?.SelectedItem != null;
         }
 
-        /// <summary>
-        /// Handles a right tap on an item in the list consisting of recently created archives.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private void RecentArchivesGrid_RightTapped(object sender, RightTappedRoutedEventArgs args)
         {
             if (args.PointerDeviceType == PointerDeviceType.Mouse
@@ -310,11 +244,6 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        /// <summary>
-        /// Handles the holding event on an item in the list consisting of recently created archives.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private void RecentArchivesGrid_Holding(object sender, HoldingRoutedEventArgs args)
         {
             if (args.HoldingState == HoldingState.Started
@@ -325,11 +254,6 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        /// <summary>
-        /// Reveals the selected archive in the file explorer.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private async void LaunchFolderFlyoutItem_Tapped(object sender, RoutedEventArgs args)
         {
             if (sender is MenuFlyoutItem flyoutItem)
@@ -356,11 +280,6 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        /// <summary>
-        /// Removes the selected archive from the history consisting of created archives.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private void RemoveFromHistoryFlyOutItem_Tapped(object sender, TappedRoutedEventArgs args)
         {
             if (sender is MenuFlyoutItem flyoutItem)
