@@ -23,6 +23,7 @@ Supported formats for decompression:
   - TAR+BZIP2
   - TAR+LZMA
   - RAR4
+  - RAR5
 
 Supported message digest algorithms:
   - MD5
@@ -31,7 +32,10 @@ Supported message digest algorithms:
   - SHA384
   - SHA512
 
-<br />This application makes use of the <a href="https://github.com/adamhathcock/sharpcompress">SharpCompress</a> library and depends on its quality when it comes to compression and decompression.
+<br />
+At the current state, this application supports encrypted archives of type ZIP (legacy encryption) and RAR4 (fully encrypted).
+<br />
+This application uses the <a href="https://github.com/adamhathcock/sharpcompress">SharpCompress</a> library and depends on its quality when it comes to compression and decompression. Unit tests exist to test updates of this library (see project _SimpleZIP_UI_TEST_). 
 <br /><br />
 
 # Development requirements
