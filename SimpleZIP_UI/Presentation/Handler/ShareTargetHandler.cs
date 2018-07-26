@@ -56,7 +56,7 @@ namespace SimpleZIP_UI.Presentation.Handler
                 var dest = typeof(ShareTargetOptionsPage);
 
                 var args = ConsistsOfArchivesOnly(files)
-                    ? NavigationArgs.ForDecompressionSummaryPage(files, shareOp)
+                    ? new NavigationArgs(files, shareOp, true)
                     : new NavigationArgs(files, shareOp);
 
                 rootFrame.Navigate(dest, args);

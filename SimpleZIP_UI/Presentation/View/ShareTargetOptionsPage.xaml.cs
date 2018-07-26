@@ -20,7 +20,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-using SimpleZIP_UI.Application.Util;
 
 namespace SimpleZIP_UI.Presentation.View
 {
@@ -59,8 +58,7 @@ namespace SimpleZIP_UI.Presentation.View
         protected override void OnNavigatedTo(NavigationEventArgs args)
         {
             _navigationArgs = args.Parameter as NavigationArgs;
-            // ReSharper disable once PossibleNullReferenceException
-            if (!_navigationArgs.ExtractableItems.IsNullOrEmpty())
+            if (_navigationArgs != null && _navigationArgs.IsArchivesOnly)
             {
                 ExtractButton.Visibility = Visibility.Visible;
             }

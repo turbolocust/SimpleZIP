@@ -106,7 +106,7 @@ namespace SimpleZIP_UI.Presentation.Controller
 
             if (!(files?.Count > 0)) return false;
 
-            var args = NavigationArgs.ForDecompressionSummaryPage(files);
+            var args = new NavigationArgs(files);
             ParentPage.Frame.Navigate(typeof(DecompressionSummaryPage), args);
 
             return true;

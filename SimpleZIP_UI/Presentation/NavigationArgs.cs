@@ -17,10 +17,8 @@
 // 
 // ==--==
 using System.Collections.Generic;
-using System.Linq;
 using Windows.ApplicationModel.DataTransfer.ShareTarget;
 using Windows.Storage;
-using SimpleZIP_UI.Application.Compression.Model;
 
 namespace SimpleZIP_UI.Presentation
 {
@@ -28,35 +26,17 @@ namespace SimpleZIP_UI.Presentation
     {
         public IReadOnlyList<StorageFile> StorageFiles { get; }
 
-        public IReadOnlyList<ExtractableItem> ExtractableItems { get; private set; }
-
         public ShareOperation ShareOperation { get; }
 
+        public bool IsArchivesOnly { get; }
+
         /// <inheritdoc />
-        public NavigationArgs(IReadOnlyList<StorageFile> files, ShareOperation shareOp = null)
+        public NavigationArgs(IReadOnlyList<StorageFile> files,
+            ShareOperation shareOp = null, bool archivesOnly = false)
         {
             StorageFiles = files;
             ShareOperation = shareOp;
-        }
-
-        /// <summary>
-        /// Converts each file in the specified list to <see cref="ExtractableItem"/>.
-        /// This will then set <see cref="ExtractableItems"/> of <see cref="NavigationArgs"/>.
-        /// </summary>
-        /// <param name="files">The files to be converted.</param>
-        /// <param name="shareOp">Optional share operation.</param>
-        /// <returns>A new instance of <see cref="NavigationArgs"/>.</returns>
-        internal static NavigationArgs ForDecompressionSummaryPage(
-            IReadOnlyList<StorageFile> files, ShareOperation shareOp = null)
-        {
-            // convert to ExtractableItem objects
-            var items = new List<ExtractableItem>(files.Count);
-            items.AddRange(files.Select(file => new ExtractableItem(file.Name, file)));
-
-            return new NavigationArgs(files, shareOp)
-            {
-                ExtractableItems = items
-            };
+            IsArchivesOnly = archivesOnly;
         }
     }
 }

@@ -66,23 +66,12 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        /// <summary>
-        /// Invoked when the abort button has been tapped.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private void AbortButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             AbortButtonToolTip.IsOpen = true;
             _controller.AbortButtonAction();
         }
 
-        /// <summary>
-        /// Invoked when the start button has been tapped.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown on fatal error.</exception>
         private async void StartButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             if (await _controller.CheckOutputFolder())
@@ -99,15 +88,17 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        /// <summary>
-        /// Invoked when the button holding the output path has been tapped.
-        /// As a result, the user can pick an output folder for the archive.
-        /// </summary>
-        /// <param name="sender">The sender of this event.</param>
-        /// <param name="args">Consists of event parameters.</param>
         private void OutputPathButton_Tap(object sender, TappedRoutedEventArgs args)
         {
             PickOutputFolder();
+        }
+
+        private static IReadOnlyList<ExtractableItem> ConvertFiles(
+            IReadOnlyCollection<StorageFile> files)
+        {
+            var items = new List<ExtractableItem>(files.Count);
+            items.AddRange(files.Select(file => new ExtractableItem(file.Name, file)));
+            return items;
         }
 
         /// <summary>
@@ -125,9 +116,11 @@ namespace SimpleZIP_UI.Presentation.View
         }
 
         /// <summary>
-        /// Sets the archiving operation as active. This results in the UI being busy.
+        /// Sets the archiving operation as active.
+        /// This results in the UI being busy.
         /// </summary>
-        /// <param name="isActive">True to set operation as active, false to set it as inactive.</param>
+        /// <param name="isActive">True to set operation as active,
+        /// false to set it as inactive.</param>
         private void SetOperationActive(bool isActive)
         {
             if (isActive)
@@ -190,7 +183,8 @@ namespace SimpleZIP_UI.Presentation.View
             // navigated from MainPage
             else if (args.Parameter is NavigationArgs navigationArgs)
             {
-                _selectedItems = navigationArgs.ExtractableItems;
+
+                _selectedItems = ConvertFiles(navigationArgs.StorageFiles);
                 _controller.ShareOperation = navigationArgs.ShareOperation;
             }
             // populate list
