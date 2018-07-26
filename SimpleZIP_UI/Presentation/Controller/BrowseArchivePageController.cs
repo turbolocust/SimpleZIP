@@ -135,8 +135,8 @@ namespace SimpleZIP_UI.Presentation.Controller
         internal void ExtractWholeArchiveButtonAction()
         {
             IsNavigating = true;
-            var item = new ExtractableItem(_archiveFile.Name, _archiveFile);
-            ParentPage.Frame.Navigate(typeof(DecompressionSummaryPage), new[] { item });
+            var args = new NavigationArgs(new[] { _archiveFile });
+            ParentPage.Frame.Navigate(typeof(DecompressionSummaryPage), args);
         }
 
         /// <summary>

@@ -77,8 +77,9 @@ namespace SimpleZIP_UI.I18N
             switch (ex)
             {
                 case SharpCompress.Common.CryptographicException _:
-                    // encrypted files are currently not supported
-                    message = "FileEncryptedMessage/Text";
+                    message = passwordSet
+                        ? "ErrorReadingArchiveWithPassword/Text"
+                        : "FileEncryptedMessage/Text"; // not all encryption types are supported
                     break;
                 case InvalidOperationException _:
                     if (file != null)
@@ -94,11 +95,7 @@ namespace SimpleZIP_UI.I18N
                     }
                     break;
                 default:
-                    if (passwordSet)
-                    {
-                        message = "ErrorReadingArchiveWithPassword/Text";
-                    }
-                    else if (acceptDefault)
+                    if (acceptDefault)
                     {
                         message = "ErrorReadingArchive/Text";
                     }

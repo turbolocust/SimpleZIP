@@ -193,7 +193,6 @@ namespace SimpleZIP_UI.Presentation.View
             // navigated from MainPage
             else if (args.Parameter is NavigationArgs navigationArgs)
             {
-
                 _selectedItems = ConvertFiles(navigationArgs.StorageFiles);
                 _controller.ShareOperation = navigationArgs.ShareOperation;
             }

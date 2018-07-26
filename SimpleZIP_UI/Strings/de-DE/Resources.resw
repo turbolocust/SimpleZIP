@@ -386,7 +386,7 @@
     <comment>Informs the user that the RAR5 archive format is not supported.</comment>
   </data>
   <data name="FileEncryptedMessage.Text" xml:space="preserve">
-    <value>Die Datei scheint verschlüsselt zu sein. Das wird momentan nicht unterstützt.</value>
+    <value>Die Datei scheint verschlüsselt zu sein. Leider wird diese Art der Verschlüsselung nicht unterstützt.</value>
     <comment>Informs the user that encrypted files are not supported.</comment>
   </data>
   <data name="RecentPivot.Header" xml:space="preserve">
