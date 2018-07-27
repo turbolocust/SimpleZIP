@@ -39,11 +39,10 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// <inheritdoc cref="SummaryPageController{T}.PerformOperation"/>
         protected override async Task<Result> PerformOperation(DecompressionInfo[] operationInfos)
         {
-            var subMessage = new StringBuilder();
             var resultMessage = new StringBuilder();
+            var verboseMessage = new StringBuilder();
             var statusCode = Result.Status.Fail;
-            var isVerbose = false;
-            var successCount = 0;
+            int successCount = 0;
 
             foreach (var operationInfo in operationInfos)
             {
@@ -67,18 +66,17 @@ namespace SimpleZIP_UI.Presentation.Controller
 
                     if (subResult.StatusCode != Result.Status.Success)
                     {
-                        isVerbose = subResult.VerboseFlag;
                         statusCode = Result.Status.PartialFail;
-                        subMessage.AppendLine(I18N.Resources
+                        resultMessage.AppendLine(I18N.Resources
                             .GetString("ArchiveNotExtracted/Text", item.DisplayName));
                     }
                     else
                     {
                         ++successCount;
                     }
-                    subMessage.AppendLine(subResult.Message);
-                    resultMessage.AppendLine(subMessage.ToString());
-                    subMessage.Clear();
+
+                    resultMessage.AppendLine(subResult.Message);
+                    verboseMessage.AppendLine(subResult.VerboseMessage);
                 }
                 catch (Exception ex)
                 {
@@ -89,7 +87,7 @@ namespace SimpleZIP_UI.Presentation.Controller
                         break;
                     }
                     statusCode = Result.Status.PartialFail;
-                    resultMessage.AppendLine(ex.Message);
+                    verboseMessage.AppendLine(ex.Message);
                 }
             }
 
@@ -102,7 +100,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             {
                 StatusCode = statusCode,
                 Message = resultMessage.ToString(),
-                VerboseFlag = isVerbose
+                VerboseMessage = verboseMessage.ToString()
             };
         }
     }

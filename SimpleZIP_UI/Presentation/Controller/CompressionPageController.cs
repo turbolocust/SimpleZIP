@@ -45,6 +45,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             var operationInfo = operationInfos[0]; // since use case doesn't support multiple operations
             string[] archiveNames; // names might change in case of file collision
             var resultMessage = new StringBuilder();
+            var verboseMessage = new StringBuilder();
             Result.Status statusCode;
 
             try
@@ -55,7 +56,8 @@ namespace SimpleZIP_UI.Presentation.Controller
                     ? await CompressSeparately(operationInfo)
                     : await Operation.Perform(operationInfo);
                 archiveNames = result.ArchiveNames;
-                resultMessage.Append(result.Message);
+                resultMessage.AppendLine(result.Message);
+                verboseMessage.AppendLine(result.VerboseMessage);
                 statusCode = result.StatusCode;
             }
             catch (Exception ex)
@@ -70,13 +72,14 @@ namespace SimpleZIP_UI.Presentation.Controller
                     statusCode = Result.Status.Fail;
                 }
                 archiveNames = new string[0];
-                resultMessage.AppendLine(ex.Message);
+                verboseMessage.AppendLine(ex.Message);
             }
 
             return new Result(archiveNames)
             {
                 StatusCode = statusCode,
-                Message = resultMessage.ToString()
+                Message = resultMessage.ToString(),
+                VerboseMessage = verboseMessage.ToString()
             };
         }
 

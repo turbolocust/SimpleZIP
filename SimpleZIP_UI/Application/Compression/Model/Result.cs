@@ -48,11 +48,11 @@ namespace SimpleZIP_UI.Application.Compression.Model
 
         internal Status StatusCode { get; set; }
 
-        internal string Message { get; set; }
+        internal string Message { get; set; } = string.Empty;
+
+        internal string VerboseMessage { get; set; } = string.Empty;
 
         internal TimeSpan ElapsedTime { get; set; }
-
-        internal bool VerboseFlag { get; set; } = false;
 
         public enum Status
         {

@@ -43,9 +43,10 @@ namespace SimpleZIP_UI.Application.Compression.Operation
 
             return await Task.Run(async () => // execute compression asynchronously
             {
-                var message = string.Empty;
-                var name = archiveName;
-                var isSuccess = false;
+                string message = string.Empty;
+                string verboseMsg = string.Empty;
+                string name = archiveName;
+                bool isSuccess = false;
 
                 if (files.Count > 0)
                 {
@@ -64,7 +65,8 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                         {
                             throw;
                         }
-                        message = ex.Message;
+
+                        verboseMsg = ex.Message;
                     }
                     finally
                     {
@@ -74,7 +76,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                         }
                     }
                 }
-                return EvaluateResult(name, message, isSuccess);
+                return EvaluateResult(name, message, verboseMsg, isSuccess);
             }, token);
         }
 

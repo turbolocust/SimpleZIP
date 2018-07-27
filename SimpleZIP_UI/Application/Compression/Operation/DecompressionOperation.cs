@@ -49,9 +49,9 @@ namespace SimpleZIP_UI.Application.Compression.Operation
 
             return await Task.Run(async () => // execute extraction asynchronously
             {
-                var message = string.Empty;
-                var isSuccess = false;
-                var isVerbose = false;
+                string message = string.Empty;
+                string verboseMsg = string.Empty;
+                bool isSuccess = false;
 
                 var options = new ReaderOptions
                 {
@@ -79,16 +79,9 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                     message = await I18N.ExceptionMessageHandler
                                     .GetStringFor(ex, false, passwordSet, archiveFile);
 
-                    if (message.Length > 0)
-                    {
-                        isVerbose = true;
-                    }
-                    else
-                    {
-                        message = ex.Message; // default message not accepted
-                    }
+                    verboseMsg = ex.Message;
                 }
-                return EvaluateResult(archiveFile.Name, message, isSuccess, isVerbose);
+                return EvaluateResult(archiveFile.Name, message, verboseMsg, isSuccess);
             }, token);
         }
 
