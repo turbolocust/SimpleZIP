@@ -25,7 +25,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using SharpCompress.Archives.Rar;
-using SharpCompress.Common;
 using SharpCompress.Readers;
 
 namespace SimpleZIP_UI.Application.Compression
@@ -147,22 +146,18 @@ namespace SimpleZIP_UI.Application.Compression
         /// Determines the <see cref="ArchiveType"/> of the specified file.
         /// </summary>
         /// <param name="file">The archive to be checked.</param>
-        /// <param name="password">The password for the file if encrypted.</param>
         /// <returns>A task which returns the determined <see cref="ArchiveType"/>.</returns>
-        /// <exception cref="CryptographicException">
-        /// Thrown if no or wrong password has been provided.</exception>
         /// <exception cref="InvalidArchiveTypeException">
         /// Thrown if archive type is not supported.</exception>
-        internal static async Task<ArchiveType> DetermineArchiveType(StorageFile file, string password = null)
+        internal static async Task<ArchiveType> DetermineArchiveType(StorageFile file)
         {
             var archiveType = ArchiveType.Unknown;
 
             try
             {
                 // let SharpCompress' reader do the archive detection
-                var options = new ReaderOptions { Password = password };
                 using (var stream = await file.OpenStreamForReadAsync())
-                using (var reader = ReaderFactory.Open(stream, options))
+                using (var reader = ReaderFactory.Open(stream))
                 {
                     var type = reader.ArchiveType;
                     if (ArchiveTypes.TryGetValue(type, out var localType))
@@ -171,14 +166,10 @@ namespace SimpleZIP_UI.Application.Compression
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) // due to missing documentation in SharpCompress
             {
-                if (ex.GetType() == typeof(CryptographicException))
-                {
-                    throw; // just re-throw
-                }
-
-                throw new InvalidArchiveTypeException("Archive type is unknown or not supported.", ex);
+                throw new InvalidArchiveTypeException(
+                    "Archive type is unknown or not supported.", ex);
             }
 
             return archiveType;

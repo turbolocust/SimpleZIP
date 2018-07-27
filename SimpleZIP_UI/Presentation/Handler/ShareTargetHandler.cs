@@ -24,6 +24,7 @@ using Windows.ApplicationModel.DataTransfer.ShareTarget;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using SimpleZIP_UI.Application;
 using SimpleZIP_UI.Application.Compression;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Presentation.View;
@@ -55,7 +56,7 @@ namespace SimpleZIP_UI.Presentation.Handler
                 var rootFrame = new Frame();
                 var dest = typeof(ShareTargetOptionsPage);
 
-                var args = ConsistsOfArchivesOnly(files)
+                var args = await ConsistsOfArchivesOnly(files)
                     ? new NavigationArgs(files, shareOp, true)
                     : new NavigationArgs(files, shareOp);
 
@@ -71,15 +72,32 @@ namespace SimpleZIP_UI.Presentation.Handler
             return message;
         }
 
-        private static bool ConsistsOfArchivesOnly(IEnumerable<StorageFile> files)
+        private static async Task<bool> ConsistsOfArchivesOnly(IEnumerable<StorageFile> files)
         {
-            return files.All(IsArchiveFile);
+            foreach (var file in files)
+            {
+                bool isArchive = await IsArchiveFile(file);
+                if (!isArchive) return false;
+            }
+
+            return true;
         }
 
-        private static bool IsArchiveFile(StorageFile file)
+        private static async Task<bool> IsArchiveFile(StorageFile file)
         {
             string ext = FileUtils.GetFileNameExtension(file.Path);
             var type = Archives.DetermineArchiveTypeByFileExtension(ext);
+            if (type == Archives.ArchiveType.Unknown)
+            {
+                try
+                {
+                    type = await Archives.DetermineArchiveType(file);
+                }
+                catch (InvalidArchiveTypeException)
+                {
+                    // type is already set to ArchiveType.Unknown
+                }
+            }
             return type != Archives.ArchiveType.Unknown;
         }
     }

@@ -103,7 +103,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         public async Task<Result> Perform(T operationInfo, bool resetBytesProcessed = true)
         {
             IsRunning = true;
-            SetAlgorithm(operationInfo);
+            Algorithm = await GetAlgorithmAsync(operationInfo);
             _totalBytesToProcess = (long)operationInfo.TotalFileSize;
             try
             {
@@ -122,9 +122,9 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         /// <summary>
         /// Sets the algorithm to be used based on the information in <see cref="OperationInfo"/>.
         /// </summary>
-        /// <param name="info">Info about the operation. Explicit parameter 
-        /// is used to avoid future programming errors.</param>
-        protected abstract void SetAlgorithm(T info);
+        /// <param name="info">Info about the operation.</param>
+        /// <returns>A task which returns <see cref="ICompressionAlgorithm"/>.</returns>
+        protected abstract Task<ICompressionAlgorithm> GetAlgorithmAsync(T info);
 
         /// <summary>
         /// Actually starts this operation.

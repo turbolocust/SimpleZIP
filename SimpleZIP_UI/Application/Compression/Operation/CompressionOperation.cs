@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
+using SimpleZIP_UI.Application.Compression.Algorithm;
 using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Util;
 
@@ -80,10 +81,10 @@ namespace SimpleZIP_UI.Application.Compression.Operation
             }, token);
         }
 
-        /// <inheritdoc cref="ArchivingOperation{T}.SetAlgorithm"/>
-        protected override void SetAlgorithm(CompressionInfo info)
+        /// <inheritdoc cref="ArchivingOperation{T}.GetAlgorithmAsync"/>
+        protected override Task<ICompressionAlgorithm> GetAlgorithmAsync(CompressionInfo info)
         {
-            Algorithm = Archives.DetermineAlgorithm(info.ArchiveType);
+            return Task.FromResult(Archives.DetermineAlgorithm(info.ArchiveType));
         }
 
         /// <inheritdoc cref="ArchivingOperation{T}.StartOperation"/>

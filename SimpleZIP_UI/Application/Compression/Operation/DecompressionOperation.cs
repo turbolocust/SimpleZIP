@@ -21,6 +21,7 @@ using System.IO;
 using System.Threading.Tasks;
 using SharpCompress.Common;
 using SharpCompress.Readers;
+using SimpleZIP_UI.Application.Compression.Algorithm;
 using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Util;
 
@@ -85,39 +86,34 @@ namespace SimpleZIP_UI.Application.Compression.Operation
             }, token);
         }
 
-        /// <inheritdoc cref="ArchivingOperation{T}.SetAlgorithm"/>
-        protected override void SetAlgorithm(DecompressionInfo info)
+        /// <inheritdoc cref="ArchivingOperation{T}.GetAlgorithmAsync"/>
+        protected override async Task<ICompressionAlgorithm> GetAlgorithmAsync(DecompressionInfo info)
         {
             var fileType = FileUtils.GetFileNameExtension(info.Item.Archive.Name);
             var value = Archives.DetermineArchiveTypeByFileExtension(fileType);
 
             if (value != Archives.ArchiveType.Unknown)
             {
-                Algorithm = Archives.DetermineAlgorithm(value);
+                return Archives.DetermineAlgorithm(value);
             }
-            else // try to detect archive by reading headers
-            {
-                string errMsg = I18N.Resources
-                    .GetString("FileFormatNotSupported/Text");
-                try
-                {
-                    var task = Archives.DetermineArchiveType(
-                        info.Item.Archive, info.Item.Password);
-                    task.RunSynchronously();
 
-                    if (task.Result != Archives.ArchiveType.Unknown)
-                    {
-                        Algorithm = Archives.DetermineAlgorithm(task.Result);
-                    }
-                    else
-                    {
-                        throw new InvalidArchiveTypeException(errMsg);
-                    }
-                }
-                catch (InvalidArchiveTypeException ex)
+            try
+            {
+                // try to detect archive by reading file headers
+                var result = await Archives.DetermineArchiveType(info.Item.Archive);
+
+                if (result != Archives.ArchiveType.Unknown)
                 {
-                    throw new InvalidArchiveTypeException(errMsg, ex);
+                    return Archives.DetermineAlgorithm(result);
                 }
+
+                throw new InvalidArchiveTypeException("Archive type is unknown.");
+            }
+            catch (InvalidArchiveTypeException ex)
+            {
+                string friendlyErrMsg = I18N.Resources
+                    .GetString("FileFormatNotSupported/Text");
+                throw new InvalidArchiveTypeException(friendlyErrMsg, ex);
             }
         }
 
