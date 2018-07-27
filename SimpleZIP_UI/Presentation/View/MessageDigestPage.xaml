@@ -6,7 +6,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:cv="using:SimpleZIP_UI.Presentation.View.Converter"
     DataContext="{Binding RelativeSource={RelativeSource Self}}"
-    Background="{ThemeResource SystemControlAcrylicWindowBrush}"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -14,7 +13,7 @@
         <cv:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
     </Page.Resources>
 
-    <Grid Background="Transparent">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="0,0,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -70,8 +69,7 @@
         </ScrollViewer>
         <StackPanel Grid.Row="3" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,8,16,8">
             <Button Tapped="CopyAllButton_OnTapped" IsEnabled="True" Width="120" MinHeight="44" Height="50" MaxHeight="60"
-                    Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" 
-                    BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+                    Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                 <TextBlock x:Uid="CopyAll" Text="" TextWrapping="Wrap" />
             </Button>
         </StackPanel>
