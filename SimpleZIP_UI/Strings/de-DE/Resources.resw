@@ -418,7 +418,7 @@
     <comment>Copy file path to clipboard.</comment>
   </data>
   <data name="ArchiveHistorySize.Text" xml:space="preserve">
-    <value>Elemente in Archiv-Historie</value>
+    <value>Elemente in Historie</value>
     <comment>Maximum allowed entries in archive history.</comment>
   </data>
   <data name="OutputFolderMissing.Text" xml:space="preserve">

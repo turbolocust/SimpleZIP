@@ -6,6 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:cv="using:SimpleZIP_UI.Presentation.View.Converter"
     DataContext="{Binding RelativeSource={RelativeSource Self}}"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -13,7 +14,7 @@
         <cv:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
     </Page.Resources>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="0,0,0,0">
+    <Grid Background="Transparent">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -22,7 +23,7 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" VerticalAlignment="Center" Orientation="Horizontal" Margin="8,0,0,0">
             <ComboBox x:Name="HashAlgorithmComboBox" x:Uid="HashAlgorithm" Header="" Margin="0,0,24,0" SelectedIndex="2"
-                SelectionChanged="HashAlgorithmComboBox_OnSelectionChanged">
+                      SelectionChanged="HashAlgorithmComboBox_OnSelectionChanged">
                 <ComboBoxItem Content="MD5"/>
                 <ComboBoxItem Content="SHA1"/>
                 <ComboBoxItem Content="SHA256"/>
