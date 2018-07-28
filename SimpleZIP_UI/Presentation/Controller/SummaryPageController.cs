@@ -110,6 +110,7 @@ namespace SimpleZIP_UI.Presentation.Controller
                     result = new Result
                     {
                         Message = ex.Message,
+                        VerboseMessage = ex.ToString(),
                         StatusCode = Result.Status.Fail
                     };
                 }

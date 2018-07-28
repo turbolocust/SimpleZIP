@@ -24,6 +24,7 @@ using Windows.Storage;
 using SimpleZIP_UI.Application.Compression;
 using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Compression.Operation;
+using SimpleZIP_UI.Application.Util;
 
 namespace SimpleZIP_UI.Presentation.Controller
 {
@@ -111,7 +112,8 @@ namespace SimpleZIP_UI.Presentation.Controller
                     {
                         ++successCount;
                     }
-                    subMessage.AppendLine(subResult.Message);
+
+                    subMessage.CheckAndAppendLine(subResult.Message);
                 }
                 if (successCount == selectedFiles.Count)
                 {

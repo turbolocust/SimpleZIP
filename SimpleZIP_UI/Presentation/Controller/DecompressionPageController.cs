@@ -21,6 +21,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Compression.Operation;
+using SimpleZIP_UI.Application.Util;
 
 namespace SimpleZIP_UI.Presentation.Controller
 {
@@ -75,8 +76,8 @@ namespace SimpleZIP_UI.Presentation.Controller
                         ++successCount;
                     }
 
-                    resultMessage.AppendLine(subResult.Message);
-                    verboseMessage.AppendLine(subResult.VerboseMessage);
+                    resultMessage.CheckAndAppendLine(subResult.Message);
+                    verboseMessage.CheckAndAppendLine(subResult.VerboseMessage);
                 }
                 catch (Exception ex)
                 {

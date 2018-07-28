@@ -124,8 +124,9 @@ namespace SimpleZIP_UI.Presentation.Controller
                     }
                 case Result.Status.PartialFail:
                     {
-                        var message = new StringBuilder(
-                            I18N.Resources.GetString("NotAllProcessed/Text"));
+                        var message = new StringBuilder(I18N.Resources
+                            .GetString("NotAllProcessed/Text"));
+                        message.AppendLine();
                         message.AppendLine(result.Message);
                         dialog = DialogFactory.CreateErrorDialog(message.ToString());
                         break;
