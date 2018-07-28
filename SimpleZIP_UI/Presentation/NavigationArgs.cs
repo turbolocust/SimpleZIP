@@ -22,7 +22,7 @@ using Windows.Storage;
 
 namespace SimpleZIP_UI.Presentation
 {
-    internal sealed class NavigationArgs
+    internal class NavigationArgs
     {
         public IReadOnlyList<StorageFile> StorageFiles { get; }
 

@@ -165,7 +165,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             {
                 IsNavigating = true;
                 var item = new ExtractableItem(_archiveFile.Name, _archiveFile, entries);
-                Navigation.Navigate(typeof(DecompressionSummaryPage), new[] { item });
+                Navigation.Navigate(typeof(DecompressionSummaryPage), item);
             }
         }
     }

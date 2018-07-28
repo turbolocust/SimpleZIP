@@ -103,12 +103,15 @@ namespace SimpleZIP_UI.Presentation.View
             PickOutputFolder();
         }
 
-        private static IReadOnlyList<ExtractableItem> ConvertFiles(
-            IReadOnlyCollection<StorageFile> files)
+        /// <summary>
+        /// Converts an enumerable of <see cref="StorageFile"/>
+        /// to a list consisting of <see cref="ExtractableItem"/>.
+        /// </summary>
+        /// <param name="files">The list to be converted.</param>
+        /// <returns>A list consisting of <see cref="ExtractableItem"/>.</returns>
+        private static IReadOnlyList<ExtractableItem> ConvertFiles(IEnumerable<StorageFile> files)
         {
-            var items = new List<ExtractableItem>(files.Count);
-            items.AddRange(files.Select(file => new ExtractableItem(file.Name, file)));
-            return items;
+            return files.Select(file => new ExtractableItem(file.Name, file)).ToList();
         }
 
         /// <summary>
@@ -183,11 +186,9 @@ namespace SimpleZIP_UI.Presentation.View
                 var files = fileArgs?.Files;
                 if (!files.IsNullOrEmpty())
                 {
-                    // ReSharper disable once PossibleNullReferenceException
-                    var itemList = new List<ExtractableItem>(files.Count);
-                    itemList.AddRange(files.Select(file
-                        => new ExtractableItem(file.Name, file as StorageFile)));
-                    _selectedItems = itemList;
+                    // ReSharper disable once AssignNullToNotNullAttribute
+                    var storageFiles = files.Select(file => file as StorageFile).ToList();
+                    _selectedItems = ConvertFiles(storageFiles);
                 }
             }
             // navigated from MainPage
@@ -195,6 +196,11 @@ namespace SimpleZIP_UI.Presentation.View
             {
                 _selectedItems = ConvertFiles(navigationArgs.StorageFiles);
                 _controller.ShareOperation = navigationArgs.ShareOperation;
+            }
+            // navigated from Archive Browser
+            else if (args.Parameter is ExtractableItem extractableItem)
+            {
+                _selectedItems = new[] { extractableItem };
             }
             // populate list
             foreach (var item in _selectedItems)
