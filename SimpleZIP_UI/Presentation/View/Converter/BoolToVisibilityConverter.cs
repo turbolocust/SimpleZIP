@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2018 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,28 +16,35 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
 using System;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
 namespace SimpleZIP_UI.Presentation.View.Converter
 {
     /// <inheritdoc />
     /// <summary>
-    /// Converter which negates the value of a Boolean.
+    /// Converter which converts a boolean to <see cref="Visibility"/>.
     /// </summary>
-    internal class NegateBooleanConverter : IValueConverter
+    internal class BoolToVisibilityConverter : IValueConverter
     {
         /// <inheritdoc />
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var boolean = (bool)value;
-            return !boolean;
+            if ((bool)value)
+            {
+                return Visibility.Visible;
+            }
+
+            return Visibility.Collapsed;
         }
 
         /// <inheritdoc />
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            throw new NotImplementedException(); // is OneWay binding
+            var visibility = (Visibility)value;
+            return visibility == Visibility.Visible;
         }
     }
 }

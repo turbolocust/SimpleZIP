@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
@@ -45,6 +46,11 @@ namespace SimpleZIP_UI.Presentation.View
         /// Models bound to the list box in view.
         /// </summary>
         public ObservableCollection<MessageDigestModel> MessageDigestModels { get; }
+
+        /// <summary>
+        /// Enables or disables certain UI elements.
+        /// </summary>
+        public BooleanModel IsPopulateListBox { get; set; } = false;
 
         /// <summary>
         /// The aggregated controller instance.
@@ -78,34 +84,34 @@ namespace SimpleZIP_UI.Presentation.View
         /// <returns>An awaitable task which returns nothing.</returns>
         private async Task PopulateListBox()
         {
-            try
+            IsPopulateListBox.IsTrue = true;
+            MessageDigestModels.Clear();
+
+            // start computation of hash value for each file
+            foreach (var file in _selectedFiles)
             {
-                HashAlgorithmComboBox.IsEnabled = false;
-                MessageDigestModels.Clear();
-                // start computation of hash value for each file
-                foreach (var file in _selectedFiles)
+                var selectedItem = (ComboBoxItem)HashAlgorithmComboBox.SelectedItem;
+                var algorithmName = selectedItem?.Content as string;
+                // key for algorithm is text in combo box item
+                if (_messageDigestAlgorithm.SupportedAlgorithms.Contains(algorithmName))
                 {
-                    var selectedItem = (ComboBoxItem)HashAlgorithmComboBox.SelectedItem;
-                    var algorithmName = selectedItem?.Content as string;
-                    // key for algorithm is text in combo box item
-                    if (_messageDigestAlgorithm.SupportedAlgorithms.Contains(algorithmName))
+                    var (_, hashedValue) = await _messageDigestAlgorithm
+                        .ComputeHashValue(file, algorithmName);
+
+                    if (LowercaseHashToggleSwitch.IsOn)
                     {
-                        var (_, hashedValue) = await _messageDigestAlgorithm
-                            .ComputeHashValue(file, algorithmName);
-                        if (LowercaseHashToggleSwitch.IsOn)
-                        {
-                            hashedValue = hashedValue.ToLowerInvariant();
-                        }
-                        var model = new MessageDigestModel(file.Name, file.Path, hashedValue);
-                        await Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                            () => { MessageDigestModels.Add(model); });
+                        hashedValue = hashedValue.ToLowerInvariant();
                     }
+
+                    await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                    {
+                        MessageDigestModels.Add(new MessageDigestModel(
+                            file.Name, file.Path, hashedValue));
+                    });
                 }
             }
-            finally
-            {
-                HashAlgorithmComboBox.IsEnabled = true;
-            }
+
+            IsPopulateListBox.IsTrue = false;
         }
 
         private void RefreshListBox()

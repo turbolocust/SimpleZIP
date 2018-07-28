@@ -17,33 +17,31 @@
 // 
 // ==--==
 using System;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
 namespace SimpleZIP_UI.Presentation.View.Converter
 {
     /// <inheritdoc />
     /// <summary>
-    /// Converter which converts a negated boolean to <see cref="Visibility"/>.
+    /// Converter which flips the value of a Boolean.
     /// </summary>
-    internal class InverseBoolToVisibilityConverter : IValueConverter
+    internal class FlipBooleanConverter : IValueConverter
     {
         /// <inheritdoc />
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (!(bool)value)
-            {
-                return Visibility.Visible;
-            }
-
-            return Visibility.Collapsed;
+            return FlipBoolean((bool)value);
         }
 
         /// <inheritdoc />
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            var visibility = (Visibility)value;
-            return visibility != Visibility.Visible;
+            return FlipBoolean((bool)value);
+        }
+
+        private static bool FlipBoolean(bool value)
+        {
+            return !value;
         }
     }
 }

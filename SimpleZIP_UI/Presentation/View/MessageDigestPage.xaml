@@ -10,7 +10,7 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-        <cv:NegateBooleanConverter x:Key="NegateBooleanConverter"/>
+        <cv:FlipBooleanConverter x:Key="FlipBooleanConverter"/>
         <cv:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
     </Page.Resources>
 
@@ -23,19 +23,21 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" VerticalAlignment="Center" Orientation="Horizontal" Margin="8,0,0,0">
             <ComboBox x:Name="HashAlgorithmComboBox" x:Uid="HashAlgorithm" Header="" Margin="0,0,24,0" SelectedIndex="2"
-                      SelectionChanged="HashAlgorithmComboBox_OnSelectionChanged">
+                      SelectionChanged="HashAlgorithmComboBox_OnSelectionChanged"
+                      IsEnabled="{x:Bind IsPopulateListBox.IsTrue, Mode=TwoWay, Converter={StaticResource FlipBooleanConverter}}">
                 <ComboBoxItem Content="MD5"/>
                 <ComboBoxItem Content="SHA1"/>
                 <ComboBoxItem Content="SHA256"/>
                 <ComboBoxItem Content="SHA384"/>
                 <ComboBoxItem Content="SHA512"/>
             </ComboBox>
-            <ToggleSwitch x:Name="LowercaseHashToggleSwitch" Toggled="LowercaseHashToggleSwitch_OnToggled" Margin="0,0,24,0">
+            <ToggleSwitch x:Name="LowercaseHashToggleSwitch" Toggled="LowercaseHashToggleSwitch_OnToggled" Margin="0,0,24,0" 
+                          IsEnabled="{x:Bind IsPopulateListBox.IsTrue, Mode=TwoWay, Converter={StaticResource FlipBooleanConverter}}">
                 <TextBlock x:Uid="LowerCaseHashToggleSwitch" Text="" TextWrapping="Wrap"/>
             </ToggleSwitch>
         </StackPanel>
         <ProgressBar Grid.Row="1" HorizontalAlignment="Stretch" IsIndeterminate="True" 
-                     IsEnabled="{x:Bind HashAlgorithmComboBox.IsEnabled, Mode=OneWay, Converter={StaticResource NegateBooleanConverter}}" 
+                     IsEnabled="{x:Bind HashAlgorithmComboBox.IsEnabled, Mode=OneWay, Converter={StaticResource FlipBooleanConverter}}" 
                      Visibility="{x:Bind HashAlgorithmComboBox.IsEnabled, Mode=OneWay, Converter={StaticResource InverseBoolToVisibilityConverter}}" />
         <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
             <ListBox ItemsSource="{Binding MessageDigestModels}" Margin="0,16,0,0" SelectionMode="Single"  x:Name="MessageDigestModelsListBox"

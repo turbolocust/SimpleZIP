@@ -30,6 +30,8 @@ using SimpleZIP_UI.Application.Compression.Reader;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Presentation.Controller;
 using SimpleZIP_UI.Presentation.View.Model;
+using System.Threading.Tasks;
+using Windows.UI.Core;
 
 namespace SimpleZIP_UI.Presentation.View
 {
@@ -56,6 +58,11 @@ namespace SimpleZIP_UI.Presentation.View
         /// </summary>
         public ObservableCollection<ArchiveEntryModel> ArchiveEntryModels { get; }
 
+        /// <summary>
+        /// Enables or disables the progress bar.
+        /// </summary>
+        public BooleanModel IsProgressBarEnabled { get; set; } = true;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -65,8 +72,6 @@ namespace SimpleZIP_UI.Presentation.View
             _controller = new BrowseArchivePageController(this);
             _selectedModels = new HashSet<ArchiveEntryModel>();
             ArchiveEntryModels = new ObservableCollection<ArchiveEntryModel>();
-            ProgressBar.IsEnabled = true;
-            ProgressBar.Visibility = Visibility.Visible;
         }
 
         private void ExtractWholeArchiveButton_OnTapped(object sender, TappedRoutedEventArgs args)
@@ -88,7 +93,7 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        private void ItemsListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs args)
+        private async void ItemsListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs args)
         {
             // add items from selection
             foreach (var item in args.AddedItems)
@@ -102,8 +107,8 @@ namespace SimpleZIP_UI.Presentation.View
                             if (child.Name.Equals(addItem.DisplayName) && child.IsNode)
                             {
                                 var nextNode = child as Node;
-                                UpdateListContent(nextNode);
-                                return;
+                                await UpdateListContent(nextNode);
+                                return; // since node is a new folder
                             }
                         }
                     }
@@ -119,7 +124,7 @@ namespace SimpleZIP_UI.Presentation.View
                 }
             }
             // enable button if at least one item is selected and
-            // archive does not consist of a single file entry only
+            // archive does not only consist of a single file entry
             ExtractSelectedEntriesButton.IsEnabled =
                 _selectedModels.Count > 0 && !_controller.IsSingleFileEntryArchive();
         }
@@ -128,26 +133,35 @@ namespace SimpleZIP_UI.Presentation.View
         /// Populates the list box with the content of the specified node.
         /// </summary>
         /// <param name="nextNode">The node whose content will be used 
-        /// to populate the list box.</param>
-        private void UpdateListContent(Node nextNode)
+        /// to populate the list box (for display in UI).</param>
+        /// <returns>An awaitable task which returns nothing.</returns>
+        private async Task UpdateListContent(Node nextNode)
         {
             if (nextNode == null) return;
 
-            ArchiveEntryModels.Clear();
-            _selectedModels.Clear();
-            _nodeStack.Push(nextNode);
+            IsProgressBarEnabled.IsTrue = true;
 
-            foreach (var child in nextNode.Children)
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
             {
-                var isNode = child.IsNode;
-                var model = new ArchiveEntryModel(isNode, child.Name)
+                ArchiveEntryModels.Clear();
+                _selectedModels.Clear();
+                _nodeStack.Push(nextNode);
+
+                foreach (var child in nextNode.Children)
                 {
-                    Symbol = isNode ? Symbol.Folder : Symbol.Preview
-                };
-                ArchiveEntryModels.Add(model);
-            }
-            // checking stack count since root node name may be different
-            AddressBar.Text = _nodeStack.Count == 1 ? "/" : nextNode.Id;
+                    var isNode = child.IsNode;
+                    var model = new ArchiveEntryModel(isNode, child.Name)
+                    {
+                        Symbol = isNode ? Symbol.Folder : Symbol.Preview
+                    };
+                    ArchiveEntryModels.Add(model);
+                }
+
+                // checking stack count since root node name may be different
+                AddressBar.Text = _nodeStack.Count == 1 ? "/" : nextNode.Id;
+            });
+
+            IsProgressBarEnabled.IsTrue = false;
         }
 
         /// <inheritdoc />
@@ -178,14 +192,12 @@ namespace SimpleZIP_UI.Presentation.View
             if (archive == null)
                 throw new NullReferenceException("Cannot handle null parameter.");
 
-            UpdateListContent(await _controller.ReadArchive(archive));
+            await UpdateListContent(await _controller.ReadArchive(archive));
             ExtractWholeArchiveButton.IsEnabled = !_controller.IsEmptyArchive();
-            ProgressBar.IsEnabled = false;
-            ProgressBar.Visibility = Visibility.Collapsed;
         }
 
         /// <inheritdoc />
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs args)
+        protected override async void OnNavigatingFrom(NavigatingCancelEventArgs args)
         {
             // can only go back in history if stack holds at 
             // least two elements (since first node is root node)
@@ -193,7 +205,7 @@ namespace SimpleZIP_UI.Presentation.View
             {
                 args.Cancel = true;
                 _nodeStack.Pop();
-                UpdateListContent(_nodeStack.Pop());
+                await UpdateListContent(_nodeStack.Pop());
             }
         }
 

@@ -4,9 +4,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:cv="using:SimpleZIP_UI.Presentation.View.Converter"
     DataContext="{Binding RelativeSource={RelativeSource Self}}"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
+
+    <Page.Resources>
+        <cv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </Page.Resources>
 
     <Grid Background="Transparent" Padding="0,0,0,8">
         <Grid.RowDefinitions>
@@ -32,10 +37,13 @@
                     FontSize="20" Tapped="NavigateUpButton_OnTapped" Width="40" Height="40" Background="Transparent" 
                     Foreground="{ThemeResource ButtonForegroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}" BorderThickness="1" />
         </Grid>
-        <ProgressBar x:Name="ProgressBar" Grid.Row="1" HorizontalAlignment="Stretch" IsIndeterminate="True" IsEnabled="False" Visibility="Collapsed" />
+        <ProgressBar Grid.Row="1" HorizontalAlignment="Stretch" IsIndeterminate="True" 
+                     IsEnabled="{x:Bind IsProgressBarEnabled.IsTrue, Mode=TwoWay}" 
+                     Visibility="{x:Bind IsProgressBarEnabled.IsTrue, Mode=TwoWay, Converter={StaticResource BoolToVisibilityConverter}}" />
         <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" Margin="0,16,0,0" VerticalScrollBarVisibility="Auto">
-            <ListBox ItemsSource="{Binding ArchiveEntryModels}" SelectionChanged="ItemsListBox_OnSelectionChanged" Margin="8,0,8,0" SelectionMode="Multiple" CanDrag="False"
-                     HorizontalContentAlignment="Stretch" Background="Transparent" Height="Auto" Foreground="{ThemeResource ButtonForegroundThemeBrush}">
+            <ListBox ItemsSource="{Binding ArchiveEntryModels}" SelectionChanged="ItemsListBox_OnSelectionChanged" 
+                     Margin="8,0,8,0" SelectionMode="Multiple" CanDrag="False" HorizontalContentAlignment="Stretch" 
+                     Background="Transparent" Height="Auto" Foreground="{ThemeResource ButtonForegroundThemeBrush}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Stretch">
@@ -47,12 +55,18 @@
             </ListBox>
         </ScrollViewer>
         <StackPanel Grid.Row="3" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,8,16,0">
-            <Button x:Name="ExtractSelectedEntriesButton" Tapped="ExtractSelectedEntriesButton_OnTapped" IsEnabled="False" MinHeight="44" Height="50" MaxHeight="60" Margin="0,0,16,0"
-                    Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+            <Button x:Name="ExtractSelectedEntriesButton" Tapped="ExtractSelectedEntriesButton_OnTapped" IsEnabled="False" 
+                    MinHeight="44" Height="50" MaxHeight="60" Margin="0,0,16,0"
+                    Foreground="{ThemeResource ButtonForegroundThemeBrush}" 
+                    Background="{ThemeResource ButtonBackgroundThemeBrush}" 
+                    BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                 <TextBlock x:Uid="ExtractSelected" Text="" TextWrapping="Wrap" />
             </Button>
-            <Button x:Name="ExtractWholeArchiveButton" Tapped="ExtractWholeArchiveButton_OnTapped" IsEnabled="False" MinHeight="44" Height="50" MaxHeight="60"
-                    Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+            <Button x:Name="ExtractWholeArchiveButton" Tapped="ExtractWholeArchiveButton_OnTapped" 
+                    IsEnabled="False" MinHeight="44" Height="50" MaxHeight="60"
+                    Foreground="{ThemeResource ButtonForegroundThemeBrush}" 
+                    Background="{ThemeResource ButtonBackgroundThemeBrush}" 
+                    BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                 <TextBlock x:Uid="ExtractAll" Text="" TextWrapping="Wrap" />
             </Button>
         </StackPanel>
