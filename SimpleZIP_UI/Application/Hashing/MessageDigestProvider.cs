@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2018 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ namespace SimpleZIP_UI.Application.Hashing
     internal class MessageDigestProvider : IMessageDigestProvider
     {
         /// <inheritdoc />
-        public List<string> SupportedAlgorithms { get; }
+        public IReadOnlyList<string> SupportedAlgorithms { get; }
 
         /// <summary>
         /// Creates a new instance of this class.
@@ -47,7 +47,8 @@ namespace SimpleZIP_UI.Application.Hashing
         }
 
         /// <inheritdoc />
-        public async Task<(byte[] HashedBytes, string HashedValue)> ComputeHashValue(StorageFile file, string algorithmName)
+        public async Task<(byte[] HashedBytes, string HashedValue)>
+            ComputeHashValue(StorageFile file, string algorithmName)
         {
             using (var fileStream = await file.OpenStreamForReadAsync())
             {
