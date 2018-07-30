@@ -116,6 +116,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
             var keyBuilder = new StringBuilder();
             var nameBuilder = new StringBuilder();
             var rootNode = new Node(RootNodeName);
+            var pair = new EntryKeyPair();
             _nodes.Add(rootNode.Id, rootNode);
 
             uint threshold = 0; // to avoid too many calls on Task.Delay
@@ -125,10 +126,10 @@ namespace SimpleZIP_UI.Application.Compression.Reader
                 // directories are considered anyway
                 if (entry.IsDirectory || entry.Key == null) continue;
 
-                var pair = GetEntryKeyPair(entry.Key, separator);
+                UpdateEntryKeyPair(ref pair, entry.Key, separator);
                 var parentNode = rootNode;
 
-                for (var i = 0; i <= pair.SeparatorPos; ++i)
+                for (int i = 0; i <= pair.SeparatorPos; ++i)
                 {
                     var c = entry.Key[i];
                     keyBuilder.Append(c);
@@ -150,12 +151,9 @@ namespace SimpleZIP_UI.Application.Compression.Reader
                 }
 
                 if (!parentNode.Id.Equals(pair.ParentKey))
-                {
                     throw new ReadingArchiveException("Error reading archive.");
-                }
 
-                var entrySize = (ulong)entry.Size;
-                var fileEntry = new FileEntry(entry.Key, pair.EntryName, entrySize);
+                var fileEntry = new FileEntry(entry.Key, pair.EntryName, (ulong)entry.Size);
                 parentNode.Children.Add(fileEntry);
                 keyBuilder.Clear();
 
@@ -210,25 +208,24 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         }
 
         /// <summary>
-        /// Returns an <see cref="EntryKeyPair"/> which holds the name of the entry 
+        /// Updates an <see cref="EntryKeyPair"/> which holds the name of the entry 
         /// and the key of its parent node, also considering the root node.
         /// </summary>
+        /// <param name="pair">Reference to the pair to be updated.</param>
         /// <param name="key">The full key of the entry.</param>
         /// <param name="separator">File separator character.</param>
         /// <returns>An <see cref="EntryKeyPair"/>.</returns>
-        private static EntryKeyPair GetEntryKeyPair(string key, char separator)
+        private static void UpdateEntryKeyPair(ref EntryKeyPair pair, string key, char separator)
         {
             var trimmedKey = key.TrimEnd(separator);
             var lastSeparatorPos = trimmedKey.LastIndexOf(separator);
             var entryName = trimmedKey.Substring(lastSeparatorPos + 1);
             var parentKey = lastSeparatorPos == -1 ? RootNodeName
                 : trimmedKey.Substring(0, trimmedKey.Length - entryName.Length);
-            return new EntryKeyPair
-            {
-                SeparatorPos = lastSeparatorPos,
-                EntryName = entryName,
-                ParentKey = parentKey
-            };
+
+            pair.SeparatorPos = lastSeparatorPos;
+            pair.EntryName = entryName;
+            pair.ParentKey = parentKey;
         }
 
         public void Dispose()
