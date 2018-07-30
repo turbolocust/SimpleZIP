@@ -22,15 +22,11 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" VerticalAlignment="Center" Orientation="Horizontal" Margin="8,0,0,0">
-            <ComboBox x:Name="HashAlgorithmComboBox" x:Uid="HashAlgorithm" Header="" Margin="0,0,24,0" SelectedIndex="2"
-                      SelectionChanged="HashAlgorithmComboBox_OnSelectionChanged"
-                      IsEnabled="{x:Bind IsPopulateListBox.IsTrue, Mode=TwoWay, Converter={StaticResource FlipBooleanConverter}}">
-                <ComboBoxItem Content="MD5"/>
-                <ComboBoxItem Content="SHA1"/>
-                <ComboBoxItem Content="SHA256"/>
-                <ComboBoxItem Content="SHA384"/>
-                <ComboBoxItem Content="SHA512"/>
-            </ComboBox>
+            <ComboBox x:Name="HashAlgorithmComboBox" x:Uid="HashAlgorithm" Header=""
+                      Margin="0,0,24,0" SelectionChanged="HashAlgorithmComboBox_OnSelectionChanged"
+                      ItemsSource="{x:Bind HashAlgorithmModels}" DisplayMemberPath="HashAlgorithm" 
+                      SelectedValuePath="HashAlgorithm" SelectedItem="{x:Bind SelectedAlgorithm, Mode=TwoWay}"
+                      IsEnabled="{x:Bind IsPopulateListBox.IsTrue, Mode=TwoWay, Converter={StaticResource FlipBooleanConverter}}" />
             <ToggleSwitch x:Name="LowercaseHashToggleSwitch" Toggled="LowercaseHashToggleSwitch_OnToggled" Margin="0,0,24,0" 
                           IsEnabled="{x:Bind IsPopulateListBox.IsTrue, Mode=TwoWay, Converter={StaticResource FlipBooleanConverter}}">
                 <TextBlock x:Uid="LowerCaseHashToggleSwitch" Text="" TextWrapping="Wrap"/>
@@ -71,8 +67,11 @@
             </ListBox>
         </ScrollViewer>
         <StackPanel Grid.Row="3" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,8,16,8">
-            <Button Tapped="CopyAllButton_OnTapped" IsEnabled="True" Width="120" MinHeight="44" Height="50" MaxHeight="60"
-                    Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+            <Button Tapped="CopyAllButton_OnTapped" Width="120" MinHeight="44" Height="50" MaxHeight="60"
+                    IsEnabled="{x:Bind IsPopulateListBox.IsTrue, Mode=TwoWay, Converter={StaticResource FlipBooleanConverter}}"
+                    Foreground="{ThemeResource ButtonForegroundThemeBrush}" 
+                    Background="{ThemeResource ButtonBackgroundThemeBrush}" 
+                    BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                 <TextBlock x:Uid="CopyAll" Text="" TextWrapping="Wrap" />
             </Button>
         </StackPanel>

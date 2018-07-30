@@ -24,7 +24,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
-using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -43,6 +42,11 @@ namespace SimpleZIP_UI.Presentation.View
     public sealed partial class MessageDigestPage : INavigation
     {
         /// <summary>
+        /// Models bound to the combo box in view.
+        /// </summary>
+        public ObservableCollection<HashAlgorithmModel> HashAlgorithmModels { get; }
+
+        /// <summary>
         /// Models bound to the list box in view.
         /// </summary>
         public ObservableCollection<MessageDigestModel> MessageDigestModels { get; }
@@ -53,6 +57,11 @@ namespace SimpleZIP_UI.Presentation.View
         public BooleanModel IsPopulateListBox { get; set; } = false;
 
         /// <summary>
+        /// The currently selected algorithm (ComboBox item).
+        /// </summary>
+        public HashAlgorithmModel SelectedAlgorithm { get; set; }
+
+        /// <summary>
         /// The aggregated controller instance.
         /// </summary>
         private readonly MessageDigestPageController _controller;
@@ -60,7 +69,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// <summary>
         /// Instance used to compute hashes.
         /// </summary>
-        private readonly IMessageDigestProvider _messageDigestAlgorithm;
+        private readonly IMessageDigestProvider _messageDigestProvider;
 
         /// <summary>
         /// List of selected files needed for re-computation of hash values.
@@ -71,9 +80,22 @@ namespace SimpleZIP_UI.Presentation.View
         public MessageDigestPage()
         {
             _controller = new MessageDigestPageController(this);
-            _messageDigestAlgorithm = new MessageDigestProvider();
+            _messageDigestProvider = new MessageDigestProvider();
+            HashAlgorithmModels = new ObservableCollection<HashAlgorithmModel>();
             MessageDigestModels = new ObservableCollection<MessageDigestModel>();
-            InitializeComponent(); // has to be last call
+            InitializeComponent(); // has to be called after creating lists
+            InitHashAlgorithmComboBox();
+        }
+
+        private void InitHashAlgorithmComboBox()
+        {
+            var algorithms = _messageDigestProvider.SupportedAlgorithms;
+            foreach (string algorithm in algorithms)
+            {
+                HashAlgorithmModels.Add(new HashAlgorithmModel(algorithm));
+            }
+
+            SelectedAlgorithm = HashAlgorithmModels[0];
         }
 
         /// <summary>
@@ -81,37 +103,51 @@ namespace SimpleZIP_UI.Presentation.View
         /// This may only be called once the combo box holding the hash algorithm
         /// strings is loaded.
         /// </summary>
-        /// <returns>An awaitable task which returns nothing.</returns>
-        private async Task PopulateListBox()
+        private async void PopulateListBox()
         {
             IsPopulateListBox.IsTrue = true;
             MessageDigestModels.Clear();
 
-            // start computation of hash value for each file
-            foreach (var file in _selectedFiles)
+            string algorithmName = SelectedAlgorithm.HashAlgorithm;
+            bool isLowercase = LowercaseHashToggleSwitch.IsOn;
+
+            var models = await BuildModelsAsync(algorithmName, isLowercase);
+            models.ForEach(model => MessageDigestModels.Add(model));
+
+            IsPopulateListBox.IsTrue = false;
+        }
+
+        /// <summary>
+        /// Asynchronously builds all <see cref="MessageDigestModel"/>
+        /// which are to be displayed in the ListBox of the UI.
+        /// </summary>
+        /// <param name="algorithmName">The name of the algorithm.</param>
+        /// <param name="isLowercase">True for lower case hash value.</param>
+        /// <returns>A list consisting of <see cref="MessageDigestModel"/>.</returns>
+        private async Task<List<MessageDigestModel>> BuildModelsAsync(
+            string algorithmName, bool isLowercase)
+        {
+            var models = new List<MessageDigestModel>();
+
+            if (_messageDigestProvider.SupportedAlgorithms.Contains(algorithmName))
             {
-                var selectedItem = (ComboBoxItem)HashAlgorithmComboBox.SelectedItem;
-                var algorithmName = selectedItem?.Content as string;
-                // key for algorithm is text in combo box item
-                if (_messageDigestAlgorithm.SupportedAlgorithms.Contains(algorithmName))
+                // start computation of hash value for each file
+                foreach (var file in _selectedFiles)
                 {
-                    var (_, hashedValue) = await _messageDigestAlgorithm
+                    // suppress hashed bytes (string is sufficient)
+                    var (_, hash) = await _messageDigestProvider
                         .ComputeHashValue(file, algorithmName);
 
-                    if (LowercaseHashToggleSwitch.IsOn)
+                    if (isLowercase)
                     {
-                        hashedValue = hashedValue.ToLowerInvariant();
+                        hash = hash.ToLowerInvariant();
                     }
 
-                    await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                    {
-                        MessageDigestModels.Add(new MessageDigestModel(
-                            file.Name, file.Path, hashedValue));
-                    });
+                    models.Add(new MessageDigestModel(file.Name, file.Path, hash));
                 }
             }
 
-            IsPopulateListBox.IsTrue = false;
+            return models;
         }
 
         private void RefreshListBox()
@@ -130,10 +166,10 @@ namespace SimpleZIP_UI.Presentation.View
             Clipboard.SetContent(package);
         }
 
-        private async void HashAlgorithmComboBox_OnSelectionChanged(
+        private void HashAlgorithmComboBox_OnSelectionChanged(
             object sender, SelectionChangedEventArgs args)
         {
-            await PopulateListBox();
+            PopulateListBox();
         }
 
         private async void ViewFullHashButton_OnTapped(object sender, TappedRoutedEventArgs args)
@@ -184,13 +220,12 @@ namespace SimpleZIP_UI.Presentation.View
         }
 
         /// <inheritdoc />
-        protected override async void OnNavigatedTo(NavigationEventArgs args)
+        protected override void OnNavigatedTo(NavigationEventArgs args)
         {
             if (args.Parameter is NavigationArgs navigationArgs)
             {
                 _selectedFiles = navigationArgs.StorageFiles;
                 _controller.ShareOperation = navigationArgs.ShareOperation;
-                await PopulateListBox();
             }
         }
 
