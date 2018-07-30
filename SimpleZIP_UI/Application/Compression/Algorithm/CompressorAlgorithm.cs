@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2018 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                 var progressStream = new ProgressObservableStream(this, archiveStream);
                 compressorStream = GetCompressorStream(progressStream, compressorOptions);
 
-                var outputFileName = archive.Name.Substring(0, archive.Name.Length - archive.FileType.Length);
+                string outputFileName = archive.Name.Substring(0, archive.Name.Length - archive.FileType.Length);
 
                 var file = await location.CreateFileAsync(outputFileName, CreationCollisionOption.GenerateUniqueName);
                 if (file == null) return Stream.Null; // file was not created

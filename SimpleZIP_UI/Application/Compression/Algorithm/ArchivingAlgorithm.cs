@@ -90,6 +90,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         {
             if (archive == null || entries.IsNullOrEmpty() || location == null) return Stream.Null;
 
+            var entriesSet = new HashSet<string>(entries.Select(entry => entry.Key).ToArray());
+
             options = options ?? new ReaderOptions { LeaveStreamOpen = false };
             var progressStream = Stream.Null;
             try
@@ -102,10 +104,13 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                     while (reader.MoveToNextEntry())
                     {
                         Token.ThrowIfCancellationRequested();
-                        if (entries.Any(entry => reader.Entry.Key.Equals(entry.Key)))
+                        if (entriesSet.Contains(reader.Entry.Key))
                         {
                             await WriteEntry(reader, location);
+                            entriesSet.Remove(reader.Entry.Key);
                         }
+
+                        if (entriesSet.IsEmpty()) break;
                     }
                 }
             }
