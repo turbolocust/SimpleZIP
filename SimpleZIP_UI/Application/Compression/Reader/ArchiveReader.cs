@@ -22,6 +22,7 @@ using SharpCompress.Readers;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
 
@@ -40,6 +41,11 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         public const string RootNodeName = "root";
 
         /// <summary>
+        /// To avoid too many calls on <see cref="Task.Delay(int)"/>.
+        /// </summary>
+        private const uint TaskDelayThreshold = 100;
+
+        /// <summary>
         /// Dictionary that consists of existing nodes. Each node is unique and this 
         /// dictionary is used to access existing nodes as fast as possible => O(1).
         /// </summary>
@@ -52,14 +58,21 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         private IReader Reader { get; set; }
 
         /// <summary>
+        /// The token which can be used to interrupt the operation.
+        /// </summary>
+        private CancellationToken _cancellationToken;
+
+        /// <summary>
         /// True if this reader is closed and thus cannot be used anymore. 
         /// Once this instance is disposed, this value will always be true.
         /// </summary>
         internal bool Closed { get; private set; }
 
-        public ArchiveReader()
+        public ArchiveReader(CancellationToken token)
         {
             _nodes = new Dictionary<string, Node>();
+            _cancellationToken = token;
+            _cancellationToken.Register(() => Closed = true);
         }
 
         /// <summary>
@@ -91,17 +104,21 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         /// <param name="password">The password for the archive (if encrypted).</param>
         /// <returns>The root node of the tree, which represents the root directory.</returns>
         /// <exception cref="IOException">Thrown when an error while reading the archive occurred.</exception>
+        /// <exception cref="OperationCanceledException">Thrown if operation has been cancelled.</exception>
+        /// <exception cref="ObjectDisposedException">Thrown if reader is closed.</exception>
         public async Task<Node> Read(StorageFile archive, string password = null)
         {
             if (Closed) throw new ObjectDisposedException(GetType().FullName);
 
             await OpenArchiveAsync(archive, password);
 
-            var separator = DetermineFileSeparator();
+            char separator = DetermineFileSeparator();
             var keyBuilder = new StringBuilder();
             var nameBuilder = new StringBuilder();
             var rootNode = new Node(RootNodeName);
             _nodes.Add(rootNode.Id, rootNode);
+
+            uint threshold = 0; // to avoid too many calls on Task.Delay
 
             foreach (var entry in ReadArchive())
             {
@@ -141,6 +158,13 @@ namespace SimpleZIP_UI.Application.Compression.Reader
                 var fileEntry = new FileEntry(entry.Key, pair.EntryName, entrySize);
                 parentNode.Children.Add(fileEntry);
                 keyBuilder.Clear();
+
+                if (++threshold == TaskDelayThreshold)
+                {
+                    // to keep any waiting thread responsive
+                    await Task.Delay(1, _cancellationToken);
+                    threshold = 0;
+                }
             }
 
             return rootNode; // return first element in tree, which is the root node
@@ -154,6 +178,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         {
             while (!Closed && Reader.MoveToNextEntry())
             {
+                _cancellationToken.ThrowIfCancellationRequested();
                 yield return Reader.Entry;
             }
         }

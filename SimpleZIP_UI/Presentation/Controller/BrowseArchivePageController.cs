@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
 using SimpleZIP_UI.Application.Compression.Model;
@@ -30,7 +31,7 @@ using SimpleZIP_UI.Presentation.View.Model;
 
 namespace SimpleZIP_UI.Presentation.Controller
 {
-    internal class BrowseArchivePageController : BaseController
+    internal sealed class BrowseArchivePageController : BaseController, IDisposable
     {
         /// <summary>
         /// The associated archive. Will hold a reference to a storage file 
@@ -45,12 +46,18 @@ namespace SimpleZIP_UI.Presentation.Controller
         private static Node _rootNode;
 
         /// <summary>
+        /// Source for cancellation token.
+        /// </summary>
+        private readonly CancellationTokenSource _tokenSource;
+
+        /// <summary>
         /// True if navigation is about to be executed, false otherwise.
         /// </summary>
         internal bool IsNavigating { get; private set; }
 
         internal BrowseArchivePageController(INavigation navHandler) : base(navHandler)
         {
+            _tokenSource = new CancellationTokenSource();
         }
 
         /// <summary>
@@ -69,7 +76,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             {
                 try
                 {
-                    using (var reader = new ArchiveReader())
+                    using (var reader = new ArchiveReader(_tokenSource.Token))
                     {
                         rootNode = await reader.Read(archive);
                     }
@@ -79,15 +86,20 @@ namespace SimpleZIP_UI.Presentation.Controller
                     // archive is encrypted, ask for password and try again
                     string password = await RequestPassword(archive.DisplayName);
                     passwordSet = password != null;
-                    using (var reader = new ArchiveReader())
+                    using (var reader = new ArchiveReader(_tokenSource.Token))
                     {
                         rootNode = await reader.Read(archive, password);
                     }
                 }
             }
+            catch (OperationCanceledException)
+            {
+                // ignore, because we're navigating back to
+                // the main page after cancelling the operation
+            }
             catch (Exception ex)
             {
-                var message = await I18N.ExceptionMessageHandler
+                string message = await I18N.ExceptionMessageHandler
                     .GetStringFor(ex, true, passwordSet, archive);
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 DialogFactory.CreateErrorDialog(message).ShowAsync();
@@ -103,6 +115,17 @@ namespace SimpleZIP_UI.Presentation.Controller
             }
 
             return _rootNode = rootNode;
+        }
+
+        /// <summary>
+        /// Cancels any ongoing <see cref="ReadArchive"/> operation.
+        /// </summary>
+        internal void CancelReadArchive()
+        {
+            if (!_tokenSource.IsCancellationRequested)
+            {
+                _tokenSource.Cancel();
+            }
         }
 
         /// <summary>
@@ -167,6 +190,12 @@ namespace SimpleZIP_UI.Presentation.Controller
                 var item = new ExtractableItem(_archiveFile.Name, _archiveFile, entries);
                 Navigation.Navigate(typeof(DecompressionSummaryPage), item);
             }
+        }
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            _tokenSource.Dispose();
         }
     }
 }

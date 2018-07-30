@@ -20,7 +20,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -30,8 +32,6 @@ using SimpleZIP_UI.Application.Compression.Reader;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Presentation.Controller;
 using SimpleZIP_UI.Presentation.View.Model;
-using System.Threading.Tasks;
-using Windows.UI.Core;
 
 namespace SimpleZIP_UI.Presentation.View
 {
@@ -106,8 +106,8 @@ namespace SimpleZIP_UI.Presentation.View
                         {
                             if (child.Name.Equals(addItem.DisplayName) && child.IsNode)
                             {
-                                var nextNode = child as Node;
-                                await UpdateListContent(nextNode);
+                                IsProgressBarEnabled.IsTrue = true;
+                                await UpdateListContentAsync(child as Node);
                                 return; // since node is a new folder
                             }
                         }
@@ -134,14 +134,15 @@ namespace SimpleZIP_UI.Presentation.View
         /// </summary>
         /// <param name="nextNode">The node whose content will be used 
         /// to populate the list box (for display in UI).</param>
-        /// <returns>An awaitable task which returns nothing.</returns>
-        private async Task UpdateListContent(Node nextNode)
+        /// <returns>A task which returns nothing.</returns>
+        private async Task UpdateListContentAsync(Node nextNode)
         {
             if (nextNode == null) return;
 
-            IsProgressBarEnabled.IsTrue = true;
+            await Task.Delay(50); // allow visual updates in UI
 
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            // dispatch for non-blocking UI
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 ArchiveEntryModels.Clear();
                 _selectedModels.Clear();
@@ -157,11 +158,11 @@ namespace SimpleZIP_UI.Presentation.View
                     ArchiveEntryModels.Add(model);
                 }
 
+                IsProgressBarEnabled.IsTrue = false;
+
                 // checking stack count since root node name may be different
                 AddressBar.Text = _nodeStack.Count == 1 ? "/" : nextNode.Id;
             });
-
-            IsProgressBarEnabled.IsTrue = false;
         }
 
         /// <inheritdoc />
@@ -192,7 +193,7 @@ namespace SimpleZIP_UI.Presentation.View
             if (archive == null)
                 throw new NullReferenceException("Cannot handle null parameter.");
 
-            await UpdateListContent(await _controller.ReadArchive(archive));
+            await UpdateListContentAsync(await _controller.ReadArchive(archive));
             ExtractWholeArchiveButton.IsEnabled = !_controller.IsEmptyArchive();
         }
 
@@ -204,8 +205,13 @@ namespace SimpleZIP_UI.Presentation.View
             if (_nodeStack.Count > 1 && !_controller.IsNavigating)
             {
                 args.Cancel = true;
-                _nodeStack.Pop();
-                await UpdateListContent(_nodeStack.Pop());
+                _nodeStack.Pop(); // remove current
+                IsProgressBarEnabled.IsTrue = true;
+                await UpdateListContentAsync(_nodeStack.Pop());
+            }
+            else
+            {
+                _controller.CancelReadArchive();
             }
         }
 
