@@ -95,7 +95,8 @@ namespace SimpleZIP_UI.Presentation.View
                 HashAlgorithmModels.Add(new HashAlgorithmModel(algorithm));
             }
 
-            SelectedAlgorithm = HashAlgorithmModels[0];
+            int i = LoadHashAlgorithmIndex();
+            SelectedAlgorithm = HashAlgorithmModels[i];
         }
 
         /// <summary>
@@ -150,6 +151,25 @@ namespace SimpleZIP_UI.Presentation.View
             return models;
         }
 
+        private void SaveHashAlgorithmIndex()
+        {
+            int index = HashAlgorithmModels.IndexOf(SelectedAlgorithm);
+            Settings.PushOrUpdate(Settings.Keys.RecentHashAlgorithmKey, index);
+        }
+
+        private static int LoadHashAlgorithmIndex()
+        {
+            bool exists = Settings.TryGet(Settings
+                .Keys.RecentHashAlgorithmKey, out int index);
+
+            if (!exists || index < 0)
+            {
+                index = 0; // set to first element
+            }
+
+            return index;
+        }
+
         private void RefreshListBox()
         {
             MessageDigestModelsListBox.ItemsSource = null;
@@ -169,6 +189,7 @@ namespace SimpleZIP_UI.Presentation.View
         private void HashAlgorithmComboBox_OnSelectionChanged(
             object sender, SelectionChangedEventArgs args)
         {
+            SaveHashAlgorithmIndex();
             PopulateListBox();
         }
 

@@ -53,10 +53,9 @@ namespace SimpleZIP_UI
 
         /// <summary>
         /// Returns the value which is mapped to the specified key.
-        /// If the value does not exist, <code>null</code> is returned.
         /// </summary>
         /// <param name="key">The key of the mapped value.</param>
-        /// <returns></returns>
+        /// <returns>The value which is mapped to the specified key.</returns>
         internal static object Get(string key)
         {
             return LocalSettings.Values[key];
@@ -95,6 +94,7 @@ namespace SimpleZIP_UI
             internal const string PreferOpenArchiveKey = "PreferOpenArchive";
             internal const string RecentArchivesKey = "RecentArchives";
             internal const string ArchiveHistorySize = "ArchiveHistorySize";
+            internal const string RecentHashAlgorithmKey = "RecentHashAlgorithm";
         }
     }
 }
