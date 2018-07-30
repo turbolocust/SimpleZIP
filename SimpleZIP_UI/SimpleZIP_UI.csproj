@@ -142,9 +142,9 @@
     <Compile Include="Application\ReadingArchiveException.cs" />
     <Compile Include="I18N\Resources.cs" />
     <Compile Include="ISerializable.cs" />
-    <Compile Include="Presentation\Controller\BrowseArchivePageController.cs" />
+    <Compile Include="Presentation\Controller\BrowseArchiveController.cs" />
     <Compile Include="Presentation\Controller\IGuiController.cs" />
-    <Compile Include="Presentation\Controller\MessageDigestPageController.cs" />
+    <Compile Include="Presentation\Controller\MessageDigestController.cs" />
     <Compile Include="Presentation\Controller\SummaryPageController.cs" />
     <Compile Include="Application\ProgressManager.cs" />
     <Compile Include="Presentation\Handler\ArchiveHistoryHandler.cs" />
@@ -182,15 +182,15 @@
       <DependentUpon>DecompressionSummaryPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\Controller\BaseController.cs" />
-    <Compile Include="Presentation\Controller\DecompressionPageController.cs" />
+    <Compile Include="Presentation\Controller\DecompressionController.cs" />
     <Compile Include="Presentation\Factory\DialogFactory.cs" />
     <Compile Include="Presentation\Factory\PickerFactory.cs" />
     <Compile Include="Application\InvalidArchiveTypeException.cs" />
-    <Compile Include="Presentation\Controller\CompressionPageController.cs" />
+    <Compile Include="Presentation\Controller\CompressionController.cs" />
     <Compile Include="Presentation\View\CompressionSummaryPage.xaml.cs">
       <DependentUpon>CompressionSummaryPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Presentation\Controller\MainPageController.cs" />
+    <Compile Include="Presentation\Controller\MainController.cs" />
     <Compile Include="Presentation\View\Dialog\ViewTextDialog.xaml.cs">
       <DependentUpon>ViewTextDialog.xaml</DependentUpon>
     </Compile>

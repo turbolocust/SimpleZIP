@@ -40,7 +40,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// <summary>
         /// The aggregated controller instance.
         /// </summary>
-        private readonly CompressionPageController _controller;
+        private readonly CompressionController _controller;
 
         /// <summary>
         /// A list of selected files for compression.
@@ -91,7 +91,7 @@ namespace SimpleZIP_UI.Presentation.View
             }
 
             ArchiveTypeComboBox.SelectedIndex = 0; // selected index on page launch
-            _controller = new CompressionPageController(this);
+            _controller = new CompressionController(this);
         }
 
         private static ComboBoxItem CreateItemForComboBox(string content, string fileType)

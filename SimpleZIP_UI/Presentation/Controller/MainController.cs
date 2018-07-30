@@ -23,7 +23,7 @@ using SimpleZIP_UI.Presentation.View;
 
 namespace SimpleZIP_UI.Presentation.Controller
 {
-    internal class MainPageController : BaseController
+    internal class MainController : BaseController
     {
         /// <summary>
         /// Type of action to be performed.
@@ -33,7 +33,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             Compress, Decompress, OpenArchive, HashCalculation
         }
 
-        internal MainPageController(INavigation navHandler) : base(navHandler)
+        internal MainController(INavigation navHandler) : base(navHandler)
         {
         }
 

@@ -41,7 +41,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// <summary>
         /// The aggregated controller instance.
         /// </summary>
-        private readonly DecompressionPageController _controller;
+        private readonly DecompressionController _controller;
 
         /// <summary>
         /// A list of selected files for decompression.
@@ -52,7 +52,7 @@ namespace SimpleZIP_UI.Presentation.View
         public DecompressionSummaryPage()
         {
             InitializeComponent();
-            _controller = new DecompressionPageController(this);
+            _controller = new DecompressionController(this);
             _selectedItems = new List<ExtractableItem>(0);
         }
 

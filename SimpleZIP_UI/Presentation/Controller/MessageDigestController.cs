@@ -19,9 +19,9 @@
 
 namespace SimpleZIP_UI.Presentation.Controller
 {
-    internal class MessageDigestPageController : BaseController
+    internal class MessageDigestController : BaseController
     {
-        internal MessageDigestPageController(
+        internal MessageDigestController(
             INavigation navHandler) : base(navHandler)
         {
         }

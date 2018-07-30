@@ -28,9 +28,9 @@ using SimpleZIP_UI.Application.Util;
 
 namespace SimpleZIP_UI.Presentation.Controller
 {
-    internal class CompressionPageController : SummaryPageController<CompressionInfo>
+    internal class CompressionController : SummaryPageController<CompressionInfo>
     {
-        internal CompressionPageController(INavigation navHandler) : base(navHandler)
+        internal CompressionController(INavigation navHandler) : base(navHandler)
         {
         }
 

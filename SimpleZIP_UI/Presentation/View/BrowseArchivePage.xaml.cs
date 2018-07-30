@@ -41,7 +41,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// <summary>
         /// The aggregated controller instance.
         /// </summary>
-        private readonly BrowseArchivePageController _controller;
+        private readonly BrowseArchiveController _controller;
 
         /// <summary>
         /// Set consisting of selected models in view.
@@ -69,7 +69,7 @@ namespace SimpleZIP_UI.Presentation.View
         public BrowseArchivePage()
         {
             InitializeComponent();
-            _controller = new BrowseArchivePageController(this);
+            _controller = new BrowseArchiveController(this);
             _selectedModels = new HashSet<ArchiveEntryModel>();
             ArchiveEntryModels = new ObservableCollection<ArchiveEntryModel>();
         }

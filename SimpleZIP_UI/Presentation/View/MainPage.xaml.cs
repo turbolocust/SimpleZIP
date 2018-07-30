@@ -35,7 +35,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using SimpleZIP_UI.Presentation.Controller;
 using SimpleZIP_UI.Presentation.Handler;
 using SimpleZIP_UI.Presentation.View.Model;
-using static SimpleZIP_UI.Presentation.Controller.MainPageController;
+using static SimpleZIP_UI.Presentation.Controller.MainController;
 
 namespace SimpleZIP_UI.Presentation.View
 {
@@ -55,7 +55,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// <summary>
         /// The aggregated controller instance.
         /// </summary>
-        private readonly MainPageController _controller;
+        private readonly MainController _controller;
 
         /// <summary>
         /// Models bound to the list view.
@@ -65,7 +65,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// <inheritdoc />
         public MainPage()
         {
-            _controller = new MainPageController(this);
+            _controller = new MainController(this);
             RecentArchiveModels = new ObservableCollection<RecentArchiveModel>();
             InitializeComponent();
 

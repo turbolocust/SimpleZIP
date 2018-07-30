@@ -31,7 +31,7 @@ using SimpleZIP_UI.Presentation.View.Model;
 
 namespace SimpleZIP_UI.Presentation.Controller
 {
-    internal sealed class BrowseArchivePageController : BaseController, IDisposable
+    internal sealed class BrowseArchiveController : BaseController, IDisposable
     {
         /// <summary>
         /// The associated archive. Will hold a reference to a storage file 
@@ -55,7 +55,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// </summary>
         internal bool IsNavigating { get; private set; }
 
-        internal BrowseArchivePageController(INavigation navHandler) : base(navHandler)
+        internal BrowseArchiveController(INavigation navHandler) : base(navHandler)
         {
             _tokenSource = new CancellationTokenSource();
         }

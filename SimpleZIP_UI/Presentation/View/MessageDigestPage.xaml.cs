@@ -64,7 +64,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// <summary>
         /// The aggregated controller instance.
         /// </summary>
-        private readonly MessageDigestPageController _controller;
+        private readonly MessageDigestController _controller;
 
         /// <summary>
         /// Instance used to compute hashes.
@@ -79,7 +79,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// <inheritdoc />
         public MessageDigestPage()
         {
-            _controller = new MessageDigestPageController(this);
+            _controller = new MessageDigestController(this);
             _messageDigestProvider = new MessageDigestProvider();
             HashAlgorithmModels = new ObservableCollection<HashAlgorithmModel>();
             MessageDigestModels = new ObservableCollection<MessageDigestModel>();
