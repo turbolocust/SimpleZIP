@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2018 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -23,6 +23,17 @@ namespace SimpleZIP_UI.Application.Util
 {
     internal static class CollectionUtils
     {
+        /// <summary>
+        /// Checks if this collection is empty.
+        /// </summary>
+        /// <typeparam name="T">The type of elements in this collection.</typeparam>
+        /// <param name="collection">The collection to be checked.</param>
+        /// <returns>True if collection is empty, false otherwise.</returns>
+        public static bool IsEmpty<T>(this ICollection<T> collection)
+        {
+            return collection.Count == 0;
+        }
+
         /// <summary>
         /// Checks whether this collection is <code>null</code> or empty.
         /// </summary>
