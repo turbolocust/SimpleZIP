@@ -157,6 +157,7 @@
       <DependentUpon>EnterPasswordDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\View\Model\BooleanModel.cs" />
+    <Compile Include="Presentation\View\Model\HashAlgorithmModel.cs" />
     <Compile Include="Presentation\View\ShareTargetOptionsPage.xaml.cs">
       <DependentUpon>ShareTargetOptionsPage.xaml</DependentUpon>
     </Compile>
