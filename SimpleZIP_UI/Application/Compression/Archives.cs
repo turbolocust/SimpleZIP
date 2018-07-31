@@ -92,7 +92,7 @@ namespace SimpleZIP_UI.Application.Compression
             {
                 { SharpCompress.Common.ArchiveType.Zip, ArchiveType.Zip },
                 { SharpCompress.Common.ArchiveType.Tar, ArchiveType.Tar },
-                { SharpCompress.Common.ArchiveType.Rar, ArchiveType.GZip },
+                { SharpCompress.Common.ArchiveType.Rar, ArchiveType.Rar },
                 { SharpCompress.Common.ArchiveType.GZip, ArchiveType.GZip }
             };
         }

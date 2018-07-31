@@ -85,18 +85,14 @@ namespace SimpleZIP_UI.Presentation.Handler
 
         private static async Task<bool> IsArchiveFile(StorageFile file)
         {
-            string ext = FileUtils.GetFileNameExtension(file.Path);
-            var type = Archives.DetermineArchiveTypeByFileExtension(ext);
-            if (type == Archives.ArchiveType.Unknown)
+            var type = Archives.ArchiveType.Unknown;
+            try
             {
-                try
-                {
-                    type = await Archives.DetermineArchiveType(file);
-                }
-                catch (InvalidArchiveTypeException)
-                {
-                    // type is already set to ArchiveType.Unknown
-                }
+                type = await Archives.DetermineArchiveType(file);
+            }
+            catch (InvalidArchiveTypeException)
+            {
+                // type is already set to ArchiveType.Unknown
             }
             return type != Archives.ArchiveType.Unknown;
         }
