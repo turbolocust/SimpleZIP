@@ -154,8 +154,6 @@ namespace SimpleZIP_UI.Presentation.View
                             // allow error dialog to be displayed
                             await _controller.CreateResultDialog(result).ShowAsync();
                         }
-                        // leave if share target is activated
-                        _controller.NavigateBackHome();
                     }
                     else
                     {
@@ -163,6 +161,8 @@ namespace SimpleZIP_UI.Presentation.View
                         _controller.CreateResultDialog(result).ShowAsync();
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     }
+
+                    _controller.NavigateBackHome();
                 }
             }
             else
