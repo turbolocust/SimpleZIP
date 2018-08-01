@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2018 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -23,8 +23,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using SharpCompress.Readers;
 using SharpCompress.Writers;
-using SimpleZIP_UI.Application.Compression.Reader;
 using Windows.Storage;
+using SimpleZIP_UI.Application.Compression.Reader;
 using SimpleZIP_UI.Application.Compression.Algorithm.Event;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm
@@ -37,6 +37,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// </summary>
         protected const int DefaultBufferSize = 8192;
 
+        /// <inheritdoc />
         /// <summary>
         /// Event handler for total bytes processed.
         /// </summary>
@@ -65,12 +66,15 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         }
 
         /// <inheritdoc cref="ICompressionAlgorithm.Compress"/>
-        public abstract Task<Stream> Compress(IReadOnlyList<StorageFile> files, StorageFile archive, StorageFolder location, WriterOptions options = null);
+        public abstract Task<Stream> Compress(IReadOnlyList<StorageFile> files,
+            StorageFile archive, StorageFolder location, WriterOptions options = null);
 
         /// <inheritdoc cref="ICompressionAlgorithm.Decompress(StorageFile,StorageFolder,ReaderOptions)"/>
-        public abstract Task<Stream> Decompress(StorageFile archive, StorageFolder location, ReaderOptions options = null);
+        public abstract Task<Stream> Decompress(StorageFile archive,
+            StorageFolder location, ReaderOptions options = null);
 
         /// <inheritdoc cref="ICompressionAlgorithm.Decompress(StorageFile,StorageFolder,IReadOnlyList&lt;FileEntry&gt;,ReaderOptions)"/>
-        public abstract Task<Stream> Decompress(StorageFile archive, StorageFolder location, IReadOnlyList<FileEntry> entries, ReaderOptions options = null);
+        public abstract Task<Stream> Decompress(StorageFile archive, StorageFolder location,
+            IReadOnlyList<FileEntry> entries, ReaderOptions options = null);
     }
 }

@@ -124,11 +124,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             return progressStream;
         }
 
-        private async Task<IEntry> WriteEntry(IReader reader, StorageFolder location)
+        private async Task WriteEntry(IReader reader, StorageFolder location)
         {
             var entry = reader.Entry;
             var file = await FileUtils.CreateFileAsync(location, entry.Key);
-            if (file == null) return null;
+            if (file == null) return; // file could not be created
 
             using (var entryStream = reader.OpenEntryStream())
             {
@@ -142,7 +142,6 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                     }
                 }
             }
-            return entry;
         }
 
         /// <inheritdoc />
