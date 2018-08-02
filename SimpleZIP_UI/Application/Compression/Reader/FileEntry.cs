@@ -48,5 +48,24 @@ namespace SimpleZIP_UI.Application.Compression.Reader
             Name = name;
             Size = size;
         }
+
+        protected bool Equals(FileEntry other)
+        {
+            return string.Equals(Key, other.Key);
+        }
+
+        /// <inheritdoc />
+        public override bool Equals(object obj)
+        {
+            if (obj is null) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj.GetType() == GetType() && Equals((FileEntry)obj);
+        }
+
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+            return Key != null ? Key.GetHashCode() : 0;
+        }
     }
 }
