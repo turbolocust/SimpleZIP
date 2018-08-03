@@ -57,10 +57,7 @@ namespace SimpleZIP_UI.Application.Util
                     }
                 }, token);
 
-                while (!childTask.IsCompleted)
-                {
-                    token.ThrowIfCancellationRequested();
-                }
+                Task.WaitAll(new[] { childTask }, token);
             }, token);
 
             return task;
