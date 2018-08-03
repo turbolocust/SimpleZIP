@@ -59,12 +59,7 @@ namespace SimpleZIP_UI.Application.Hashing
             }
         }
 
-        /// <summary>
-        /// Converts the specified byte array to a hexadecimal string representation (upper case).
-        /// </summary>
-        /// <param name="hashedBytes">The byte array to be converted.</param>
-        /// <returns>The hexadecimal string representation of the specified byte array.</returns>
-        public static string ConvertHashValueToString(IReadOnlyCollection<byte> hashedBytes)
+        private static string ConvertHashValueToString(IReadOnlyCollection<byte> hashedBytes)
         {
             var stringBuilder = new StringBuilder(hashedBytes.Count);
             foreach (var byteValue in hashedBytes)
