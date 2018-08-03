@@ -230,8 +230,17 @@ namespace SimpleZIP_UI.Application.Compression.Reader
 
         public void Dispose()
         {
-            Closed = true;
-            Reader?.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Closed = true;
+                Reader?.Dispose();
+            }
         }
 
         private struct EntryKeyPair
