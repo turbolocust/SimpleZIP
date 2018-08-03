@@ -32,7 +32,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
         protected override Stream GetCompressorStream(Stream stream, CompressorOptions options)
         {
             var compressorStream = options.IsCompression
-                ? new GZipStream(stream, CompressionMode.Compress, CompressionLevel.BestSpeed)
+                ? new GZipStream(stream, CompressionMode.Compress, CompressionLevel.Default)
                 : new GZipStream(stream, CompressionMode.Decompress);
 
             // set file name to stream
