@@ -15,7 +15,7 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="SimpleZIP_UI.App">
-      <uap:VisualElements DisplayName="SimpleZIP" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="Create and extract archives using ZIP, GZIP, TAR, TAR+GZIP, TAR+BZIP2 or TAR+LZMA." BackgroundColor="transparent">
+      <uap:VisualElements DisplayName="SimpleZIP" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="Create and extract archives using ZIP, TAR, TAR+GZIP, TAR+BZIP2 or TAR+LZMA." BackgroundColor="transparent">
         <uap:DefaultTile ShortName="SimpleZIP" Square71x71Logo="Assets\SmallTile.png">
         </uap:DefaultTile>
         <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="transparent" />
