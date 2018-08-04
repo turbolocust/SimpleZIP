@@ -461,4 +461,8 @@
     <value>Was möchtest du tun?</value>
     <comment>Asks the user what he/she would like to do.</comment>
   </data>
+  <data name="FolderMissing.Text" xml:space="preserve">
+    <value>Ordner existiert nicht mehr.</value>
+    <comment>Specified folder (file) has been deleted.</comment>
+  </data>
 </root>

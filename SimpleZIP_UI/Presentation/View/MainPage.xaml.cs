@@ -262,22 +262,30 @@ namespace SimpleZIP_UI.Presentation.View
                 var model = (RecentArchiveModel)flyoutItem.DataContext;
                 var mru = ArchiveHistoryHandler.MruList;
                 if (!mru.ContainsItem(model.MruToken)) return;
-                var folder = await mru.GetFolderAsync(model.MruToken);
-                if (folder == null) return; // shouldn't be null
-                var options = new FolderLauncherOptions();
                 try
                 {
-                    var file = await folder.GetFileAsync(model.FileName);
-                    options.ItemsToSelect.Add(file);
+                    var folder = await mru.GetFolderAsync(model.MruToken);
+                    if (folder == null) return; // shouldn't be null
+                    var options = new FolderLauncherOptions();
+                    try
+                    {
+                        var file = await folder.GetFileAsync(model.FileName);
+                        options.ItemsToSelect.Add(file);
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        // file probably got deleted by someone;
+                        // thus, ignore and just launch directory
+                    }
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    Launcher.LaunchFolderAsync(folder, options);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 }
                 catch (FileNotFoundException)
                 {
-                    // file probably got deleted by someone;
-                    // thus, ignore and just launch directory
+                    string errMsg = I18N.Resources.GetString("FolderMissing/Text");
+                    await DialogFactory.CreateErrorDialog(errMsg).ShowAsync();
                 }
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                Launcher.LaunchFolderAsync(folder, options);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             }
         }
 
