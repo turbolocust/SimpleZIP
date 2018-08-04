@@ -16,6 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+using System.IO;
 using System.Text;
 
 namespace SimpleZIP_UI.Application.Util
@@ -38,6 +39,18 @@ namespace SimpleZIP_UI.Application.Util
             }
 
             return sb;
+        }
+
+        /// <summary>
+        /// Converts the specified string to a <see cref="Stream"/>.
+        /// </summary>
+        /// <param name="s">The string to be converted.</param>
+        /// <param name="charEncoding">Character encoding of the string.</param>
+        /// <returns>A new <see cref="Stream"/> object.</returns>
+        public static Stream ToStream(this string s, Encoding charEncoding = null)
+        {
+            var encoding = charEncoding ?? Encoding.UTF8;
+            return new MemoryStream(encoding.GetBytes(s ?? string.Empty));
         }
     }
 }
