@@ -23,6 +23,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
+using SimpleZIP_UI.Application.Util;
 
 namespace SimpleZIP_UI.Application.Hashing
 {
@@ -50,13 +51,32 @@ namespace SimpleZIP_UI.Application.Hashing
         public async Task<(byte[] HashedBytes, string HashedValue)>
             ComputeHashValue(StorageFile file, string algorithmName)
         {
-            using (var fileStream = await file.OpenStreamForReadAsync())
+            using (var stream = await file.OpenStreamForReadAsync())
             {
-                var algorithm = GetHashAlgorithm(algorithmName);
-                var hashedBytes = algorithm.ComputeHash(fileStream);
-                var hashedValue = ConvertHashValueToString(hashedBytes);
-                return (hashedBytes, hashedValue);
+                return ComputeHash(stream, algorithmName);
             }
+        }
+
+        /// <inheritdoc />
+        public Task<(byte[] HashedBytes, string HashedValue)>
+            ComputeHashValue(string value, string algorithmName)
+        {
+            return Task.Run(() =>
+            {
+                using (var stream = value.ToStream())
+                {
+                    return ComputeHash(stream, algorithmName);
+                }
+            });
+        }
+
+        private static (byte[] HashedBytes, string HashedValue)
+            ComputeHash(Stream stream, string algorithmName)
+        {
+            var algorithm = GetHashAlgorithm(algorithmName);
+            var hashedBytes = algorithm.ComputeHash(stream);
+            var hashedValue = ConvertHashValueToString(hashedBytes);
+            return (hashedBytes, hashedValue);
         }
 
         private static string ConvertHashValueToString(IReadOnlyCollection<byte> hashedBytes)

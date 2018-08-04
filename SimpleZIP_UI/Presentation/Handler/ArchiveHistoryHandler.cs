@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using SimpleZIP_UI.Application.Compression;
+using SimpleZIP_UI.Application.Hashing;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Presentation.View.Model;
 using static SimpleZIP_UI.Presentation.View.Model.RecentArchiveModel;
@@ -39,6 +40,11 @@ namespace SimpleZIP_UI.Presentation.Handler
         /// The default date format that is being used by history items.
         /// </summary>
         public const string DefaultDateFormat = @"dd/MM/yyyy - hh:mm tt";
+
+        /// <summary>
+        /// Instance used for hashing the MRU token.
+        /// </summary>
+        private readonly IMessageDigestProvider _msgDigestProvider;
 
         /// <summary>
         /// Instance used for compressing/decompressing serialized history data.
@@ -89,6 +95,7 @@ namespace SimpleZIP_UI.Presentation.Handler
 
         private ArchiveHistoryHandler()
         {
+            _msgDigestProvider = new MessageDigestProvider();
             // Unicode encoding is important here, see the generated
             // XML file produced by System.Xml.Serialization
             _compressor = new StringGzipCompressor(Encoding.Unicode);
@@ -119,11 +126,11 @@ namespace SimpleZIP_UI.Presentation.Handler
         /// consisting of file names. Each entry holds the specified <code>location</code>
         /// as well as the current datetime with the format as specified in <see cref="DefaultDateFormat"/>.
         /// </summary>
-        /// <param name="location">The location to be associated with each entry.</param>
+        /// <param name="folder">The folder to be stored with each entry.</param>
         /// <param name="fileNames">File names to be stored in history.</param>
-        internal void SaveToHistory(StorageFolder location, params string[] fileNames)
+        internal async Task<bool> SaveToHistoryAsync(StorageFolder folder, params string[] fileNames)
         {
-            if (fileNames.IsNullOrEmpty()) return;
+            if (fileNames.IsNullOrEmpty()) return false;
 
             if (!GetSerializedHistory(out string xml))
             {
@@ -134,8 +141,13 @@ namespace SimpleZIP_UI.Presentation.Handler
             var history = collection.Models.ToList();
             var whenUsed = DateTime.Now.ToString(DefaultDateFormat);
             var models = new List<RecentArchiveModel>(fileNames.Length);
-            string mruToken = location.Path.Replace('\\', '|'); // causes exception when adding to MRU list otherwise
-            models.AddRange(fileNames.Select(name => new RecentArchiveModel(whenUsed, name, location.Path, mruToken)));
+
+            foreach (string name in fileNames)
+            {
+                var model = new RecentArchiveModel(whenUsed, name,
+                    folder.Path, await CreateTokenAsync(folder.Path, name));
+                models.Add(model);
+            }
 
             // get maximum history size specified by user
             if (!Settings.TryGet(Settings.Keys.ArchiveHistorySize, out int size) || size > MaxHistoryItems)
@@ -149,14 +161,17 @@ namespace SimpleZIP_UI.Presentation.Handler
             // save folder (location) to Most Recently Used list
             foreach (var model in collection.Models)
             {
-                MruList.AddOrReplace(model.MruToken, location);
+                MruList.AddOrReplace(model.MruToken, folder);
             }
             // also serialize separately to an XML file to be able to store
             // any information which StorageFile's do not have
             if (!string.IsNullOrEmpty(xml = collection.Serialize()))
             {
                 StoreAwayCompressed(xml);
+                return true;
             }
+
+            return false;
         }
 
         /// <summary>
@@ -172,8 +187,7 @@ namespace SimpleZIP_UI.Presentation.Handler
                 try
                 {
                     var modelRemove = models.SingleOrDefault(m =>
-                        m.Location.Equals(model.Location) &&
-                        m.FileName.Equals(model.FileName));
+                        m.MruToken.Equals(model.MruToken));
                     models.Remove(modelRemove);
                     // check if contains first to avoid exception
                     if (MruList.ContainsItem(model.MruToken))
@@ -202,6 +216,54 @@ namespace SimpleZIP_UI.Presentation.Handler
             MruList.Clear();
             Settings.PushOrUpdate(Settings.Keys
                 .RecentArchivesKey, string.Empty);
+        }
+
+        private void StoreAwayCompressed(string xml)
+        {
+            string compressed = _compressor.Compress(xml);
+            Settings.PushOrUpdate(Settings.Keys.RecentArchivesKey, compressed);
+        }
+
+        private bool GetSerializedHistory(out string xml)
+        {
+            bool found = Settings.TryGet(Settings.Keys
+                .RecentArchivesKey, out string value);
+            xml = string.Empty;
+
+            try
+            {
+                if (found && !string.IsNullOrEmpty(value))
+                {
+                    xml = _compressor.Decompress(value);
+                }
+            }
+            catch (Exception)
+            {
+                found = false;
+            }
+
+            return found;
+        }
+
+        private async Task<string> CreateTokenAsync(string location, string name)
+        {
+            // build proper path (FullName) first
+            string loc = location.Replace('/', '\\');
+            var sb = new StringBuilder(loc);
+
+            if (!loc.EndsWith("\\"))
+            {
+                sb.Append("\\");
+            }
+
+            sb.Append(name);
+
+            // project path to fixed length string to avoid
+            // length limitation of MRU token
+            var (_, hash) = await _msgDigestProvider
+                .ComputeHashValue(sb.ToString(), "SHA256");
+
+            return hash;
         }
 
         private static RecentArchiveModel[] UpdateHistory(List<RecentArchiveModel> history,
@@ -239,34 +301,8 @@ namespace SimpleZIP_UI.Presentation.Handler
                 }
                 history.InsertRange(0, models); // insert from start to keep order
             }
+
             return history.ToArray();
-        }
-
-        private void StoreAwayCompressed(string xml)
-        {
-            string compressed = _compressor.Compress(xml);
-            Settings.PushOrUpdate(Settings.Keys.RecentArchivesKey, compressed);
-        }
-
-        private bool GetSerializedHistory(out string xml)
-        {
-            bool found = Settings.TryGet(Settings.Keys
-                .RecentArchivesKey, out string value);
-            xml = string.Empty;
-
-            try
-            {
-                if (found && !string.IsNullOrEmpty(value))
-                {
-                    xml = _compressor.Decompress(value);
-                }
-            }
-            catch (Exception)
-            {
-                found = false;
-            }
-
-            return found;
         }
     }
 }
