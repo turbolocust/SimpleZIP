@@ -26,7 +26,7 @@ using SharpCompress.Compressors.Deflate;
 using SharpCompress.Readers;
 using SharpCompress.Writers;
 using SimpleZIP_UI.Application.Compression.Reader;
-using SimpleZIP_UI.Application.Compression.Streams;
+using SimpleZIP_UI.Application.Streams;
 using SimpleZIP_UI.Application.Util;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm

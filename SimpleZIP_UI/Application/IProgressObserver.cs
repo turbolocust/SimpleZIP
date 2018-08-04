@@ -16,7 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
-namespace SimpleZIP_UI.Application.Compression
+namespace SimpleZIP_UI.Application
 {
     /// <summary>
     /// An observer that gets informed on progress updates.

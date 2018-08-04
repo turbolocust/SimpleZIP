@@ -124,7 +124,7 @@
     <Compile Include="Application\Compression\Operation\CompressionOperation.cs" />
     <Compile Include="Application\Compression\Operation\DecompressionOperation.cs" />
     <Compile Include="Application\Compression\Operation\Event\ProgressUpdateEventArgs.cs" />
-    <Compile Include="Application\Compression\IProgressObserver.cs" />
+    <Compile Include="Application\IProgressObserver.cs" />
     <Compile Include="Application\Compression\Reader\IArchiveEntry.cs" />
     <Compile Include="Application\Compression\Reader\ArchiveReader.cs" />
     <Compile Include="Application\Compression\Reader\FileEntry.cs" />
@@ -132,8 +132,8 @@
     <Compile Include="Application\Compression\Model\CompressionInfo.cs" />
     <Compile Include="Application\Compression\Model\ExtractableItem.cs" />
     <Compile Include="Application\Compression\Model\Result.cs" />
-    <Compile Include="Application\Compression\Streams\DecoratorStream.cs" />
-    <Compile Include="Application\Compression\Streams\ProgressObservableStream.cs" />
+    <Compile Include="Application\Streams\DecoratorStream.cs" />
+    <Compile Include="Application\Streams\ProgressObservableStream.cs" />
     <Compile Include="Application\Compression\IStringCompressor.cs" />
     <Compile Include="Application\Hashing\IMessageDigestProvider.cs" />
     <Compile Include="Application\Hashing\MessageDigestProvider.cs" />
