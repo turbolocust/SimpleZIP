@@ -81,14 +81,16 @@ namespace SimpleZIP_UI.Presentation.View
             else
             {
                 // set default launch size (will have no effect on phones)
-                ApplicationView.PreferredLaunchViewSize = new Size(PreferredLaunchSizeWidth, PreferredLaunchSizeHeight);
-                ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+                ApplicationView.PreferredLaunchViewSize
+                    = new Size(PreferredLaunchSizeWidth, PreferredLaunchSizeHeight);
+                ApplicationView.PreferredLaunchWindowingMode
+                    = ApplicationViewWindowingMode.PreferredLaunchViewSize;
             }
         }
 
         private async void PopulateOrUpdateRecentArchivesList()
         {
-            var collection = await ArchiveHistoryHandler.GetHistoryAsync();
+            var collection = await ArchiveHistoryHandler.Instance.GetHistoryAsync();
             if (collection.Models.Length > 0)
             {
                 RecentArchiveModels.Clear(); // important
@@ -206,8 +208,7 @@ namespace SimpleZIP_UI.Presentation.View
             if (RecentArchiveModels.Count > 0)
             {
                 RecentArchiveModels.Clear();
-                ArchiveHistoryHandler.MruList.Clear();
-                Settings.PushOrUpdate(Settings.Keys.RecentArchivesKey, string.Empty);
+                ArchiveHistoryHandler.Instance.ClearHistory();
             }
         }
 
@@ -285,7 +286,7 @@ namespace SimpleZIP_UI.Presentation.View
             if (sender is MenuFlyoutItem flyoutItem)
             {
                 var model = (RecentArchiveModel)flyoutItem.DataContext;
-                ArchiveHistoryHandler.RemoveFromHistory(model);
+                ArchiveHistoryHandler.Instance.RemoveFromHistory(model);
                 RecentArchiveModels.Remove(model);
             }
         }

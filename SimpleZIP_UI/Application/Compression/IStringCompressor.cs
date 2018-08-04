@@ -16,7 +16,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
-
 using System;
 using System.IO;
 using System.IO.Compression;
@@ -47,11 +46,16 @@ namespace SimpleZIP_UI.Application.Compression
             _encoding = charEncoding ?? Encoding.UTF8;
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Compresses the specified string.
         /// </summary>
         /// <param name="value">The string to be compressed.</param>
         /// <returns>BASE64 encoded string representation of compressed data.</returns>
+        /// <exception cref="IOException">Thrown by streams if something went wrong.</exception>
+        /// <exception cref="ArgumentNullException">Thrown if specified argument is <code>null</code>.</exception>
+        /// <exception cref="EncoderFallbackException">Thrown if a fallback occurred.</exception>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public string Compress(string value)
         {
             string base64;
@@ -70,11 +74,17 @@ namespace SimpleZIP_UI.Application.Compression
             return base64;
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Decompresses the specified string.
         /// </summary>
         /// <param name="input">BASE64 encoded string representation of compressed data.</param>
         /// <returns>The decompressed string.</returns>
+        /// <exception cref="FormatException">Thrown if input is not BASE64 encoded.</exception>
+        /// <exception cref="ArgumentException">Thrown if input is not compressed with GZIP.</exception>
+        /// <exception cref="ArgumentNullException">Thrown if specified argument is <code>null</code>.</exception>
+        /// <exception cref="DecoderFallbackException">Thrown if a fallback occurred.</exception>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public string Decompress(string input)
         {
             string output;

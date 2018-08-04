@@ -19,31 +19,88 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
+using SimpleZIP_UI.Application.Compression;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Presentation.View.Model;
 using static SimpleZIP_UI.Presentation.View.Model.RecentArchiveModel;
 
 namespace SimpleZIP_UI.Presentation.Handler
 {
-    internal static class ArchiveHistoryHandler
+    /// <summary>
+    /// Singleton class which manages the history of created archives.
+    /// </summary>
+    internal sealed class ArchiveHistoryHandler
     {
+        /// <summary>
+        /// The default date format that is being used by history items.
+        /// </summary>
         public const string DefaultDateFormat = @"dd/MM/yyyy - hh:mm tt";
 
-        internal static StorageItemMostRecentlyUsedList MruList => StorageApplicationPermissions.MostRecentlyUsedList;
+        /// <summary>
+        /// Instance used for compressing/decompressing serialized history data.
+        /// </summary>
+        private readonly ICompressor<string, string> _compressor;
 
-        internal static uint MaxHistoryItems { get; } = MruList.MaximumItemsAllowed;
+        /// <summary>
+        /// Stores most recently used <see cref="StorageFile"/> (archives) objects.
+        /// </summary>
+        internal static StorageItemMostRecentlyUsedList MruList
+            => StorageApplicationPermissions.MostRecentlyUsedList;
+
+        /// <summary>
+        /// The maximum allowed items in the archive history. This value
+        /// is retrieved from the <see cref="StorageApplicationPermissions.MostRecentlyUsedList"/>.
+        /// </summary>
+        internal static uint MaxHistoryItems => MruList.MaximumItemsAllowed;
+
+        /// <summary>
+        /// Lock object which is used for double-checked locking
+        /// when retrieving the singleton instance of this class.
+        /// </summary>
+        private static readonly object LockObj = new object();
+
+        /// <summary>
+        /// Singleton instance of this class.
+        /// </summary>
+        private static ArchiveHistoryHandler _instance;
+
+        /// <summary>
+        /// The singleton instance of this class. This property is thread-safe.
+        /// </summary>
+        public static ArchiveHistoryHandler Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    lock (LockObj)
+                    {
+                        _instance = new ArchiveHistoryHandler();
+                    }
+                }
+
+                return _instance;
+            }
+        }
+
+        private ArchiveHistoryHandler()
+        {
+            // Unicode encoding is important here, see the generated
+            // XML file produced by System.Xml.Serialization
+            _compressor = new StringGzipCompressor(Encoding.Unicode);
+        }
 
         /// <summary>
         /// Reads the history of recently created archives synchronously.
         /// </summary>
         /// <returns>Collection of <see cref="RecentArchiveModel"/>.</returns>
-        internal static RecentArchiveModelCollection GetHistory()
+        internal RecentArchiveModelCollection GetHistory()
         {
-            const string key = Settings.Keys.RecentArchivesKey;
-            return Settings.TryGet(key, out string xml)
+            return GetSerializedHistory(out string xml)
                 ? RecentArchiveModelCollection.From(xml)
                 : new RecentArchiveModelCollection();
         }
@@ -52,7 +109,7 @@ namespace SimpleZIP_UI.Presentation.Handler
         /// Reads the history of recently created archives asynchronously.
         /// </summary>
         /// <returns>A task which returns <see cref="RecentArchiveModelCollection"/>.</returns>
-        internal static async Task<RecentArchiveModelCollection> GetHistoryAsync()
+        internal async Task<RecentArchiveModelCollection> GetHistoryAsync()
         {
             return await Task.Run(() => GetHistory());
         }
@@ -64,11 +121,11 @@ namespace SimpleZIP_UI.Presentation.Handler
         /// </summary>
         /// <param name="location">The location to be associated with each entry.</param>
         /// <param name="fileNames">File names to be stored in history.</param>
-        internal static void SaveToHistory(StorageFolder location, params string[] fileNames)
+        internal void SaveToHistory(StorageFolder location, params string[] fileNames)
         {
             if (fileNames.IsNullOrEmpty()) return;
 
-            if (!Settings.TryGet(Settings.Keys.RecentArchivesKey, out string xml))
+            if (!GetSerializedHistory(out string xml))
             {
                 xml = string.Empty;
             }
@@ -94,10 +151,11 @@ namespace SimpleZIP_UI.Presentation.Handler
             {
                 MruList.AddOrReplace(model.MruToken, location);
             }
-            // also serialize separately to an XML file
+            // also serialize separately to an XML file to be able to store
+            // any information which StorageFile's do not have
             if (!string.IsNullOrEmpty(xml = collection.Serialize()))
             {
-                Settings.PushOrUpdate(Settings.Keys.RecentArchivesKey, xml);
+                StoreAwayCompressed(xml);
             }
         }
 
@@ -105,9 +163,9 @@ namespace SimpleZIP_UI.Presentation.Handler
         /// Removes the specified model from the history (if exists).
         /// </summary>
         /// <param name="model">The model to be removed.</param>
-        internal static void RemoveFromHistory(RecentArchiveModel model)
+        internal void RemoveFromHistory(RecentArchiveModel model)
         {
-            if (Settings.TryGet(Settings.Keys.RecentArchivesKey, out string xml))
+            if (GetSerializedHistory(out string xml))
             {
                 var collection = RecentArchiveModelCollection.From(xml);
                 var models = collection.Models.ToList();
@@ -131,9 +189,19 @@ namespace SimpleZIP_UI.Presentation.Handler
                 // store away updated history
                 if (!string.IsNullOrEmpty(xml = collection.Serialize()))
                 {
-                    Settings.PushOrUpdate(Settings.Keys.RecentArchivesKey, xml);
+                    StoreAwayCompressed(xml);
                 }
             }
+        }
+
+        /// <summary>
+        /// Clears the entire history.
+        /// </summary>
+        internal void ClearHistory()
+        {
+            MruList.Clear();
+            Settings.PushOrUpdate(Settings.Keys
+                .RecentArchivesKey, string.Empty);
         }
 
         private static RecentArchiveModel[] UpdateHistory(List<RecentArchiveModel> history,
@@ -172,6 +240,33 @@ namespace SimpleZIP_UI.Presentation.Handler
                 history.InsertRange(0, models); // insert from start to keep order
             }
             return history.ToArray();
+        }
+
+        private void StoreAwayCompressed(string xml)
+        {
+            string compressed = _compressor.Compress(xml);
+            Settings.PushOrUpdate(Settings.Keys.RecentArchivesKey, compressed);
+        }
+
+        private bool GetSerializedHistory(out string xml)
+        {
+            bool found = Settings.TryGet(Settings.Keys
+                .RecentArchivesKey, out string value);
+            xml = string.Empty;
+
+            try
+            {
+                if (found && !string.IsNullOrEmpty(value))
+                {
+                    xml = _compressor.Decompress(value);
+                }
+            }
+            catch (Exception)
+            {
+                found = false;
+            }
+
+            return found;
         }
     }
 }

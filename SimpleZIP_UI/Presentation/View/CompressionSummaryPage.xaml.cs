@@ -142,7 +142,7 @@ namespace SimpleZIP_UI.Presentation.View
 
                     if (result.StatusCode == Result.Status.Success)
                     {
-                        ArchiveHistoryHandler.SaveToHistory(
+                        ArchiveHistoryHandler.Instance.SaveToHistory(
                             _controller.OutputFolder, result.ArchiveNames);
                     }
 
