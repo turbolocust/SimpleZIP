@@ -71,16 +71,12 @@ namespace SimpleZIP_UI.Presentation.View
 
             if (Settings.IsMobileDevice)
             {
-                // configure page elements for smaller screens
                 Pivot.Margin = new Thickness(0);
                 CompressButton.Margin = new Thickness(0, 32, 0, 0);
-                StackPanelStart.Orientation = Orientation.Vertical;
-                MenuSplitView.DisplayMode = SplitViewDisplayMode.CompactOverlay;
-                MenuSplitView.IsPaneOpen = false;
             }
             else
             {
-                // set default launch size (will have no effect on phones)
+                // set default launch size (has no effect on phones)
                 ApplicationView.PreferredLaunchViewSize
                     = new Size(PreferredLaunchSizeWidth, PreferredLaunchSizeHeight);
                 ApplicationView.PreferredLaunchWindowingMode
