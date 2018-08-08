@@ -63,7 +63,8 @@ namespace SimpleZIP_UI.Application.Compression
             using (var inputStream = value.ToStream(_encoding))
             using (var outputStream = new MemoryStream())
             {
-                using (var gzipStream = new GZipStream(outputStream, CompressionMode.Compress, true))
+                using (var gzipStream = new GZipStream(outputStream,
+                    CompressionMode.Compress, leaveOpen: true))
                 {
                     inputStream.CopyTo(gzipStream);
                 }
@@ -84,14 +85,13 @@ namespace SimpleZIP_UI.Application.Compression
         /// <exception cref="ArgumentException">Thrown if input is not compressed with GZIP.</exception>
         /// <exception cref="ArgumentNullException">Thrown if specified argument is <code>null</code>.</exception>
         /// <exception cref="DecoderFallbackException">Thrown if a fallback occurred.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public string Decompress(string input)
         {
             string output;
 
             var compressed = Convert.FromBase64String(input);
 
-            using (var inputStream = new MemoryStream(compressed))
+            var inputStream = new MemoryStream(compressed); // disposed by GZIP stream
             using (var gzipStream = new GZipStream(inputStream, CompressionMode.Decompress))
             using (var outputStream = new MemoryStream())
             {
