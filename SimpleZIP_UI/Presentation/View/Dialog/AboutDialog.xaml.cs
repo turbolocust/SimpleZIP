@@ -17,6 +17,7 @@
 // 
 // ==--==
 
+using System;
 using Windows.UI.Xaml.Controls;
 
 namespace SimpleZIP_UI.Presentation.View.Dialog
@@ -27,13 +28,20 @@ namespace SimpleZIP_UI.Presentation.View.Dialog
         private const string Author = "Matthias Fussenegger";
         private const string License = "GNU General Public License 3";
 
+        private const string LicenseUri = @"https://www.gnu.org/licenses/gpl-3.0";
+        private const string LibraryUri = @"https://github.com/adamhathcock/sharpcompress";
+
         /// <inheritdoc />
         public AboutDialog()
         {
             InitializeComponent();
+
             DevelopedByRun.Text = I18N.Resources.GetString("DevelopedBy/Text", Author);
             LicenseRun.Text = I18N.Resources.GetString("License/Text", License);
             PrimaryButtonText = I18N.Resources.GetString("ContentDialog/PrimaryButtonText");
+
+            LibraryHyperlinkButton.NavigateUri = new Uri(LibraryUri);
+            LicenseHyperlinkButton.NavigateUri = new Uri(LicenseUri);
         }
 
         private void ContentDialog_PrimaryButtonClick(
