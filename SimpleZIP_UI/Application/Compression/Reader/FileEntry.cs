@@ -23,11 +23,12 @@ namespace SimpleZIP_UI.Application.Compression.Reader
     /// </summary>
     public class FileEntry : IArchiveEntry
     {
-        internal string Key { get; }
+        /// <inheritdoc />
+        public string Id { get; }
 
         /// <inheritdoc />
         /// <summary>
-        /// The key of the entry without the path.
+        /// The Id (key) of this entry without the path.
         /// </summary>
         public string Name { get; }
 
@@ -35,23 +36,28 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         /// <summary>
         /// Defaults to false as this entry is not a node.
         /// </summary>
-        public bool IsNode { get; } = false;
+        public bool IsBrowsable { get; } = false;
+
+        /// <inheritdoc />
+        public bool IsArchive { get; }
 
         /// <summary>
         /// The uncompressed size of this file entry.
         /// </summary>
         public ulong Size { get; }
 
-        internal FileEntry(string key, string name, ulong size)
+        internal FileEntry(string id, string name,
+            ulong size, bool isArchive = false)
         {
-            Key = key;
+            Id = id;
             Name = name;
             Size = size;
+            IsArchive = false;
         }
 
         protected bool Equals(FileEntry other)
         {
-            return string.Equals(Key, other.Key);
+            return string.Equals(Id, other.Id);
         }
 
         /// <inheritdoc />
@@ -65,7 +71,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         /// <inheritdoc />
         public override int GetHashCode()
         {
-            return Key != null ? Key.GetHashCode() : 0;
+            return Id != null ? Id.GetHashCode() : 0;
         }
     }
 }

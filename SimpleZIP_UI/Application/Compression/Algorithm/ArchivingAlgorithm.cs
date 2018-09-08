@@ -16,18 +16,18 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Windows.Storage;
 using SharpCompress.Common;
 using SharpCompress.Readers;
 using SharpCompress.Writers;
 using SimpleZIP_UI.Application.Compression.Reader;
 using SimpleZIP_UI.Application.Streams;
 using SimpleZIP_UI.Application.Util;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Windows.Storage;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm
 {
@@ -90,7 +90,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         {
             if (archive == null || entries.IsNullOrEmpty() || location == null) return Stream.Null;
 
-            var entriesSet = new HashSet<string>(entries.Select(entry => entry.Key).ToArray());
+            var entriesSet = new HashSet<string>(entries.Select(entry => entry.Id).ToArray());
 
             options = options ?? new ReaderOptions { LeaveStreamOpen = false };
             var progressStream = Stream.Null;

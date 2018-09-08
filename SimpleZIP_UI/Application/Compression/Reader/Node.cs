@@ -27,22 +27,29 @@ namespace SimpleZIP_UI.Application.Compression.Reader
     {
         /// <inheritdoc />
         /// <summary>
+        /// The identifier of this node, including file separators.
+        /// </summary>
+        public string Id { get; }
+
+        /// <inheritdoc />
+        /// <summary>
         /// Friendly name of this node. Can be set differently but should ideally
         /// consist of the <see cref="P:SimpleZIP_UI.Application.Compression.Reader.Node.Id" /> 
-        /// without path and file separators.
+        /// without the path.
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; internal set; }
 
         /// <inheritdoc />
         /// <summary>
         /// Defaults to true as this entry is a node.
         /// </summary>
-        public bool IsNode { get; } = true;
+        public bool IsBrowsable { get; } = true;
 
+        /// <inheritdoc />
         /// <summary>
-        /// The identifier of this node, including file separators.
+        /// Defaults to false as this entry is a node.
         /// </summary>
-        internal string Id { get; }
+        public bool IsArchive { get; } = false;
 
         /// <summary>
         /// Children of this node, which can be nodes, entries or both.

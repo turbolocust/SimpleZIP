@@ -137,7 +137,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         internal bool IsSingleFileEntryArchive()
         {
             return _rootNode.Children.Count == 1
-                && !_rootNode.Children.First().IsNode;
+                && !_rootNode.Children.First().IsBrowsable;
         }
 
         /// <summary>

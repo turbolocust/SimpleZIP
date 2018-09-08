@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2018 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,13 +21,23 @@ namespace SimpleZIP_UI.Application.Compression.Reader
     internal interface IArchiveEntry
     {
         /// <summary>
-        /// The key of the entry.
+        /// The unique identifier of this entry.
+        /// </summary>
+        string Id { get; }
+
+        /// <summary>
+        /// The friendly name of this entry.
         /// </summary>
         string Name { get; }
 
         /// <summary>
-        /// True if this entry represents a directory, false otherwise.
+        /// True if this entry is browsable (directory), false otherwise.
         /// </summary>
-        bool IsNode { get; }
+        bool IsBrowsable { get; }
+
+        /// <summary>
+        /// True if this entry is an archive, false otherwise.
+        /// </summary>
+        bool IsArchive { get; }
     }
 }

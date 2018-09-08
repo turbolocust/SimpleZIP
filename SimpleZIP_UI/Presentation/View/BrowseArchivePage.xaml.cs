@@ -104,7 +104,7 @@ namespace SimpleZIP_UI.Presentation.View
                     {
                         foreach (var child in _nodeStack.Peek().Children)
                         {
-                            if (child.Name.Equals(addItem.DisplayName) && child.IsNode)
+                            if (child.Name.Equals(addItem.DisplayName) && child.IsBrowsable)
                             {
                                 IsProgressBarEnabled.IsTrue = true;
                                 await UpdateListContentAsync(child as Node);
@@ -150,7 +150,7 @@ namespace SimpleZIP_UI.Presentation.View
 
                 foreach (var child in nextNode.Children)
                 {
-                    var isNode = child.IsNode;
+                    var isNode = child.IsBrowsable;
                     var model = new ArchiveEntryModel(isNode, child.Name)
                     {
                         Symbol = isNode ? Symbol.Folder : Symbol.Preview
