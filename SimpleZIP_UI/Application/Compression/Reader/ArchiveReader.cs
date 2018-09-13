@@ -16,9 +16,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
-using System;
 using SharpCompress.Common;
 using SharpCompress.Readers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -153,7 +153,8 @@ namespace SimpleZIP_UI.Application.Compression.Reader
                 if (!parentNode.Id.Equals(pair.ParentKey))
                     throw new ReadingArchiveException("Error reading archive.");
 
-                var fileEntry = new FileEntry(entry.Key, pair.EntryName, (ulong)entry.Size);
+                var fileEntry = FileEntry.CreateFileEntry(
+                    entry.Key, pair.EntryName, (ulong)entry.Size);
                 parentNode.Children.Add(fileEntry);
                 keyBuilder.Clear();
 
@@ -217,10 +218,10 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         /// <returns>An <see cref="EntryKeyPair"/>.</returns>
         private static void UpdateEntryKeyPair(ref EntryKeyPair pair, string key, char separator)
         {
-            var trimmedKey = key.TrimEnd(separator);
-            var lastSeparatorPos = trimmedKey.LastIndexOf(separator);
-            var entryName = trimmedKey.Substring(lastSeparatorPos + 1);
-            var parentKey = lastSeparatorPos == -1 ? RootNodeName
+            string trimmedKey = key.TrimEnd(separator);
+            int lastSeparatorPos = trimmedKey.LastIndexOf(separator);
+            string entryName = trimmedKey.Substring(lastSeparatorPos + 1);
+            string parentKey = lastSeparatorPos == -1 ? RootNodeName
                 : trimmedKey.Substring(0, trimmedKey.Length - entryName.Length);
 
             pair.SeparatorPos = lastSeparatorPos;
