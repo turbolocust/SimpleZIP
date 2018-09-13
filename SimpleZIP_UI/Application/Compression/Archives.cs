@@ -16,6 +16,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+using SharpCompress.Archives.Rar;
+using SharpCompress.Readers;
 using SimpleZIP_UI.Application.Compression.Algorithm;
 using SimpleZIP_UI.Application.Compression.Algorithm.Type;
 using System;
@@ -24,8 +26,6 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
-using SharpCompress.Archives.Rar;
-using SharpCompress.Readers;
 
 namespace SimpleZIP_UI.Application.Compression
 {
@@ -177,7 +177,8 @@ namespace SimpleZIP_UI.Application.Compression
 
         /// <summary>
         /// Determines the <see cref="ArchiveType"/> of the specified file
-        /// only considering its filename extension.
+        /// only considering its filename extension. If the type cannot be
+        /// determined then <see cref="ArchiveType.Unknown"/> is returned.
         /// </summary>
         /// <param name="ext">The filename extension of the archive.</param>
         /// <returns>The determined <see cref="ArchiveType"/>.</returns>
@@ -202,7 +203,7 @@ namespace SimpleZIP_UI.Application.Compression
         /// <param name="stream">Archive stream to be checked.</param>
         /// <param name="password">The password of the file if encrypted.</param>
         /// <param name="rar5Only">True to only check for RAR5 format, false otherwise.</param>
-        /// <returns></returns>
+        /// <returns>True if archive is RAR, false otherwise.</returns>
         internal static bool IsRarArchive(Stream stream,
             string password = null, bool rar5Only = false)
         {

@@ -16,6 +16,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+using SimpleZIP_UI.Application.Compression.Reader;
+using SimpleZIP_UI.Application.Util;
+using SimpleZIP_UI.Presentation.Controller;
+using SimpleZIP_UI.Presentation.View.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -28,10 +32,6 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
-using SimpleZIP_UI.Application.Compression.Reader;
-using SimpleZIP_UI.Application.Util;
-using SimpleZIP_UI.Presentation.Controller;
-using SimpleZIP_UI.Presentation.View.Model;
 
 namespace SimpleZIP_UI.Presentation.View
 {
