@@ -16,6 +16,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
+using SimpleZIP_UI.Application.Util;
+
 namespace SimpleZIP_UI.Application.Compression.Reader
 {
     /// <summary>
@@ -52,7 +55,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
             Id = id;
             Name = name;
             Size = size;
-            IsArchive = false;
+            IsArchive = isArchive;
         }
 
         protected bool Equals(FileEntry other)
@@ -72,6 +75,24 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         public override int GetHashCode()
         {
             return Id != null ? Id.GetHashCode() : 0;
+        }
+
+        /// <summary>
+        /// Factory method which creates a new instance of <see cref="FileEntry"/>.
+        /// This method also checks if the specified name consists of a filename
+        /// extension which indicates that it is an archive. In this case,
+        /// <see cref="IsArchive"/> is set to true.
+        /// </summary>
+        /// <param name="id">The identifier of the file entry.</param>
+        /// <param name="name">The name of the entry.</param>
+        /// <param name="size">The size of the entry.</param>
+        /// <returns></returns>
+        public static FileEntry CreateFileEntry(string id, string name, ulong size)
+        {
+            string ext = FileUtils.GetFileNameExtension(name);
+            var archiveType = Archives.DetermineArchiveTypeByFileExtension(ext);
+            bool isArchive = archiveType != Archives.ArchiveType.Unknown;
+            return new FileEntry(id, name, size, isArchive);
         }
     }
 }
