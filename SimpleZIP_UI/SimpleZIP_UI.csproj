@@ -124,6 +124,7 @@
     <Compile Include="Application\Compression\Operation\CompressionOperation.cs" />
     <Compile Include="Application\Compression\Operation\DecompressionOperation.cs" />
     <Compile Include="Application\Compression\Operation\Event\ProgressUpdateEventArgs.cs" />
+    <Compile Include="Application\Compression\Operation\Operations.cs" />
     <Compile Include="Application\IProgressObserver.cs" />
     <Compile Include="Application\Compression\Reader\IArchiveEntry.cs" />
     <Compile Include="Application\Compression\Reader\ArchiveReader.cs" />
