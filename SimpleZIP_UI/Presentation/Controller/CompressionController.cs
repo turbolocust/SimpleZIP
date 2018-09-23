@@ -16,15 +16,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+using SimpleZIP_UI.Application.Compression;
+using SimpleZIP_UI.Application.Compression.Model;
+using SimpleZIP_UI.Application.Compression.Operation;
+using SimpleZIP_UI.Application.Util;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
-using SimpleZIP_UI.Application.Compression;
-using SimpleZIP_UI.Application.Compression.Model;
-using SimpleZIP_UI.Application.Compression.Operation;
-using SimpleZIP_UI.Application.Util;
 
 namespace SimpleZIP_UI.Presentation.Controller
 {
@@ -37,7 +37,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// <inheritdoc cref="SummaryPageController{T}.GetArchivingOperation"/>
         protected override ArchivingOperation<CompressionInfo> GetArchivingOperation()
         {
-            return new CompressionOperation();
+            return Operations.ForCompression();
         }
 
         /// <inheritdoc cref="SummaryPageController{T}.PerformOperation"/>

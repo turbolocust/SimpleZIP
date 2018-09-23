@@ -34,7 +34,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// <inheritdoc cref="SummaryPageController{T}.GetArchivingOperation"/>
         protected override ArchivingOperation<DecompressionInfo> GetArchivingOperation()
         {
-            return new DecompressionOperation();
+            return Operations.ForDecompression();
         }
 
         /// <inheritdoc cref="SummaryPageController{T}.PerformOperation"/>
@@ -60,7 +60,7 @@ namespace SimpleZIP_UI.Presentation.Controller
                     catch (SharpCompress.Common.CryptographicException)
                     {
                         // archive is encrypted, ask for password and try again
-                        string password = await RequestPassword(operationInfo.Item.DisplayName);
+                        string password = await RequestPassword(operationInfo.Item.Name);
                         operationInfo.Item.Password = password;
                         subResult = await Operation.Perform(operationInfo, false);
                     }
@@ -69,7 +69,7 @@ namespace SimpleZIP_UI.Presentation.Controller
                     {
                         statusCode = Result.Status.PartialFail;
                         resultMessage.AppendLine(I18N.Resources
-                            .GetString("ArchiveNotExtracted/Text", item.DisplayName));
+                            .GetString("ArchiveNotExtracted/Text", item.Name));
                     }
                     else
                     {

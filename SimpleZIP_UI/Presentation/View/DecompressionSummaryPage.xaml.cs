@@ -206,7 +206,7 @@ namespace SimpleZIP_UI.Presentation.View
             foreach (var item in _selectedItems)
             {
                 // ReSharper disable once PossibleNullReferenceException
-                ItemsListBox.Items.Add(new TextBlock { Text = item.DisplayName });
+                ItemsListBox.Items.Add(new TextBlock { Text = item.Name });
                 if (!item.Entries.IsNullOrEmpty()) // add entries with indent as well
                 {
                     var stringBuilder = new StringBuilder();

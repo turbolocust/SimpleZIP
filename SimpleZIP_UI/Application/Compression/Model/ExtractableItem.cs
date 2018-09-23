@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2018 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,9 +16,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+using SimpleZIP_UI.Application.Compression.Reader;
 using System.Collections.Generic;
 using Windows.Storage;
-using SimpleZIP_UI.Application.Compression.Reader;
 
 namespace SimpleZIP_UI.Application.Compression.Model
 {
@@ -28,9 +28,9 @@ namespace SimpleZIP_UI.Application.Compression.Model
     public class ExtractableItem
     {
         /// <summary>
-        /// A friendly name of this item.
+        /// Friendly name of this item.
         /// </summary>
-        internal string DisplayName { get; }
+        internal string Name { get; }
 
         /// <summary>
         /// The archive which can be extracted.
@@ -48,10 +48,10 @@ namespace SimpleZIP_UI.Application.Compression.Model
         /// </summary>
         internal IReadOnlyList<FileEntry> Entries { get; }
 
-        internal ExtractableItem(string displayName, StorageFile archive,
+        internal ExtractableItem(string name, StorageFile archive,
             IReadOnlyList<FileEntry> entries = null)
         {
-            DisplayName = displayName;
+            Name = name;
             Archive = archive;
             Entries = entries;
         }
