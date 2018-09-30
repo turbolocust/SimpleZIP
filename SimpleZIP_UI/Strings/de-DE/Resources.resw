@@ -465,4 +465,8 @@
     <value>Ordner existiert nicht mehr.</value>
     <comment>Specified folder (file) has been deleted.</comment>
   </data>
+  <data name="ArchiveNotCreated.Text" xml:space="preserve">
+    <value>Archiv {0} konnte nicht erstellt werden.</value>
+    <comment>Informs the user that an archive could not be created.</comment>
+  </data>
 </root>
