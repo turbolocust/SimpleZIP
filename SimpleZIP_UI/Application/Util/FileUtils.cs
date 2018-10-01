@@ -16,13 +16,14 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
+using SimpleZIP_UI.Application.Compression;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
-using SimpleZIP_UI.Application.Compression;
-using System.Collections.Generic;
 
 namespace SimpleZIP_UI.Application.Util
 {
@@ -62,7 +63,7 @@ namespace SimpleZIP_UI.Application.Util
         /// or <code>String.Empty</code> if path does not have an extension.</returns>
         public static string GetFileNameExtension(string path)
         {
-            var fileNameExtension = "";
+            var fileNameExtension = string.Empty;
             if (ContainsMultipleFileNameExtensions(path))
             {
                 foreach (var extendedFileType in Archives.ArchiveExtendedFileTypes)
@@ -94,6 +95,16 @@ namespace SimpleZIP_UI.Application.Util
         }
 
         /// <summary>
+        /// Returns the application's temporary folder.
+        /// </summary>
+        /// <returns>The application's temporary folder.</returns>
+        public static async Task<StorageFolder> GetTempFolderAsync()
+        {
+            string path = Path.GetTempPath();
+            return await StorageFolder.GetFolderFromPathAsync(path);
+        }
+
+        /// <summary>
         /// Returns the file size of the specified file.
         /// </summary>
         /// <param name="file">The file from which to get the file size.</param>
@@ -120,8 +131,8 @@ namespace SimpleZIP_UI.Application.Util
         }
 
         /// <summary>
-        /// Creates a file (<see cref="string"/>) at the specified location 
-        /// (<see cref="StorageFolder"/>) including all the missing directories in the path.
+        /// Creates a file (<code>path</code>) at the specified <code>location</code>
+        /// including all the missing directories in the path.
         /// </summary>
         /// <param name="location">Used to create directories and the file.</param>
         /// <param name="path">Dynamic path to the file to be created.</param>
@@ -144,13 +155,16 @@ namespace SimpleZIP_UI.Application.Util
                 for (var i = 0; i < lastPos; ++i)
                 {
                     var folderName = pathMembers[i];
-                    folder = await folder.CreateFolderAsync(folderName, CreationCollisionOption.OpenIfExists);
+                    folder = await folder.CreateFolderAsync(folderName,
+                        CreationCollisionOption.OpenIfExists);
                 }
-                file = await folder.CreateFileAsync(pathMembers[lastPos], CreationCollisionOption.GenerateUniqueName);
+                file = await folder.CreateFileAsync(pathMembers[lastPos],
+                    CreationCollisionOption.GenerateUniqueName);
             }
             else if (pathMembers.Length > 0)
             {
-                file = await location.CreateFileAsync(pathMembers[0], CreationCollisionOption.GenerateUniqueName);
+                file = await location.CreateFileAsync(pathMembers[0],
+                    CreationCollisionOption.GenerateUniqueName);
             }
             return file;
         }
