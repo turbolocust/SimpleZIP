@@ -16,26 +16,21 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
+using SharpCompress.Common;
+using SharpCompress.Readers;
+using SharpCompress.Writers;
+using SimpleZIP_UI.Application.Compression.Algorithm.Event;
+using SimpleZIP_UI.Application.Compression.Reader;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
-using SharpCompress.Common;
-using SharpCompress.Readers;
-using SharpCompress.Writers;
-using SimpleZIP_UI.Application.Compression.Algorithm.Event;
-using SimpleZIP_UI.Application.Compression.Reader;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm
 {
-    /// <summary>
-    /// Delegate for total bytes processed.
-    /// </summary>
-    /// <param name="evtArgs">Consists of event parameters.</param>
-    public delegate void TotalBytesProcessedEventHandler(TotalBytesProcessedEventArgs evtArgs);
-
     /// <summary>
     /// Offers methods for compression and decompression of files/archives.
     /// </summary>
@@ -52,7 +47,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         CancellationToken Token { get; set; }
 
         /// <summary>
-        /// Decompresses and extracts an archive to the specified location.
+        /// Decompresses (extracts) all entries of the specified archive to the specified location.
         /// </summary>
         /// <param name="archive">The archive to be extracted.</param>
         /// <param name="location">The location where to extract the archive to.</param>
@@ -64,7 +59,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         Task<Stream> Decompress(StorageFile archive, StorageFolder location, ReaderOptions options = null);
 
         /// <summary>
-        /// Decompresses and extracts entries from the specified archive to the specified location.
+        /// Decompresses (extracts) entries from the specified archive to the specified location.
         /// </summary>
         /// <param name="archive">The archive which contains the entries.</param>
         /// <param name="location">The location where to extract the entries to.</param>
@@ -78,12 +73,28 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             IReadOnlyList<FileEntry> entries, ReaderOptions options = null);
 
         /// <summary>
+        /// Decompresses (extracts) entries from the specified archive to the specified location.
+        /// </summary>
+        /// <param name="archive">The archive which contains the entries.</param>
+        /// <param name="location">The location where to extract the entries to.</param>
+        /// <param name="entries">Entries of the archive to be extracted.</param>
+        /// <param name="collectFileNames">True to collect file names, false otherwise.
+        /// Names of extracted files will be saved to <see cref="FileEntry.FileName"/>.</param>.
+        /// <param name="options">Options for the reader. May be omitted.</param>
+        /// <returns>Task which returns a stream that has been used to read the archive. The stream will not be 
+        /// disposed if <see cref="OptionsBase.LeaveStreamOpen"/> in options is set to true.</returns>
+        /// <exception cref="IOException">Thrown on any error when reading from or writing to streams.</exception>
+        /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not permitted.</exception>
+        Task<Stream> Decompress(StorageFile archive, StorageFolder location,
+            IReadOnlyList<FileEntry> entries, bool collectFileNames, ReaderOptions options = null);
+
+        /// <summary>
         /// Compresses files to the specified location. If the writer options are omitted, the default
         /// fallback algorithm is used for the corresponding archive type of this instance.
         /// </summary>
         /// <param name="files">The files to be put into the archive.</param>
         /// <param name="archive">The file to write compressed bytes to.</param>
-        /// <param name="location">Where the archive will be created.</param>
+        /// <param name="location">Where the archive is to be created.</param>
         /// <param name="options">Options for the writer. May be omitted.</param>
         /// <returns>Task which returns a stream that has been used to write the archive. The stream will not be 
         /// disposed if <see cref="OptionsBase.LeaveStreamOpen"/> in options is set to true.</returns>

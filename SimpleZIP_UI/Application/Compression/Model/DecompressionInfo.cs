@@ -16,6 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
 namespace SimpleZIP_UI.Application.Compression.Model
 {
     internal class DecompressionInfo : OperationInfo
@@ -24,6 +25,11 @@ namespace SimpleZIP_UI.Application.Compression.Model
         /// Aggregated item which is to be extracted.
         /// </summary>
         internal ExtractableItem Item { get; }
+
+        /// <summary>
+        /// True to collect extracted file names, false otherwise.
+        /// </summary>
+        internal bool IsCollectFileNames { get; set; }
 
         internal DecompressionInfo(ExtractableItem item, ulong size) : base(size)
         {

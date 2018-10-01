@@ -16,16 +16,17 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
+using SharpCompress.Readers;
+using SharpCompress.Writers;
+using SimpleZIP_UI.Application.Compression.Algorithm.Event;
+using SimpleZIP_UI.Application.Compression.Reader;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using SharpCompress.Readers;
-using SharpCompress.Writers;
 using Windows.Storage;
-using SimpleZIP_UI.Application.Compression.Reader;
-using SimpleZIP_UI.Application.Compression.Algorithm.Event;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm
 {
@@ -65,16 +66,20 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             FireTotalBytesProcessed(value);
         }
 
-        /// <inheritdoc cref="ICompressionAlgorithm.Compress"/>
+        /// <inheritdoc />
         public abstract Task<Stream> Compress(IReadOnlyList<StorageFile> files,
             StorageFile archive, StorageFolder location, WriterOptions options = null);
 
-        /// <inheritdoc cref="ICompressionAlgorithm.Decompress(StorageFile,StorageFolder,ReaderOptions)"/>
+        /// <inheritdoc />
         public abstract Task<Stream> Decompress(StorageFile archive,
             StorageFolder location, ReaderOptions options = null);
 
-        /// <inheritdoc cref="ICompressionAlgorithm.Decompress(StorageFile,StorageFolder,IReadOnlyList&lt;FileEntry&gt;,ReaderOptions)"/>
+        /// <inheritdoc />
         public abstract Task<Stream> Decompress(StorageFile archive, StorageFolder location,
             IReadOnlyList<FileEntry> entries, ReaderOptions options = null);
+
+        /// <inheritdoc />
+        public abstract Task<Stream> Decompress(StorageFile archive, StorageFolder location,
+            IReadOnlyList<FileEntry> entries, bool collectFileNames, ReaderOptions options = null);
     }
 }

@@ -16,11 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
-using Windows.Storage;
+
 using SharpCompress.Common;
 using SharpCompress.Compressors.Deflate;
 using SharpCompress.Readers;
@@ -28,6 +24,11 @@ using SharpCompress.Writers;
 using SimpleZIP_UI.Application.Compression.Reader;
 using SimpleZIP_UI.Application.Streams;
 using SimpleZIP_UI.Application.Util;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+using Windows.Storage;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm
 {
@@ -80,11 +81,17 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         }
 
         /// <inheritdoc />
+        public override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
+            IReadOnlyList<FileEntry> entries, bool collectFileNames, ReaderOptions options = null)
+        {
+            return await Decompress(archive, location, options); // ignore entries as they are not supported
+        }
+
+        /// <inheritdoc />
         public sealed override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
             IReadOnlyList<FileEntry> entries, ReaderOptions options = null)
         {
-            // ignore entries as they are not supported
-            return await Decompress(archive, location, options);
+            return await Decompress(archive, location, options); // ignore entries as they are not supported
         }
 
         /// <inheritdoc />

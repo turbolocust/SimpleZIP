@@ -16,6 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
 using SharpCompress.Common;
 using SharpCompress.Readers;
 using SharpCompress.Writers;
@@ -24,7 +25,6 @@ using SimpleZIP_UI.Application.Streams;
 using SimpleZIP_UI.Application.Util;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -50,8 +50,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         }
 
         /// <inheritdoc />
-        public override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
-            ReaderOptions options = null)
+        public override async Task<Stream> Decompress(StorageFile archive,
+            StorageFolder location, ReaderOptions options = null)
         {
             if (archive == null || location == null) return Stream.Null;
 
@@ -81,6 +81,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                     progressStream.Dispose();
                 }
             }
+
             return progressStream;
         }
 
@@ -88,60 +89,14 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         public override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
             IReadOnlyList<FileEntry> entries, ReaderOptions options = null)
         {
-            if (archive == null || entries.IsNullOrEmpty() || location == null) return Stream.Null;
-
-            var entriesSet = new HashSet<string>(entries.Select(entry => entry.Id).ToArray());
-
-            options = options ?? new ReaderOptions { LeaveStreamOpen = false };
-            var progressStream = Stream.Null;
-            try
-            {
-                var archiveStream = await archive.OpenStreamForReadAsync();
-                progressStream = new ProgressObservableStream(this, archiveStream);
-
-                using (var reader = ReaderFactory.Open(progressStream, options))
-                {
-                    while (reader.MoveToNextEntry())
-                    {
-                        Token.ThrowIfCancellationRequested();
-                        if (entriesSet.Contains(reader.Entry.Key))
-                        {
-                            await WriteEntry(reader, location);
-                            entriesSet.Remove(reader.Entry.Key);
-                        }
-
-                        if (entriesSet.IsEmpty()) break;
-                    }
-                }
-            }
-            finally
-            {
-                if (!options.LeaveStreamOpen)
-                {
-                    progressStream.Dispose();
-                }
-            }
-            return progressStream;
+            return await DecompressEntries(archive, location, entries, false, options);
         }
 
-        private async Task WriteEntry(IReader reader, StorageFolder location)
+        /// <inheritdoc />
+        public override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
+            IReadOnlyList<FileEntry> entries, bool collectFileNames, ReaderOptions options = null)
         {
-            var entry = reader.Entry;
-            var file = await FileUtils.CreateFileAsync(location, entry.Key);
-            if (file == null) return; // file could not be created
-
-            using (var entryStream = reader.OpenEntryStream())
-            {
-                using (var outputStream = await file.OpenStreamForWriteAsync())
-                {
-                    var bytes = new byte[DefaultBufferSize];
-                    int readBytes;
-                    while ((readBytes = entryStream.Read(bytes, 0, bytes.Length)) > 0)
-                    {
-                        await outputStream.WriteAsync(bytes, 0, readBytes, Token);
-                    }
-                }
-            }
+            return await DecompressEntries(archive, location, entries, collectFileNames, options);
         }
 
         /// <inheritdoc />
@@ -181,7 +136,95 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                     progressStream.Dispose();
                 }
             }
+
             return progressStream;
+        }
+
+        private async Task<Stream> DecompressEntries(IStorageFile archive, StorageFolder location,
+            IReadOnlyCollection<FileEntry> entries, bool collectFileNames, ReaderOptions options = null)
+        {
+            if (archive == null || entries.IsNullOrEmpty() || location == null) return Stream.Null;
+
+            int processedEntries = 0; // to count number of found entries
+            var entriesMap = ConvertToMap(entries); // for faster access
+
+            options = options ?? new ReaderOptions { LeaveStreamOpen = false };
+            var progressStream = Stream.Null;
+            try
+            {
+                var archiveStream = await archive.OpenStreamForReadAsync();
+                progressStream = new ProgressObservableStream(this, archiveStream);
+
+                using (var reader = ReaderFactory.Open(progressStream, options))
+                {
+                    while (reader.MoveToNextEntry())
+                    {
+                        Token.ThrowIfCancellationRequested();
+                        if (entriesMap.ContainsKey(reader.Entry.Key))
+                        {
+                            if (collectFileNames)
+                            {
+                                var file = await WriteEntry(reader, location);
+                                var entry = entriesMap[reader.Entry.Key];
+                                entry.FileName = file.Name; // save name
+                            }
+                            else
+                            {
+                                await WriteEntry(reader, location);
+                            }
+
+                            ++processedEntries;
+                        }
+
+                        if (processedEntries == entries.Count) break;
+                    }
+                }
+            }
+            finally
+            {
+                if (!options.LeaveStreamOpen)
+                {
+                    progressStream.Dispose();
+                }
+            }
+
+            return progressStream;
+        }
+
+        private static IDictionary<string, FileEntry> ConvertToMap(
+            IReadOnlyCollection<FileEntry> entries)
+        {
+            int mapSize = entries.Count * 2;
+            var map = new Dictionary<string, FileEntry>(mapSize);
+
+            foreach (var entry in entries)
+            {
+                map.Add(entry.Id, entry);
+            }
+
+            return map;
+        }
+
+        private async Task<StorageFile> WriteEntry(IReader reader, StorageFolder location)
+        {
+            var entry = reader.Entry;
+            var file = await FileUtils.CreateFileAsync(location, entry.Key);
+            if (file == null) return null; // file could not be created
+
+            using (var entryStream = reader.OpenEntryStream())
+            {
+                using (var outputStream = await file.OpenStreamForWriteAsync())
+                {
+                    var bytes = new byte[DefaultBufferSize];
+                    int readBytes;
+                    while ((readBytes = entryStream.Read(bytes, 0, bytes.Length)) > 0)
+                    {
+                        await outputStream.WriteAsync(bytes, 0, readBytes, Token);
+                    }
+                }
+            }
+
+            return file;
         }
 
         /// <summary>

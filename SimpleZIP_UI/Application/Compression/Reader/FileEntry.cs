@@ -49,6 +49,12 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         /// </summary>
         public ulong Size { get; }
 
+        /// <summary>
+        /// Name of the file if already extracted. This may
+        /// be <code>null</code> if not yet extracted.
+        /// </summary>
+        internal string FileName { get; set; }
+
         internal FileEntry(string id, string name,
             ulong size, bool isArchive = false)
         {
