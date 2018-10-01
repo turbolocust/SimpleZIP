@@ -16,6 +16,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
+using SimpleZIP_UI.Application.Compression.Compressor;
+using SimpleZIP_UI.Application.Hashing;
+using SimpleZIP_UI.Application.Util;
+using SimpleZIP_UI.Presentation.View.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,10 +28,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
-using SimpleZIP_UI.Application.Compression;
-using SimpleZIP_UI.Application.Hashing;
-using SimpleZIP_UI.Application.Util;
-using SimpleZIP_UI.Presentation.View.Model;
 using static SimpleZIP_UI.Presentation.View.Model.RecentArchiveModel;
 
 namespace SimpleZIP_UI.Presentation.Handler

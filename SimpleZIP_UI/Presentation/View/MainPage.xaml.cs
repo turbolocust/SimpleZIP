@@ -16,25 +16,26 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
+using SimpleZIP_UI.Presentation.Controller;
+using SimpleZIP_UI.Presentation.Factory;
+using SimpleZIP_UI.Presentation.Handler;
+using SimpleZIP_UI.Presentation.View.Model;
 using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Devices.Input;
-using Windows.System;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Navigation;
-using SimpleZIP_UI.Presentation.Factory;
-using Windows.UI.ViewManagement;
 using Windows.Foundation;
+using Windows.System;
 using Windows.UI.Input;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using SimpleZIP_UI.Presentation.Controller;
-using SimpleZIP_UI.Presentation.Handler;
-using SimpleZIP_UI.Presentation.View.Model;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Navigation;
 using static SimpleZIP_UI.Presentation.Controller.MainController;
 
 namespace SimpleZIP_UI.Presentation.View
