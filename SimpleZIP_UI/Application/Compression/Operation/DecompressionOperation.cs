@@ -16,14 +16,14 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
-using System;
-using System.IO;
-using System.Threading.Tasks;
 using SharpCompress.Common;
 using SharpCompress.Readers;
 using SimpleZIP_UI.Application.Compression.Algorithm;
 using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Util;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace SimpleZIP_UI.Application.Compression.Operation
 {
@@ -47,6 +47,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
             var location = info.OutputFolder;
             var entries = info.Item.Entries;
             string password = info.Item.Password;
+            bool collect = info.IsCollectFileNames;
 
             return await Task.Run(async () => // execute extraction asynchronously
             {
@@ -65,7 +66,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                     Algorithm.Token = token;
                     var stream = entries == null
                         ? await Algorithm.Decompress(archiveFile, location, options)
-                        : await Algorithm.Decompress(archiveFile, location, entries, options);
+                        : await Algorithm.Decompress(archiveFile, location, entries, collect, options);
                     isSuccess = stream != Stream.Null;
                 }
                 catch (Exception ex)

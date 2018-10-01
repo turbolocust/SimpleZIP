@@ -16,23 +16,19 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+
 using SimpleZIP_UI.Application.Compression.Algorithm;
 using SimpleZIP_UI.Application.Compression.Algorithm.Event;
 using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Compression.Operation.Event;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SimpleZIP_UI.Application.Compression.Operation
 {
-    /// <summary>
-    /// Delegate for progress updates.
-    /// </summary>
-    /// <param name="evtArgs">Consists of event parameters.</param>
-    public delegate void ProgressUpdateEventHandler(ProgressUpdateEventArgs evtArgs);
-
-    internal abstract class ArchivingOperation<T> : IDisposable where T : OperationInfo
+    internal abstract class ArchivingOperation<T> :
+        IDisposable, ICancellable where T : OperationInfo
     {
         /// <summary>
         /// Event handler for progress updates.
@@ -85,16 +81,14 @@ namespace SimpleZIP_UI.Application.Compression.Operation
             TokenSource = new CancellationTokenSource();
         }
 
-        /// <summary>
-        /// Cancels this operation.
-        /// </summary>
+        /// <inheritdoc />
         public void Cancel()
         {
             TokenSource.Cancel();
         }
 
         /// <summary>
-        /// Performs this operation.
+        /// Performs the operation as specified in the <code>OperationInfo</code> object.
         /// </summary>
         /// <param name="operationInfo">Information required for the operation.</param>
         /// <param name="resetBytesProcessed">True to reset the current amount 
