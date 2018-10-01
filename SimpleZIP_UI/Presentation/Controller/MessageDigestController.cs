@@ -22,7 +22,7 @@ namespace SimpleZIP_UI.Presentation.Controller
     internal class MessageDigestController : BaseController
     {
         internal MessageDigestController(
-            INavigation navHandler) : base(navHandler)
+            INavigation navHandler) : base(navHandler, null)
         {
         }
     }

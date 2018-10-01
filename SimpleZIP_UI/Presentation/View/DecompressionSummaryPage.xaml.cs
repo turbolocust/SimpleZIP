@@ -16,6 +16,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
+using SimpleZIP_UI.Application;
+using SimpleZIP_UI.Application.Compression.Model;
+using SimpleZIP_UI.Application.Compression.Operation.Event;
+using SimpleZIP_UI.Application.Util;
+using SimpleZIP_UI.Presentation.Controller;
+using SimpleZIP_UI.Presentation.Factory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,15 +35,11 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-using SimpleZIP_UI.Application.Compression.Model;
-using SimpleZIP_UI.Application.Compression.Operation.Event;
-using SimpleZIP_UI.Application.Util;
-using SimpleZIP_UI.Presentation.Controller;
 
 namespace SimpleZIP_UI.Presentation.View
 {
     /// <inheritdoc cref="Page" />
-    public sealed partial class DecompressionSummaryPage : IDisposable, INavigation
+    public sealed partial class DecompressionSummaryPage : INavigation, IPasswordRequest, IDisposable
     {
         /// <summary>
         /// The aggregated controller instance.
@@ -52,7 +55,7 @@ namespace SimpleZIP_UI.Presentation.View
         public DecompressionSummaryPage()
         {
             InitializeComponent();
-            _controller = new DecompressionController(this);
+            _controller = new DecompressionController(this, this);
             _selectedItems = new List<ExtractableItem>(0);
         }
 
@@ -238,9 +241,15 @@ namespace SimpleZIP_UI.Presentation.View
         }
 
         /// <inheritdoc />
-        public void Dispose()
+        public async Task<string> RequestPassword(string fileName)
         {
-            _controller.Dispose();
+            var dialog = DialogFactory.CreateRequestPasswordDialog(fileName);
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                await dialog.ShowAsync();
+            });
+
+            return dialog.Password;
         }
 
         /// <inheritdoc />
@@ -254,6 +263,12 @@ namespace SimpleZIP_UI.Presentation.View
             {
                 Frame.Navigate(destinationPageType, parameter);
             }
+        }
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            _controller.Dispose();
         }
     }
 }

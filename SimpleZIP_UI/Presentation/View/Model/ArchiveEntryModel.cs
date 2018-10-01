@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2018 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,6 +16,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
+using SimpleZIP_UI.Application.Compression.Reader;
 using Windows.UI.Xaml.Controls;
 
 namespace SimpleZIP_UI.Presentation.View.Model
@@ -26,9 +28,9 @@ namespace SimpleZIP_UI.Presentation.View.Model
     public class ArchiveEntryModel
     {
         /// <summary>
-        /// True if this model represents a node.
+        /// The type of the archive entry this model represents.
         /// </summary>
-        public bool IsNode { get; }
+        public ArchiveEntryModelType EntryType { get; }
 
         /// <summary>
         /// A friendly name which will be displayed in the ListBox.
@@ -44,12 +46,47 @@ namespace SimpleZIP_UI.Presentation.View.Model
         /// <summary>
         /// Constructs a new model for the ListBox in <see cref="BrowseArchivePage"/>.
         /// </summary>
-        /// <param name="isNode">True if this model represents a node (folder).</param>
+        /// <param name="type">The type of the archive entry this model should represent.</param>
         /// <param name="displayName">Friendly name of the model to be displayed.</param>
-        public ArchiveEntryModel(bool isNode, string displayName)
+        public ArchiveEntryModel(ArchiveEntryModelType type, string displayName)
         {
-            IsNode = isNode;
+            EntryType = type;
             DisplayName = displayName;
+        }
+
+        /// <summary>
+        /// Factory method for creating a new instance of <see cref="ArchiveEntryModel"/>.
+        /// </summary>
+        /// <param name="entry">Entry of which to extract information for the model.</param>
+        /// <returns>A new instance of <see cref="ArchiveEntryModel"/>.</returns>
+        internal static ArchiveEntryModel Create(IArchiveEntry entry)
+        {
+            ArchiveEntryModelType type;
+            var symbol = Symbol.Preview;
+
+            if (entry.IsArchive)
+            {
+                type = ArchiveEntryModelType.Archive;
+            }
+            else if (entry.IsBrowsable)
+            {
+                type = ArchiveEntryModelType.Node;
+                symbol = Symbol.Folder;
+            }
+            else
+            {
+                type = ArchiveEntryModelType.File;
+            }
+
+            return new ArchiveEntryModel(type, entry.Name)
+            {
+                Symbol = symbol
+            };
+        }
+
+        public enum ArchiveEntryModelType
+        {
+            File, Archive, Node
         }
     }
 }

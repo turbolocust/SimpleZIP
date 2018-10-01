@@ -17,6 +17,8 @@
 // 
 // ==--==
 
+using SimpleZIP_UI.Application;
+
 namespace SimpleZIP_UI.Presentation.Controller
 {
     /// <summary>
@@ -28,5 +30,10 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// Aggregated navigation handler for navigation between pages.
         /// </summary>
         INavigation Navigation { get; }
+
+        /// <summary>
+        /// Aggregated object for password requests. Can be <code>null</code>.
+        /// </summary>
+        IPasswordRequest PasswordRequest { get; }
     }
 }

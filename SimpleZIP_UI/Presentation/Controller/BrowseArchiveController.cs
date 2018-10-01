@@ -16,34 +16,36 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
+using SimpleZIP_UI.Application;
+using SimpleZIP_UI.Application.Compression.Model;
+using SimpleZIP_UI.Application.Compression.Operation;
+using SimpleZIP_UI.Application.Compression.Operation.Job;
+using SimpleZIP_UI.Application.Compression.Reader;
+using SimpleZIP_UI.Application.Util;
+using SimpleZIP_UI.Presentation.Factory;
+using SimpleZIP_UI.Presentation.View;
+using SimpleZIP_UI.Presentation.View.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
-using SimpleZIP_UI.Application.Compression.Model;
-using SimpleZIP_UI.Application.Compression.Reader;
-using SimpleZIP_UI.Application.Util;
-using SimpleZIP_UI.Presentation.Factory;
-using SimpleZIP_UI.Presentation.View;
-using SimpleZIP_UI.Presentation.View.Model;
 
 namespace SimpleZIP_UI.Presentation.Controller
 {
-    internal sealed class BrowseArchiveController : BaseController, IDisposable
+    internal sealed class BrowseArchiveController : BaseController, ICancelRequest, IDisposable
     {
         /// <summary>
-        /// The associated archive. Will hold a reference to a storage file 
-        /// once the <see cref="ReadArchive"/> method has been invoked.
+        /// Cache used for faster access to already read archives.
         /// </summary>
-        private static StorageFile _archiveFile;
+        private static readonly Dictionary<string, RootNode> NodesCache;
 
         /// <summary>
-        /// Static reference to the root node. Works like a cache and 
-        /// allows faster resumption when navigating back to this page.
+        /// The currently active root node.
         /// </summary>
-        private static Node _rootNode;
+        private static RootNode _curNode;
 
         /// <summary>
         /// Source for cancellation token.
@@ -55,9 +57,24 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// </summary>
         internal bool IsNavigating { get; private set; }
 
-        internal BrowseArchiveController(INavigation navHandler) : base(navHandler)
+        /// <inheritdoc />
+        public bool IsCancelRequest { get; private set; }
+
+        static BrowseArchiveController()
+        {
+            NodesCache = new Dictionary<string, RootNode>();
+        }
+
+        internal BrowseArchiveController(INavigation navHandler,
+            IPasswordRequest pwRequest) : base(navHandler, pwRequest)
         {
             _tokenSource = new CancellationTokenSource();
+        }
+
+        /// <inheritdoc />
+        public void Reset()
+        {
+            IsCancelRequest = false;
         }
 
         /// <summary>
@@ -67,9 +84,13 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// <returns>The root node of the archive.</returns>
         internal async Task<Node> ReadArchive(StorageFile archive)
         {
-            if (_archiveFile != null && _archiveFile.IsEqual(archive)) return _rootNode;
+            string id = archive.FolderRelativeId;
+            // try to read root node from cache first
+            if (NodesCache.TryGetValue(id, out var root))
+            {
+                return root.Node;
+            }
 
-            _archiveFile = archive;
             bool passwordSet = false;
             Node rootNode = null;
             try
@@ -84,7 +105,8 @@ namespace SimpleZIP_UI.Presentation.Controller
                 catch (SharpCompress.Common.CryptographicException)
                 {
                     // archive is encrypted, ask for password and try again
-                    string password = await RequestPassword(archive.DisplayName);
+                    string password = await PasswordRequest
+                        .RequestPassword(archive.DisplayName);
                     passwordSet = password != null;
                     using (var reader = new ArchiveReader(_tokenSource.Token))
                     {
@@ -95,7 +117,8 @@ namespace SimpleZIP_UI.Presentation.Controller
             catch (OperationCanceledException)
             {
                 // ignore, because we're navigating back to
-                // the main page after cancelling the operation
+                // to previous archive or calling page
+                // after cancelling the operation
             }
             catch (Exception ex)
             {
@@ -108,13 +131,73 @@ namespace SimpleZIP_UI.Presentation.Controller
             }
             finally
             {
-                if (rootNode == null)
+                if (rootNode != null)
                 {
-                    _archiveFile = null;
+                    root = new RootNode(rootNode, archive);
+                    NodesCache.Add(id, root);
+                    _curNode = root;
+                }
+                else
+                {
+                    _curNode.Password.Initialize();
+                    _curNode = null;
                 }
             }
 
-            return _rootNode = rootNode;
+            return rootNode;
+        }
+
+        /// <summary>
+        /// Extracts a sub-archive within the current archive.
+        /// </summary>
+        /// <param name="node">The currently active node that
+        /// holds the equivalent of the model.</param>
+        /// <param name="model">The model to be converted.</param>
+        /// <returns></returns>
+        internal async Task<StorageFile> ExtractSubArchive(Node node, ArchiveEntryModel model)
+        {
+            StorageFile archive = null;
+            // find entry in children of current node
+            var entry = (from child in node.Children
+                         where child.Name.Equals(model.DisplayName)
+                         select child as FileEntry).FirstOrDefault();
+
+            if (entry != null)
+            {
+                var folder = await FileUtils.GetTempFolderAsync();
+                if (!string.IsNullOrEmpty(entry.FileName))
+                {
+                    // file has already been extracted
+                    archive = await folder.GetFileAsync(entry.FileName);
+                    if (archive != null) // exists
+                    {
+                        return archive;
+                    }
+                }
+                // doesn't exist, hence extract and read again
+                var item = new ExtractableItem(
+                    _curNode.ArchiveFile.Name,
+                    _curNode.ArchiveFile, new[] { entry });
+                var size = await FileUtils.GetFileSizeAsync(item.Archive);
+                // create operation and job for execution
+                var operationInfo = new DecompressionInfo(item, size)
+                {
+                    OutputFolder = folder,
+                    IsCollectFileNames = true
+                };
+                var operation = Operations.ForDecompression();
+                var job = new DecompressionJob(operation, operationInfo)
+                {
+                    PasswordRequest = PasswordRequest
+                };
+                var result = await job.Run(this); // extraction happens here
+                if (result.StatusCode == Result.Status.Success)
+                {
+                    archive = await folder.GetFileAsync(entry.FileName);
+                }
+            }
+
+            return archive;
         }
 
         /// <summary>
@@ -124,6 +207,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         {
             if (!_tokenSource.IsCancellationRequested)
             {
+                IsCancelRequest = true;
                 _tokenSource.Cancel();
             }
         }
@@ -136,8 +220,8 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// <returns>True if archive only consists of one file entry.</returns>
         internal bool IsSingleFileEntryArchive()
         {
-            return _rootNode.Children.Count == 1
-                && !_rootNode.Children.First().IsBrowsable;
+            return _curNode.Node.Children.Count == 1
+                && !_curNode.Node.Children.First().IsBrowsable;
         }
 
         /// <summary>
@@ -147,17 +231,18 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// <returns>True if archive is empty, false otherwise.</returns>
         internal bool IsEmptyArchive()
         {
-            return _rootNode == null || _rootNode.Children.IsNullOrEmpty();
+            return _curNode.Node == null ||
+                   _curNode.Node.Children.IsNullOrEmpty();
         }
 
         /// <summary>
-        /// Navigates to <see cref="DecompressionSummaryPage"/> with the archive 
-        /// file (<see cref="_archiveFile"/>) as a parameter.
+        /// Navigates to <see cref="DecompressionSummaryPage"/> with the currently
+        /// set archive file as the argument.
         /// </summary>
         internal void ExtractWholeArchiveButtonAction()
         {
             IsNavigating = true;
-            var args = new NavigationArgs(new[] { _archiveFile });
+            var args = new NavigationArgs(new[] { _curNode.ArchiveFile });
             Navigation.Navigate(typeof(DecompressionSummaryPage), args);
         }
 
@@ -165,11 +250,11 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// Converts each model from the specified collection to <see cref="ExtractableItem"/> 
         /// and navigates to <see cref="DecompressionSummaryPage"/> afterwards.
         /// </summary>
-        /// <param name="models">The models to be converted.</param>
         /// <param name="node">The currently active node that holds equivalents of the models.</param>
-        internal void ExtractSelectedEntriesButtonAction(ICollection<ArchiveEntryModel> models, Node node)
+        /// <param name="models">The models to be converted.</param>
+        internal void ExtractSelectedEntriesButtonAction(Node node, params ArchiveEntryModel[] models)
         {
-            var entries = new List<FileEntry>(models.Count);
+            var entries = new List<FileEntry>(models.Length);
             foreach (var model in models)
             {
                 foreach (var child in node.Children)
@@ -187,7 +272,9 @@ namespace SimpleZIP_UI.Presentation.Controller
             if (entries.Count > 0)
             {
                 IsNavigating = true;
-                var item = new ExtractableItem(_archiveFile.Name, _archiveFile, entries);
+                var item = new ExtractableItem(
+                    _curNode.ArchiveFile.Name,
+                    _curNode.ArchiveFile, entries);
                 Navigation.Navigate(typeof(DecompressionSummaryPage), item);
             }
         }
@@ -196,6 +283,22 @@ namespace SimpleZIP_UI.Presentation.Controller
         public void Dispose()
         {
             _tokenSource.Dispose();
+        }
+
+        private sealed class RootNode
+        {
+            internal Node Node { get; }
+
+            internal StorageFile ArchiveFile { get; }
+
+            internal char[] Password { get; }
+
+            internal RootNode(Node node, StorageFile archiveFile, char[] password = null)
+            {
+                Node = node;
+                ArchiveFile = archiveFile;
+                Password = password ?? new char[0];
+            }
         }
     }
 }

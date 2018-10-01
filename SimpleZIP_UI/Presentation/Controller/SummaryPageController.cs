@@ -16,22 +16,24 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Windows.Storage;
-using Windows.System.Display;
+
 using SimpleZIP_UI.Application;
 using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Compression.Operation;
 using SimpleZIP_UI.Application.Compression.Operation.Event;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Presentation.Factory;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.System.Display;
 
 namespace SimpleZIP_UI.Presentation.Controller
 {
-    internal abstract class SummaryPageController<T> : BaseController, IDisposable where T : OperationInfo
+    internal abstract class SummaryPageController<T> : BaseController,
+        ICancelRequest, IDisposable where T : OperationInfo
     {
         /// <summary>
         /// Specifies the threshold for the total file size 
@@ -43,11 +45,6 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// Avoids exceptions if file/folder picker is already open.
         /// </summary>
         private bool _pickerTriggered;
-
-        /// <summary>
-        /// True if a cancel request has been made.
-        /// </summary>
-        internal bool IsCancelRequest { get; set; }
 
         /// <summary>
         /// Where the archive or its content will be saved to.
@@ -64,10 +61,20 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// </summary>
         internal ProgressManager<int> ProgressManager { get; }
 
-        internal SummaryPageController(INavigation navHandler) : base(navHandler)
+        /// <inheritdoc />
+        public bool IsCancelRequest { get; protected set; }
+
+        internal SummaryPageController(INavigation navHandler,
+            IPasswordRequest pwRequest) : base(navHandler, pwRequest)
         {
             DisplayRequest = new DisplayRequest();
             ProgressManager = ProgressManagers.CreateInexact();
+        }
+
+        /// <inheritdoc />
+        public void Reset()
+        {
+            IsCancelRequest = false;
         }
 
         /// <summary>
@@ -92,7 +99,8 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// <param name="operationInfos">The amount of operations to be performed.</param>
         /// <returns>True on success, false otherwise.</returns>
         internal async Task<Result> StartButtonAction(
-            EventHandler<ProgressUpdateEventArgs> listener, params T[] operationInfos)
+            EventHandler<ProgressUpdateEventArgs> listener,
+            params T[] operationInfos)
         {
             using (Operation = GetArchivingOperation())
             {

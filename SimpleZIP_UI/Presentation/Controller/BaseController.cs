@@ -16,21 +16,21 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
+using SimpleZIP_UI.Application;
+using SimpleZIP_UI.Application.Compression.Model;
+using SimpleZIP_UI.Presentation.Factory;
+using SimpleZIP_UI.Presentation.View;
 using System;
 using System.Text;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer.ShareTarget;
 using Windows.System.Display;
 using Windows.UI.Notifications;
 using Windows.UI.Popups;
-using SimpleZIP_UI.Application.Compression.Model;
-using SimpleZIP_UI.Presentation.Factory;
-using SimpleZIP_UI.Presentation.View;
-using SimpleZIP_UI.Presentation.View.Dialog;
 
 namespace SimpleZIP_UI.Presentation.Controller
 {
-    /// <inheritdoc />
+    /// <inheritdoc cref="IGuiController" />
     /// <summary>
     /// Base GUI controller. Other GUI controllers should derive from this one.
     /// </summary>
@@ -38,6 +38,9 @@ namespace SimpleZIP_UI.Presentation.Controller
     {
         /// <inheritdoc />
         public INavigation Navigation { get; }
+
+        /// <inheritdoc />
+        public IPasswordRequest PasswordRequest { get; }
 
         /// <summary>
         /// Display request which can be used to keep screen active.
@@ -49,21 +52,10 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// </summary>
         internal ShareOperation ShareOperation { private get; set; }
 
-        protected BaseController(INavigation navHandler)
+        protected BaseController(INavigation navHandler, IPasswordRequest pwRequest)
         {
             Navigation = navHandler;
-        }
-
-        /// <summary>
-        /// Requests a password string from the user.
-        /// </summary>
-        /// <param name="fileName">Name of the encrypted file.</param>
-        /// <returns>The password entered by the user.</returns>
-        protected async Task<string> RequestPassword(string fileName)
-        {
-            var dialog = new EnterPasswordDialog(fileName);
-            await dialog.ShowAsync();
-            return dialog.Password;
+            PasswordRequest = pwRequest;
         }
 
         /// <summary>

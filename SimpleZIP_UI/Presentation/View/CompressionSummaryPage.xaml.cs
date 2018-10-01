@@ -16,6 +16,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
+using SimpleZIP_UI.Application;
+using SimpleZIP_UI.Application.Compression;
+using SimpleZIP_UI.Application.Compression.Model;
+using SimpleZIP_UI.Application.Compression.Operation.Event;
+using SimpleZIP_UI.Application.Util;
+using SimpleZIP_UI.Presentation.Controller;
+using SimpleZIP_UI.Presentation.Factory;
+using SimpleZIP_UI.Presentation.Handler;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -25,17 +34,11 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-using SimpleZIP_UI.Application.Compression;
-using SimpleZIP_UI.Application.Compression.Model;
-using SimpleZIP_UI.Application.Compression.Operation.Event;
-using SimpleZIP_UI.Application.Util;
-using SimpleZIP_UI.Presentation.Controller;
-using SimpleZIP_UI.Presentation.Handler;
 
 namespace SimpleZIP_UI.Presentation.View
 {
     /// <inheritdoc cref="Page" />
-    public sealed partial class CompressionSummaryPage : IDisposable, INavigation
+    public sealed partial class CompressionSummaryPage : INavigation, IPasswordRequest, IDisposable
     {
         /// <summary>
         /// The aggregated controller instance.
@@ -91,7 +94,7 @@ namespace SimpleZIP_UI.Presentation.View
             }
 
             ArchiveTypeComboBox.SelectedIndex = 0; // selected index on page launch
-            _controller = new CompressionController(this);
+            _controller = new CompressionController(this, this);
         }
 
         private static ComboBoxItem CreateItemForComboBox(string content, string fileType)
@@ -320,9 +323,15 @@ namespace SimpleZIP_UI.Presentation.View
         }
 
         /// <inheritdoc />
-        public void Dispose()
+        public async Task<string> RequestPassword(string fileName)
         {
-            _controller.Dispose();
+            var dialog = DialogFactory.CreateRequestPasswordDialog(fileName);
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                await dialog.ShowAsync();
+            });
+
+            return dialog.Password;
         }
 
         /// <inheritdoc />
@@ -336,6 +345,12 @@ namespace SimpleZIP_UI.Presentation.View
             {
                 Frame.Navigate(destinationPageType, parameter);
             }
+        }
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            _controller.Dispose();
         }
     }
 }

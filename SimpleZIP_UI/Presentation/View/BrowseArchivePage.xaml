@@ -41,8 +41,9 @@
                      IsEnabled="{x:Bind IsProgressBarEnabled.IsTrue, Mode=TwoWay}" 
                      Visibility="{x:Bind IsProgressBarEnabled.IsTrue, Mode=TwoWay, Converter={StaticResource BoolToVisibilityConverter}}" />
         <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" Margin="0,16,0,0" VerticalScrollBarVisibility="Auto">
-            <ListBox ItemsSource="{Binding ArchiveEntryModels}" SelectionChanged="ItemsListBox_OnSelectionChanged" 
+            <ListBox ItemsSource="{Binding ArchiveEntryModels}" SelectionChanged="ItemsListBox_OnSelectionChanged"
                      Margin="8,0,8,0" SelectionMode="Multiple" CanDrag="False" HorizontalContentAlignment="Stretch" 
+                     IsDoubleTapEnabled="True" DoubleTapped="ItemsListBox_OnDoubleTapped"
                      Background="Transparent" Height="Auto" Foreground="{ThemeResource ButtonForegroundThemeBrush}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>

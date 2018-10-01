@@ -16,10 +16,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
-using System;
-using System.Threading.Tasks;
+
 using SimpleZIP_UI.Presentation.Factory;
 using SimpleZIP_UI.Presentation.View;
+using System;
+using System.Threading.Tasks;
 
 namespace SimpleZIP_UI.Presentation.Controller
 {
@@ -33,7 +34,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             Compress, Decompress, OpenArchive, HashCalculation
         }
 
-        internal MainController(INavigation navHandler) : base(navHandler)
+        internal MainController(INavigation navHandler) : base(navHandler, null)
         {
         }
 

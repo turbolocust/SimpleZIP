@@ -16,6 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+using SimpleZIP_UI.Presentation.View.Dialog;
 using Windows.UI.Popups;
 
 namespace SimpleZIP_UI.Presentation.Factory
@@ -58,6 +59,16 @@ namespace SimpleZIP_UI.Presentation.Factory
         public static MessageDialog CreateInformationDialog(string title, string message)
         {
             return new MessageDialog(message, title);
+        }
+
+        /// <summary>
+        /// Creates a new dialog which allows the user to enter a password.
+        /// </summary>
+        /// <param name="fileName">The name of the password protected file.</param>
+        /// <returns>The newly created dialog for entering a password.</returns>
+        public static EnterPasswordDialog CreateRequestPasswordDialog(string fileName)
+        {
+            return new EnterPasswordDialog(fileName);
         }
     }
 }
