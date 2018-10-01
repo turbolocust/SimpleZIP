@@ -16,18 +16,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
+using SimpleZIP_UI.Application.Util;
 using System;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
-using SimpleZIP_UI.Application.Util;
 
-namespace SimpleZIP_UI.Application.Compression
+namespace SimpleZIP_UI.Application.Compression.Compressor
 {
-    internal interface IStringCompressor : ICompressor<string, string>
-    {
-    }
-
     /// <summary>
     /// Compresses and decompresses strings using a GZIP compressor.
     /// </summary>
@@ -36,7 +33,7 @@ namespace SimpleZIP_UI.Application.Compression
         private readonly Encoding _encoding;
 
         /// <summary>
-        /// Constructes a new instance of this class.
+        /// Constructs a new instance of this class.
         /// </summary>
         /// <param name="charEncoding">Character encoding of strings
         /// to be processed by this instance. Defaults to

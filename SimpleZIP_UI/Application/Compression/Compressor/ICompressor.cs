@@ -17,7 +17,7 @@
 // 
 // ==--==
 
-namespace SimpleZIP_UI.Application.Compression
+namespace SimpleZIP_UI.Application.Compression.Compressor
 {
     internal interface ICompressor<T, TO>
     {
