@@ -37,28 +37,23 @@ namespace SimpleZIP_UI.Presentation.Controller
 {
     internal sealed class BrowseArchiveController : BaseController, ICancelRequest, IDisposable
     {
-        /// <summary>
-        /// Cache used for faster access to already read archives.
-        /// </summary>
-        private static readonly Dictionary<string, RootNode> NodesCache;
-
-        /// <summary>
-        /// The currently active root node.
-        /// </summary>
-        private static RootNode _curNode;
-
-        /// <summary>
-        /// Source for cancellation token.
-        /// </summary>
-        private readonly CancellationTokenSource _tokenSource;
+        /// <inheritdoc />
+        public bool IsCancelRequest { get; private set; }
 
         /// <summary>
         /// True if navigation is about to be executed, false otherwise.
         /// </summary>
         internal bool IsNavigating { get; private set; }
 
-        /// <inheritdoc />
-        public bool IsCancelRequest { get; private set; }
+        /// <summary>
+        /// Cache used for faster access to already read archives.
+        /// </summary>
+        private static readonly Dictionary<string, RootNode> NodesCache;
+
+        /// <summary>
+        /// Source for cancellation token.
+        /// </summary>
+        private readonly CancellationTokenSource _tokenSource;
 
         static BrowseArchiveController()
         {
@@ -82,48 +77,46 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// </summary>
         /// <param name="archive">The archive to be read.</param>
         /// <returns>The root node of the archive.</returns>
-        internal async Task<Node> ReadArchive(StorageFile archive)
+        internal async Task<RootNode> ReadArchive(StorageFile archive)
         {
-            string id = archive.FolderRelativeId;
+            string key = archive.Path + archive.FolderRelativeId;
             // try to read root node from cache first
-            if (NodesCache.TryGetValue(id, out var root))
+            if (NodesCache.TryGetValue(key, out var rootNode))
             {
-                return root.Node;
+                return rootNode;
             }
 
-            bool passwordSet = false;
-            Node rootNode = null;
+            string password = string.Empty;
+            Node root = null;
             try
             {
                 try
                 {
                     using (var reader = new ArchiveReader(_tokenSource.Token))
                     {
-                        rootNode = await reader.Read(archive);
+                        root = await reader.Read(archive);
                     }
                 }
                 catch (SharpCompress.Common.CryptographicException)
                 {
                     // archive is encrypted, ask for password and try again
-                    string password = await PasswordRequest
-                        .RequestPassword(archive.DisplayName);
-                    passwordSet = password != null;
+                    password = await PasswordRequest.RequestPassword(archive.DisplayName);
                     using (var reader = new ArchiveReader(_tokenSource.Token))
                     {
-                        rootNode = await reader.Read(archive, password);
+                        root = await reader.Read(archive, password);
                     }
                 }
             }
             catch (OperationCanceledException)
             {
-                // ignore, because we're navigating back to
+                // ignore, because we're navigating back
                 // to previous archive or calling page
                 // after cancelling the operation
             }
             catch (Exception ex)
             {
                 string message = await I18N.ExceptionMessageHandler
-                    .GetStringFor(ex, true, passwordSet, archive);
+                    .GetStringFor(ex, true, password != null, archive);
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 DialogFactory.CreateErrorDialog(message).ShowAsync();
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -131,16 +124,10 @@ namespace SimpleZIP_UI.Presentation.Controller
             }
             finally
             {
-                if (rootNode != null)
+                if (root != null)
                 {
-                    root = new RootNode(rootNode, archive);
-                    NodesCache.Add(id, root);
-                    _curNode = root;
-                }
-                else
-                {
-                    _curNode.Password.Initialize();
-                    _curNode = null;
+                    rootNode = new RootNode(root, archive, password);
+                    NodesCache.Add(key, rootNode);
                 }
             }
 
@@ -150,11 +137,13 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// <summary>
         /// Extracts a sub-archive within the current archive.
         /// </summary>
+        /// <param name="root">The root node of the sub-archive.</param>
         /// <param name="node">The currently active node that
         /// holds the equivalent of the model.</param>
         /// <param name="model">The model to be converted.</param>
-        /// <returns></returns>
-        internal async Task<StorageFile> ExtractSubArchive(Node node, ArchiveEntryModel model)
+        /// <returns>A task which returns the extracted archive.</returns>
+        internal async Task<StorageFile> ExtractSubArchive(RootNode root,
+            Node node, ArchiveEntryModel model)
         {
             StorageFile archive = null;
             // find entry in children of current node
@@ -176,8 +165,8 @@ namespace SimpleZIP_UI.Presentation.Controller
                 }
                 // doesn't exist, hence extract and read again
                 var item = new ExtractableItem(
-                    _curNode.ArchiveFile.Name,
-                    _curNode.ArchiveFile, new[] { entry });
+                    root.ArchiveFile.Name,
+                    root.ArchiveFile, new[] { entry });
                 var size = await FileUtils.GetFileSizeAsync(item.Archive);
                 // create operation and job for execution
                 var operationInfo = new DecompressionInfo(item, size)
@@ -217,42 +206,52 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// of one file entry. This evaluates to true if the opened 
         /// archive is e.g. a GZIP compressed file.
         /// </summary>
+        /// <param name="root">The root node of the archive.</param>
         /// <returns>True if archive only consists of one file entry.</returns>
-        internal bool IsSingleFileEntryArchive()
+        internal bool IsSingleFileEntryArchive(RootNode root)
         {
-            return _curNode.Node.Children.Count == 1
-                && !_curNode.Node.Children.First().IsBrowsable;
+            return root.Node.Children.Count == 1
+                && !root.Node.Children.First().IsBrowsable;
         }
 
         /// <summary>
         /// Checks whether the currently opened archive contains
         /// any elements (including files and folders) or not.
         /// </summary>
+        /// <param name="root">The root node of the archive.</param>
         /// <returns>True if archive is empty, false otherwise.</returns>
-        internal bool IsEmptyArchive()
+        internal bool IsEmptyArchive(RootNode root)
         {
-            return _curNode.Node == null ||
-                   _curNode.Node.Children.IsNullOrEmpty();
+            return root.Node == null || root.Node.Children.IsNullOrEmpty();
         }
 
         /// <summary>
         /// Navigates to <see cref="DecompressionSummaryPage"/> with the currently
-        /// set archive file as the argument.
+        /// set archive as the argument (as <see cref="ExtractableItem"/>).
         /// </summary>
-        internal void ExtractWholeArchiveButtonAction()
+        /// <param name="root">The root node of the archive.</param>
+        internal void ExtractWholeArchiveButtonAction(RootNode root)
         {
             IsNavigating = true;
-            var args = new NavigationArgs(new[] { _curNode.ArchiveFile });
-            Navigation.Navigate(typeof(DecompressionSummaryPage), args);
+
+            var item = new ExtractableItem(
+                root.ArchiveFile.Name, root.ArchiveFile)
+            {
+                Password = root.Password
+            };
+
+            Navigation.Navigate(typeof(DecompressionSummaryPage), item);
         }
 
         /// <summary>
         /// Converts each model from the specified collection to <see cref="ExtractableItem"/> 
         /// and navigates to <see cref="DecompressionSummaryPage"/> afterwards.
         /// </summary>
+        /// <param name="root">The root node of the archive.</param>
         /// <param name="node">The currently active node that holds equivalents of the models.</param>
         /// <param name="models">The models to be converted.</param>
-        internal void ExtractSelectedEntriesButtonAction(Node node, params ArchiveEntryModel[] models)
+        internal void ExtractSelectedEntriesButtonAction(RootNode root,
+            Node node, params ArchiveEntryModel[] models)
         {
             var entries = new List<FileEntry>(models.Length);
             foreach (var model in models)
@@ -273,8 +272,11 @@ namespace SimpleZIP_UI.Presentation.Controller
             {
                 IsNavigating = true;
                 var item = new ExtractableItem(
-                    _curNode.ArchiveFile.Name,
-                    _curNode.ArchiveFile, entries);
+                    root.ArchiveFile.Name,
+                    root.ArchiveFile, entries)
+                {
+                    Password = root.Password
+                };
                 Navigation.Navigate(typeof(DecompressionSummaryPage), item);
             }
         }
@@ -285,19 +287,19 @@ namespace SimpleZIP_UI.Presentation.Controller
             _tokenSource.Dispose();
         }
 
-        private sealed class RootNode
+        internal sealed class RootNode
         {
             internal Node Node { get; }
 
             internal StorageFile ArchiveFile { get; }
 
-            internal char[] Password { get; }
+            internal string Password { get; }
 
-            internal RootNode(Node node, StorageFile archiveFile, char[] password = null)
+            internal RootNode(Node node, StorageFile archiveFile, string password = null)
             {
                 Node = node;
                 ArchiveFile = archiveFile;
-                Password = password ?? new char[0];
+                Password = password ?? string.Empty;
             }
         }
     }

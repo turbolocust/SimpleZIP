@@ -37,12 +37,18 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
+using static SimpleZIP_UI.Presentation.Controller.BrowseArchiveController;
 
 namespace SimpleZIP_UI.Presentation.View
 {
     /// <inheritdoc cref="Page" />
     public sealed partial class BrowseArchivePage : INavigation, IPasswordRequest, IDisposable
     {
+        /// <summary>
+        /// Initial capacity of data structures holding archive nodes.
+        /// </summary>
+        private const int InitialStackCapacity = 1 << 3;
+
         /// <summary>
         /// The aggregated controller instance.
         /// </summary>
@@ -54,14 +60,26 @@ namespace SimpleZIP_UI.Presentation.View
         private readonly ISet<ArchiveEntryModel> _selectedModels;
 
         /// <summary>
-        /// History when navigating back and to determine the currently active node.
+        /// History when navigating back and to determine the currently active node
+        /// for each archive that is stored in <see cref="_rootNodeStack"/>.
         /// </summary>
-        private readonly Stack<Node> _nodeStack = new Stack<Node>();
+        private readonly List<Stack<Node>> _nodeStackList;
 
         /// <summary>
-        /// Nodes of any sub-archives opened through another archive.
+        /// Root nodes of sub-archives opened through another archive.
         /// </summary>
-        private readonly Stack<Node> _archivesStack = new Stack<Node>();
+        private readonly Stack<RootNode> _rootNodeStack;
+
+        /// <summary>
+        /// The currently opened archive's root node.
+        /// </summary>
+        private RootNode _curRootNode;
+
+        /// <summary>
+        /// Current position in <see cref="_rootNodeStack"/>. A negative
+        /// value indicates that no archives are currently on the stack.
+        /// </summary>
+        private int _rootNodeStackPointer = -1;
 
         /// <summary>
         /// Models bound to the list box in view.
@@ -81,20 +99,22 @@ namespace SimpleZIP_UI.Presentation.View
             InitializeComponent();
             _controller = new BrowseArchiveController(this, this);
             _selectedModels = new HashSet<ArchiveEntryModel>();
+            _nodeStackList = new List<Stack<Node>>(InitialStackCapacity);
+            _rootNodeStack = new Stack<RootNode>(InitialStackCapacity);
             ArchiveEntryModels = new ObservableCollection<ArchiveEntryModel>();
         }
 
         private void ExtractWholeArchiveButton_OnTapped(
             object sender, TappedRoutedEventArgs args)
         {
-            _controller.ExtractWholeArchiveButtonAction();
+            _controller.ExtractWholeArchiveButtonAction(_curRootNode);
         }
 
         private void ExtractSelectedEntriesButton_OnTapped(
             object sender, TappedRoutedEventArgs args)
         {
-            _controller.ExtractSelectedEntriesButtonAction(
-                _nodeStack.Peek(), _selectedModels.ToArray());
+            _controller.ExtractSelectedEntriesButtonAction(_curRootNode,
+                GetNodesForCurrentRoot().Peek(), _selectedModels.ToArray());
         }
 
         private void NavigateUpButton_OnTapped(
@@ -117,7 +137,8 @@ namespace SimpleZIP_UI.Presentation.View
                 {
                     if (addItem.EntryType == ArchiveEntryModel.ArchiveEntryModelType.Node)
                     {
-                        foreach (var child in _nodeStack.Peek().Children)
+                        var curNode = GetNodesForCurrentRoot().Peek();
+                        foreach (var child in curNode.Children)
                         {
                             if (child.Name.Equals(addItem.DisplayName))
                             {
@@ -142,7 +163,7 @@ namespace SimpleZIP_UI.Presentation.View
             // archive does not only consist of a single file entry
             ExtractSelectedEntriesButton.IsEnabled =
                 _selectedModels.Count > 0 &&
-                !_controller.IsSingleFileEntryArchive();
+                !_controller.IsSingleFileEntryArchive(_curRootNode);
         }
 
         private async void ItemsListBox_OnDoubleTapped(
@@ -157,14 +178,16 @@ namespace SimpleZIP_UI.Presentation.View
                     try
                     {
                         list.SelectedItem = model; // in case of multi-selection
-                        var file = await _controller.ExtractSubArchive(_nodeStack.Peek(), model);
+                        var curNode = GetNodesForCurrentRoot().Peek();
+                        var file = await _controller.ExtractSubArchive(_curRootNode, curNode, model);
                         if (file == null) // something went wrong
                         {
                             throw new FileNotFoundException("File not found. Extraction of sub archive failed.");
                         }
-                        _nodeStack.Clear(); // since we're loading a new archive
+                        GetNodesForCurrentRoot().Clear(); // since we're loading a new archive
                         await LoadArchive(file); // will push first node onto nodeStack
-                        ExtractWholeArchiveButton.IsEnabled = !_controller.IsEmptyArchive();
+                        ExtractWholeArchiveButton.IsEnabled
+                            = !_controller.IsEmptyArchive(_curRootNode);
                     }
                     catch (Exception)
                     {
@@ -178,12 +201,20 @@ namespace SimpleZIP_UI.Presentation.View
             args.Handled = true;
         }
 
-        private async Task<Node> LoadArchive(StorageFile archive)
+        #region Private helper methods
+        private async Task LoadArchive(StorageFile archive)
         {
             var rootNode = await _controller.ReadArchive(archive);
-            await UpdateListContentAsync(rootNode);
-            _archivesStack.Push(rootNode);
-            return rootNode;
+            _rootNodeStack.Push(rootNode);
+            _nodeStackList.Add(new Stack<Node>(InitialStackCapacity));
+            ++_rootNodeStackPointer; // will be zero if new archive
+            _curRootNode = rootNode;
+            await UpdateListContentAsync(rootNode.Node);
+        }
+
+        private Stack<Node> GetNodesForCurrentRoot()
+        {
+            return _nodeStackList[_rootNodeStackPointer];
         }
 
         private async Task UpdateListContentAsync(Node nextNode)
@@ -197,7 +228,7 @@ namespace SimpleZIP_UI.Presentation.View
             {
                 ArchiveEntryModels.Clear();
                 _selectedModels.Clear();
-                _nodeStack.Push(nextNode);
+                GetNodesForCurrentRoot().Push(nextNode);
 
                 foreach (var child in nextNode.Children)
                 {
@@ -208,9 +239,10 @@ namespace SimpleZIP_UI.Presentation.View
                 IsProgressBarEnabled.IsTrue = false;
 
                 // checking stack count since root node name may be different
-                AddressBar.Text = _nodeStack.Count == 1 ? "/" : nextNode.Id;
+                AddressBar.Text = GetNodesForCurrentRoot().Count == 1 ? "/" : nextNode.Id;
             });
         }
+        #endregion
 
         /// <inheritdoc />
         protected override async void OnNavigatedTo(NavigationEventArgs args)
@@ -240,8 +272,9 @@ namespace SimpleZIP_UI.Presentation.View
             if (archive == null)
                 throw new NullReferenceException("Cannot handle null parameter.");
 
-            await LoadArchive(archive);
-            ExtractWholeArchiveButton.IsEnabled = !_controller.IsEmptyArchive();
+            await LoadArchive(archive); // load initial archive
+            ExtractWholeArchiveButton.IsEnabled
+                = !_controller.IsEmptyArchive(_curRootNode);
         }
 
         /// <inheritdoc />
@@ -249,19 +282,22 @@ namespace SimpleZIP_UI.Presentation.View
         {
             // can only go back in history if stack holds at 
             // least two elements (since first node is root node)
-            if (_nodeStack.Count > 1 && !_controller.IsNavigating)
+            if (GetNodesForCurrentRoot().Count > 1 && !_controller.IsNavigating)
             {
                 args.Cancel = true;
-                _nodeStack.Pop(); // remove current
+                GetNodesForCurrentRoot().Pop(); // remove current
                 IsProgressBarEnabled.IsTrue = true;
-                await UpdateListContentAsync(_nodeStack.Pop());
+                await UpdateListContentAsync(GetNodesForCurrentRoot().Pop());
             }
-            else if (_archivesStack.Count > 0 && !_controller.IsNavigating)
+            // or if sub-archives have been opened (archive within archive)
+            else if (_rootNodeStack.Count > 1 && !_controller.IsNavigating)
             {
                 args.Cancel = true;
-                _archivesStack.Pop(); // remove current
+                _rootNodeStack.Pop(); // remove current
+                --_rootNodeStackPointer;
                 IsProgressBarEnabled.IsTrue = true;
-                await UpdateListContentAsync(_archivesStack.Peek());
+                var nextRoot = _curRootNode = _rootNodeStack.Peek();
+                await UpdateListContentAsync(nextRoot.Node);
             }
             else
             {
