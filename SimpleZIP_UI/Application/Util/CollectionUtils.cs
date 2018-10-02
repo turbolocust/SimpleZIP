@@ -16,6 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,17 +24,6 @@ namespace SimpleZIP_UI.Application.Util
 {
     internal static class CollectionUtils
     {
-        /// <summary>
-        /// Checks if this collection is empty.
-        /// </summary>
-        /// <typeparam name="T">The type of elements in this collection.</typeparam>
-        /// <param name="collection">The collection to be checked.</param>
-        /// <returns>True if collection is empty, false otherwise.</returns>
-        public static bool IsEmpty<T>(this ICollection<T> collection)
-        {
-            return collection.Count == 0;
-        }
-
         /// <summary>
         /// Checks whether this collection is <code>null</code> or empty.
         /// </summary>
