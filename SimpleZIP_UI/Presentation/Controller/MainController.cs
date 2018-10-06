@@ -17,7 +17,9 @@
 // 
 // ==--==
 
+using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Presentation.Factory;
+using SimpleZIP_UI.Presentation.Handler;
 using SimpleZIP_UI.Presentation.View;
 using System;
 using System.Threading.Tasks;
@@ -84,6 +86,19 @@ namespace SimpleZIP_UI.Presentation.Controller
             }
 
             return success;
+        }
+
+        /// <summary>
+        /// Performs initialization of e.g. cached files created in some use cases.
+        /// </summary>
+        internal async void Initialize()
+        {
+            // only clear cache if threshold is exceeded
+            if (RootNodeCacheHandler.Instance.Cache.Count > 10)
+            {
+                RootNodeCacheHandler.Instance.ClearCache();
+                await FileUtils.PurgeTempFolderAsync();
+            }
         }
 
         private async Task<bool> CompressButtonAction()
