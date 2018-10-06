@@ -23,7 +23,9 @@ using SimpleZIP_UI.Application.Compression.Operation;
 using SimpleZIP_UI.Application.Compression.Operation.Job;
 using SimpleZIP_UI.Application.Compression.Reader;
 using SimpleZIP_UI.Application.Util;
+using SimpleZIP_UI.I18N;
 using SimpleZIP_UI.Presentation.Factory;
+using SimpleZIP_UI.Presentation.Handler;
 using SimpleZIP_UI.Presentation.View;
 using SimpleZIP_UI.Presentation.View.Model;
 using System;
@@ -46,19 +48,9 @@ namespace SimpleZIP_UI.Presentation.Controller
         internal bool IsNavigating { get; private set; }
 
         /// <summary>
-        /// Cache used for faster access to already read archives.
-        /// </summary>
-        private static readonly Dictionary<string, RootNode> NodesCache;
-
-        /// <summary>
         /// Source for cancellation token.
         /// </summary>
         private readonly CancellationTokenSource _tokenSource;
-
-        static BrowseArchiveController()
-        {
-            NodesCache = new Dictionary<string, RootNode>();
-        }
 
         internal BrowseArchiveController(INavigation navHandler,
             IPasswordRequest pwRequest) : base(navHandler, pwRequest)
@@ -79,22 +71,22 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// <returns>The root node of the archive.</returns>
         internal async Task<RootNode> ReadArchive(StorageFile archive)
         {
-            string key = archive.Path + archive.FolderRelativeId;
-            // try to read root node from cache first
-            if (NodesCache.TryGetValue(key, out var rootNode))
+            string key = !string.IsNullOrEmpty(archive.Path)
+                ? archive.Path : archive.FolderRelativeId;
+            var node = RootNodeCacheHandler.Instance.ReadFromCache(key);
+            if (node != null) // return immediately if cached
             {
-                return rootNode;
+                return node;
             }
 
             string password = string.Empty;
-            Node root = null;
             try
             {
                 try
                 {
                     using (var reader = new ArchiveReader(_tokenSource.Token))
                     {
-                        root = await reader.Read(archive);
+                        node = await reader.Read(archive);
                     }
                 }
                 catch (SharpCompress.Common.CryptographicException)
@@ -103,7 +95,7 @@ namespace SimpleZIP_UI.Presentation.Controller
                     password = await PasswordRequest.RequestPassword(archive.DisplayName);
                     using (var reader = new ArchiveReader(_tokenSource.Token))
                     {
-                        root = await reader.Read(archive, password);
+                        node = await reader.Read(archive, password);
                     }
                 }
             }
@@ -115,7 +107,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             }
             catch (Exception ex)
             {
-                string message = await I18N.ExceptionMessageHandler
+                string message = await ExceptionMessages
                     .GetStringFor(ex, true, password != null, archive);
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 DialogFactory.CreateErrorDialog(message).ShowAsync();
@@ -124,14 +116,13 @@ namespace SimpleZIP_UI.Presentation.Controller
             }
             finally
             {
-                if (root != null)
+                if (node != null)
                 {
-                    rootNode = new RootNode(root, archive, password);
-                    NodesCache.Add(key, rootNode);
+                    RootNodeCacheHandler.Instance.WriteToCache(key, node);
                 }
             }
 
-            return rootNode;
+            return node;
         }
 
         /// <summary>
@@ -210,8 +201,8 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// <returns>True if archive only consists of one file entry.</returns>
         internal bool IsSingleFileEntryArchive(RootNode root)
         {
-            return root.Node.Children.Count == 1
-                && !root.Node.Children.First().IsBrowsable;
+            return root.Children.Count == 1
+                && !root.Children.First().IsBrowsable;
         }
 
         /// <summary>
@@ -222,7 +213,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// <returns>True if archive is empty, false otherwise.</returns>
         internal bool IsEmptyArchive(RootNode root)
         {
-            return root.Node == null || root.Node.Children.IsNullOrEmpty();
+            return root == null || root.Children.IsNullOrEmpty();
         }
 
         /// <summary>
@@ -285,22 +276,6 @@ namespace SimpleZIP_UI.Presentation.Controller
         public void Dispose()
         {
             _tokenSource.Dispose();
-        }
-
-        internal sealed class RootNode
-        {
-            internal Node Node { get; }
-
-            internal StorageFile ArchiveFile { get; }
-
-            internal string Password { get; }
-
-            internal RootNode(Node node, StorageFile archiveFile, string password = null)
-            {
-                Node = node;
-                ArchiveFile = archiveFile;
-                Password = password ?? string.Empty;
-            }
         }
     }
 }

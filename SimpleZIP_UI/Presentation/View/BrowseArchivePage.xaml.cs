@@ -37,7 +37,6 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
-using static SimpleZIP_UI.Presentation.Controller.BrowseArchiveController;
 
 namespace SimpleZIP_UI.Presentation.View
 {
@@ -209,7 +208,7 @@ namespace SimpleZIP_UI.Presentation.View
             _nodeStackList.Add(new Stack<Node>(InitialStackCapacity));
             ++_rootNodeStackPointer; // will be zero if new archive
             _curRootNode = rootNode;
-            await UpdateListContentAsync(rootNode.Node);
+            await UpdateListContentAsync(rootNode);
         }
 
         private Stack<Node> GetNodesForCurrentRoot()
@@ -297,7 +296,7 @@ namespace SimpleZIP_UI.Presentation.View
                 --_rootNodeStackPointer;
                 IsProgressBarEnabled.IsTrue = true;
                 var nextRoot = _curRootNode = _rootNodeStack.Peek();
-                await UpdateListContentAsync(nextRoot.Node);
+                await UpdateListContentAsync(nextRoot);
             }
             else
             {

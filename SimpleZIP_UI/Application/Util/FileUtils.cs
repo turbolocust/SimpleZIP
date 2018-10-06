@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2018 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -86,7 +86,7 @@ namespace SimpleZIP_UI.Application.Util
         }
 
         /// <summary>
-        /// Deletes the specified item. This may be called if an operation has been canceled.
+        /// Deletes the specified item.
         /// </summary>
         /// <param name="item">The item to be deleted.</param>
         public static async void Delete(IStorageItem item)
@@ -102,6 +102,24 @@ namespace SimpleZIP_UI.Application.Util
         {
             string path = Path.GetTempPath();
             return await StorageFolder.GetFolderFromPathAsync(path);
+        }
+
+        /// <summary>
+        /// Purges files from the application's temporary folder.
+        /// </summary>
+        /// <returns>A task which can be awaited.</returns>
+        public static async Task PurgeTempFolderAsync()
+        {
+            var folder = await GetTempFolderAsync();
+
+            if (folder != null)
+            {
+                var files = await folder.GetFilesAsync();
+                foreach (var file in files)
+                {
+                    Delete(file);
+                }
+            }
         }
 
         /// <summary>

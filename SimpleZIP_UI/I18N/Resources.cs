@@ -16,11 +16,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
-using System;
-using System.Threading.Tasks;
+
 using Windows.ApplicationModel.Resources;
-using Windows.Storage;
-using SimpleZIP_UI.Application.Compression;
 
 namespace SimpleZIP_UI.I18N
 {
@@ -54,54 +51,6 @@ namespace SimpleZIP_UI.I18N
         {
             var value = Loader.GetString(name);
             return string.Format(value, objects);
-        }
-    }
-
-    internal static class ExceptionMessageHandler
-    {
-        /// <summary>
-        /// Gets an internationalized string for the specified exception. 
-        /// The string is a friendly error message which can be shown to users.
-        /// </summary>
-        /// <param name="ex">Exception from which to receive an internationalized message.</param>
-        /// <param name="acceptDefault">Returns a generic error message instead of
-        /// an empty string when there is no friendly message defined for the concrete type
-        /// of the specified exception.</param>
-        /// <param name="passwordSet">True to indicate that passwort is set.</param>
-        /// <param name="file">File that was processed when exception occurred.</param>
-        /// <returns>String value of a resource.</returns>
-        internal static async Task<string> GetStringFor(Exception ex,
-            bool acceptDefault, bool passwordSet, StorageFile file = null)
-        {
-            var message = string.Empty;
-            switch (ex)
-            {
-                case SharpCompress.Common.CryptographicException _:
-                    message = passwordSet
-                        ? "ErrorReadingArchiveWithPassword/Text"
-                        : "FileEncryptedMessage/Text"; // not all encryption types are supported
-                    break;
-                case InvalidOperationException _:
-                    if (file != null)
-                    {
-                        // to inform that file format is not supported
-                        message = await Archives.IsRarArchive(file)
-                            ? "RAR5FormatNotSupported/Text"
-                            : "FileFormatNotSupported/Text";
-                    }
-                    else
-                    {
-                        message = "FileFormatNotSupported/Text";
-                    }
-                    break;
-                default:
-                    if (acceptDefault)
-                    {
-                        message = "ErrorReadingArchive/Text";
-                    }
-                    break;
-            }
-            return message.Length > 0 ? Resources.GetString(message) : message;
         }
     }
 }

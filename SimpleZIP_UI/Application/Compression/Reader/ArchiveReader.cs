@@ -106,7 +106,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         /// <exception cref="IOException">Thrown when an error while reading the archive occurred.</exception>
         /// <exception cref="OperationCanceledException">Thrown if operation has been cancelled.</exception>
         /// <exception cref="ObjectDisposedException">Thrown if reader is closed.</exception>
-        public async Task<Node> Read(StorageFile archive, string password = null)
+        public async Task<RootNode> Read(StorageFile archive, string password = null)
         {
             if (Closed) throw new ObjectDisposedException(GetType().FullName);
 
@@ -115,7 +115,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
             char separator = DetermineFileSeparator();
             var keyBuilder = new StringBuilder();
             var nameBuilder = new StringBuilder();
-            var rootNode = new Node(RootNodeName);
+            var rootNode = new RootNode(RootNodeName, archive, password);
             var pair = new EntryKeyPair();
             _nodes.Add(rootNode.Id, rootNode);
 
@@ -127,7 +127,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
                 if (entry.IsDirectory || entry.Key == null) continue;
 
                 UpdateEntryKeyPair(ref pair, entry.Key, separator);
-                var parentNode = rootNode;
+                Node parentNode = rootNode;
 
                 for (int i = 0; i <= pair.SeparatorPos; ++i)
                 {

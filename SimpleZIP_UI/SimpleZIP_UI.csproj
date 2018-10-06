@@ -130,6 +130,7 @@
     <Compile Include="Application\Compression\Operation\Job\DecompressionJob.cs" />
     <Compile Include="Application\Compression\Operation\Job\IArchivingJob.cs" />
     <Compile Include="Application\Compression\Operation\Operations.cs" />
+    <Compile Include="Application\Compression\Reader\RootNode.cs" />
     <Compile Include="Application\ICancellable.cs" />
     <Compile Include="Application\ICancelRequest.cs" />
     <Compile Include="Application\IPasswordRequest.cs" />
@@ -151,6 +152,7 @@
     <Compile Include="Application\Util\WriterUtils.cs" />
     <Compile Include="Application\Util\CollectionUtils.cs" />
     <Compile Include="Application\ReadingArchiveException.cs" />
+    <Compile Include="I18N\ExceptionMessages.cs" />
     <Compile Include="I18N\Resources.cs" />
     <Compile Include="ISerializable.cs" />
     <Compile Include="Presentation\Controller\BrowseArchiveController.cs" />
@@ -159,6 +161,8 @@
     <Compile Include="Presentation\Controller\SummaryPageController.cs" />
     <Compile Include="Application\ProgressManager.cs" />
     <Compile Include="Presentation\Handler\ArchiveHistoryHandler.cs" />
+    <Compile Include="Presentation\Handler\ICacheHandler.cs" />
+    <Compile Include="Presentation\Handler\RootNodeCacheHandler.cs" />
     <Compile Include="Presentation\INavigation.cs" />
     <Compile Include="Presentation\Handler\ShareTargetHandler.cs" />
     <Compile Include="Presentation\NavigationArgs.cs" />

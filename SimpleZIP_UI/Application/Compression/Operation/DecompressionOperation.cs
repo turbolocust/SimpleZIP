@@ -16,11 +16,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
 using SharpCompress.Common;
 using SharpCompress.Readers;
 using SimpleZIP_UI.Application.Compression.Algorithm;
 using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Util;
+using SimpleZIP_UI.I18N;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -78,9 +80,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                         throw; // simply re-throw, but only if password not set
                     }
 
-                    message = await I18N.ExceptionMessageHandler
-                                    .GetStringFor(ex, false, passwordSet, archiveFile);
-
+                    message = await ExceptionMessages.GetStringFor(ex, false, passwordSet, archiveFile);
                     verboseMsg = ex.Message;
                 }
                 return EvaluateResult(archiveFile.Name, message, verboseMsg, isSuccess);
