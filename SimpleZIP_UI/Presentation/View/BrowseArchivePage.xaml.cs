@@ -139,7 +139,7 @@ namespace SimpleZIP_UI.Presentation.View
                         var curNode = GetNodesForCurrentRoot().Peek();
                         foreach (var child in curNode.Children)
                         {
-                            if (child.Name.Equals(addItem.DisplayName))
+                            if (child.Name.Equals(addItem.DisplayName) && child.IsBrowsable)
                             {
                                 IsProgressBarEnabled.IsTrue = true;
                                 await UpdateListContentAsync(child as Node);
