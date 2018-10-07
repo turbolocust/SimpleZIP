@@ -469,4 +469,20 @@
     <value>Archiv {0} konnte nicht erstellt werden.</value>
     <comment>Informs the user that an archive could not be created.</comment>
   </data>
+  <data name="Sort.Content" xml:space="preserve">
+    <value>Sortieren</value>
+    <comment>Change the order of items.</comment>
+  </data>
+  <data name="SortByName.Text" xml:space="preserve">
+    <value>Sortieren nach Name</value>
+    <comment>Change the order of items by name.</comment>
+  </data>
+  <data name="SortByType.Text" xml:space="preserve">
+    <value>Sortieren nach Typ</value>
+    <comment>Change the order of items by type.</comment>
+  </data>
+  <data name="Descending.Text" xml:space="preserve">
+    <value>Absteigend</value>
+    <comment>Descending sort order.</comment>
+  </data>
 </root>

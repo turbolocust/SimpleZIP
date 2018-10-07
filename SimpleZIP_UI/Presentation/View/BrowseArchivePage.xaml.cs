@@ -44,6 +44,21 @@ namespace SimpleZIP_UI.Presentation.View
     public sealed partial class BrowseArchivePage : INavigation, IPasswordRequest, IDisposable
     {
         /// <summary>
+        /// Models bound to the list box in view.
+        /// </summary>
+        public ObservableCollection<ArchiveEntryModel> ArchiveEntryModels { get; }
+
+        /// <summary>
+        /// Enables or disables the progress bar.
+        /// </summary>
+        public BooleanModel IsProgressBarEnabled { get; set; } = true;
+
+        /// <summary>
+        /// True for descending sort order, false for ascending.
+        /// </summary>
+        public BooleanModel IsSortOrderDescending { get; set; } = false;
+
+        /// <summary>
         /// Initial capacity of data structures holding archive nodes.
         /// </summary>
         private const int InitialStackCapacity = 1 << 3;
@@ -81,14 +96,9 @@ namespace SimpleZIP_UI.Presentation.View
         private int _rootNodeStackPointer = -1;
 
         /// <summary>
-        /// Models bound to the list box in view.
+        /// To determine the ordering of the elements in <see cref="ArchiveEntryModels"/>.
         /// </summary>
-        public ObservableCollection<ArchiveEntryModel> ArchiveEntryModels { get; }
-
-        /// <summary>
-        /// Enables or disables the progress bar.
-        /// </summary>
-        public BooleanModel IsProgressBarEnabled { get; set; } = true;
+        private SortMode _sortMode = SortMode.None;
 
         /// <inheritdoc />
         /// <summary>
@@ -116,14 +126,40 @@ namespace SimpleZIP_UI.Presentation.View
                 GetNodesForCurrentRoot().Peek(), _selectedModels.ToArray());
         }
 
-        private void NavigateUpButton_OnTapped(
-            object sender, TappedRoutedEventArgs args)
+        private void NavigateUpButton_OnTapped(object sender, TappedRoutedEventArgs args)
         {
             if (Window.Current.Content is Frame frame && frame.CanGoBack)
             {
                 args.Handled = true;
                 frame.GoBack();
             }
+        }
+
+        private void SortOrderToggleMenuFlyoutItem_OnTapped(
+            object sender, TappedRoutedEventArgs args)
+        {
+            // ReSharper disable once SwitchStatementMissingSomeCases
+            switch (_sortMode)
+            {
+                case SortMode.Name:
+                    SortArchiveEntryModelsByName();
+                    break;
+                case SortMode.Type:
+                    SortArchiveEntryModelsByType();
+                    break;
+            }
+        }
+
+        private void SortByNameFlyoutItem_OnTapped(
+            object sender, TappedRoutedEventArgs args)
+        {
+            SortArchiveEntryModelsByName();
+        }
+
+        private void SortByTypeFlyoutItem_OnTapped(
+            object sender, TappedRoutedEventArgs args)
+        {
+            SortArchiveEntryModelsByType();
         }
 
         private async void ItemsListBox_OnSelectionChanged(
@@ -199,49 +235,6 @@ namespace SimpleZIP_UI.Presentation.View
 
             args.Handled = true;
         }
-
-        #region Private helper methods
-        private async Task LoadArchive(StorageFile archive)
-        {
-            var rootNode = await _controller.ReadArchive(archive);
-            _rootNodeStack.Push(rootNode);
-            _nodeStackList.Add(new Stack<Node>(InitialStackCapacity));
-            ++_rootNodeStackPointer; // will be zero if new archive
-            _curRootNode = rootNode;
-            await UpdateListContentAsync(rootNode);
-        }
-
-        private Stack<Node> GetNodesForCurrentRoot()
-        {
-            return _nodeStackList[_rootNodeStackPointer];
-        }
-
-        private async Task UpdateListContentAsync(Node nextNode)
-        {
-            if (nextNode == null) return;
-
-            await Task.Delay(50); // allow visual updates in UI
-
-            // dispatch for non-blocking UI
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                ArchiveEntryModels.Clear();
-                _selectedModels.Clear();
-                GetNodesForCurrentRoot().Push(nextNode);
-
-                foreach (var child in nextNode.Children)
-                {
-                    var model = ArchiveEntryModel.Create(child);
-                    ArchiveEntryModels.Add(model);
-                }
-
-                IsProgressBarEnabled.IsTrue = false;
-
-                // checking stack count since root node name may be different
-                AddressBar.Text = GetNodesForCurrentRoot().Count == 1 ? "/" : nextNode.Id;
-            });
-        }
-        #endregion
 
         /// <inheritdoc />
         protected override async void OnNavigatedTo(NavigationEventArgs args)
@@ -333,6 +326,82 @@ namespace SimpleZIP_UI.Presentation.View
         public void Dispose()
         {
             _controller.Dispose();
+        }
+
+        #region Private helper methods
+        private async Task LoadArchive(StorageFile archive)
+        {
+            var rootNode = await _controller.ReadArchive(archive);
+            _rootNodeStack.Push(rootNode);
+            _nodeStackList.Add(new Stack<Node>(InitialStackCapacity));
+            ++_rootNodeStackPointer; // will be zero if new archive
+            _curRootNode = rootNode;
+            await UpdateListContentAsync(rootNode);
+        }
+
+        private Stack<Node> GetNodesForCurrentRoot()
+        {
+            return _nodeStackList[_rootNodeStackPointer];
+        }
+
+        private void SortArchiveEntryModelsByName()
+        {
+            var sorted = IsSortOrderDescending.IsTrue
+                ? ArchiveEntryModels.OrderByDescending(model => model.DisplayName)
+                : ArchiveEntryModels.OrderBy(model => model.DisplayName);
+            SortArchiveEntryModels(sorted);
+            _sortMode = SortMode.Name;
+        }
+
+        private void SortArchiveEntryModelsByType()
+        {
+            var sorted = IsSortOrderDescending.IsTrue
+                ? ArchiveEntryModels.OrderByDescending(model => model.EntryType)
+                : ArchiveEntryModels.OrderBy(model => model.EntryType);
+            SortArchiveEntryModels(sorted);
+            _sortMode = SortMode.Type;
+        }
+
+        private void SortArchiveEntryModels(IEnumerable<ArchiveEntryModel> sorted)
+        {
+            int newIndex = 0;
+            foreach (var model in sorted)
+            {
+                int oldIndex = ArchiveEntryModels.IndexOf(model);
+                ArchiveEntryModels.Move(oldIndex, newIndex++);
+            }
+        }
+
+        private async Task UpdateListContentAsync(Node nextNode)
+        {
+            if (nextNode == null) return;
+
+            await Task.Delay(50); // allow visual updates in UI
+
+            // dispatch for non-blocking UI
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                ArchiveEntryModels.Clear();
+                _selectedModels.Clear();
+                GetNodesForCurrentRoot().Push(nextNode);
+
+                foreach (var child in nextNode.Children)
+                {
+                    var model = ArchiveEntryModel.Create(child);
+                    ArchiveEntryModels.Add(model);
+                }
+
+                IsProgressBarEnabled.IsTrue = false;
+
+                // checking stack count since root node name may be different
+                AddressBar.Text = GetNodesForCurrentRoot().Count == 1 ? "/" : nextNode.Id;
+            });
+        }
+        #endregion
+
+        private enum SortMode
+        {
+            None, Name, Type
         }
     }
 }

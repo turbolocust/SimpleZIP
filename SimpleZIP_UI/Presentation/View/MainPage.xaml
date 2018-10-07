@@ -127,7 +127,7 @@
                                         <FlyoutBase.AttachedFlyout>
                                             <MenuFlyout>
                                                 <MenuFlyoutItem x:Uid="LaunchFolderFlyoutItem" Text="" Tapped="LaunchFolderFlyoutItem_OnTapped" />
-                                                <MenuFlyoutItem x:Uid="RemoveFromHistoryFlyoutItem" Text="" Tapped="RemoveFromHistoryFlyOutItem_OnTapped"/>
+                                                <MenuFlyoutItem x:Uid="RemoveFromHistoryFlyoutItem" Text="" Tapped="RemoveFromHistoryFlyOutItem_OnTapped" />
                                             </MenuFlyout>
                                         </FlyoutBase.AttachedFlyout>
                                         <Grid.RowDefinitions>

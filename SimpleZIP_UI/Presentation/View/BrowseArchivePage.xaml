@@ -22,11 +22,12 @@
         </Grid.RowDefinitions>
         <Grid Background="Transparent">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="40"/>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="40" />
             </Grid.ColumnDefinitions>
             <TextBox x:Name="AddressBar" TextWrapping="NoWrap" Grid.Row="0" Grid.Column="0" Padding="8,2,0,0"
                      HorizontalAlignment="Stretch" Height="40" TextAlignment="Left" IsReadOnly="True" Text="/"
@@ -36,6 +37,21 @@
             <Button Grid.Row="0" Grid.Column="1" Visibility="Visible" FontFamily="Segoe MDL2 Assets" Content="&#xE752;"
                     FontSize="20" Tapped="NavigateUpButton_OnTapped" Width="40" Height="40" Background="Transparent" 
                     Foreground="{ThemeResource ButtonForegroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}" BorderThickness="1" />
+            <Button Grid.Row="0" Grid.Column="2" Visibility="Visible" FontFamily="Segoe MDL2 Assets" Content="&#xE8CB;"
+                    FontSize="20" Width="40" Height="40" Background="Transparent"
+                    Foreground="{ThemeResource ButtonForegroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}" BorderThickness="1">
+                <ToolTipService.ToolTip>
+                    <ToolTip x:Uid="Sort" Content="" />
+                </ToolTipService.ToolTip>
+                <Button.Flyout>
+                    <MenuFlyout>
+                        <ToggleMenuFlyoutItem x:Uid="Descending" Text="" Tapped="SortOrderToggleMenuFlyoutItem_OnTapped" IsChecked="{x:Bind IsSortOrderDescending.IsTrue, Mode=TwoWay}" />
+                        <MenuFlyoutSeparator />
+                        <MenuFlyoutItem x:Uid="SortByName" Text="" Tapped="SortByNameFlyoutItem_OnTapped" />
+                        <MenuFlyoutItem x:Uid="SortByType" Text="" Tapped="SortByTypeFlyoutItem_OnTapped"/>
+                    </MenuFlyout>
+                </Button.Flyout>
+            </Button>
         </Grid>
         <ProgressBar Grid.Row="1" HorizontalAlignment="Stretch" IsIndeterminate="True" 
                      IsEnabled="{x:Bind IsProgressBarEnabled.IsTrue, Mode=TwoWay}" 
