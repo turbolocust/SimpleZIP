@@ -278,18 +278,23 @@ namespace SimpleZIP_UI.Presentation.View
             {
                 args.Cancel = true;
                 GetNodesForCurrentRoot().Pop(); // remove current
+                var next = GetNodesForCurrentRoot().Pop();
                 IsProgressBarEnabled.IsTrue = true;
-                await UpdateListContentAsync(GetNodesForCurrentRoot().Pop());
+                await UpdateListContentAsync(next);
             }
             // or if sub-archives have been opened (archive within archive)
             else if (_rootNodeStack.Count > 1 && !_controller.IsNavigating)
             {
                 args.Cancel = true;
+                GetNodesForCurrentRoot().Clear();
                 _rootNodeStack.Pop(); // remove current
                 --_rootNodeStackPointer;
+                _curRootNode = _rootNodeStack.Peek();
+                var children = GetNodesForCurrentRoot();
+                var next = children.IsNullOrEmpty()
+                    ? _curRootNode : children.Peek();
                 IsProgressBarEnabled.IsTrue = true;
-                var nextRoot = _curRootNode = _rootNodeStack.Peek();
-                await UpdateListContentAsync(nextRoot);
+                await UpdateListContentAsync(next);
             }
             else
             {
@@ -314,11 +319,7 @@ namespace SimpleZIP_UI.Presentation.View
         public async Task<string> RequestPassword(string fileName)
         {
             var dialog = DialogFactory.CreateRequestPasswordDialog(fileName);
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
-            {
-                await dialog.ShowAsync();
-            });
-
+            await Dispatcher.RunTaskAsync(dialog.ShowAsync().AsTask);
             return dialog.Password;
         }
 
@@ -333,8 +334,13 @@ namespace SimpleZIP_UI.Presentation.View
         {
             var rootNode = await _controller.ReadArchive(archive);
             _rootNodeStack.Push(rootNode);
-            _nodeStackList.Add(new Stack<Node>(InitialStackCapacity));
             ++_rootNodeStackPointer; // will be zero if new archive
+
+            if (_rootNodeStackPointer >= _nodeStackList.Count)
+            {
+                _nodeStackList.Add(new Stack<Node>(InitialStackCapacity));
+            }
+
             _curRootNode = rootNode;
             await UpdateListContentAsync(rootNode);
         }
