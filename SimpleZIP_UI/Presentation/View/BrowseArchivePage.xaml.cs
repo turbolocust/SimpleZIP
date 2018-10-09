@@ -341,7 +341,13 @@ namespace SimpleZIP_UI.Presentation.View
 
         private Stack<Node> GetNodesForCurrentRoot()
         {
-            return _nodeStackList[_rootNodeStackPointer];
+            if (_rootNodeStackPointer >= 0 &&
+                _rootNodeStackPointer < _nodeStackList.Count)
+            {
+                return _nodeStackList[_rootNodeStackPointer];
+            }
+
+            return new Stack<Node>(0);
         }
 
         private void SortArchiveEntryModelsByName()
