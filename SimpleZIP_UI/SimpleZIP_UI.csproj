@@ -148,6 +148,7 @@
     <Compile Include="Application\Hashing\IMessageDigestProvider.cs" />
     <Compile Include="Application\Hashing\MessageDigestProvider.cs" />
     <Compile Include="Application\Progress.cs" />
+    <Compile Include="Application\Util\CoreDispatcherUtils.cs" />
     <Compile Include="Application\Util\StringUtils.cs" />
     <Compile Include="Application\Util\WriterUtils.cs" />
     <Compile Include="Application\Util\CollectionUtils.cs" />
