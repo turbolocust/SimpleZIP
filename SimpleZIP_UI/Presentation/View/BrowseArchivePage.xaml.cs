@@ -219,7 +219,6 @@ namespace SimpleZIP_UI.Presentation.View
                         {
                             throw new FileNotFoundException("File not found. Extraction of sub archive failed.");
                         }
-                        GetNodesForCurrentRoot().Clear(); // since we're loading a new archive
                         await LoadArchive(file); // will push first node onto nodeStack
                         ExtractWholeArchiveButton.IsEnabled
                             = !_controller.IsEmptyArchive(_curRootNode);
@@ -292,7 +291,7 @@ namespace SimpleZIP_UI.Presentation.View
                 _curRootNode = _rootNodeStack.Peek();
                 var children = GetNodesForCurrentRoot();
                 var next = children.IsNullOrEmpty()
-                    ? _curRootNode : children.Peek();
+                    ? _curRootNode : children.Pop();
                 IsProgressBarEnabled.IsTrue = true;
                 await UpdateListContentAsync(next);
             }
