@@ -11,6 +11,7 @@
 
     <Page.Resources>
         <cv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <cv:FlipBooleanConverter x:Key="FlipBooleanConverter" />
     </Page.Resources>
 
     <Grid Background="Transparent" Padding="0,0,0,8">
@@ -35,11 +36,14 @@
                      IsSpellCheckEnabled="False" IsTextPredictionEnabled="False" AcceptsReturn="False" FontSize="20"
                      FontFamily="Segoe UI" FontStretch="Normal" FontStyle="Normal" FontWeight="SemiLight" />
             <Button Grid.Row="0" Grid.Column="1" Visibility="Visible" FontFamily="Segoe MDL2 Assets" Content="&#xE752;"
-                    FontSize="20" Tapped="NavigateUpButton_OnTapped" Width="40" Height="40" Background="Transparent" 
-                    Foreground="{ThemeResource ButtonForegroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}" BorderThickness="1" />
+                    FontSize="20" Tapped="NavigateUpButton_OnTapped" Width="40" Height="40" Background="Transparent"
+                    Foreground="{ThemeResource ButtonForegroundThemeBrush}" 
+                    BorderBrush="{ThemeResource ButtonBorderThemeBrush}" BorderThickness="1" />
             <Button Grid.Row="0" Grid.Column="2" Visibility="Visible" FontFamily="Segoe MDL2 Assets" Content="&#xE8CB;"
                     FontSize="20" Width="40" Height="40" Background="Transparent"
-                    Foreground="{ThemeResource ButtonForegroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}" BorderThickness="1">
+                    IsEnabled="{x:Bind IsProgressBarEnabled.IsTrue, Converter={StaticResource FlipBooleanConverter}, Mode=OneWay}" 
+                    Foreground="{ThemeResource ButtonForegroundThemeBrush}" 
+                    BorderBrush="{ThemeResource ButtonBorderThemeBrush}" BorderThickness="1">
                 <ToolTipService.ToolTip>
                     <ToolTip x:Uid="Sort" Content="" />
                 </ToolTipService.ToolTip>
@@ -80,7 +84,8 @@
                 <TextBlock x:Uid="ExtractSelected" Text="" TextWrapping="Wrap" />
             </Button>
             <Button x:Name="ExtractWholeArchiveButton" Tapped="ExtractWholeArchiveButton_OnTapped" 
-                    IsEnabled="False" MinHeight="44" Height="50" MaxHeight="60"
+                    MinHeight="44" Height="50" MaxHeight="60"
+                    IsEnabled="{x:Bind IsProgressBarEnabled.IsTrue, Converter={StaticResource FlipBooleanConverter}, Mode=OneWay}" 
                     Foreground="{ThemeResource ButtonForegroundThemeBrush}" 
                     Background="{ThemeResource ButtonBackgroundThemeBrush}" 
                     BorderBrush="{ThemeResource ButtonBorderThemeBrush}">

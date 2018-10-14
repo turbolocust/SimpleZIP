@@ -212,6 +212,7 @@ namespace SimpleZIP_UI.Presentation.View
                 {
                     try
                     {
+                        IsProgressBarEnabled.IsTrue = true;
                         list.SelectedItem = model; // in case of multi-selection
                         var curNode = GetNodesForCurrentRoot().Peek();
                         var file = await _controller.ExtractSubArchive(_curRootNode, curNode, model);
