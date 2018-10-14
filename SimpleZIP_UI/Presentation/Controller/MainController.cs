@@ -17,6 +17,7 @@
 // 
 // ==--==
 
+using SimpleZIP_UI.Application;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Presentation.Factory;
 using SimpleZIP_UI.Presentation.Handler;
@@ -38,6 +39,7 @@ namespace SimpleZIP_UI.Presentation.Controller
 
         internal MainController(INavigation navHandler) : base(navHandler, null)
         {
+            CheckInitialize();
         }
 
         /// <summary>
@@ -92,13 +94,15 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// Performs initialization of e.g. cached files created in some use cases.
         /// </summary>
         /// <param name="force">True to force initialization.</param>
-        internal async void Initialize(bool force = false)
+        internal async void CheckInitialize(bool force = false)
         {
-            // only clear cache if threshold is exceeded
+            // only clear cache if forced or threshold is exceeded
             if (force || RootNodeCacheHandler.Instance.Cache.Count > 10)
             {
                 RootNodeCacheHandler.Instance.ClearCache();
-                await FileUtils.PurgeTempFolderAsync();
+                var tempFolder = await FileUtils
+                    .GetTempFolderAsync(TempFolder.Archives);
+                await FileUtils.CleanFolderAsync(tempFolder);
             }
         }
 

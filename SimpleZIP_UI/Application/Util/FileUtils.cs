@@ -95,23 +95,33 @@ namespace SimpleZIP_UI.Application.Util
         }
 
         /// <summary>
-        /// Returns the application's temporary folder.
+        /// Returns the specified temporary folder.
         /// </summary>
-        /// <returns>The application's temporary folder.</returns>
-        public static async Task<StorageFolder> GetTempFolderAsync()
+        /// <param name="location">The temporary folder to be get.</param>
+        /// <returns>The specified temporary folder.</returns>
+        public static async Task<StorageFolder> GetTempFolderAsync(
+            TempFolder location = TempFolder.Default)
         {
             string path = Path.GetTempPath();
-            return await StorageFolder.GetFolderFromPathAsync(path);
+            var folder = await StorageFolder.GetFolderFromPathAsync(path);
+
+            if (location == TempFolder.Archives)
+            {
+                const string tempArchivesFolderName = "Archives";
+                folder = await folder.CreateFolderAsync(
+                    tempArchivesFolderName,
+                    CreationCollisionOption.OpenIfExists);
+            }
+
+            return folder;
         }
 
         /// <summary>
-        /// Purges files from the application's temporary folder.
+        /// Deletes all files (non-recursive) from the specified storage folder.
         /// </summary>
         /// <returns>A task which can be awaited.</returns>
-        public static async Task PurgeTempFolderAsync()
+        public static async Task CleanFolderAsync(StorageFolder folder)
         {
-            var folder = await GetTempFolderAsync();
-
             if (folder != null)
             {
                 var files = await folder.GetFilesAsync();
@@ -147,21 +157,50 @@ namespace SimpleZIP_UI.Application.Util
             }
             return totalSize;
         }
-
         /// <summary>
-        /// Creates a file (<code>path</code>) at the specified <code>location</code>
-        /// including all the missing directories in the path.
+        /// Recursively gets a file (<code>filePath</code>) from the specified <code>location</code>.
         /// </summary>
-        /// <param name="location">Used to create directories and the file.</param>
-        /// <param name="path">Dynamic path to the file to be created.</param>
-        /// <returns>The created file or <code>null</code> if path is <code>String.Empty</code>.</returns>
-        /// <exception cref="ArgumentException">Thrown if path is invalid and thus creation of 
-        /// a folder or file failed.</exception>
-        /// <exception cref="NullReferenceException">Thrown if any argument is <code>null</code>.</exception>
-        public static async Task<StorageFile> CreateFileAsync(StorageFolder location, string path)
+        /// <param name="location">Used to get directories and eventually the file.</param>
+        /// <param name="filePath">Relative path to the file to be get.</param>
+        /// <returns>The file or <code>null</code> if path is <code>String.Empty</code>.</returns>
+        public static async Task<StorageFile> GetFileAsync(StorageFolder location, string filePath)
         {
             var separatorChar = Path.DirectorySeparatorChar;
-            var dirPath = path.Replace('/', separatorChar);
+            var dirPath = filePath.Replace('/', separatorChar);
+            var pathMembers = dirPath.Split(separatorChar);
+
+            StorageFile file = null;
+            if (pathMembers.Length > 1) // at least one directory in path
+            {
+                var lastPos = pathMembers.Length - 1;
+                var folder = location;
+                // ignore last position because it's supposed be a file
+                for (var i = 0; i < lastPos; ++i)
+                {
+                    var folderName = pathMembers[i];
+                    folder = await folder.GetFolderAsync(folderName);
+                }
+                file = await folder.GetFileAsync(pathMembers[lastPos]);
+            }
+            else if (pathMembers.Length == 1)
+            {
+                file = await location.GetFileAsync(pathMembers[0]);
+            }
+
+            return file;
+        }
+
+        /// <summary>
+        /// Creates a file (<code>filePath</code>) in the specified <code>location</code>
+        /// including all the missing directories in the path.
+        /// </summary>
+        /// <param name="location">Used to create directories and eventually the file.</param>
+        /// <param name="filePath">Relative path to the file to be created.</param>
+        /// <returns>The created file or <code>null</code> if path is <code>String.Empty</code>.</returns>
+        public static async Task<StorageFile> CreateFileAsync(StorageFolder location, string filePath)
+        {
+            var separatorChar = Path.DirectorySeparatorChar;
+            var dirPath = filePath.Replace('/', separatorChar);
             var pathMembers = dirPath.Split(separatorChar);
 
             StorageFile file = null;
@@ -179,11 +218,12 @@ namespace SimpleZIP_UI.Application.Util
                 file = await folder.CreateFileAsync(pathMembers[lastPos],
                     CreationCollisionOption.GenerateUniqueName);
             }
-            else if (pathMembers.Length > 0)
+            else if (pathMembers.Length == 1)
             {
                 file = await location.CreateFileAsync(pathMembers[0],
                     CreationCollisionOption.GenerateUniqueName);
             }
+
             return file;
         }
     }

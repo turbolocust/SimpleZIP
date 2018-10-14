@@ -30,6 +30,7 @@ using SimpleZIP_UI.Presentation.View;
 using SimpleZIP_UI.Presentation.View.Model;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -144,14 +145,18 @@ namespace SimpleZIP_UI.Presentation.Controller
 
             if (entry != null)
             {
-                var folder = await FileUtils.GetTempFolderAsync();
+                var folder = await FileUtils
+                    .GetTempFolderAsync(TempFolder.Archives);
                 if (!string.IsNullOrEmpty(entry.FileName))
                 {
-                    // file has already been extracted
-                    archive = await folder.GetFileAsync(entry.FileName);
-                    if (archive != null) // exists
+                    try
                     {
-                        return archive;
+                        return await FileUtils
+                            .GetFileAsync(folder, entry.FileName);
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        // continue, as file most likely got deleted
                     }
                 }
                 // doesn't exist, hence extract and read again
@@ -173,7 +178,7 @@ namespace SimpleZIP_UI.Presentation.Controller
                 var result = await job.Run(this); // extraction happens here
                 if (result.StatusCode == Result.Status.Success)
                 {
-                    archive = await folder.GetFileAsync(entry.FileName);
+                    archive = await FileUtils.GetFileAsync(folder, entry.FileName);
                 }
             }
 

@@ -28,6 +28,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using SimpleZIP_UI.Application;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Presentation.Handler;
 #if !DEBUG
@@ -194,7 +195,9 @@ namespace SimpleZIP_UI
 
         private static async void InitializeTempDir()
         {
-            await FileUtils.PurgeTempFolderAsync();
+            var folder = await FileUtils
+                .GetTempFolderAsync(TempFolder.Archives);
+            await FileUtils.CleanFolderAsync(folder);
         }
 
         /// <summary>

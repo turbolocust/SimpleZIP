@@ -164,9 +164,9 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                         {
                             if (collectFileNames)
                             {
-                                var file = await WriteEntry(reader, location);
+                                var name = await WriteEntry(reader, location);
                                 var entry = entriesMap[reader.Entry.Key];
-                                entry.FileName = file.Name; // save name
+                                entry.FileName = name; // save name
                             }
                             else
                             {
@@ -205,10 +205,10 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             return map;
         }
 
-        private async Task<StorageFile> WriteEntry(IReader reader, StorageFolder location)
+        private async Task<string> WriteEntry(IReader reader, StorageFolder location)
         {
-            var entry = reader.Entry;
-            var file = await FileUtils.CreateFileAsync(location, entry.Key);
+            var relFilePath = reader.Entry.Key;
+            var file = await FileUtils.CreateFileAsync(location, relFilePath);
             if (file == null) return null; // file could not be created
 
             using (var entryStream = reader.OpenEntryStream())
@@ -224,7 +224,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                 }
             }
 
-            return file;
+            return relFilePath;
         }
 
         /// <summary>

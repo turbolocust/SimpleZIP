@@ -300,7 +300,7 @@ namespace SimpleZIP_UI.Presentation.View
         protected override void OnNavigatedTo(NavigationEventArgs args)
         {
             Frame.BackStack.Clear(); // going back is prohibited e.g. after aborting operation
-            _controller.Initialize();
+            _controller.CheckInitialize();
         }
 
         /// <inheritdoc />

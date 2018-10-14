@@ -217,7 +217,8 @@ namespace SimpleZIP_UI.Presentation.View
                         var file = await _controller.ExtractSubArchive(_curRootNode, curNode, model);
                         if (file == null) // something went wrong
                         {
-                            throw new FileNotFoundException("File not found. Extraction of sub archive failed.");
+                            throw new FileNotFoundException(
+                                "File not found. Extraction of sub archive failed.");
                         }
                         await LoadArchive(file); // will push first node onto nodeStack
                         ExtractWholeArchiveButton.IsEnabled
