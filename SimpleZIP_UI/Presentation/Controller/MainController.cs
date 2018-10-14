@@ -91,10 +91,11 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// <summary>
         /// Performs initialization of e.g. cached files created in some use cases.
         /// </summary>
-        internal async void Initialize()
+        /// <param name="force">True to force initialization.</param>
+        internal async void Initialize(bool force = false)
         {
             // only clear cache if threshold is exceeded
-            if (RootNodeCacheHandler.Instance.Cache.Count > 10)
+            if (force || RootNodeCacheHandler.Instance.Cache.Count > 10)
             {
                 RootNodeCacheHandler.Instance.ClearCache();
                 await FileUtils.PurgeTempFolderAsync();

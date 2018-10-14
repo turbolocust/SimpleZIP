@@ -28,6 +28,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Presentation.Handler;
 #if !DEBUG
 using Microsoft.Services.Store.Engagement;
@@ -51,6 +52,10 @@ namespace SimpleZIP_UI
         {
             RequestApplicationTheme();
             InitializeComponent();
+            InitializeTempDir();
+#if !DEBUG
+            RegisterEngagementNotification(); // register notification channel to send notifications to users
+#endif
             Suspending += OnSuspending;
         }
 
@@ -67,15 +72,10 @@ namespace SimpleZIP_UI
                 DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
-#if !DEBUG
-            RegisterEngagementNotification(); // register notification channel to send notifications to users
-#endif
-            // do not repeat app initialization when the Window already has content,
-            // just ensure that the window is active
+            // do not repeat app initialization when the Window already has content
             if (!(Window.Current.Content is Frame rootFrame))
             {
-                // create a Frame to act as the navigation context and navigate to the first page
-                rootFrame = new Frame();
+                rootFrame = new Frame(); // create frame to act as navigation context and navigate to the first page
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
                 rootFrame.Navigated += OnNavigated;
@@ -93,8 +93,7 @@ namespace SimpleZIP_UI
                     AppViewBackButtonVisibility.Visible :
                     AppViewBackButtonVisibility.Collapsed;
 
-                // place the frame in the current Window
-                Window.Current.Content = rootFrame;
+                Window.Current.Content = rootFrame; // place the frame in the current Window
             }
 
             if (args.PrelaunchActivated == false)
@@ -186,15 +185,17 @@ namespace SimpleZIP_UI
         }
 
 #if !DEBUG
-        /// <summary>
-        /// Registers the app for engagement services.
-        /// </summary>
         private static async void RegisterEngagementNotification()
         {
             var engagementManager = StoreServicesEngagementManager.GetDefault();
             await engagementManager.RegisterNotificationChannelAsync();
         }
 #endif
+
+        private static async void InitializeTempDir()
+        {
+            await FileUtils.PurgeTempFolderAsync();
+        }
 
         /// <summary>
         /// Each time a navigation event occurs, update the Back button's visibility.
