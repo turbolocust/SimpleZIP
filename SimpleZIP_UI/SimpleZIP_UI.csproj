@@ -332,7 +332,7 @@
       <Version>6.1.9</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Services.Store.Engagement">
-      <Version>10.1711.28001</Version>
+      <Version>10.1810.16002</Version>
     </PackageReference>
     <PackageReference Include="secure-file">
       <Version>1.0.31</Version>
