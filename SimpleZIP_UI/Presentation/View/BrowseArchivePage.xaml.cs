@@ -36,7 +36,6 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
-using Windows.UI.Xaml.Shapes;
 
 namespace SimpleZIP_UI.Presentation.View
 {
@@ -204,16 +203,15 @@ namespace SimpleZIP_UI.Presentation.View
         private async void ItemsListBox_OnDoubleTapped(
             object sender, DoubleTappedRoutedEventArgs args)
         {
-            if (sender is ListBox list &&
-                args.OriginalSource is Rectangle rect &&
-                rect.DataContext is ArchiveEntryModel model)
+            if (args.OriginalSource is FrameworkElement elem &&
+                elem.DataContext is ArchiveEntryModel model)
             {
                 if (model.EntryType == ArchiveEntryModel.ArchiveEntryModelType.Archive)
                 {
                     try
                     {
                         IsProgressBarEnabled.IsTrue = true;
-                        list.SelectedItem = model; // in case of multi-selection
+                        ModelsList.SelectedItem = model; // in case of multi-selection
                         var curNode = GetNodesForCurrentRoot().Peek();
                         var file = await _controller.ExtractSubArchive(_curRootNode, curNode, model);
                         if (file == null) // something went wrong
@@ -232,9 +230,9 @@ namespace SimpleZIP_UI.Presentation.View
                         await dialog.ShowAsync();
                     }
                 }
-            }
 
-            args.Handled = true;
+                args.Handled = true;
+            }
         }
 
         /// <inheritdoc />
