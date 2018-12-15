@@ -67,6 +67,7 @@ namespace SimpleZIP_UI.Presentation.View.Model
             if (entry.IsArchive)
             {
                 type = ArchiveEntryModelType.Archive;
+                symbol = Symbol.OpenLocal;
             }
             else if (entry.IsBrowsable)
             {
