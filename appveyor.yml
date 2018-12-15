@@ -19,7 +19,7 @@ environment:
   secret_testTempKey:
     secure: MwhPsHlpRf0zVmlCt1V+RRBbzg2h0j+cqHvz3jYXQsA=
   secret_testCertKey:
-	secure: 3g30mH5Oqk650+oKPN4ECNVf5E5dHTSWozbn8THkgQU=
+    secure: 3g30mH5Oqk650+oKPN4ECNVf5E5dHTSWozbn8THkgQU=
 install:
 - cmd: >-
     nuget install secure-file -ExcludeVersion
@@ -31,7 +31,8 @@ install:
     secure-file\tools\secure-file -decrypt SimpleZIP_UI_TEST\SimpleZIP_UI_TEST_TemporaryKey.pfx.enc -secret %secret_testTempKey%
 build_script:
 - ps: >-
-	Add-Type -AssemblyName System.Security
+    Add-Type -AssemblyName System.Security
+
     Write-Host "Downloading latest Nuget executable..."
 
     appveyor DownloadFile https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
@@ -57,18 +58,18 @@ build_script:
 
     Write-Host "Installed" -ForegroundColor green
 
-	Write-Host "Importing protected certificates into store..."
+    Write-Host "Importing protected certificates into store..."
 
-	$pfxPath = "C:\projects\simplezip\SimpleZIP_UI_TEST\SimpleZIP_UI_TEST_TemporaryKey.pfx"
-	$cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2
-	$cert.Import($pfxPath, $env:secret_testCertKey, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]"PersistKeySet")
-	$store = New-Object System.Security.Cryptography.X509Certificates.X509Store -argumentlist "MY", CurrentUser
-	$store.Open([System.Security.Cryptography.X509Certificates.OpenFlags]"ReadWrite")
-	$store.Add($cert)
-	$store.Close()
+    $pfxPath = "C:\projects\simplezip\SimpleZIP_UI_TEST\SimpleZIP_UI_TEST_TemporaryKey.pfx"
+    $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2
+    $cert.Import($pfxPath, $env:secret_testCertKey, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]"PersistKeySet")
+    $store = New-Object System.Security.Cryptography.X509Certificates.X509Store -argumentlist "MY", CurrentUser
+    $store.Open([System.Security.Cryptography.X509Certificates.OpenFlags]"ReadWrite")
+    $store.Add($cert)
+    $store.Close()
 
-	Write-Host "Certificates imported." -ForegroundColor green
-	
+    Write-Host "Certificates imported." -ForegroundColor green
+
     Write-Host "Starting to build using MSBuild..."
-	
+
     msbuild "C:\projects\simplezip\SimpleZIP_UI.sln" /t:Build /p:Configuration=Debug /p:Platform=x86 /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
