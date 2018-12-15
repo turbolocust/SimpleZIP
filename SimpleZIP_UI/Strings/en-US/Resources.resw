@@ -298,8 +298,8 @@
     <comment>Informs that an archive could not be extracted.</comment>
   </data>
   <data name="ErrorReadingArchive.Text" xml:space="preserve">
-    <value>Error reading archive. Please check file format and try again. If this happens again, archive is most likely corrupt.</value>
-    <comment>Reading archive failed.</comment>
+    <value>Error reading archive. Please check file format and try again. If this happens again, the archive is most likely corrupt.</value>
+    <comment>Reading archive failed, hence give further instructions to user.</comment>
   </data>
   <data name="FileFormatNotSupported.Text" xml:space="preserve">
     <value>The selected file format is not supported.</value>

@@ -155,7 +155,7 @@
   </data>
   <data name="ErrorReadingArchive.Text" xml:space="preserve">
     <value>Archiv konnte nicht gelesen werden. Bitte Format prüfen und erneut versuchen. Bei mehrfachem Scheitern ist das Archiv wahrscheinlich beschädigt.</value>
-    <comment>Reading archive failed.</comment>
+    <comment>Reading archive failed, hence give further instructions to user.</comment>
   </data>
   <data name="ExtractAll.Text" xml:space="preserve">
     <value>Extrahiere Alle</value>
@@ -322,7 +322,7 @@
     <comment>Adjustments that can be made to the application.</comment>
   </data>
   <data name="BrowseArchiveSetting.Text" xml:space="preserve">
-    <value>Archivinhalt zeigen, wenn geöffnet via Datei-Explorer</value>
+    <value>Archiv-Inhalt zeigen, wenn geöffnet via Datei-Explorer</value>
     <comment>Allows to browse the archive directly when opened via file explorer.</comment>
   </data>
   <data name="HideLessCommonArchiveTypesSetting.Text" xml:space="preserve">
@@ -450,7 +450,7 @@
     <comment>Asks user to enter a password in this dialog.</comment>
   </data>
   <data name="ErrorReadingArchiveWithPassword.Text" xml:space="preserve">
-    <value>Archiv konnte nicht gelesen werden. Wahrscheinlich stimmt das Passwort nicht oder die Verschlüsselung wird nicht unterstützt.</value>
+    <value>Archiv konnte nicht gelesen werden. Wahrscheinlich stimmt das Passwort nicht oder die Art der Verschlüsselung wird nicht unterstützt.</value>
     <comment>Informs the user that there has been an error reading an archive with a set password.</comment>
   </data>
   <data name="ErrorNoFilesProvided.Text" xml:space="preserve">
