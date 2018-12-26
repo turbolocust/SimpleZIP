@@ -42,9 +42,9 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         public const string RootNodeName = "root";
 
         /// <summary>
-        /// To avoid too many calls on <see cref="Task.Delay(int)"/>.
+        /// To avoid too many calls of <see cref="Task.Delay(int)"/>.
         /// </summary>
-        private const uint TaskDelayThreshold = 100;
+        private const uint DefaultTaskDelayRate = 100;
 
         /// <summary>
         /// Dictionary that consists of existing nodes. Each node is unique and this 
@@ -120,7 +120,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
             var pair = new EntryKeyPair();
             _nodes.Add(rootNode.Id, rootNode);
 
-            uint threshold = 0; // to avoid too many calls on Task.Delay
+            uint delayRate = 0; // to avoid too many calls of Task.Delay
 
             foreach (var entry in ReadArchive())
             {
@@ -159,11 +159,11 @@ namespace SimpleZIP_UI.Application.Compression.Reader
                 parentNode.Children.Add(fileEntry);
                 keyBuilder.Clear();
 
-                if (++threshold == TaskDelayThreshold)
+                if (++delayRate == DefaultTaskDelayRate)
                 {
                     // to keep any waiting thread responsive
                     await Task.Delay(1, _cancellationToken);
-                    threshold = 0;
+                    delayRate = 0;
                 }
             }
 
@@ -224,7 +224,6 @@ namespace SimpleZIP_UI.Application.Compression.Reader
             string entryName = trimmedKey.Substring(lastSeparatorPos + 1);
             string parentKey = lastSeparatorPos == -1 ? RootNodeName
                 : trimmedKey.Substring(0, trimmedKey.Length - entryName.Length);
-
             pair.SeparatorPos = lastSeparatorPos;
             pair.EntryName = entryName;
             pair.ParentKey = parentKey;

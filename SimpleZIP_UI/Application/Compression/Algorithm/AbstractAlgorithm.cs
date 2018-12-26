@@ -33,11 +33,6 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
     /// <inheritdoc cref="ICompressionAlgorithm" />
     public abstract class AbstractAlgorithm : ICompressionAlgorithm, IProgressObserver<long>
     {
-        /// <summary>
-        /// Default buffer size for streams.
-        /// </summary>
-        protected const int DefaultBufferSize = 8192;
-
         /// <inheritdoc />
         /// <summary>
         /// Event handler for total bytes processed.
@@ -46,6 +41,34 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
 
         /// <inheritdoc cref="ICompressionAlgorithm.Token"/>
         public CancellationToken Token { get; set; }
+
+        /// <summary>
+        /// Default buffer size for streams.
+        /// </summary>
+        protected const int DefaultBufferSize = 8192;
+
+        /// <summary>
+        /// Delay rate to lessen <see cref="TotalBytesProcessed"/> events. As a result,
+        /// e.g. <code>bufferSize</code> times <code>x</code> (update rate) bytes are
+        /// not reported to any observers.
+        /// </summary>
+        protected const uint DefaultUpdateDelayRate = 20;
+
+        /// <summary>
+        /// See <see cref="DefaultUpdateDelayRate"/> for more details.
+        /// </summary>
+        private readonly uint _updateDelayRate;
+
+        /// <summary>
+        /// Counter used to respect <see cref="_updateDelayRate"/>.
+        /// </summary>
+        private uint _delayRateCounter;
+
+        /// <inheritdoc />
+        protected AbstractAlgorithm(uint updateDelayRate = DefaultUpdateDelayRate)
+        {
+            _updateDelayRate = updateDelayRate;
+        }
 
         /// <summary>
         /// Fires <see cref="ICompressionAlgorithm.TotalBytesProcessed"/> using the specified parameter.
@@ -63,7 +86,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <inheritdoc cref="IProgressObserver{T}.Update"/>
         public void Update(long value)
         {
-            FireTotalBytesProcessed(value);
+            if (_delayRateCounter++ == _updateDelayRate)
+            {
+                FireTotalBytesProcessed(value);
+                _delayRateCounter = 0;
+            }
         }
 
         /// <inheritdoc />
