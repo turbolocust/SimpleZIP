@@ -294,11 +294,11 @@
     <comment>Positive answer.</comment>
   </data>
   <data name="ArchiveNotExtracted.Text" xml:space="preserve">
-    <value>Archive {0} could not be extracted.</value>
+    <value>Archive {0} could not be (fully) extracted.</value>
     <comment>Informs that an archive could not be extracted.</comment>
   </data>
   <data name="ErrorReadingArchive.Text" xml:space="preserve">
-    <value>Error reading archive. Please check file format and try again. If this happens again, the archive is most likely corrupt.</value>
+    <value>Error reading archive. Please check file format and try again. If this happens again, the archive is most likely corrupt or its format not fully supported.</value>
     <comment>Reading archive failed, hence give further instructions to user.</comment>
   </data>
   <data name="FileFormatNotSupported.Text" xml:space="preserve">
@@ -382,7 +382,7 @@
     <comment>Informs the user that any action will have no effect until a restart of the app.</comment>
   </data>
   <data name="RAR5FormatNotSupported.Text" xml:space="preserve">
-    <value>Note that the RAR5 format is currently not fully supported.</value>
+    <value>Note, that the RAR5 format is currently not fully supported.</value>
     <comment>Informs the user that the RAR5 archive format is not supported.</comment>
   </data>
   <data name="FileEncryptedMessage.Text" xml:space="preserve">
