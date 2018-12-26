@@ -39,6 +39,11 @@ namespace SimpleZIP_UI
         {
             DeviceFamily = AnalyticsInfo.VersionInfo.DeviceFamily;
             LocalSettings = ApplicationData.Current.LocalSettings;
+            if (LocalSettings.Values.Count == 0)
+            {
+                // no settings stored yet, hence initialize defaults
+                PushOrUpdate(Keys.HideSomeArchiveTypesKey, true);
+            }
         }
 
         /// <summary>
