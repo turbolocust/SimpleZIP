@@ -75,21 +75,17 @@ namespace SimpleZIP_UI.Presentation.View
             // ReSharper disable once PossibleNullReferenceException
             ArchiveTypeComboBox.Items.Add(CreateItemForComboBox("ZIP (.zip)", ".zip"));
 
-            if (!isHideSome)
-            {
-                var tarText = "TAR (.tar) [" + uncompressedText + "]";
-                ArchiveTypeComboBox.Items.Add(CreateItemForComboBox("GZIP (.gzip)", ".gzip"));
-                ArchiveTypeComboBox.Items.Add(CreateItemForComboBox(tarText, ".tar"));
-            }
+            var tarText = "TAR (.tar) [" + uncompressedText + "]";
+            ArchiveTypeComboBox.Items.Add(CreateItemForComboBox("GZIP (.gzip)", ".gzip"));
+            ArchiveTypeComboBox.Items.Add(CreateItemForComboBox(tarText, ".tar"));
 
             ArchiveTypeComboBox.Items.Add(CreateItemForComboBox("TAR+GZIP (.tgz)", ".tgz"));
 
-            var tbz2Text = "TAR+BZIP2 (.tbz2) [" + slowText + "]";
-            ArchiveTypeComboBox.Items.Add(CreateItemForComboBox(tbz2Text, ".tbz2"));
-
             if (!isHideSome)
             {
+                var tbz2Text = "TAR+BZIP2 (.tbz2) [" + slowText + "]";
                 var tlzText = "TAR+LZIP (.tlz) [" + slowText + "]";
+                ArchiveTypeComboBox.Items.Add(CreateItemForComboBox(tbz2Text, ".tbz2"));
                 ArchiveTypeComboBox.Items.Add(CreateItemForComboBox(tlzText, ".tlz"));
             }
 
