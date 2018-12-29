@@ -16,8 +16,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
 using Windows.Storage;
-using Windows.System.Profile;
 
 namespace SimpleZIP_UI
 {
@@ -25,19 +25,8 @@ namespace SimpleZIP_UI
     {
         private static readonly ApplicationDataContainer LocalSettings;
 
-        /// <summary>
-        /// Holds the device family of this device as string.
-        /// </summary>
-        internal static readonly string DeviceFamily;
-
-        /// <summary>
-        /// True if the current device is a mobile device, false otherwise.
-        /// </summary>
-        internal static bool IsMobileDevice => DeviceFamily.Equals("Windows.Mobile");
-
         static Settings()
         {
-            DeviceFamily = AnalyticsInfo.VersionInfo.DeviceFamily;
             LocalSettings = ApplicationData.Current.LocalSettings;
             if (LocalSettings.Values.Count == 0)
             {

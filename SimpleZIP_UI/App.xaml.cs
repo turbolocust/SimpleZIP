@@ -154,14 +154,24 @@ namespace SimpleZIP_UI
             // only StorageItems are supported, hence return if none are present
             if (!shareOperation.Data.Contains(StandardDataFormats.StorageItems)) return;
 
-            var handler = new ShareTargetHandler();
-            string message = await handler.Handle(shareOperation);
-
-            if (!string.IsNullOrEmpty(message))
+            try
             {
-                shareOperation.ReportCompleted();
-                // Error message doesn't seem to be displayed.
-                //shareOperation.ReportError(message);
+                var handler = new ShareTargetHandler();
+                await handler.Handle(shareOperation);
+            }
+            catch (Exception)
+            {
+                if (DeviceInfo.IsMinCreatorsUpdate)
+                {
+                    // does not seem to work properly, even though
+                    // it is no longer deprecated since 1703
+                    //shareOperation.ReportError(ex.Message);
+                    shareOperation.ReportCompleted();
+                }
+                else
+                {
+                    shareOperation.ReportCompleted();
+                }
             }
         }
 

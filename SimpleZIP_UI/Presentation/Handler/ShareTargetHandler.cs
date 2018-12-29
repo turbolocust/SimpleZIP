@@ -16,18 +16,19 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+using SimpleZIP_UI.Application;
+using SimpleZIP_UI.Application.Compression;
+using SimpleZIP_UI.Application.Util;
+using SimpleZIP_UI.Presentation.View;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer.ShareTarget;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using SimpleZIP_UI.Application;
-using SimpleZIP_UI.Application.Compression;
-using SimpleZIP_UI.Application.Util;
-using SimpleZIP_UI.Presentation.View;
 
 namespace SimpleZIP_UI.Presentation.Handler
 {
@@ -37,11 +38,9 @@ namespace SimpleZIP_UI.Presentation.Handler
         /// Handles the specified <see cref="ShareOperation"/>.
         /// </summary>
         /// <param name="shareOp">The share operation to be handled.</param>
-        /// <returns>A task which returns an error message as string.</returns>
-        internal async Task<string> Handle(ShareOperation shareOp)
+        /// <returns>An awaitable task.</returns>
+        internal async Task Handle(ShareOperation shareOp)
         {
-            string message = string.Empty;
-
             shareOp.ReportStarted();
 
             var storageItems = await shareOp.Data.GetStorageItemsAsync();
@@ -66,14 +65,15 @@ namespace SimpleZIP_UI.Presentation.Handler
             }
             else
             {
-                message = I18N.Resources.GetString("ErrorNoFilesProvided/Text");
+                var errMsg = I18N.Resources.GetString("ErrorNoFilesProvided/Text");
+                throw new IOException(errMsg);
             }
-
-            return message;
         }
 
-        private static async Task<bool> ConsistsOfArchivesOnly(IEnumerable<StorageFile> files)
+        private static async Task<bool> ConsistsOfArchivesOnly(IList<StorageFile> files)
         {
+            if (files.IsNullOrEmpty()) return false;
+
             foreach (var file in files)
             {
                 bool isArchive = await IsArchiveFile(file);
@@ -94,6 +94,7 @@ namespace SimpleZIP_UI.Presentation.Handler
             {
                 // type is already set to ArchiveType.Unknown
             }
+
             return type != Archives.ArchiveType.Unknown;
         }
     }
