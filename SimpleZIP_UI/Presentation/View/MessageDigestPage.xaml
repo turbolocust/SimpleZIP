@@ -6,7 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:cv="using:SimpleZIP_UI.Presentation.View.Converter"
     DataContext="{Binding RelativeSource={RelativeSource Self}}"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    Background="{ThemeResource SystemControlAcrylicWindowBrush}"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -14,7 +14,7 @@
         <cv:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
     </Page.Resources>
 
-    <Grid Background="Transparent">
+    <Grid Background="{ThemeResource SystemControlAcrylicWindowBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
