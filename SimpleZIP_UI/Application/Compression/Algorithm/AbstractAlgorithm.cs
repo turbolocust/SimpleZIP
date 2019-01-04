@@ -52,7 +52,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// e.g. <code>bufferSize</code> times <code>x</code> (update rate) bytes are
         /// not reported to any observers.
         /// </summary>
-        protected const uint DefaultUpdateDelayRate = 20;
+        protected const uint DefaultUpdateDelayRate = 125;
 
         /// <summary>
         /// See <see cref="DefaultUpdateDelayRate"/> for more details.
