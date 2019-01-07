@@ -286,7 +286,7 @@
     <comment>Positive result.</comment>
   </data>
   <data name="TapToChoose.Text" xml:space="preserve">
-    <value>Antippen zum Wählen</value>
+    <value>Tippen zum Wählen</value>
     <comment>Allows further interaction with the software after a tap.</comment>
   </data>
   <data name="TotalDuration.Text" xml:space="preserve">
@@ -484,5 +484,13 @@
   <data name="Descending.Text" xml:space="preserve">
     <value>Absteigend</value>
     <comment>Descending sort order.</comment>
+  </data>
+  <data name="HintColon.Text" xml:space="preserve">
+    <value>Hinweis:</value>
+    <comment>Displays the translated text "Hint" followed by a colon.</comment>
+  </data>
+  <data name="ShareTargetHint.Text" xml:space="preserve">
+    <value>Sie können auch Dateien mit dieser App teilen! Probieren Sie es doch einfach mit einer oder mehreren Dateien im Datei-Explorer aus.</value>
+    <comment>Informational message to inform that this app is also a Share Target and that sharing via the file explorer is supported.</comment>
   </data>
 </root>
