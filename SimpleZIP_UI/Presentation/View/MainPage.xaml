@@ -24,7 +24,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+                        <Grid x:Name="RootGrid" Background="{TemplateBinding Background}" CornerRadius="16">
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="CommonStates">
                                     <VisualState x:Name="Normal">
@@ -75,8 +75,7 @@
                                     </VisualState>
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
-                            <Rectangle RadiusX="25" RadiusY="25" Fill="{TemplateBinding Background}" Margin="0,0,10,0" />
-                            <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentTransitions="{TemplateBinding ContentTransitions}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            <ContentPresenter CornerRadius="16" x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentTransitions="{TemplateBinding ContentTransitions}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
@@ -173,15 +172,15 @@
                     <PivotItem x:Uid="StartPivot" Header="">
                         <!-- ReSharper disable once UnusedMember.Local -->
                         <StackPanel x:Name="StackPanelStart" Background="Transparent" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top">
-                            <Button Style="{StaticResource RoundedEdges}" x:Name="CompressButton" Width="280" Height="64" MaxHeight="75" Margin="0,32,32,0" Tapped="CompressButton_OnTapped" VerticalContentAlignment="Center"
-                                    Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" 
-                                    BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+                            <Button Style="{StaticResource RoundedEdges}" x:Name="CompressButton" Width="280" Height="64" MaxHeight="75" Margin="0,32,32,0" 
+                                    Tapped="CompressButton_OnTapped" VerticalContentAlignment="Center" Foreground="{ThemeResource ButtonForegroundThemeBrush}" 
+                                    Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock FontSize="20" FontFamily="Segoe MDL2 Assets" Text="&#xE73F;" Margin="0,0,32,0" />
                                     <TextBlock x:Uid="CompressArchive" FontWeight="Normal" FontSize="16" CharacterSpacing="32" Text="" TextWrapping="Wrap" />
                                 </StackPanel>
                             </Button>
-                            <Button Style="{StaticResource RoundedEdges}" Width="280" Height="64" MaxHeight="75" Margin="0,32,0,0" 
+                            <Button Style="{StaticResource RoundedEdges}" Width="280" Height="64" MaxHeight="75" Margin="0,32,0,0"
                                     Tapped="ExtractButton_OnTapped" VerticalContentAlignment="Center" Foreground="{ThemeResource ButtonForegroundThemeBrush}" 
                                     Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                                 <StackPanel Orientation="Horizontal">
