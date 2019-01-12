@@ -14,7 +14,7 @@
         <cv:FlipBooleanConverter x:Key="FlipBooleanConverter" />
     </Page.Resources>
 
-    <Grid Background="{ThemeResource SystemControlAcrylicWindowBrush}" Padding="0,0,0,8">
+    <Grid Background="Transparent" Padding="0,0,0,8">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />

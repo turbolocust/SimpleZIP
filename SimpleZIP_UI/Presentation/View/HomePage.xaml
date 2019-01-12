@@ -1,0 +1,184 @@
+﻿<Page
+    x:Class="SimpleZIP_UI.Presentation.View.HomePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    DataContext="{Binding RelativeSource={RelativeSource Self}}"
+    Background="{ThemeResource SystemControlAcrylicWindowBrush}"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <Style x:Key="RoundedEdges" TargetType="Button">
+            <Setter Property="Background" Value="{ThemeResource ButtonBackground}"/>
+            <Setter Property="Foreground" Value="{ThemeResource ButtonForeground}"/>
+            <Setter Property="BorderBrush" Value="{ThemeResource ButtonBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="{ThemeResource ButtonBorderThemeThickness}"/>
+            <Setter Property="Padding" Value="8,4,8,4"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
+            <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
+            <Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}"/>
+            <Setter Property="FocusVisualMargin" Value="-3"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid x:Name="RootGrid" Background="{TemplateBinding Background}" CornerRadius="16">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal">
+                                        <Storyboard>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid" Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBackgroundPointerOver}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushPointerOver}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundPointerOver}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid" Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBackgroundPressed}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushPressed}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundPressed}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerDownThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid" Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBackgroundDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter CornerRadius="16" x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentTransitions="{TemplateBinding ContentTransitions}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
+    <Grid Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="800" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="StackPanelStart.Orientation" Value="Horizontal" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <Pivot x:Name="Pivot" Grid.Row="0" Margin="8,8,0,0" Padding="0,0,0,0" 
+               SelectionChanged="Pivot_OnSelectionChanged" IsHeaderItemsCarouselEnabled="True">
+            <Pivot.Title>
+                <TextBlock Text="SimpleZIP" FontSize="28" FontStyle="Normal" 
+                           CharacterSpacing="32" FontWeight="Bold" 
+                           Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
+            </Pivot.Title>
+            <Pivot.RightHeader>
+                <CommandBar x:Name="CommandBar" ClosedDisplayMode="Compact" Background="Transparent">
+                    <AppBarButton x:Name="CopyPathButton" x:Uid="CopyPath" Icon="Copy" Label="" IsEnabled="False" Tapped="CopyPathButton_OnTapped"/>
+                    <!-- <AppBarSeparator Visibility="Visible" /> -->
+                    <AppBarButton x:Name="ClearListButton" x:Uid="ClearList" Icon="Delete" Label="" Tapped="ClearListButton_OnTapped"/>
+                </CommandBar>
+            </Pivot.RightHeader>
+            <PivotItem x:Uid="StartPivot" Header="">
+                <!-- ReSharper disable once UnusedMember.Local -->
+                <StackPanel x:Name="StackPanelStart" Background="Transparent" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Button Style="{StaticResource RoundedEdges}" x:Name="CompressButton" Width="280" Height="64" MaxHeight="75" Margin="0,32,32,0" 
+                        Tapped="CompressButton_OnTapped" VerticalContentAlignment="Center" Foreground="{ThemeResource ButtonForegroundThemeBrush}" 
+                        Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontSize="20" FontFamily="Segoe MDL2 Assets" Text="&#xE73F;" Margin="0,0,32,0" />
+                            <TextBlock x:Uid="CompressArchive" FontWeight="Normal" FontSize="16" CharacterSpacing="32" Text="" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource RoundedEdges}" Width="280" Height="64" MaxHeight="75" Margin="0,32,0,0"
+                        Tapped="ExtractButton_OnTapped" VerticalContentAlignment="Center" Foreground="{ThemeResource ButtonForegroundThemeBrush}" 
+                        Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontSize="20" FontFamily="Segoe MDL2 Assets" Text="&#xEE71;" Margin="0,0,32,0" />
+                            <TextBlock x:Uid="ExtractArchive" FontWeight="Normal" FontSize="16" CharacterSpacing="32" Text="" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </PivotItem>
+            <PivotItem x:Uid="RecentPivot" Header="">
+                <ListView x:Name="RecentArchivesListView" ItemsSource="{Binding RecentArchiveModels}" SelectionMode="Single" CanDrag="False" Background="Transparent" 
+                      HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" SelectionChanged="RecentArchivesListView_OnSelectionChanged">
+                    <ListView.Header>
+                        <TextBlock x:Uid="RecentlyUsedArchives" Text="" Margin="0,0,0,16"/>
+                    </ListView.Header>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid x:Name="RecentArchivesGrid" Background="Transparent" Margin="0,8,0,8" 
+                              Holding="RecentArchivesGrid_OnHolding" RightTapped="RecentArchivesGrid_OnRightTapped">
+                                <FlyoutBase.AttachedFlyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem x:Uid="LaunchFolderFlyoutItem" Text="" Tapped="LaunchFolderFlyoutItem_OnTapped" />
+                                        <MenuFlyoutItem x:Uid="RemoveFromHistoryFlyoutItem" Text="" Tapped="RemoveFromHistoryFlyOutItem_OnTapped" />
+                                    </MenuFlyout>
+                                </FlyoutBase.AttachedFlyout>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2.0*"/>
+                                    <ColumnDefinition Width="8.0*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Foreground="{ThemeResource SystemControlForegroundAccentBrush}" FontWeight="Medium"
+                                       CharacterSpacing="32" Grid.Row="0" Grid.Column="1" Text="{Binding FileName}" />
+                                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding WhenUsed}" />
+                                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Location}" TextTrimming="CharacterEllipsis" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </PivotItem>
+        </Pivot>
+    </Grid>
+    <Page.Transitions>
+        <TransitionCollection>
+            <NavigationThemeTransition>
+                <NavigationThemeTransition.DefaultNavigationTransitionInfo>
+                    <EntranceNavigationTransitionInfo/>
+                </NavigationThemeTransition.DefaultNavigationTransitionInfo>
+            </NavigationThemeTransition>
+        </TransitionCollection>
+    </Page.Transitions>
+</Page>

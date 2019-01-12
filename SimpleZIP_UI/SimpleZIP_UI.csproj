@@ -12,7 +12,7 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.17134.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.15063.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.17134.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -169,13 +169,20 @@
     <Compile Include="Presentation\INavigation.cs" />
     <Compile Include="Presentation\Handler\ShareTargetHandler.cs" />
     <Compile Include="Presentation\NavigationArgs.cs" />
+    <Compile Include="Presentation\RootPageNavigationArgs.cs" />
     <Compile Include="Presentation\View\Converter\BoolToVisibilityConverter.cs" />
     <Compile Include="Presentation\View\Converter\InverseBoolToVisibilityConverter.cs" />
     <Compile Include="Presentation\View\Dialog\EnterPasswordDialog.xaml.cs">
       <DependentUpon>EnterPasswordDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Presentation\View\HomePage.xaml.cs">
+      <DependentUpon>HomePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\View\Model\BooleanModel.cs" />
     <Compile Include="Presentation\View\Model\HashAlgorithmModel.cs" />
+    <Compile Include="Presentation\View\SettingsPage.xaml.cs">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\View\ShareTargetOptionsPage.xaml.cs">
       <DependentUpon>ShareTargetOptionsPage.xaml</DependentUpon>
     </Compile>
@@ -208,21 +215,17 @@
     <Compile Include="Presentation\View\CompressionSummaryPage.xaml.cs">
       <DependentUpon>CompressionSummaryPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Presentation\Controller\MainController.cs" />
     <Compile Include="Presentation\View\Dialog\ViewTextDialog.xaml.cs">
       <DependentUpon>ViewTextDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Presentation\View\MainPage.xaml.cs">
-      <DependentUpon>MainPage.xaml</DependentUpon>
+    <Compile Include="Presentation\View\NavigationViewRootPage.xaml.cs">
+      <DependentUpon>NavigationViewRootPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\View\MessageDigestPage.xaml.cs">
       <DependentUpon>MessageDigestPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\View\Model\ArchiveEntryModel.cs" />
     <Compile Include="Presentation\View\Model\MessageDigestModel.cs" />
-    <Compile Include="Presentation\View\Dialog\SettingsDialog.xaml.cs">
-      <DependentUpon>SettingsDialog.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Presentation\View\Model\RecentArchiveModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -303,7 +306,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Presentation\View\MainPage.xaml">
+    <Page Include="Presentation\View\HomePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\View\NavigationViewRootPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -311,7 +318,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Presentation\View\Dialog\SettingsDialog.xaml">
+    <Page Include="Presentation\View\SettingsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,24 +16,24 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
+using SimpleZIP_UI.Presentation.Handler;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using SimpleZIP_UI.Presentation.Handler;
 
-namespace SimpleZIP_UI.Presentation.View.Dialog
+namespace SimpleZIP_UI.Presentation.View
 {
-    /// <inheritdoc cref="ContentDialog" />
-    public sealed partial class SettingsDialog
+    /// <inheritdoc cref="Page" />
+    public sealed partial class SettingsPage
     {
-        /// <inheritdoc />
-        public SettingsDialog()
+        public SettingsPage()
         {
             InitializeComponent();
             SetToggleButtonsToggledState();
             SetThemeGroupToggleButton();
-            PrimaryButtonText = I18N.Resources.GetString("ContentDialog/PrimaryButtonText");
             ArchiveHistorySizeTextBlock.Text += " (0-" + ArchiveHistoryHandler.MaxHistoryItems + "):";
             ArchiveHistorySizeTextBox.Text = GetCurrentSizeLimit().ToString();
+            SetToggleButtonsToggledState();
         }
 
         private static int GetCurrentSizeLimit()
@@ -75,18 +75,6 @@ namespace SimpleZIP_UI.Presentation.View.Dialog
                 DarkThemeRadioButton.IsChecked = true;
                 SystemThemeRadioButton.IsChecked = false;
             }
-        }
-
-        private void SettingsDialog_OnOpened(ContentDialog sender,
-            ContentDialogOpenedEventArgs args)
-        {
-            SetToggleButtonsToggledState();
-        }
-
-        private void ContentDialog_PrimaryButtonClick(ContentDialog sender,
-            ContentDialogButtonClickEventArgs args)
-        {
-            sender.Hide();
         }
 
         private void ToggleSwitch_OnToggled(object sender, RoutedEventArgs args)

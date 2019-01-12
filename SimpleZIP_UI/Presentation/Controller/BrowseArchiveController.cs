@@ -113,7 +113,7 @@ namespace SimpleZIP_UI.Presentation.Controller
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 DialogFactory.CreateErrorDialog(message).ShowAsync();
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                Navigation.Navigate(typeof(MainPage));
+                Navigation.Navigate(typeof(HomePage));
             }
             finally
             {

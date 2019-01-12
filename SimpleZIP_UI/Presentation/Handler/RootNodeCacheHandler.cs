@@ -17,7 +17,9 @@
 // 
 // ==--==
 
+using SimpleZIP_UI.Application;
 using SimpleZIP_UI.Application.Compression.Reader;
+using SimpleZIP_UI.Application.Util;
 using System.Collections.Generic;
 
 namespace SimpleZIP_UI.Presentation.Handler
@@ -46,6 +48,22 @@ namespace SimpleZIP_UI.Presentation.Handler
         public void ClearCache()
         {
             _nodesCache.Clear();
+        }
+
+        /// <summary>
+        /// Performs initialization of e.g. cached files created in some use cases.
+        /// </summary>
+        /// <param name="force">True to force initialization, false to respect threshold.</param>
+        internal static async void CheckInitialize(bool force = false)
+        {
+            // only clear cache if forced or threshold is exceeded
+            if (force || Instance.Cache.Count > 10)
+            {
+                Instance.ClearCache();
+                var tempFolder = await FileUtils
+                    .GetTempFolderAsync(TempFolder.Archives);
+                await FileUtils.CleanFolderAsync(tempFolder);
+            }
         }
 
         #region Singleton members

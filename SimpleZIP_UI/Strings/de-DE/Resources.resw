@@ -329,10 +329,6 @@
     <value>Verstecke weniger verbreitete Archiv-Typen bei Komprimierung</value>
     <comment>Allows to hide some less commonly used archive types.</comment>
   </data>
-  <data name="SettingsDialog.Title" xml:space="preserve">
-    <value>Einstellungen</value>
-    <comment>Dialog which allows adjustments to behavior of application.</comment>
-  </data>
   <data name="ComputeHash.Text" xml:space="preserve">
     <value>Hash berechnen</value>
     <comment>Allows the user to compute file hashes.</comment>
@@ -492,5 +488,9 @@
   <data name="ShareTargetHint.Text" xml:space="preserve">
     <value>Sie können auch Dateien mit dieser App teilen! Probieren Sie es doch einfach mit einer oder mehreren Dateien im Datei-Explorer aus.</value>
     <comment>Informational message to inform that this app is also a Share Target and that sharing via the file explorer is supported.</comment>
+  </data>
+  <data name="Home.Text" xml:space="preserve">
+    <value>Start</value>
+    <comment>Title for the home/start page.</comment>
   </data>
 </root>

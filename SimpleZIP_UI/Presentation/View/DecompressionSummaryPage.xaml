@@ -7,7 +7,7 @@
     Background="{ThemeResource SystemControlAcrylicWindowBrush}"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource SystemControlAcrylicWindowBrush}" Padding="0,0,0,8">
+    <Grid Background="Transparent" Padding="12,0,0,8">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />

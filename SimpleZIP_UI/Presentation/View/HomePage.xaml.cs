@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
 // 
 // ==--==
 
-using SimpleZIP_UI.Presentation.Controller;
 using SimpleZIP_UI.Presentation.Factory;
 using SimpleZIP_UI.Presentation.Handler;
 using SimpleZIP_UI.Presentation.View.Model;
@@ -27,46 +26,27 @@ using System.Globalization;
 using System.IO;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Devices.Input;
-using Windows.Foundation;
 using Windows.System;
 using Windows.UI.Input;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-using static SimpleZIP_UI.Presentation.Controller.MainController;
 
 namespace SimpleZIP_UI.Presentation.View
 {
     /// <inheritdoc cref="Page" />
-    public sealed partial class MainPage : INavigation
+    public sealed partial class HomePage : INavigation
     {
-        /// <summary>
-        /// Constant which defines the preferred width of the view.
-        /// </summary>
-        private const double PreferredLaunchSizeWidth = 1024d;
-
-        /// <summary>
-        /// Constant which defines the preferred height of the view.
-        /// </summary>
-        private const double PreferredLaunchSizeHeight = 780d;
-
-        /// <summary>
-        /// The aggregated controller instance.
-        /// </summary>
-        private readonly MainController _controller;
-
         /// <summary>
         /// Models bound to the list view.
         /// </summary>
         public ObservableCollection<RecentArchiveModel> RecentArchiveModels { get; }
 
         /// <inheritdoc />
-        public MainPage()
+        public HomePage()
         {
-            _controller = new MainController(this);
             RecentArchiveModels = new ObservableCollection<RecentArchiveModel>();
             InitializeComponent();
 
@@ -74,15 +54,6 @@ namespace SimpleZIP_UI.Presentation.View
             {
                 Pivot.Margin = new Thickness(0);
                 CompressButton.Margin = new Thickness(0, 32, 0, 0);
-                MenuSplitView.IsPaneOpen = false;
-            }
-            else
-            {
-                // set default launch size (has no effect on phones)
-                ApplicationView.PreferredLaunchViewSize
-                    = new Size(PreferredLaunchSizeWidth, PreferredLaunchSizeHeight);
-                ApplicationView.PreferredLaunchWindowingMode
-                    = ApplicationViewWindowingMode.PreferredLaunchViewSize;
             }
         }
 
@@ -127,76 +98,44 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        private void HamburgerButton_OnTapped(object sender, TappedRoutedEventArgs args)
-        {
-            MenuSplitView.IsPaneOpen = !MenuSplitView.IsPaneOpen;
-        }
-
         private async void CompressButton_OnTapped(object sender, TappedRoutedEventArgs args)
         {
-            await _controller.PerformAction(MainPageActionType.Compress);
+            var picker = PickerFactory.FileOpenPickerForAnyFile;
+            var files = await picker.PickMultipleFilesAsync();
+
+            if (files?.Count > 0)
+            {
+                var navArgs = new NavigationArgs(files);
+                Frame.Navigate(typeof(CompressionSummaryPage), navArgs);
+            }
         }
 
         private async void ExtractButton_OnTapped(object sender, TappedRoutedEventArgs args)
         {
-            await _controller.PerformAction(MainPageActionType.Decompress);
-        }
+            var picker = PickerFactory.FileOpenPickerForArchives;
+            var files = await picker.PickMultipleFilesAsync();
 
-        private async void OpenArchiveButton_OnTapped(object sender, TappedRoutedEventArgs args)
-        {
-            await _controller.PerformAction(MainPageActionType.OpenArchive);
-        }
-
-        private async void CalculateHashesButton_OnTapped(object sender, TappedRoutedEventArgs args)
-        {
-            await _controller.PerformAction(MainPageActionType.HashCalculation);
-        }
-
-        private async void GetSourceButton_OnTapped(object sender, TappedRoutedEventArgs args)
-        {
-            var dialog = DialogFactory.CreateConfirmationDialog(
-                I18N.Resources.GetString("OpenWebBrowserMessage/Text"),
-                "\n" + I18N.Resources.GetString("Proceed/Text"));
-
-            var result = await dialog.ShowAsync();
-            if (result.Id.Equals(0)) // launch browser
+            if (files?.Count > 0)
             {
-                await Launcher.LaunchUriAsync(new Uri("https://github.com/turbolocust/SimpleZIP"));
+                var navArgs = new NavigationArgs(files);
+                Frame.Navigate(typeof(DecompressionSummaryPage), navArgs);
             }
-        }
-
-        private async void SettingsMenuButton_OnTapped(object sender, TappedRoutedEventArgs args)
-        {
-            await new Dialog.SettingsDialog().ShowAsync();
-        }
-
-        private async void AboutMenuButton_OnTapped(object sender, TappedRoutedEventArgs args)
-        {
-            await new Dialog.AboutDialog().ShowAsync();
         }
 
         private void Pivot_OnSelectionChanged(object sender, SelectionChangedEventArgs args)
         {
             if (sender is Pivot pivot)
             {
-                // ReSharper disable once RedundantEmptySwitchSection
-                switch (pivot.SelectedIndex)
+                if (pivot.SelectedIndex == 0) // Start pivot
                 {
-                    case 0: // StartPivot
-                        {
-                            CommandBar.ClosedDisplayMode = AppBarClosedDisplayMode.Hidden;
-                        }
-                        break;
-                    case 1: // RecentPivot
-                        {
-                            PopulateOrUpdateRecentArchivesList();
-                            CommandBar.ClosedDisplayMode = DeviceInfo.IsMobileDevice
-                                ? AppBarClosedDisplayMode.Minimal
-                                : AppBarClosedDisplayMode.Compact;
-                        }
-                        break;
-                    default:
-                        break;
+                    CommandBar.ClosedDisplayMode = AppBarClosedDisplayMode.Hidden;
+                }
+                else if (pivot.SelectedIndex == 1) // Recent pivot
+                {
+                    PopulateOrUpdateRecentArchivesList();
+                    CommandBar.ClosedDisplayMode = DeviceInfo.IsMobileDevice
+                        ? AppBarClosedDisplayMode.Minimal
+                        : AppBarClosedDisplayMode.Compact;
                 }
             }
         }
@@ -300,8 +239,17 @@ namespace SimpleZIP_UI.Presentation.View
         /// <inheritdoc />
         protected override void OnNavigatedTo(NavigationEventArgs args)
         {
-            Frame.BackStack.Clear(); // going back is prohibited e.g. after aborting operation
-            _controller.CheckInitialize(true); // force cleaning of temporary file for now
+            if (args != null)
+            {
+                if (args.SourcePageType != typeof(NavigationViewRootPage))
+                {
+                    Frame.BackStack.Clear(); // going back is prohibited e.g. after aborting operation
+                }
+                else if (args.SourcePageType == typeof(BrowseArchivePage))
+                {
+                    RootNodeCacheHandler.CheckInitialize(true);
+                }
+            }
         }
 
         /// <inheritdoc />

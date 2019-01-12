@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -24,7 +24,9 @@ using System.Diagnostics;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
 using Windows.UI.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -44,6 +46,16 @@ namespace SimpleZIP_UI
     /// </summary>
     public sealed partial class App
     {
+        /// <summary>
+        /// Constant which defines the preferred width of the view.
+        /// </summary>
+        private const double PreferredLaunchSizeWidth = 1024d;
+
+        /// <summary>
+        /// Constant which defines the preferred height of the view.
+        /// </summary>
+        private const double PreferredLaunchSizeHeight = 780d;
+
         /// <inheritdoc />
         /// <summary>
         /// Initializes the singleton application object. This is the first line of authored code
@@ -54,10 +66,18 @@ namespace SimpleZIP_UI
             RequestApplicationTheme();
             InitializeComponent();
             InitializeTempDir();
-#if !DEBUG
-            RegisterEngagementNotification(); // register notification channel to send notifications to users
-#endif
             Suspending += OnSuspending;
+#if !DEBUG
+            RegisterEngagementNotification(); // to be able to send notifications to users
+#endif
+            if (!DeviceInfo.IsMobileDevice)
+            {
+                // set default launch size (has no effect on phones)
+                ApplicationView.PreferredLaunchViewSize
+                    = new Size(PreferredLaunchSizeWidth, PreferredLaunchSizeHeight);
+                ApplicationView.PreferredLaunchWindowingMode
+                    = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+            }
         }
 
         /// <summary>
@@ -102,7 +122,7 @@ namespace SimpleZIP_UI
                 if (rootFrame.Content == null)
                 {
                     // navigate to the first page, if the navigation stack isn't restored
-                    rootFrame.Navigate(typeof(MainPage), args.Arguments);
+                    rootFrame.Navigate(typeof(NavigationViewRootPage), args.Arguments);
                 }
                 // Ensure the current window is active
                 Window.Current.Activate();
@@ -137,11 +157,8 @@ namespace SimpleZIP_UI
         {
             base.OnFileActivated(args);
             var rootFrame = new Frame();
-            var destination = Settings.TryGet(Settings.Keys.PreferOpenArchiveKey,
-                out bool isOpenArchive) && isOpenArchive
-                    ? typeof(BrowseArchivePage)
-                    : typeof(DecompressionSummaryPage);
-            rootFrame.Navigate(destination, args);
+            var destPage = typeof(NavigationViewRootPage);
+            rootFrame.Navigate(destPage, args);
             Window.Current.Content = rootFrame;
             Window.Current.Activate();
         }

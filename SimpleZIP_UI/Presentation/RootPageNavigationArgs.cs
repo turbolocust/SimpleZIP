@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,26 +17,24 @@
 // 
 // ==--==
 
-using System.Collections.Generic;
-using Windows.ApplicationModel.DataTransfer.ShareTarget;
-using Windows.Storage;
+using System;
 
 namespace SimpleZIP_UI.Presentation
 {
-    internal class NavigationArgs
+    internal class RootPageNavigationArgs
     {
-        public IReadOnlyList<StorageFile> StorageFiles { get; }
+        /// <summary>
+        /// Page to be loaded in content frame.
+        /// </summary>
+        public Type Content { get; }
 
-        public ShareOperation ShareOperation { get; }
-
-        public bool IsArchivesOnly { get; }
-
-        public NavigationArgs(IReadOnlyList<StorageFile> files,
-            ShareOperation shareOp = null, bool archivesOnly = false)
+        /// <summary>
+        /// Constructs a new instance of this class.
+        /// </summary>
+        /// <param name="contentFrame">Page to be loaded in content frame.</param>
+        public RootPageNavigationArgs(Type contentFrame)
         {
-            StorageFiles = files;
-            ShareOperation = shareOp;
-            IsArchivesOnly = archivesOnly;
+            Content = contentFrame;
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,6 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
@@ -49,14 +50,14 @@ namespace SimpleZIP_UI.Presentation.View.Model
         public string MruToken { get; set; }
 
         /// <summary>
-        /// Constructs a new model for the ListBox in <see cref="MainPage"/>.
+        /// Constructs a new model for the ListBox in <see cref="HomePage"/>.
         /// </summary>
         public RecentArchiveModel()
         {
         }
 
         /// <summary>
-        /// Constructs a new model for the ListBox in <see cref="MainPage"/>.
+        /// Constructs a new model for the ListBox in <see cref="HomePage"/>.
         /// </summary>
         /// <param name="whenUsed">Date/Time when archive was used.</param>
         /// <param name="fileName">The name of the file to be displayed.</param>

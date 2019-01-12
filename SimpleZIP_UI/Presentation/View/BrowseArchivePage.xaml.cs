@@ -251,8 +251,8 @@ namespace SimpleZIP_UI.Presentation.View
                     // since extension method already checks for null
                     archive = files.First() as StorageFile;
                     // add main page to back stack to allow navigation via back button
-                    Frame.BackStack.Add(new PageStackEntry(typeof(MainPage), null,
-                        new CommonNavigationTransitionInfo()));
+                    Frame.BackStack.Add(new PageStackEntry(typeof(HomePage),
+                        null, new CommonNavigationTransitionInfo()));
                 }
             }
             else
