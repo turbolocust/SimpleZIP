@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -112,6 +112,41 @@ namespace SimpleZIP_UI.Presentation.View
             ArchiveEntryModels = new ObservableCollection<ArchiveEntryModel>();
         }
 
+        private async Task<bool> NavigateUp()
+        {
+            bool navigateSuccess = false;
+            // can only go back in history if stack holds at 
+            // least two elements (since first node is root node)
+            if (GetNodesForCurrentRoot().Count > 1 && !_controller.IsNavigating)
+            {
+                navigateSuccess = true;
+                GetNodesForCurrentRoot().Pop(); // remove current
+                var next = GetNodesForCurrentRoot().Pop();
+                IsProgressBarEnabled.IsTrue = true;
+                await UpdateListContentAsync(next);
+            }
+            // or if sub-archives have been opened (archive within archive)
+            else if (_rootNodeStack.Count > 1 && !_controller.IsNavigating)
+            {
+                navigateSuccess = true;
+                GetNodesForCurrentRoot().Clear();
+                _rootNodeStack.Pop(); // remove current
+                --_rootNodeStackPointer;
+                _curRootNode = _rootNodeStack.Peek();
+                var children = GetNodesForCurrentRoot();
+                var next = children.IsNullOrEmpty()
+                    ? _curRootNode : children.Pop();
+                IsProgressBarEnabled.IsTrue = true;
+                await UpdateListContentAsync(next);
+            }
+            else
+            {
+                _controller.CancelReadArchive();
+            }
+
+            return navigateSuccess;
+        }
+
         private void ExtractWholeArchiveButton_OnTapped(
             object sender, TappedRoutedEventArgs args)
         {
@@ -125,12 +160,14 @@ namespace SimpleZIP_UI.Presentation.View
                 GetNodesForCurrentRoot().Peek(), _selectedModels.ToArray());
         }
 
-        private void NavigateUpButton_OnTapped(object sender, TappedRoutedEventArgs args)
+        private async void NavigateUpButton_OnTapped(object sender, TappedRoutedEventArgs args)
         {
-            if (Window.Current.Content is Frame frame && frame.CanGoBack)
+            args.Handled = true;
+
+            if (!await NavigateUp())
             {
-                args.Handled = true;
-                frame.GoBack();
+                // cannot go back in history, hence navigate back home
+                Frame.Navigate(typeof(HomePage));
             }
         }
 
@@ -261,7 +298,9 @@ namespace SimpleZIP_UI.Presentation.View
             }
 
             if (archive == null)
+            {
                 throw new NullReferenceException("Cannot handle null parameter.");
+            }
 
             await LoadArchive(archive); // load initial archive
             ExtractWholeArchiveButton.IsEnabled
@@ -271,34 +310,13 @@ namespace SimpleZIP_UI.Presentation.View
         /// <inheritdoc />
         protected override async void OnNavigatingFrom(NavigatingCancelEventArgs args)
         {
-            // can only go back in history if stack holds at 
-            // least two elements (since first node is root node)
-            if (GetNodesForCurrentRoot().Count > 1 && !_controller.IsNavigating)
+            if (GetNodesForCurrentRoot().Count > 1 && !_controller.IsNavigating ||
+                _rootNodeStack.Count > 1 && !_controller.IsNavigating)
             {
                 args.Cancel = true;
-                GetNodesForCurrentRoot().Pop(); // remove current
-                var next = GetNodesForCurrentRoot().Pop();
-                IsProgressBarEnabled.IsTrue = true;
-                await UpdateListContentAsync(next);
             }
-            // or if sub-archives have been opened (archive within archive)
-            else if (_rootNodeStack.Count > 1 && !_controller.IsNavigating)
-            {
-                args.Cancel = true;
-                GetNodesForCurrentRoot().Clear();
-                _rootNodeStack.Pop(); // remove current
-                --_rootNodeStackPointer;
-                _curRootNode = _rootNodeStack.Peek();
-                var children = GetNodesForCurrentRoot();
-                var next = children.IsNullOrEmpty()
-                    ? _curRootNode : children.Pop();
-                IsProgressBarEnabled.IsTrue = true;
-                await UpdateListContentAsync(next);
-            }
-            else
-            {
-                _controller.CancelReadArchive();
-            }
+
+            await NavigateUp();
         }
 
         /// <inheritdoc />

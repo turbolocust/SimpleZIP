@@ -31,7 +31,7 @@
                     <TextBlock x:Uid="HelpFeedback" Text="" VerticalAlignment="Center" HorizontalAlignment="Left" />
                 </NavigationViewItem>
             </NavigationView.MenuItems>
-            <Frame x:Name="ContentFrame" IsTabStop="True" />
+            <Frame x:Name="ContentFrame" IsTabStop="True" Navigated="ContentFrame_OnNavigated" NavigationStopped="ContentFrame_OnNavigationStopped" />
         </NavigationView>
     </Grid>
     <Page.Transitions>

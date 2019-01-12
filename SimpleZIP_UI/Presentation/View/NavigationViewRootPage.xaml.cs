@@ -44,6 +44,13 @@ namespace SimpleZIP_UI.Presentation.View
         /// </summary>
         private readonly IList<(string Tag, Type Page)> _pages;
 
+        /// <summary>
+        /// True if navigating back (via back stack). Used to detect
+        /// cancellation of navigation and to avoid updating the selected
+        /// menu item in case navigation got cancelled.
+        /// </summary>
+        private bool _isNavigateBack;
+
         /// <inheritdoc />
         public NavigationViewRootPage()
         {
@@ -150,18 +157,27 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
+        private void ContentFrame_OnNavigated(object sender, NavigationEventArgs args)
+        {
+            if (_isNavigateBack)
+            {
+                _isNavigateBack = false;
+                UpdateSelectedMenuItem(args.SourcePageType);
+            }
+        }
+
+        private void ContentFrame_OnNavigationStopped(object sender, NavigationEventArgs args)
+        {
+            _isNavigateBack = false;
+        }
+
         private void NavigationView_OnBackRequested(NavigationView sender,
             NavigationViewBackRequestedEventArgs args)
         {
             if (ContentFrame.CanGoBack)
             {
-                var bStack = ContentFrame.BackStack;
-                if (bStack.Count > 0) // just in case...
-                {
-                    var entry = bStack[bStack.Count - 1];
-                    UpdateSelectedMenuItem(entry.SourcePageType);
-                    ContentFrame.GoBack();
-                }
+                _isNavigateBack = true;
+                ContentFrame.GoBack();
             }
         }
 
@@ -186,6 +202,7 @@ namespace SimpleZIP_UI.Presentation.View
                 {
                     destination = typeof(DecompressionSummaryPage);
                 }
+
                 ContentFrameNavigate(destination, args.Parameter);
             }
             else
