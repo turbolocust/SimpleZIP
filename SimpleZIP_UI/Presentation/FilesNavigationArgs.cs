@@ -23,7 +23,7 @@ using Windows.Storage;
 
 namespace SimpleZIP_UI.Presentation
 {
-    internal class NavigationArgs
+    internal class FilesNavigationArgs
     {
         public IReadOnlyList<StorageFile> StorageFiles { get; }
 
@@ -31,7 +31,7 @@ namespace SimpleZIP_UI.Presentation
 
         public bool IsArchivesOnly { get; }
 
-        public NavigationArgs(IReadOnlyList<StorageFile> files,
+        public FilesNavigationArgs(IReadOnlyList<StorageFile> files,
             ShareOperation shareOp = null, bool archivesOnly = false)
         {
             StorageFiles = files;

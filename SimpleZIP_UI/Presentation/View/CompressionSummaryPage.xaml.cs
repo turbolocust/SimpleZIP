@@ -293,7 +293,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// <inheritdoc />
         protected override void OnNavigatedTo(NavigationEventArgs args)
         {
-            if (!(args.Parameter is NavigationArgs navigationArgs)) return;
+            if (!(args.Parameter is FilesNavigationArgs navigationArgs)) return;
 
             _selectedFiles = navigationArgs.StorageFiles;
             _controller.ShareOperation = navigationArgs.ShareOperation;

@@ -56,8 +56,8 @@ namespace SimpleZIP_UI.Presentation.Handler
                 var dest = typeof(ShareTargetOptionsPage);
 
                 var args = await ConsistsOfArchivesOnly(files)
-                    ? new NavigationArgs(files, shareOp, true)
-                    : new NavigationArgs(files, shareOp);
+                    ? new FilesNavigationArgs(files, shareOp, true)
+                    : new FilesNavigationArgs(files, shareOp);
 
                 rootFrame.Navigate(dest, args);
                 Window.Current.Content = rootFrame;

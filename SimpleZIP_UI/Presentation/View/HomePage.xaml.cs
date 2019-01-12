@@ -105,7 +105,7 @@ namespace SimpleZIP_UI.Presentation.View
 
             if (files?.Count > 0)
             {
-                var navArgs = new NavigationArgs(files);
+                var navArgs = new FilesNavigationArgs(files);
                 Frame.Navigate(typeof(CompressionSummaryPage), navArgs);
             }
         }
@@ -117,7 +117,7 @@ namespace SimpleZIP_UI.Presentation.View
 
             if (files?.Count > 0)
             {
-                var navArgs = new NavigationArgs(files);
+                var navArgs = new FilesNavigationArgs(files);
                 Frame.Navigate(typeof(DecompressionSummaryPage), navArgs);
             }
         }

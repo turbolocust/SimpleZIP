@@ -168,7 +168,7 @@
     <Compile Include="Presentation\Handler\RootNodeCacheHandler.cs" />
     <Compile Include="Presentation\INavigation.cs" />
     <Compile Include="Presentation\Handler\ShareTargetHandler.cs" />
-    <Compile Include="Presentation\NavigationArgs.cs" />
+    <Compile Include="Presentation\FilesNavigationArgs.cs" />
     <Compile Include="Presentation\RootPageNavigationArgs.cs" />
     <Compile Include="Presentation\View\Converter\BoolToVisibilityConverter.cs" />
     <Compile Include="Presentation\View\Converter\InverseBoolToVisibilityConverter.cs" />

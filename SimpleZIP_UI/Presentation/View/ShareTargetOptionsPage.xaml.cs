@@ -31,7 +31,7 @@ namespace SimpleZIP_UI.Presentation.View
     /// </summary>
     public sealed partial class ShareTargetOptionsPage : INavigation
     {
-        private NavigationArgs _navigationArgs;
+        private FilesNavigationArgs _filesNavigationArgs;
 
         public ShareTargetOptionsPage()
         {
@@ -40,27 +40,27 @@ namespace SimpleZIP_UI.Presentation.View
 
         private void CompressFilesButton_OnTapped(object sender, TappedRoutedEventArgs args)
         {
-            Frame.Navigate(typeof(CompressionSummaryPage), _navigationArgs);
+            Frame.Navigate(typeof(CompressionSummaryPage), _filesNavigationArgs);
             args.Handled = true;
         }
 
         private void ExtractButton_OnTapped(object sender, TappedRoutedEventArgs args)
         {
-            Frame.Navigate(typeof(DecompressionSummaryPage), _navigationArgs);
+            Frame.Navigate(typeof(DecompressionSummaryPage), _filesNavigationArgs);
             args.Handled = true;
         }
 
         private void ComputeHashes_OnTapped(object sender, TappedRoutedEventArgs args)
         {
-            Frame.Navigate(typeof(MessageDigestPage), _navigationArgs);
+            Frame.Navigate(typeof(MessageDigestPage), _filesNavigationArgs);
             args.Handled = true;
         }
 
         /// <inheritdoc />
         protected override void OnNavigatedTo(NavigationEventArgs args)
         {
-            _navigationArgs = args.Parameter as NavigationArgs;
-            if (_navigationArgs != null && _navigationArgs.IsArchivesOnly)
+            _filesNavigationArgs = args.Parameter as FilesNavigationArgs;
+            if (_filesNavigationArgs != null && _filesNavigationArgs.IsArchivesOnly)
             {
                 ExtractButton.Visibility = Visibility.Visible;
             }

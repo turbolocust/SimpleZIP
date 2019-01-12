@@ -113,7 +113,7 @@ namespace SimpleZIP_UI.Presentation.View
 
             if (files?.Count > 0)
             {
-                var args = new NavigationArgs(files);
+                var args = new FilesNavigationArgs(files);
                 ContentFrameNavigate(typeof(MessageDigestPage), args);
             }
         }
