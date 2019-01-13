@@ -56,6 +56,7 @@ namespace SimpleZIP_UI.Presentation.View
         public NavigationViewRootPage()
         {
             InitializeComponent();
+            NavigationLock.Instance.IsLocked = false;
             // initialize list consisting of value tuples for pages
             _pages = new List<(string Tag, Type Page)>
             {
@@ -147,24 +148,27 @@ namespace SimpleZIP_UI.Presentation.View
             else if (args.InvokedItem is FrameworkElement elem &&
                      elem.Parent is NavigationViewItem item)
             {
-                // ReSharper disable once SwitchStatementMissingSomeCases
-                switch (item.Tag)
+                if (!NavigationLock.Instance.IsLocked)
                 {
-                    case TagHome:
-                        ContentFrameNavigate(typeof(HomePage));
-                        break;
-                    case TagOpenArchive:
-                        await OpenArchiveAction();
-                        break;
-                    case TagHashCalculation:
-                        await CalculateHashAction();
-                        break;
-                    case TagProjectHome:
-                        NavigateToProjectHome();
-                        break;
-                    case TagAbout:
-                        ShowAboutViewDialogAsync();
-                        break;
+                    // ReSharper disable once SwitchStatementMissingSomeCases
+                    switch (item.Tag)
+                    {
+                        case TagHome:
+                            ContentFrameNavigate(typeof(HomePage));
+                            break;
+                        case TagOpenArchive:
+                            await OpenArchiveAction();
+                            break;
+                        case TagHashCalculation:
+                            await CalculateHashAction();
+                            break;
+                        case TagProjectHome:
+                            NavigateToProjectHome();
+                            break;
+                        case TagAbout:
+                            ShowAboutViewDialogAsync();
+                            break;
+                    }
                 }
             }
         }

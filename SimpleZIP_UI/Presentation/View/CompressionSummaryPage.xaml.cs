@@ -106,11 +106,20 @@ namespace SimpleZIP_UI.Presentation.View
             return item;
         }
 
+        private void CheckLockNavigation()
+        {
+            if (Frame.Parent is NavigationView)
+            {
+                NavigationLock.Instance.IsLocked = true;
+            }
+        }
+
         private void FinishOperation()
         {
             SetOperationActive(false);
             AbortButtonToolTip.IsOpen = false;
             ArchiveTypeToolTip.IsOpen = false;
+            NavigationLock.Instance.IsLocked = false;
         }
 
         private async void PickOutputFolder()
@@ -242,13 +251,16 @@ namespace SimpleZIP_UI.Presentation.View
         /// <param name="archiveName">The name of the archive.</param>
         private async Task<Result> InitOperation(Archives.ArchiveType key, string archiveName)
         {
+            CheckLockNavigation();
             SetOperationActive(true);
+
             var totalSize = await _controller.CheckFileSizes(_selectedFiles);
             var info = new CompressionInfo(key, totalSize)
             {
                 ArchiveName = archiveName,
                 SelectedFiles = _selectedFiles
             };
+
             return await _controller.StartButtonAction(OnProgressUpdate, info);
         }
 

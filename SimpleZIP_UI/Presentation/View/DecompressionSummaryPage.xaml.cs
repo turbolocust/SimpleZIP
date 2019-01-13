@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -59,6 +59,21 @@ namespace SimpleZIP_UI.Presentation.View
             _selectedItems = new List<ExtractableItem>(0);
         }
 
+        private void CheckLockNavigation()
+        {
+            if (Frame.Parent is NavigationView)
+            {
+                NavigationLock.Instance.IsLocked = true;
+            }
+        }
+
+        private void FinishOperation()
+        {
+            SetOperationActive(false);
+            AbortButtonToolTip.IsOpen = false;
+            NavigationLock.Instance.IsLocked = false;
+        }
+
         private async void PickOutputFolder()
         {
             if (ProgressBar.IsEnabled) return;
@@ -80,6 +95,7 @@ namespace SimpleZIP_UI.Presentation.View
             if (await _controller.CheckOutputFolder())
             {
                 var result = await InitOperation();
+
                 if (_controller.IsShareTargetActivated()
                     && result.StatusCode != Result.Status.Success)
                 {
@@ -122,7 +138,9 @@ namespace SimpleZIP_UI.Presentation.View
         /// </summary>
         private async Task<Result> InitOperation()
         {
+            CheckLockNavigation();
             SetOperationActive(true);
+
             var infos = new List<DecompressionInfo>(_selectedItems.Count);
             var totalSize = await _controller.CheckFileSizes(_selectedItems);
 
@@ -236,8 +254,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// <inheritdoc />
         protected override void OnNavigatedFrom(NavigationEventArgs args)
         {
-            SetOperationActive(false);
-            AbortButtonToolTip.IsOpen = false;
+            FinishOperation();
         }
 
         /// <inheritdoc />

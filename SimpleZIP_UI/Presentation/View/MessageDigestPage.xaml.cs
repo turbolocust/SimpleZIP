@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,6 +16,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
+using SimpleZIP_UI.Application.Hashing;
+using SimpleZIP_UI.Presentation.Controller;
+using SimpleZIP_UI.Presentation.View.Dialog;
+using SimpleZIP_UI.Presentation.View.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -28,10 +33,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-using SimpleZIP_UI.Application.Hashing;
-using SimpleZIP_UI.Presentation.Controller;
-using SimpleZIP_UI.Presentation.View.Dialog;
-using SimpleZIP_UI.Presentation.View.Model;
 
 namespace SimpleZIP_UI.Presentation.View
 {
@@ -106,16 +107,23 @@ namespace SimpleZIP_UI.Presentation.View
         /// </summary>
         private async void PopulateListBox()
         {
-            IsPopulateListBox.IsTrue = true;
-            MessageDigestModels.Clear();
+            try
+            {
+                NavigationLock.Instance.IsLocked = true;
+                IsPopulateListBox.IsTrue = true;
+                MessageDigestModels.Clear();
 
-            string algorithmName = SelectedAlgorithm.HashAlgorithm;
-            bool isLowercase = LowercaseHashToggleSwitch.IsOn;
+                string algorithmName = SelectedAlgorithm.HashAlgorithm;
+                bool isLowercase = LowercaseHashToggleSwitch.IsOn;
 
-            var models = await BuildModelsAsync(algorithmName, isLowercase);
-            models.ForEach(model => MessageDigestModels.Add(model));
-
-            IsPopulateListBox.IsTrue = false;
+                var models = await BuildModelsAsync(algorithmName, isLowercase);
+                models.ForEach(model => MessageDigestModels.Add(model));
+            }
+            finally
+            {
+                IsPopulateListBox.IsTrue = false;
+                NavigationLock.Instance.IsLocked = false;
+            }
         }
 
         /// <summary>
@@ -237,6 +245,7 @@ namespace SimpleZIP_UI.Presentation.View
                     ? model.HashValue.ToLowerInvariant()
                     : model.HashValue.ToUpperInvariant();
             }
+
             RefreshListBox();
         }
 
