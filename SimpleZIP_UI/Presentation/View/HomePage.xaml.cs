@@ -247,6 +247,7 @@ namespace SimpleZIP_UI.Presentation.View
                 }
                 else if (args.SourcePageType == typeof(BrowseArchivePage))
                 {
+                    // force cleaning after browsing archive
                     RootNodeCacheHandler.CheckInitialize(true);
                 }
             }

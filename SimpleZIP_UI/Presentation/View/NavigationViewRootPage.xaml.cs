@@ -33,6 +33,7 @@ namespace SimpleZIP_UI.Presentation.View
     /// <inheritdoc cref="Page" />
     public sealed partial class NavigationViewRootPage
     {
+        // tag names for each NavigationViewItem in NavigationView
         private const string TagHome = "Home";
         private const string TagOpenArchive = "OpenArchive";
         private const string TagHashCalculation = "HashCalculation";
@@ -40,21 +41,22 @@ namespace SimpleZIP_UI.Presentation.View
         private const string TagAbout = "About";
 
         /// <summary>
-        /// Consists of value tuples for pages in <see cref="NavView"/>.
+        /// Consists of value tuples for defined pages in <see cref="NavView"/>.
         /// </summary>
         private readonly IList<(string Tag, Type Page)> _pages;
 
         /// <summary>
         /// True if navigating back (via back stack). Used to detect
         /// cancellation of navigation and to avoid updating the selected
-        /// menu item in case navigation got cancelled.
+        /// menu item in case the navigation process got cancelled.
         /// </summary>
-        private bool _isNavigateBack;
+        private volatile bool _isNavigateBack;
 
         /// <inheritdoc />
         public NavigationViewRootPage()
         {
             InitializeComponent();
+            // initialize list consisting of value tuples for pages
             _pages = new List<(string Tag, Type Page)>
             {
                 (TagHome, typeof(HomePage)),
@@ -80,14 +82,20 @@ namespace SimpleZIP_UI.Presentation.View
         private void UpdateSelectedMenuItem(Type destPageType)
         {
             var (tag, _) = _pages.FirstOrDefault(t => t.Page == destPageType);
-            if (!string.IsNullOrEmpty(tag)) // might not be in list
+            if (!string.IsNullOrEmpty(tag)) // page might not be in list
             {
+                // page was found, now find the item with matching tag
                 var menuItem = NavView.MenuItems.OfType<NavigationViewItem>()
                     .FirstOrDefault(item => item.Tag.Equals(tag));
                 if (menuItem != null) NavView.SelectedItem = menuItem;
             }
         }
 
+        /// <summary>
+        /// Loads the specified page within <see cref="ContentFrame"/>.
+        /// </summary>
+        /// <param name="destPageType">Type of page to be loaded.</param>
+        /// <param name="param">Optional parameter to be passed to page.</param>
         private void ContentFrameNavigate(Type destPageType, object param = null)
         {
             var curPage = ContentFrame.CurrentSourcePageType;
@@ -97,7 +105,7 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        private static async void ShowAboutViewDialog()
+        private static async void ShowAboutViewDialogAsync()
         {
             await new Dialog.AboutDialog().ShowAsync();
         }
@@ -109,7 +117,8 @@ namespace SimpleZIP_UI.Presentation.View
 
             if (file != null)
             {
-                ContentFrameNavigate(typeof(BrowseArchivePage), file);
+                var destPage = typeof(BrowseArchivePage);
+                ContentFrameNavigate(destPage, file);
             }
         }
 
@@ -121,7 +130,8 @@ namespace SimpleZIP_UI.Presentation.View
             if (files?.Count > 0)
             {
                 var args = new FilesNavigationArgs(files);
-                ContentFrameNavigate(typeof(MessageDigestPage), args);
+                var destPage = typeof(MessageDigestPage);
+                ContentFrameNavigate(destPage, args);
             }
         }
 
@@ -130,8 +140,10 @@ namespace SimpleZIP_UI.Presentation.View
         {
             if (args.IsSettingsInvoked)
             {
+                // opening a content dialog here causes an exception
                 ContentFrameNavigate(typeof(SettingsPage));
             }
+            // invoked item is TextBlock (content of NavigationViewItem)
             else if (args.InvokedItem is FrameworkElement elem &&
                      elem.Parent is NavigationViewItem item)
             {
@@ -151,7 +163,7 @@ namespace SimpleZIP_UI.Presentation.View
                         NavigateToProjectHome();
                         break;
                     case TagAbout:
-                        ShowAboutViewDialog();
+                        ShowAboutViewDialogAsync();
                         break;
                 }
             }
@@ -184,6 +196,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// <inheritdoc />
         protected override void OnNavigatedTo(NavigationEventArgs args)
         {
+            // arguments may hold a specified page type
             if (args.Parameter is RootPageNavigationArgs rootArgs)
             {
                 var type = rootArgs.Content ?? typeof(HomePage);
