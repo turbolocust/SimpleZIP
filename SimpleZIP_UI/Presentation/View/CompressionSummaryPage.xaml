@@ -4,10 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Background="{ThemeResource SystemControlAcrylicWindowBrush}"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
 
-    <Grid Background="Transparent" Padding="12,0,0,8">
+    <Grid Background="Transparent" Padding="0,0,0,8">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -16,7 +16,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="8,8,0,16">
+        <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="12,8,0,16">
             <ComboBox x:Uid="ArchiveType" x:Name="ArchiveTypeComboBox" DropDownClosed="ArchiveTypeComboBox_OnDropDownClosed" Width="225"
                       Margin="0,0,0,16" Header="" Foreground="{ThemeResource ButtonForegroundThemeBrush}">
                 <ToolTipService.ToolTip>
@@ -30,14 +30,14 @@
                 </ToolTipService.ToolTip>
             </TextBox>
         </StackPanel>
-        <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center" Background="Transparent" Margin="8,0,0,16">
+        <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center" Background="Transparent" Margin="12,0,0,16">
             <TextBlock x:Uid="OutputFolder" Text="" IsTapEnabled="False" FontSize="16" Margin="0,0,0,8" FocusVisualPrimaryBrush="Transparent" FocusVisualSecondaryBrush="Transparent" />
             <Button x:Name="OutputPathButton" AllowFocusWhenDisabled="False" Width="Auto" Height="40" FontWeight="Normal" BorderBrush="{ThemeResource SystemControlBackgroundAccentBrush}"
                     BorderThickness="2" IsTapEnabled="True" Background="Transparent" IsHoldingEnabled="False" IsDoubleTapEnabled="False" Tapped="OutputPathButton_OnTapped">
                 <TextBlock x:Uid="TapToChoose" Text="" TextWrapping="NoWrap" />
             </Button>
         </StackPanel>
-        <TextBlock x:Uid="FilesToCompress" Text="" Grid.Row="2" FontWeight="Medium" FontSize="16" CharacterSpacing="56" Margin="8,0,0,8" VerticalAlignment="Center" />
+        <TextBlock x:Uid="FilesToCompress" Text="" Grid.Row="2" FontWeight="Medium" FontSize="16" CharacterSpacing="56" Margin="12,0,0,8" VerticalAlignment="Center" />
         <ScrollViewer Grid.Row="3" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
             <ListBox x:Name="ItemsListBox"  Margin="4,0,0,0" SelectionMode="Single" CanDrag="False" HorizontalContentAlignment="Stretch"
                      Background="Transparent" Height="Auto" Foreground="{ThemeResource ButtonForegroundThemeBrush}" />

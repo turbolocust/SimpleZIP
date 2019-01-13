@@ -4,14 +4,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Background="{ThemeResource SystemControlAcrylicWindowBrush}"
-    mc:Ignorable="d" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
+    Background="Transparent" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
+    mc:Ignorable="d">
 
     <Grid Background="Transparent">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <NavigationView x:Name="NavView" Grid.Row="0" Background="{ThemeResource SystemControlAcrylicWindowBrush}"
+        <NavigationView x:Name="NavView" Grid.Row="0" Background="Transparent" IsPaneToggleButtonVisible="True"
                         AlwaysShowHeader="False" IsSettingsVisible="True" ItemInvoked="NavView_OnItemInvoked" 
                         IsPaneOpen="True" IsBackButtonVisible="Auto" IsBackEnabled="True" BackRequested="NavigationView_OnBackRequested">
             <NavigationView.MenuItems>
