@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -54,6 +54,12 @@ namespace SimpleZIP_UI.Presentation.View
         /// Maps combo box items to file types for archives.
         /// </summary>
         private static readonly Dictionary<ComboBoxItem, string> FileTypesComboBoxItems;
+
+        /// <summary>
+        /// True if tooltip timer is active. The timer is used to automatically
+        /// close a tooltip after a certain number of seconds.
+        /// </summary>
+        private volatile bool _isTooltipTimerActive;
 
         static CompressionSummaryPage()
         {
@@ -212,13 +218,18 @@ namespace SimpleZIP_UI.Presentation.View
         private void ArchiveTypeToolTip_OnOpened(object sender, RoutedEventArgs args)
         {
             var toolTip = (ToolTip)sender;
-            if (!toolTip.IsOpen)
+            if (toolTip.IsOpen && !_isTooltipTimerActive)
             {
-                var timer = new DispatcherTimer { Interval = new TimeSpan(0, 0, 8) };
-                timer.Tick += (s, evt) => // close tooltip after 8 seconds
+                _isTooltipTimerActive = true;
+                var timer = new DispatcherTimer
                 {
-                    toolTip.IsOpen = false;
+                    Interval = new TimeSpan(0, 0, 10)
+                };
+                timer.Tick += (s, evt) => // close tooltip after 10 seconds
+                {
                     timer.Stop();
+                    toolTip.IsOpen = false;
+                    _isTooltipTimerActive = false;
                 };
                 timer.Start();
             }
