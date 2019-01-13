@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,17 +16,18 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using SharpCompress.Common;
+using SharpCompress.Writers;
+using SimpleZIP_UI.Application.Compression.Algorithm;
+using SimpleZIP_UI.Application.Compression.Algorithm.Type;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-using SharpCompress.Common;
-using SharpCompress.Writers;
-using SimpleZIP_UI.Application.Compression.Algorithm;
-using SimpleZIP_UI.Application.Compression.Algorithm.Type;
 
 namespace SimpleZIP_UI_TEST
 {
@@ -163,7 +164,7 @@ namespace SimpleZIP_UI_TEST
             using (var streamReader = new StreamReader(await file.OpenStreamForReadAsync()))
             {
                 var line = streamReader.ReadLine();
-                if (!line.Equals(FileText))
+                if (line != null && !line.Equals(FileText))
                 {
                     Assert.Fail("Files do not match.");
                 }
