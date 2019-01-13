@@ -158,6 +158,7 @@
     <Compile Include="I18N\ExceptionMessages.cs" />
     <Compile Include="I18N\Resources.cs" />
     <Compile Include="ISerializable.cs" />
+    <Compile Include="Presentation\NavigationLock.cs" />
     <Compile Include="Presentation\Controller\BrowseArchiveController.cs" />
     <Compile Include="Presentation\Controller\IGuiController.cs" />
     <Compile Include="Presentation\Controller\MessageDigestController.cs" />
