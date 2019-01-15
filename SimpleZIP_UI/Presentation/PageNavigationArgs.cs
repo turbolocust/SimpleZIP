@@ -21,20 +21,20 @@ using System;
 
 namespace SimpleZIP_UI.Presentation
 {
-    internal class RootPageNavigationArgs
+    internal class PageNavigationArgs
     {
         /// <summary>
-        /// Page to be loaded in content frame.
+        /// Page to be loaded in a frame.
         /// </summary>
-        public Type Content { get; }
+        public Type PageType { get; }
 
         /// <summary>
         /// Constructs a new instance of this class.
         /// </summary>
-        /// <param name="contentFrame">Page to be loaded in content frame.</param>
-        public RootPageNavigationArgs(Type contentFrame)
+        /// <param name="pageType">Page to be loaded in a frame.</param>
+        public PageNavigationArgs(Type pageType)
         {
-            Content = contentFrame;
+            PageType = pageType;
         }
     }
 }

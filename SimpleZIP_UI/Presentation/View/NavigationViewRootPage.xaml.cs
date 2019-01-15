@@ -201,9 +201,9 @@ namespace SimpleZIP_UI.Presentation.View
         protected override void OnNavigatedTo(NavigationEventArgs args)
         {
             // arguments may hold a specified page type
-            if (args.Parameter is RootPageNavigationArgs rootArgs)
+            if (args.Parameter is PageNavigationArgs navArgs)
             {
-                var type = rootArgs.Content ?? typeof(HomePage);
+                var type = navArgs.PageType ?? typeof(HomePage);
                 ContentFrameNavigate(type);
             }
             else if (args.Parameter is FileActivatedEventArgs)

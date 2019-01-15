@@ -23,14 +23,14 @@ namespace SimpleZIP_UI.Application.Compression.Reader
 {
     internal class RootNode : Node
     {
-        internal StorageFile ArchiveFile { get; }
+        internal StorageFile Archive { get; }
 
         internal string Password { get; }
 
-        internal RootNode(string id, StorageFile archiveFile,
+        internal RootNode(string id, StorageFile archive,
             string password = null) : base(id)
         {
-            ArchiveFile = archiveFile;
+            Archive = archive;
             Password = password ?? string.Empty;
         }
     }

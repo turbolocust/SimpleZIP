@@ -161,8 +161,8 @@ namespace SimpleZIP_UI.Presentation.Controller
                 }
                 // doesn't exist, hence extract and read again
                 var item = new ExtractableItem(
-                    root.ArchiveFile.Name,
-                    root.ArchiveFile, new[] { entry });
+                    root.Archive.Name,
+                    root.Archive, new[] { entry });
                 var size = await FileUtils.GetFileSizeAsync(item.Archive);
                 // create operation and job for execution
                 var operationInfo = new DecompressionInfo(item, size)
@@ -231,7 +231,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             IsNavigating = true;
 
             var item = new ExtractableItem(
-                root.ArchiveFile.Name, root.ArchiveFile)
+                root.Archive.Name, root.Archive)
             {
                 Password = root.Password
             };
@@ -268,8 +268,8 @@ namespace SimpleZIP_UI.Presentation.Controller
             {
                 IsNavigating = true;
                 var item = new ExtractableItem(
-                    root.ArchiveFile.Name,
-                    root.ArchiveFile, entries)
+                    root.Archive.Name,
+                    root.Archive, entries)
                 {
                     Password = root.Password
                 };
