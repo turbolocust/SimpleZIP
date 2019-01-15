@@ -250,6 +250,8 @@ namespace SimpleZIP_UI.Presentation.View
                     // force cleaning after browsing archive
                     RootNodeCacheHandler.CheckInitialize(true);
                 }
+
+                NavigationLock.Instance.IsLocked = false;
             }
         }
 
