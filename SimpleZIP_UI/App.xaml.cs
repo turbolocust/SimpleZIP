@@ -124,7 +124,7 @@ namespace SimpleZIP_UI
                     // navigate to the first page, if the navigation stack isn't restored
                     rootFrame.Navigate(typeof(NavigationViewRootPage), args.Arguments);
                 }
-                // Ensure the current window is active
+                // ensure the current window is active
                 Window.Current.Activate();
             }
         }

@@ -241,14 +241,12 @@ namespace SimpleZIP_UI.Presentation.View
         {
             if (args != null)
             {
-                if (args.SourcePageType != typeof(NavigationViewRootPage))
+                if (args.Parameter is PageNavigationArgs navArgs)
                 {
-                    Frame.BackStack.Clear(); // going back is prohibited e.g. after aborting operation
-                }
-                else if (args.SourcePageType == typeof(BrowseArchivePage))
-                {
-                    // force cleaning after browsing archive
-                    RootNodeCacheHandler.CheckInitialize(true);
+                    if (navArgs.PageType != typeof(NavigationViewRootPage))
+                    {
+                        Frame.BackStack.Clear(); // going back is prohibited e.g. after aborting operation
+                    }
                 }
 
                 NavigationLock.Instance.IsLocked = false;
@@ -260,7 +258,8 @@ namespace SimpleZIP_UI.Presentation.View
         {
             if (parameter == null)
             {
-                Frame.Navigate(destinationPageType);
+                var args = new PageNavigationArgs(typeof(HomePage));
+                Frame.Navigate(destinationPageType, args);
             }
             else
             {

@@ -71,7 +71,8 @@ namespace SimpleZIP_UI.Presentation.View
         {
             if (parameter == null)
             {
-                Frame.Navigate(destinationPageType);
+                var args = new PageNavigationArgs(typeof(ShareTargetOptionsPage));
+                Frame.Navigate(destinationPageType, args);
             }
             else
             {

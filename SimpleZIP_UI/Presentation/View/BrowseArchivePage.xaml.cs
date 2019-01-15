@@ -22,6 +22,7 @@ using SimpleZIP_UI.Application.Compression.Reader;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Presentation.Controller;
 using SimpleZIP_UI.Presentation.Factory;
+using SimpleZIP_UI.Presentation.Handler;
 using SimpleZIP_UI.Presentation.View.Model;
 using System;
 using System.Collections.Generic;
@@ -324,7 +325,8 @@ namespace SimpleZIP_UI.Presentation.View
         {
             if (parameter == null)
             {
-                Frame.Navigate(destinationPageType);
+                var args = new PageNavigationArgs(typeof(BrowseArchivePage));
+                Frame.Navigate(destinationPageType, args);
             }
             else
             {
@@ -399,6 +401,12 @@ namespace SimpleZIP_UI.Presentation.View
                 int oldIndex = EntryModels.IndexOf(model);
                 EntryModels.Move(oldIndex, newIndex++);
             }
+        }
+
+        /// <inheritdoc />
+        protected override void OnNavigatedFrom(NavigationEventArgs args)
+        {
+            RootNodeCacheHandler.CheckInitialize(true);
         }
 
         private async Task UpdateListContentAsync(Node nextNode)
