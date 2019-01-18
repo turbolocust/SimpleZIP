@@ -154,7 +154,7 @@
     <comment>Something went wrong.</comment>
   </data>
   <data name="ErrorReadingArchive.Text" xml:space="preserve">
-    <value>Archiv konnte nicht gelesen werden. Bitte Format prüfen und erneut versuchen. Bei mehrfachem Scheitern ist das Archiv wahrscheinlich beschädigt oder wird nicht vollständig unterstützt.</value>
+    <value>Archiv konnte nicht gelesen werden. Bitte Passwort oder Format prüfen und erneut versuchen. Bei mehrfachem Scheitern ist das Archiv wahrscheinlich beschädigt oder wird nicht vollständig unterstützt.</value>
     <comment>Reading archive failed, hence give further instructions to user.</comment>
   </data>
   <data name="ExtractAll.Text" xml:space="preserve">
