@@ -23,7 +23,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
-using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -37,7 +36,6 @@ namespace SimpleZIP_UI.Presentation.View
         private const string TagHome = "Home";
         private const string TagOpenArchive = "OpenArchive";
         private const string TagHashCalculation = "HashCalculation";
-        private const string TagProjectHome = "ProjectHome";
         private const string TagAbout = "About";
 
         /// <summary>
@@ -66,20 +64,6 @@ namespace SimpleZIP_UI.Presentation.View
             };
         }
 
-        private static async void NavigateToProjectHome()
-        {
-            const string uriString = @"https://github.com/turbolocust/SimpleZIP";
-            var dialog = DialogFactory.CreateConfirmationDialog(
-                I18N.Resources.GetString("OpenWebBrowserMessage/Text"),
-                "\n" + I18N.Resources.GetString("Proceed/Text"));
-
-            var result = await dialog.ShowAsync();
-            if (result.Id.Equals(0)) // launch browser
-            {
-                await Launcher.LaunchUriAsync(new Uri(uriString));
-            }
-        }
-
         private void UpdateSelectedMenuItem(Type destPageType)
         {
             var (tag, _) = _pages.FirstOrDefault(t => t.Page == destPageType);
@@ -104,11 +88,6 @@ namespace SimpleZIP_UI.Presentation.View
             {
                 ContentFrame.Navigate(destPageType, param);
             }
-        }
-
-        private static async void ShowAboutViewDialogAsync()
-        {
-            await new Dialog.AboutDialog().ShowAsync();
         }
 
         private async Task OpenArchiveAction()
@@ -162,11 +141,11 @@ namespace SimpleZIP_UI.Presentation.View
                         case TagHashCalculation:
                             await CalculateHashAction();
                             break;
-                        case TagProjectHome:
-                            NavigateToProjectHome();
-                            break;
+                        //case TagProjectHome:
+                        //    NavigateToProjectHome();
+                        //    break;
                         case TagAbout:
-                            ShowAboutViewDialogAsync();
+                            ContentFrameNavigate(typeof(AboutPage));
                             break;
                     }
                 }

@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,13 +17,16 @@
 // 
 // ==--==
 
+using SimpleZIP_UI.Presentation.Factory;
 using System;
+using Windows.System;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
-namespace SimpleZIP_UI.Presentation.View.Dialog
+namespace SimpleZIP_UI.Presentation.View
 {
-    /// <inheritdoc cref="ContentDialog" />
-    public sealed partial class AboutDialog
+    /// <inheritdoc cref="Page" />
+    public sealed partial class AboutPage
     {
         private const string Author = "Matthias Fussenegger";
         private const string License = "GNU General Public License 3";
@@ -31,23 +34,34 @@ namespace SimpleZIP_UI.Presentation.View.Dialog
         private const string LicenseUri = @"https://www.gnu.org/licenses/gpl-3.0";
         private const string LibraryUri = @"https://github.com/adamhathcock/sharpcompress";
 
-        /// <inheritdoc />
-        public AboutDialog()
+        public AboutPage()
         {
             InitializeComponent();
 
             DevelopedByRun.Text = I18N.Resources.GetString("DevelopedBy/Text", Author);
             LicenseRun.Text = I18N.Resources.GetString("License/Text", License);
-            PrimaryButtonText = I18N.Resources.GetString("ContentDialog/PrimaryButtonText");
 
             LibraryHyperlinkButton.NavigateUri = new Uri(LibraryUri);
             LicenseHyperlinkButton.NavigateUri = new Uri(LicenseUri);
         }
 
-        private void ContentDialog_PrimaryButtonClick(
-            ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        private static async void NavigateToProjectHome()
         {
-            sender.Hide();
+            const string uriString = @"https://github.com/turbolocust/SimpleZIP";
+            var dialog = DialogFactory.CreateConfirmationDialog(
+                I18N.Resources.GetString("OpenWebBrowserMessage/Text"),
+                "\n" + I18N.Resources.GetString("Proceed/Text"));
+
+            var result = await dialog.ShowAsync();
+            if (result.Id.Equals(0)) // launch browser
+            {
+                await Launcher.LaunchUriAsync(new Uri(uriString));
+            }
+        }
+
+        private void GetSourceButton_OnTapped(object sender, TappedRoutedEventArgs args)
+        {
+            NavigateToProjectHome();
         }
     }
 }

@@ -171,6 +171,9 @@
     <Compile Include="Presentation\Handler\ShareTargetHandler.cs" />
     <Compile Include="Presentation\FilesNavigationArgs.cs" />
     <Compile Include="Presentation\PageNavigationArgs.cs" />
+    <Compile Include="Presentation\View\AboutPage.xaml.cs">
+      <DependentUpon>AboutPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\View\Converter\BoolToVisibilityConverter.cs" />
     <Compile Include="Presentation\View\Converter\InverseBoolToVisibilityConverter.cs" />
     <Compile Include="Presentation\View\Dialog\EnterPasswordDialog.xaml.cs">
@@ -189,9 +192,6 @@
     </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="Presentation\View\Converter\FlipBooleanConverter.cs" />
-    <Compile Include="Presentation\View\Dialog\AboutDialog.xaml.cs">
-      <DependentUpon>AboutDialog.xaml</DependentUpon>
-    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
@@ -283,7 +283,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Presentation\View\Dialog\AboutDialog.xaml">
+    <Page Include="Presentation\View\AboutPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

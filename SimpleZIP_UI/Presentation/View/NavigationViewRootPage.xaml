@@ -24,9 +24,6 @@
                 <NavigationViewItem Icon="Calculator" Tag="HashCalculation">
                     <TextBlock x:Uid="ComputeHash" Text="" VerticalAlignment="Center" HorizontalAlignment="Left" />
                 </NavigationViewItem>
-                <NavigationViewItem Icon="World" Tag="ProjectHome">
-                    <TextBlock x:Uid="GetSourceCode" Text="" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                </NavigationViewItem>
                 <NavigationViewItem Icon="ContactInfo" Tag="About">
                     <TextBlock x:Uid="HelpFeedback" Text="" VerticalAlignment="Center" HorizontalAlignment="Left" />
                 </NavigationViewItem>
