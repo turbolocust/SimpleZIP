@@ -60,7 +60,8 @@ namespace SimpleZIP_UI.Presentation.View
             {
                 (TagHome, typeof(HomePage)),
                 (TagOpenArchive, typeof(BrowseArchivePage)),
-                (TagHashCalculation, typeof(MessageDigestPage))
+                (TagHashCalculation, typeof(MessageDigestPage)),
+                (TagAbout, typeof(AboutPage))
             };
         }
 
