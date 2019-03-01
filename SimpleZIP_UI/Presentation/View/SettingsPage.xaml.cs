@@ -33,7 +33,6 @@ namespace SimpleZIP_UI.Presentation.View
             SetThemeGroupToggleButton();
             ArchiveHistorySizeTextBlock.Text += " (0-" + ArchiveHistoryHandler.MaxHistoryItems + "):";
             ArchiveHistorySizeTextBox.Text = GetCurrentSizeLimit().ToString();
-            SetToggleButtonsToggledState();
         }
 
         private static int GetCurrentSizeLimit()

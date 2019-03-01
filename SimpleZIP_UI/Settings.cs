@@ -28,11 +28,10 @@ namespace SimpleZIP_UI
         static Settings()
         {
             LocalSettings = ApplicationData.Current.LocalSettings;
-            if (LocalSettings.Values.Count == 0)
-            {
-                // no settings stored yet, hence initialize defaults
-                PushOrUpdate(Keys.HideSomeArchiveTypesKey, true);
-            }
+            //if (LocalSettings.Values.Count == 0) // no settings stored yet, hence initialize defaults
+            //{
+            //    PushOrUpdate(Keys.HideSomeArchiveTypesKey, true);
+            //}
         }
 
         /// <summary>
