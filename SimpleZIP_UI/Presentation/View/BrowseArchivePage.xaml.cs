@@ -22,7 +22,6 @@ using SimpleZIP_UI.Application.Compression.Reader;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Presentation.Controller;
 using SimpleZIP_UI.Presentation.Factory;
-using SimpleZIP_UI.Presentation.Handler;
 using SimpleZIP_UI.Presentation.View.Model;
 using System;
 using System.Collections.Generic;
@@ -254,15 +253,15 @@ namespace SimpleZIP_UI.Presentation.View
                         var file = await _controller.ExtractSubArchive(_curRootNode, curNode, model);
                         if (file == null) // something went wrong
                         {
-                            throw new FileNotFoundException(
-                                "File not found. Extraction of sub archive failed.");
+                            throw new FileNotFoundException("File not found. Extraction of sub archive failed.");
                         }
+
                         await LoadArchive(file); // will push first node onto nodeStack
-                        ExtractWholeArchiveButton.IsEnabled
-                            = !_controller.IsEmptyArchive(_curRootNode);
+                        ExtractWholeArchiveButton.IsEnabled = !_controller.IsEmptyArchive(_curRootNode);
                     }
                     catch (Exception)
                     {
+                        IsProgressBarEnabled.IsTrue = false;
                         string errMsg = I18N.Resources.GetString("ErrorReadingArchive/Text");
                         var dialog = DialogFactory.CreateErrorDialog(errMsg);
                         await dialog.ShowAsync();
@@ -401,12 +400,6 @@ namespace SimpleZIP_UI.Presentation.View
                 int oldIndex = EntryModels.IndexOf(model);
                 EntryModels.Move(oldIndex, newIndex++);
             }
-        }
-
-        /// <inheritdoc />
-        protected override void OnNavigatedFrom(NavigationEventArgs args)
-        {
-            RootNodeCacheHandler.CheckInitialize(true);
         }
 
         private async Task UpdateListContentAsync(Node nextNode)
