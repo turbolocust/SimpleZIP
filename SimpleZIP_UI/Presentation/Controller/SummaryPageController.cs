@@ -39,7 +39,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// Specifies the threshold for the total file size 
         /// after which a notification will be displayed.
         /// </summary>
-        private const ulong FileSizeWarningThreshold = 1024 * 1024 * 25;
+        private const ulong FileSizeWarningThreshold = 1024 * 1024 * 100;
 
         /// <summary>
         /// Avoids exceptions if file/folder picker is already open.
