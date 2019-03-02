@@ -27,6 +27,7 @@ using SimpleZIP_UI.Application.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 
@@ -38,9 +39,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
     /// </summary>
     public abstract class CompressorAlgorithm : AbstractAlgorithm
     {
-        /// <inheritdoc />
-        public override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
-            ReaderOptions options = null)
+        private async Task<Stream> DecompressArchive(IStorageFile archive, IStorageFolder location,
+            IReadOnlyCollection<FileEntry> entries, bool collectFileNames, ReaderOptions options = null)
         {
             if (archive == null || location == null) return Stream.Null;
 
@@ -68,7 +68,15 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                         await outputStream.WriteAsync(bytes, 0, readBytes, Token);
                     }
                 }
+
                 await GZipOutputFileNameWorkaround(file, compressorStream);
+
+                // update file name of corresponding entry
+                if (collectFileNames && !entries.IsNullOrEmpty())
+                {
+                    var entry = entries.ElementAt(0);
+                    entry.FileName = file.Name;
+                }
             }
             finally
             {
@@ -77,21 +85,33 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                     compressorStream.Dispose();
                 }
             }
+
             return compressorStream;
         }
 
         /// <inheritdoc />
         public override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
-            IReadOnlyList<FileEntry> entries, bool collectFileNames, ReaderOptions options = null)
+            ReaderOptions options = null)
         {
-            return await Decompress(archive, location, options); // ignore entries as they are not supported
+            return await DecompressArchive(archive, location, null, false, options);
         }
 
         /// <inheritdoc />
+        /// <summary>Entries are not supported in non-archive formats,
+        /// but will be used if file names are to be collected.</summary>
+        public override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
+            IReadOnlyList<FileEntry> entries, bool collectFileNames, ReaderOptions options = null)
+        {
+            return await DecompressArchive(archive, location, entries, collectFileNames, options);
+        }
+
+        /// <inheritdoc />
+        /// <summary>Entries are not supported in non-archive formats,
+        /// and hence will be ignored.</summary>
         public sealed override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
             IReadOnlyList<FileEntry> entries, ReaderOptions options = null)
         {
-            return await Decompress(archive, location, options); // ignore entries as they are not supported
+            return await DecompressArchive(archive, location, entries, false, options);
         }
 
         /// <inheritdoc />
@@ -128,6 +148,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                     compressorStream.Dispose();
                 }
             }
+
             return compressorStream;
         }
 
@@ -149,6 +170,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                     NameCollisionOption.GenerateUniqueName);
                 return true;
             }
+
             return false;
         }
 
