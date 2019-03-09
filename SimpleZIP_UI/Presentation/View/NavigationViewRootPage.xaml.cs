@@ -99,7 +99,7 @@ namespace SimpleZIP_UI.Presentation.View
             if (file != null)
             {
                 var destPage = typeof(BrowseArchivePage);
-                ContentFrameNavigate(destPage, file);
+                ContentFrame.Navigate(destPage, file); // allow to open new archive while browsing
             }
         }
 
