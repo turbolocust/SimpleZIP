@@ -17,6 +17,7 @@
 // 
 // ==--==
 
+using SharpCompress.Common;
 using SharpCompress.Readers;
 using SharpCompress.Writers;
 using SimpleZIP_UI.Application.Compression.Algorithm.Event;
@@ -24,6 +25,7 @@ using SimpleZIP_UI.Application.Compression.Reader;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -71,7 +73,18 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         }
 
         /// <summary>
-        /// Fires <see cref="ICompressionAlgorithm.TotalBytesProcessed"/> using the specified parameter.
+        /// Returns an instance of <see cref="ArchiveEncoding"/> with the default
+        /// encoding set to UTF-8.
+        /// </summary>
+        /// <returns>An instance of <see cref="ArchiveEncoding"/>.</returns>
+        protected ArchiveEncoding GetDefaultEncoding()
+        {
+            return new ArchiveEncoding { Default = Encoding.UTF8, Password = Encoding.UTF8 };
+        }
+
+        /// <summary>
+        /// Fires <see cref="ICompressionAlgorithm.TotalBytesProcessed"/>
+        /// using the specified parameter.
         /// </summary>
         /// <param name="processedBytes">The bytes processed so far.</param>
         protected virtual void FireTotalBytesProcessed(long processedBytes)

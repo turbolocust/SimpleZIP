@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -46,7 +46,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
 
             var compressorStream = Stream.Null;
             var compressorOptions = new CompressorOptions { IsCompression = false };
-            options = options ?? new ReaderOptions { LeaveStreamOpen = false };
+            options = options ?? new ReaderOptions
+            {
+                LeaveStreamOpen = false,
+                ArchiveEncoding = GetDefaultEncoding()
+            };
             try
             {
                 var archiveStream = await archive.OpenStreamForReadAsync();
@@ -123,7 +127,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             var file = files[0]; // since multiple files are not supported
             var compressorStream = Stream.Null;
             var compressorOptions = new CompressorOptions { FileName = file.Name, IsCompression = true };
-            options = options ?? new WriterOptions(CompressionType.GZip) { LeaveStreamOpen = false };
+            options = options ?? new WriterOptions(CompressionType.GZip)
+            {
+                LeaveStreamOpen = false,
+                ArchiveEncoding = GetDefaultEncoding()
+            };
             try
             {
                 var archiveStream = await archive.OpenStreamForWriteAsync();
