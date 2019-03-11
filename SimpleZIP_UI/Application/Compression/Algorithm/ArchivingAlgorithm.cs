@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -55,7 +55,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         {
             if (archive == null || location == null) return Stream.Null;
 
-            options = options ?? new ReaderOptions { LeaveStreamOpen = false };
+            options = options ?? new ReaderOptions
+            {
+                LeaveStreamOpen = false,
+                ArchiveEncoding = GetDefaultEncoding()
+            };
             var progressStream = Stream.Null;
             try
             {
@@ -109,6 +113,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             {
                 options = GetWriterOptions();
                 options.LeaveStreamOpen = false;
+                options.ArchiveEncoding = GetDefaultEncoding();
             }
 
             var progressStream = Stream.Null;
@@ -148,7 +153,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             int processedEntries = 0; // to count number of found entries
             var entriesMap = ConvertToMap(entries); // for faster access
 
-            options = options ?? new ReaderOptions { LeaveStreamOpen = false };
+            options = options ?? new ReaderOptions
+            {
+                LeaveStreamOpen = false,
+                ArchiveEncoding = GetDefaultEncoding()
+            };
             var progressStream = Stream.Null;
             try
             {

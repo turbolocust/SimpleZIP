@@ -86,7 +86,12 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         {
             var options = new ReaderOptions
             {
-                LeaveStreamOpen = false
+                LeaveStreamOpen = false,
+                ArchiveEncoding = new ArchiveEncoding
+                {
+                    Default = Encoding.UTF8,
+                    Password = Encoding.UTF8
+                }
             };
             if (password != null)
             {

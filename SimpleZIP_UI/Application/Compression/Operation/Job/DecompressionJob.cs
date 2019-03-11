@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -49,17 +49,21 @@ namespace SimpleZIP_UI.Application.Compression.Operation.Job
             foreach (var operationInfo in OperationInfos)
             {
                 if (cancelReq.IsCancelRequest) break;
+                Result subResult = null;
 
                 try
                 {
-                    Result subResult;
                     try
                     {
                         subResult = await Operation.Perform(operationInfo, false);
                     }
                     catch (SharpCompress.Common.CryptographicException)
                     {
-                        // archive is encrypted, ask for password and try again
+                        // archive is encrypted, will request password and try again
+                    }
+
+                    if (subResult == null)
+                    {
                         operationInfo.Item.Password = await PasswordRequest
                             .RequestPassword(operationInfo.Item.Name);
                         subResult = await Operation.Perform(operationInfo, false);

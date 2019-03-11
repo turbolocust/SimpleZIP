@@ -25,6 +25,7 @@ using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.I18N;
 using System;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SimpleZIP_UI.Application.Compression.Operation
@@ -60,7 +61,12 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                 var options = new ReaderOptions
                 {
                     LeaveStreamOpen = false,
-                    Password = password
+                    Password = password,
+                    ArchiveEncoding = new ArchiveEncoding
+                    {
+                        Default = info.Encoding ?? Encoding.UTF8,
+                        Password = info.Encoding ?? Encoding.UTF8
+                    }
                 };
 
                 try
@@ -83,6 +89,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                     message = await ExceptionMessages.GetStringFor(ex, false, passwordSet, archiveFile);
                     verboseMsg = ex.Message;
                 }
+
                 return EvaluateResult(archiveFile.Name, message, verboseMsg, isSuccess);
             }, token);
         }

@@ -17,6 +17,8 @@
 // 
 // ==--==
 
+using System.Text;
+
 namespace SimpleZIP_UI.Application.Compression.Model
 {
     internal class DecompressionInfo : OperationInfo
@@ -30,6 +32,11 @@ namespace SimpleZIP_UI.Application.Compression.Model
         /// True to collect extracted file names, false otherwise.
         /// </summary>
         internal bool IsCollectFileNames { get; set; }
+
+        /// <summary>
+        /// Encoding to be used when decompressing .
+        /// </summary>
+        internal Encoding Encoding { get; set; }
 
         internal DecompressionInfo(ExtractableItem item, ulong size) : base(size)
         {
