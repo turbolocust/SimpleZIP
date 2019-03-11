@@ -25,7 +25,7 @@ namespace SimpleZIP_UI.Application.Util
 {
     internal static class CoreDispatcherUtils
     {
-        // see https://stackoverflow.com/questions/19133660/runasync-how-do-i-await-the-completion-of-work-on-the-ui-thread
+        // see https://github.com/Microsoft/Windows-task-snippets/blob/master/tasks/UI-thread-task-await-from-background-thread.md
 
         /// <summary>
         /// Returns a task for the specified function which then can be run asynchronously.

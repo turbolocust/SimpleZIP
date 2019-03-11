@@ -139,6 +139,7 @@ namespace SimpleZIP_UI.Application.Compression
                 default:
                     throw new ArgumentOutOfRangeException(nameof(value), value, null);
             }
+
             return algorithm;
         }
 
