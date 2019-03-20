@@ -73,15 +73,22 @@ namespace SimpleZIP_UI.Presentation.View
         private readonly ISet<ArchiveEntryModel> _selectedModels;
 
         /// <summary>
-        /// History when navigating back and to determine the currently active node
-        /// for each archive that is stored in <see cref="_rootNodeStack"/>.
-        /// </summary>
-        private readonly List<Stack<Node>> _nodeStackList;
-
-        /// <summary>
         /// Root nodes of sub-archives opened through another archive.
         /// </summary>
         private readonly Stack<RootNode> _rootNodeStack;
+
+        /// <summary>
+        /// History when navigating back and to determine the currently active node
+        /// (folder) for each archive that is stored in <see cref="_rootNodeStack"/>.
+        /// </summary>
+        private readonly List<Stack<NavNode>> _nodeStackList;
+
+        /// <summary>
+        /// Convenience property which returns the currently active
+        /// node in the currently opened archive. When browsing
+        /// an archive this would be the currently displayed folder.
+        /// </summary>
+        private NavNode ActiveNode => GetNodesForCurrentRoot().Peek();
 
         /// <summary>
         /// The currently opened archive's root node.
@@ -94,11 +101,6 @@ namespace SimpleZIP_UI.Presentation.View
         /// </summary>
         private int _rootNodeStackPointer = -1;
 
-        /// <summary>
-        /// To determine the ordering of the elements in <see cref="EntryModels"/>.
-        /// </summary>
-        private SortMode _sortMode = SortMode.None;
-
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -107,7 +109,7 @@ namespace SimpleZIP_UI.Presentation.View
             InitializeComponent();
             _controller = new BrowseArchiveController(this, this);
             _selectedModels = new HashSet<ArchiveEntryModel>();
-            _nodeStackList = new List<Stack<Node>>(InitialStackCapacity);
+            _nodeStackList = new List<Stack<NavNode>>(InitialStackCapacity);
             _rootNodeStack = new Stack<RootNode>(InitialStackCapacity);
             EntryModels = new ObservableCollection<ArchiveEntryModel>();
         }
@@ -123,7 +125,7 @@ namespace SimpleZIP_UI.Presentation.View
                 GetNodesForCurrentRoot().Pop(); // remove current
                 var next = GetNodesForCurrentRoot().Pop();
                 IsProgressBarEnabled.IsTrue = true;
-                await UpdateListContentAsync(next);
+                await UpdateListContentAsync(next.Node, next.Sorting);
             }
             // or if sub-archives have been opened (archive within archive)
             else if (_rootNodeStack.Count > 1 && !_controller.IsNavigating)
@@ -134,10 +136,19 @@ namespace SimpleZIP_UI.Presentation.View
                 --_rootNodeStackPointer;
                 _curRootNode = _rootNodeStack.Peek();
                 var children = GetNodesForCurrentRoot();
-                var next = children.IsNullOrEmpty()
-                    ? _curRootNode : children.Pop();
+
                 IsProgressBarEnabled.IsTrue = true;
-                await UpdateListContentAsync(next);
+                if (children.IsNullOrEmpty())
+                {
+                    await UpdateListContentAsync(_curRootNode);
+                }
+                else
+                {
+                    // consider sorting
+                    var navNode = children.Pop();
+                    await UpdateListContentAsync(
+                        navNode.Node, navNode.Sorting);
+                }
             }
             else
             {
@@ -157,7 +168,7 @@ namespace SimpleZIP_UI.Presentation.View
             object sender, TappedRoutedEventArgs args)
         {
             _controller.ExtractSelectedEntriesButtonAction(_curRootNode,
-                GetNodesForCurrentRoot().Peek(), _selectedModels.ToArray());
+                GetNodesForCurrentRoot().Peek().Node, _selectedModels.ToArray());
         }
 
         private async void NavigateUpButton_OnTapped(object sender, TappedRoutedEventArgs args)
@@ -166,36 +177,33 @@ namespace SimpleZIP_UI.Presentation.View
 
             if (!await NavigateUp())
             {
-                // cannot go back in history, hence navigate back home
-                Frame.Navigate(typeof(HomePage));
+                if (Frame.CanGoBack)
+                {
+                    Frame.GoBack();
+                }
+                else
+                {
+                    Frame.Navigate(typeof(HomePage));
+                }
             }
         }
 
         private void SortOrderToggleMenuFlyoutItem_OnTapped(
             object sender, TappedRoutedEventArgs args)
         {
-            // ReSharper disable once SwitchStatementMissingSomeCases
-            switch (_sortMode)
-            {
-                case SortMode.Name:
-                    SortArchiveEntryModelsByName();
-                    break;
-                case SortMode.Type:
-                    SortArchiveEntryModelsByType();
-                    break;
-            }
+            SortArchiveEntryModels(ActiveNode.Sorting);
         }
 
         private void SortByNameFlyoutItem_OnTapped(
             object sender, TappedRoutedEventArgs args)
         {
-            SortArchiveEntryModelsByName();
+            SortArchiveEntryModelsByName(IsSortOrderDescending.IsTrue);
         }
 
         private void SortByTypeFlyoutItem_OnTapped(
             object sender, TappedRoutedEventArgs args)
         {
-            SortArchiveEntryModelsByType();
+            SortArchiveEntryModelsByType(IsSortOrderDescending.IsTrue);
         }
 
         private async void ItemsListBox_OnSelectionChanged(
@@ -209,7 +217,7 @@ namespace SimpleZIP_UI.Presentation.View
                     if (addItem.EntryType == ArchiveEntryModel.ArchiveEntryModelType.Node)
                     {
                         var curNode = GetNodesForCurrentRoot().Peek();
-                        foreach (var child in curNode.Children)
+                        foreach (var child in curNode.Node.Children)
                         {
                             if (child.Name.Equals(addItem.DisplayName) && child.IsBrowsable)
                             {
@@ -250,10 +258,12 @@ namespace SimpleZIP_UI.Presentation.View
                         IsProgressBarEnabled.IsTrue = true;
                         ModelsList.SelectedItem = model; // in case of multi-selection
                         var curNode = GetNodesForCurrentRoot().Peek();
-                        var file = await _controller.ExtractSubArchive(_curRootNode, curNode, model);
+                        var file = await _controller.ExtractSubArchive(
+                            _curRootNode, curNode.Node, model);
                         if (file == null) // something went wrong
                         {
-                            throw new FileNotFoundException("File not found. Extraction of sub archive failed.");
+                            throw new FileNotFoundException(
+                                "File not found. Extraction of sub archive failed.");
                         }
 
                         await LoadArchive(file); // will push first node onto nodeStack
@@ -359,14 +369,14 @@ namespace SimpleZIP_UI.Presentation.View
 
             if (_rootNodeStackPointer >= _nodeStackList.Count)
             {
-                _nodeStackList.Add(new Stack<Node>(InitialStackCapacity));
+                _nodeStackList.Add(new Stack<NavNode>(InitialStackCapacity));
             }
 
             _curRootNode = rootNode;
             await UpdateListContentAsync(rootNode);
         }
 
-        private Stack<Node> GetNodesForCurrentRoot()
+        private Stack<NavNode> GetNodesForCurrentRoot()
         {
             if (_rootNodeStackPointer >= 0 &&
                 _rootNodeStackPointer < _nodeStackList.Count)
@@ -374,25 +384,43 @@ namespace SimpleZIP_UI.Presentation.View
                 return _nodeStackList[_rootNodeStackPointer];
             }
 
-            return new Stack<Node>(0);
+            return new Stack<NavNode>(0);
         }
 
-        private void SortArchiveEntryModelsByName()
+        private void SortArchiveEntryModelsByName(bool sortDescending)
         {
-            var sorted = IsSortOrderDescending.IsTrue
+            var sorted = sortDescending
                 ? EntryModels.OrderByDescending(model => model.DisplayName)
                 : EntryModels.OrderBy(model => model.DisplayName);
             SortArchiveEntryModels(sorted);
-            _sortMode = SortMode.Name;
+            ActiveNode.Sorting = new Sorting(SortMode.Name, sortDescending);
         }
 
-        private void SortArchiveEntryModelsByType()
+        private void SortArchiveEntryModelsByType(bool sortDescending)
         {
-            var sorted = IsSortOrderDescending.IsTrue
+            var sorted = sortDescending
                 ? EntryModels.OrderByDescending(model => model.EntryType)
                 : EntryModels.OrderBy(model => model.EntryType);
             SortArchiveEntryModels(sorted);
-            _sortMode = SortMode.Type;
+            ActiveNode.Sorting = new Sorting(SortMode.Type, sortDescending);
+        }
+
+        private void SortArchiveEntryModels(Sorting sorting)
+        {
+            switch (sorting.SortMode)
+            {
+                case SortMode.Name:
+                    SortArchiveEntryModelsByName(sorting.IsDescending);
+                    break;
+                case SortMode.Type:
+                    SortArchiveEntryModelsByType(sorting.IsDescending);
+                    break;
+                case SortMode.None:
+                    break;
+                default:
+                    const string name = nameof(sorting.SortMode);
+                    throw new ArgumentOutOfRangeException(name);
+            }
         }
 
         private void SortArchiveEntryModels(IEnumerable<ArchiveEntryModel> sorted)
@@ -405,31 +433,38 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        private async Task UpdateListContentAsync(Node nextNode)
+        private async Task UpdateListContentAsync(Node next, Sorting sorting = null)
         {
-            if (nextNode == null) return;
+            if (next == null) return;
 
             NavigationLock.Instance.IsLocked = true;
-            await Task.Delay(50); // allow visual updates in UI
+            await Task.Delay(50); // allow for visual updates in UI
 
             // dispatch for non-blocking UI
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 EntryModels.Clear();
                 _selectedModels.Clear();
-                GetNodesForCurrentRoot().Push(nextNode);
+                var navNode = new NavNode(next);
+                GetNodesForCurrentRoot().Push(navNode);
 
-                foreach (var child in nextNode.Children)
+                foreach (var child in next.Children)
                 {
                     var model = ArchiveEntryModel.Create(child);
                     EntryModels.Add(model);
                 }
 
-                IsProgressBarEnabled.IsTrue = false;
-                NavigationLock.Instance.IsLocked = false;
+                if (sorting != null)
+                {
+                    SortArchiveEntryModels(sorting);
+                    IsSortOrderDescending.IsTrue = sorting.IsDescending;
+                }
 
                 // checking stack count since root node name may be different
-                AddressBar.Text = GetNodesForCurrentRoot().Count == 1 ? "/" : nextNode.Id;
+                AddressBar.Text = GetNodesForCurrentRoot().Count == 1 ? "/" : next.Id;
+
+                IsProgressBarEnabled.IsTrue = false;
+                NavigationLock.Instance.IsLocked = false;
             });
         }
         #endregion
@@ -437,6 +472,41 @@ namespace SimpleZIP_UI.Presentation.View
         private enum SortMode
         {
             None, Name, Type
+        }
+
+        private sealed class Sorting
+        {
+            internal SortMode SortMode { get; }
+
+            internal bool IsDescending { get; }
+
+            public Sorting()
+            {
+                SortMode = SortMode.None;
+            }
+
+            internal Sorting(SortMode mode, bool descending)
+            {
+                SortMode = mode;
+                IsDescending = descending;
+            }
+        }
+
+        /// <summary>
+        /// Wraps a <see cref="Node"/> and holds information
+        /// about sorting (see <see cref="Sorting"/>).
+        /// </summary>
+        private sealed class NavNode
+        {
+            internal Node Node { get; }
+
+            internal Sorting Sorting { get; set; }
+
+            internal NavNode(Node archiveNode)
+            {
+                Node = archiveNode;
+                Sorting = new Sorting();
+            }
         }
     }
 }

@@ -49,7 +49,8 @@
                 </ToolTipService.ToolTip>
                 <Button.Flyout>
                     <MenuFlyout>
-                        <ToggleMenuFlyoutItem x:Uid="Descending" Text="" Tapped="SortOrderToggleMenuFlyoutItem_OnTapped" IsChecked="{x:Bind IsSortOrderDescending.IsTrue, Mode=TwoWay}" />
+                        <ToggleMenuFlyoutItem x:Uid="Descending" Text="" Tapped="SortOrderToggleMenuFlyoutItem_OnTapped" 
+                                              IsChecked="{x:Bind IsSortOrderDescending.IsTrue, Mode=TwoWay}" />
                         <MenuFlyoutSeparator />
                         <MenuFlyoutItem x:Uid="SortByName" Text="" Tapped="SortByNameFlyoutItem_OnTapped" />
                         <MenuFlyoutItem x:Uid="SortByType" Text="" Tapped="SortByTypeFlyoutItem_OnTapped"/>
