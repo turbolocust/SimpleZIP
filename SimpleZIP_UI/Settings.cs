@@ -88,6 +88,8 @@ namespace SimpleZIP_UI
             internal const string RecentArchivesKey = "RecentArchives";
             internal const string ArchiveHistorySize = "ArchiveHistorySize";
             internal const string RecentHashAlgorithmKey = "RecentHashAlgorithm";
+            internal const string LowerCaseHashToggledKey = "LowerCaseHashToggled";
+            internal const string DisplayLocationToggledKey = "DisplayLocationToggled";
         }
     }
 }

@@ -493,4 +493,8 @@
     <value>Start</value>
     <comment>Title for the home/start page.</comment>
   </data>
+  <data name="DisplayLocationToggleSwitch.Text" xml:space="preserve">
+    <value>Dateipfad anzeigen</value>
+    <comment>Displays the location in the MessageDigestModel when toggled.</comment>
+  </data>
 </root>

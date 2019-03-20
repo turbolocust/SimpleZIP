@@ -10,7 +10,8 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-        <cv:FlipBooleanConverter x:Key="FlipBooleanConverter"/>
+        <cv:FlipBooleanConverter x:Key="FlipBooleanConverter" />
+        <cv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <cv:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
     </Page.Resources>
 
@@ -27,40 +28,47 @@
                       ItemsSource="{x:Bind HashAlgorithmModels}" DisplayMemberPath="HashAlgorithm" 
                       SelectedValuePath="HashAlgorithm" SelectedItem="{x:Bind SelectedAlgorithm, Mode=TwoWay}"
                       IsEnabled="{x:Bind IsPopulateListBox.IsTrue, Mode=TwoWay, Converter={StaticResource FlipBooleanConverter}}" />
-            <ToggleSwitch x:Name="LowercaseHashToggleSwitch" Toggled="LowercaseHashToggleSwitch_OnToggled" Margin="0,0,24,0" 
+            <ToggleSwitch x:Name="LowercaseHashToggleSwitch" Toggled="LowercaseHashToggleSwitch_OnToggled" Margin="0,0,0,0" 
                           IsEnabled="{x:Bind IsPopulateListBox.IsTrue, Mode=TwoWay, Converter={StaticResource FlipBooleanConverter}}">
                 <TextBlock x:Uid="LowerCaseHashToggleSwitch" Text="" TextWrapping="Wrap"/>
+            </ToggleSwitch>
+            <ToggleSwitch x:Name="DisplayLocationToggleSwitch" Toggled="DisplayLocationToggleSwitch_OnToggled" Margin="0,0,24,0"
+                          IsEnabled="{x:Bind IsPopulateListBox.IsTrue, Mode=TwoWay, Converter={StaticResource FlipBooleanConverter}}">
+                <TextBlock x:Uid="DisplayLocationToggleSwitch" Text="" TextWrapping="Wrap"/>
             </ToggleSwitch>
         </StackPanel>
         <ProgressBar Grid.Row="1" HorizontalAlignment="Stretch" IsIndeterminate="True" 
                      IsEnabled="{x:Bind HashAlgorithmComboBox.IsEnabled, Mode=OneWay, Converter={StaticResource FlipBooleanConverter}}" 
                      Visibility="{x:Bind HashAlgorithmComboBox.IsEnabled, Mode=OneWay, Converter={StaticResource InverseBoolToVisibilityConverter}}" />
         <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-            <ListBox ItemsSource="{Binding MessageDigestModels}" Margin="0,16,0,0" SelectionMode="Single"  x:Name="MessageDigestModelsListBox"
+            <ListBox ItemsSource="{Binding MessageDigestModels}" Margin="0,16,0,0" SelectionMode="Single" x:Name="MessageDigestModelsListBox"
                      CanDrag="False" HorizontalContentAlignment="Stretch" Background="Transparent" Height="Auto">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="5.0*"/>
-                                <RowDefinition Height="5.0*"/>
+                                <RowDefinition Height="3.2*"/>
+                                <RowDefinition Height="3.4*"/>
+                                <RowDefinition Height="3.4*"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="1.5*"/>
                                 <ColumnDefinition Width="1.5*"/>
                                 <ColumnDefinition Width="7.0*"/>
                             </Grid.ColumnDefinitions>
-                            <Button Tapped="ViewFullHashButton_OnTapped" Grid.Row="0" Grid.RowSpan="2"
+                            <Button Tapped="ViewFullHashButton_OnTapped" Grid.Row="0" Grid.RowSpan="3"
                                     Grid.Column="0" Margin="0,0,0,0" Width="40" Background="Transparent">
                                 <SymbolIcon Symbol="View"/>
                             </Button>
-                            <Button Tapped="CopyHashButton_OnTapped" Grid.Row="0" Grid.RowSpan="2"
+                            <Button Tapped="CopyHashButton_OnTapped" Grid.Row="0" Grid.RowSpan="3"
                                     Grid.Column="1" Margin="0,0,0,0" Width="40" Background="Transparent">
                                 <SymbolIcon Symbol="Copy"/>
                             </Button>
                             <TextBlock Foreground="{ThemeResource SystemControlForegroundAccentBrush}" FontWeight="Medium"
                                        CharacterSpacing="32" Grid.Row="0" Grid.Column="2" Text="{Binding FileName}" Margin="8,0,0,0" />
-                            <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding HashValue}" TextTrimming="CharacterEllipsis" Margin="8,0,0,0"/>
+                            <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding HashValue}" TextTrimming="CharacterEllipsis" Margin="8,0,0,0" />
+                            <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding Location}" TextTrimming="CharacterEllipsis" Margin="8,0,0,0"
+                                       Visibility="{Binding IsDisplayLocation.IsTrue, Mode=TwoWay, Converter={StaticResource BoolToVisibilityConverter}}" />
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

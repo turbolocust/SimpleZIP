@@ -86,6 +86,7 @@ namespace SimpleZIP_UI.Presentation.View
             MessageDigestModels = new ObservableCollection<MessageDigestModel>();
             InitializeComponent(); // has to be called after creating lists
             InitHashAlgorithmComboBox();
+            LoadToggleButtonsState();
         }
 
         private void InitHashAlgorithmComboBox()
@@ -102,8 +103,7 @@ namespace SimpleZIP_UI.Presentation.View
 
         /// <summary>
         /// Populates the list box with file names and computed hash values.
-        /// This may only be called once the combo box holding the hash algorithm
-        /// strings is loaded.
+        /// This may only be called once UI components are initialized.
         /// </summary>
         private async void PopulateListBox()
         {
@@ -115,8 +115,9 @@ namespace SimpleZIP_UI.Presentation.View
 
                 string algorithmName = SelectedAlgorithm.HashAlgorithm;
                 bool isLowercase = LowercaseHashToggleSwitch.IsOn;
+                bool isDisplayLocation = DisplayLocationToggleSwitch.IsOn;
 
-                var models = await BuildModelsAsync(algorithmName, isLowercase);
+                var models = await BuildModelsAsync(algorithmName, isLowercase, isDisplayLocation);
                 models.ForEach(model => MessageDigestModels.Add(model));
             }
             finally
@@ -132,9 +133,10 @@ namespace SimpleZIP_UI.Presentation.View
         /// </summary>
         /// <param name="algorithmName">The name of the algorithm.</param>
         /// <param name="isLowercase">True for lower case hash value.</param>
+        /// <param name="isDisplayLocation">True if location is to be displayed.</param>
         /// <returns>A list consisting of <see cref="MessageDigestModel"/>.</returns>
         private async Task<List<MessageDigestModel>> BuildModelsAsync(
-            string algorithmName, bool isLowercase)
+            string algorithmName, bool isLowercase, bool isDisplayLocation)
         {
             var models = new List<MessageDigestModel>();
 
@@ -152,7 +154,10 @@ namespace SimpleZIP_UI.Presentation.View
                         hash = hash.ToLowerInvariant();
                     }
 
-                    models.Add(new MessageDigestModel(file.Name, file.Path, hash));
+                    models.Add(new MessageDigestModel(file.Name, file.Path, hash)
+                    {
+                        IsDisplayLocation = isDisplayLocation
+                    });
                 }
             }
 
@@ -176,6 +181,27 @@ namespace SimpleZIP_UI.Presentation.View
             }
 
             return index;
+        }
+
+        private void LoadToggleButtonsState()
+        {
+            // LowercaseHashToggleSwitch
+            bool exists = Settings.TryGet(Settings
+                .Keys.LowerCaseHashToggledKey, out bool toggle);
+
+            if (exists)
+            {
+                LowercaseHashToggleSwitch.IsOn = toggle;
+            }
+
+            // DisplayLocationToggleSwitch
+            exists = Settings.TryGet(Settings
+                .Keys.DisplayLocationToggledKey, out toggle);
+
+            if (exists)
+            {
+                DisplayLocationToggleSwitch.IsOn = toggle;
+            }
         }
 
         private void RefreshListBox()
@@ -229,7 +255,7 @@ namespace SimpleZIP_UI.Presentation.View
                 stringBuilder.AppendLine(model.FileName);
                 stringBuilder.AppendLine(model.Location);
                 stringBuilder.AppendLine(model.HashValue);
-                stringBuilder.AppendLine("\r\n");
+                stringBuilder.AppendLine();
             }
             CopyToClipboard(stringBuilder.ToString());
             // show toast (without audio) and hide it after 4 seconds
@@ -239,11 +265,31 @@ namespace SimpleZIP_UI.Presentation.View
 
         private void LowercaseHashToggleSwitch_OnToggled(object sender, RoutedEventArgs args)
         {
+            // save state of toggle button
+            Settings.PushOrUpdate(
+                Settings.Keys.LowerCaseHashToggledKey,
+                LowercaseHashToggleSwitch.IsOn);
+
             foreach (var model in MessageDigestModels)
             {
                 model.HashValue = LowercaseHashToggleSwitch.IsOn
                     ? model.HashValue.ToLowerInvariant()
                     : model.HashValue.ToUpperInvariant();
+            }
+
+            RefreshListBox();
+        }
+
+        private void DisplayLocationToggleSwitch_OnToggled(object sender, RoutedEventArgs args)
+        {
+            // save state of toggle button
+            Settings.PushOrUpdate(
+                Settings.Keys.DisplayLocationToggledKey,
+                DisplayLocationToggleSwitch.IsOn);
+
+            foreach (var model in MessageDigestModels)
+            {
+                model.IsDisplayLocation.IsTrue = DisplayLocationToggleSwitch.IsOn;
             }
 
             RefreshListBox();

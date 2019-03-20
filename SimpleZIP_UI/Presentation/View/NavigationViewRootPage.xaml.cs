@@ -99,7 +99,7 @@ namespace SimpleZIP_UI.Presentation.View
             if (file != null)
             {
                 var destPage = typeof(BrowseArchivePage);
-                ContentFrame.Navigate(destPage, file); // allow to open new archive while browsing
+                ContentFrame.Navigate(destPage, file);
             }
         }
 
@@ -112,7 +112,7 @@ namespace SimpleZIP_UI.Presentation.View
             {
                 var args = new FilesNavigationArgs(files);
                 var destPage = typeof(MessageDigestPage);
-                ContentFrameNavigate(destPage, args);
+                ContentFrame.Navigate(destPage, args);
             }
         }
 

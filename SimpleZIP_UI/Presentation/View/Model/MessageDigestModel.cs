@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -38,6 +38,11 @@ namespace SimpleZIP_UI.Presentation.View.Model
         /// The calculated hash value of the file.
         /// </summary>
         public string HashValue { get; internal set; }
+
+        /// <summary>
+        /// Displays the location in the model if set to true.
+        /// </summary>
+        public BooleanModel IsDisplayLocation { get; set; } = false;
 
         /// <summary>
         /// Constructs a new model for the ListBox in <see cref="MessageDigestPage"/>.
