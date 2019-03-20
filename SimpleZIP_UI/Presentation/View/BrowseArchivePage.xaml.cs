@@ -191,7 +191,10 @@ namespace SimpleZIP_UI.Presentation.View
         private void SortOrderToggleMenuFlyoutItem_OnTapped(
             object sender, TappedRoutedEventArgs args)
         {
-            SortArchiveEntryModels(ActiveNode.Sorting);
+            var sorting = new Sorting(
+                ActiveNode.Sorting.SortMode,
+                IsSortOrderDescending.IsTrue);
+            SortArchiveEntryModels(sorting);
         }
 
         private void SortByNameFlyoutItem_OnTapped(
