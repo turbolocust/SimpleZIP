@@ -347,7 +347,7 @@
   </data>
   <data name="ContentDialog.PrimaryButtonText" xml:space="preserve">
     <value>Schließen</value>
-    <comment>Closes the dialog.</comment>
+    <comment>Button which closes the content dialog.</comment>
   </data>
   <data name="CopiedToClipboard.Text" xml:space="preserve">
     <value>In Zwischenablage kopiert.</value>
@@ -496,5 +496,17 @@
   <data name="DisplayLocationToggleSwitch.Text" xml:space="preserve">
     <value>Dateipfad anzeigen</value>
     <comment>Displays the location in the MessageDigestModel when toggled.</comment>
+  </data>
+  <data name="CompareHashFlyoutItem.Text" xml:space="preserve">
+    <value>Wert vergleichen mit...</value>
+    <comment>User option in flyout to compare a selected hash value with another one.</comment>
+  </data>
+  <data name="CompareHashInfo.Text" xml:space="preserve">
+    <value>Geben oder fügen Sie den zu vergleichenden Text in der Box unten ein. Beachten Sie, dass der Vergleich keine Gross- und Kleinschreibung berücksichtigt.</value>
+    <comment>An info text on how to compare hashes in CompareHashDialog.</comment>
+  </data>
+  <data name="CompareHashTextBox.PlaceholderText" xml:space="preserve">
+    <value>Der zu vergleichende Hash-Wert kommt hier hin...</value>
+    <comment>Placeholder text for the CompareHashDialog. Informs the user that the hash to be compared is to be typed here.</comment>
   </data>
 </root>

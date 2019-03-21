@@ -24,7 +24,7 @@ namespace SimpleZIP_UI.Presentation.View.Dialog
 {
     public sealed partial class EnterPasswordDialog
     {
-        public string FileName { get; set; }
+        public string FileName { get; }
 
         public string Password { get; set; }
 

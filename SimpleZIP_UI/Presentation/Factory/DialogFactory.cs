@@ -47,7 +47,8 @@ namespace SimpleZIP_UI.Presentation.Factory
         /// <returns>The newly created message dialog.</returns>
         public static MessageDialog CreateErrorDialog(string message)
         {
-            return new MessageDialog(message, I18N.Resources.GetString("SomethingWentWrong/Text"));
+            string text = I18N.Resources.GetString("SomethingWentWrong/Text");
+            return new MessageDialog(message, text);
         }
 
         /// <summary>

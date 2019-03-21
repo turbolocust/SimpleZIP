@@ -28,9 +28,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Devices.Input;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 
@@ -293,6 +295,26 @@ namespace SimpleZIP_UI.Presentation.View
             }
 
             RefreshListBox();
+        }
+
+        private void MessageDigestModelsGrid_OnRightTapped(object sender, RightTappedRoutedEventArgs args)
+        {
+            if (args.PointerDeviceType == PointerDeviceType.Mouse
+                && sender is FrameworkElement elem)
+            {
+                FlyoutBase.GetAttachedFlyout(elem).ShowAt(elem);
+                args.Handled = true;
+            }
+        }
+
+        private async void CompareHashFlyoutItem_OnTapped(object sender, TappedRoutedEventArgs args)
+        {
+            if (sender is MenuFlyoutItem flyoutItem)
+            {
+                var model = (MessageDigestModel)flyoutItem.DataContext;
+                var dialog = new CompareHashDialog(model.HashValue);
+                await dialog.ShowAsync();
+            }
         }
 
         /// <inheritdoc />

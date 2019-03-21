@@ -176,6 +176,9 @@
     </Compile>
     <Compile Include="Presentation\View\Converter\BoolToVisibilityConverter.cs" />
     <Compile Include="Presentation\View\Converter\InverseBoolToVisibilityConverter.cs" />
+    <Compile Include="Presentation\View\Dialog\CompareHashDialog.xaml.cs">
+      <DependentUpon>CompareHashDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\View\Dialog\EnterPasswordDialog.xaml.cs">
       <DependentUpon>EnterPasswordDialog.xaml</DependentUpon>
     </Compile>
@@ -296,6 +299,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Presentation\View\DecompressionSummaryPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Presentation\View\Dialog\CompareHashDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

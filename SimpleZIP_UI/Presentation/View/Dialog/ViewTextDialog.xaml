@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     DataContext="{Binding RelativeSource={RelativeSource Self}}"
     mc:Ignorable="d"
-    PrimaryButtonText="Close"
+    PrimaryButtonText=""
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick">
 
     <Grid>
@@ -17,7 +17,7 @@
         </Grid.RowDefinitions>
         <TextBlock Text="{Binding Header}" Grid.Row="0" IsTextSelectionEnabled="False" 
                    TextWrapping="Wrap" Margin="0,0,0,8" />
-        <TextBox Text="{Binding Text}" Grid.Row="1" TextWrapping="Wrap" 
-                 IsReadOnly="False" IsSpellCheckEnabled="False"/>
+        <TextBox Text="{Binding Text}" Grid.Row="1" TextWrapping="Wrap" MaxLength="1024"
+                 IsReadOnly="False" IsSpellCheckEnabled="False" AcceptsReturn="False" />
     </Grid>
 </ContentDialog>

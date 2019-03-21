@@ -45,7 +45,13 @@
                      CanDrag="False" HorizontalContentAlignment="Stretch" Background="Transparent" Height="Auto">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Grid>
+                        <Grid Background="Transparent" RightTapped="MessageDigestModelsGrid_OnRightTapped">
+                            <FlyoutBase.AttachedFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem x:Uid="CompareHashFlyoutItem" Text="" 
+                                                    Tapped="CompareHashFlyoutItem_OnTapped" />
+                                </MenuFlyout>
+                            </FlyoutBase.AttachedFlyout>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="3.2*"/>
                                 <RowDefinition Height="3.4*"/>

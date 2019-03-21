@@ -1,0 +1,34 @@
+﻿<ContentDialog
+    x:Uid="ContentDialog"
+    x:Class="SimpleZIP_UI.Presentation.View.Dialog.CompareHashDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    DataContext="{Binding RelativeSource={RelativeSource Self}}"
+    mc:Ignorable="d"
+    PrimaryButtonText=""
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.0*" />
+            <ColumnDefinition Width="8.5*" />
+        </Grid.ColumnDefinitions>
+        <TextBlock x:Uid="CompareHashInfo" Text="" Grid.ColumnSpan="2"
+                   Grid.Row="0" Grid.Column="0" IsTextSelectionEnabled="False" 
+                   TextWrapping="Wrap" Margin="0,0,0,20" />
+        <SymbolIcon x:Name="ResultIcon" Grid.Row="1" Grid.Column="0" 
+                    Symbol="Forward" Margin="0,0,8,0" />
+        <TextBox x:Name="CompareHashTextBox" x:Uid="CompareHashTextBox" 
+                 IsColorFontEnabled="False" Grid.Row="1" Grid.Column="1"
+                 TextWrapping="Wrap" HorizontalTextAlignment="Left" MaxLength="256"
+                 AcceptsReturn="False" IsHandwritingViewEnabled="False" 
+                 IsTextPredictionEnabled="False" IsSpellCheckEnabled="False" 
+                 TextChanged="CompareHashTextBox_TextChanged" PlaceholderText="" />
+    </Grid>
+</ContentDialog>
