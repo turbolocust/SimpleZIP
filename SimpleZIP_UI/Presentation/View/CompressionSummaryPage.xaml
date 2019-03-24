@@ -8,6 +8,19 @@
     mc:Ignorable="d">
 
     <Grid Background="Transparent" Padding="0,0,0,8">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="680" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="StackPanelTop.Orientation" Value="Horizontal" />
+                        <Setter Target="ArchiveTypeComboBox.Margin" Value="0,0,16,0" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -16,7 +29,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="12,8,0,16">
+        <!-- ReSharper disable once UnusedMember.Local -->
+        <StackPanel x:Name="StackPanelTop" Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="12,8,0,16">
             <ComboBox x:Uid="ArchiveType" x:Name="ArchiveTypeComboBox" DropDownClosed="ArchiveTypeComboBox_OnDropDownClosed" Width="225"
                       Margin="0,0,0,16" Header="" Foreground="{ThemeResource ButtonForegroundThemeBrush}">
                 <ToolTipService.ToolTip>
@@ -24,7 +38,7 @@
                 </ToolTipService.ToolTip>
             </ComboBox>
             <TextBox x:Uid="ArchiveName" x:Name="ArchiveNameTextBox" TextChanged="ArchiveNameTextBox_OnTextChanged" AcceptsReturn="False"
-                     Text="" Width="225" Header="" IsReadOnly="False" TextWrapping="NoWrap" MaxLength="32" IsSpellCheckEnabled="False" InputScope="Url" >
+                     Text="" Width="225" Height="60" Header="" IsReadOnly="False" TextWrapping="NoWrap" MaxLength="32" IsSpellCheckEnabled="False" InputScope="Url" >
                 <ToolTipService.ToolTip>
                     <ToolTip x:Name="ArchiveNameToolTip" FontSize="13" HorizontalOffset="20" VerticalOffset="10" />
                 </ToolTipService.ToolTip>
