@@ -54,25 +54,27 @@ namespace SimpleZIP_UI.Presentation.View
 
         private void SetThemeGroupToggleButton()
         {
-            Settings.TryGet(Settings.Keys.ApplicationThemeKey, out string theme);
-            if (theme == null) // system theme
+            if (Settings.TryGetTheme(out var theme))
+            {
+                if (theme.Equals(ApplicationTheme.Dark))
+                {
+                    LightThemeRadioButton.IsChecked = false;
+                    DarkThemeRadioButton.IsChecked = true;
+                    SystemThemeRadioButton.IsChecked = false;
+                }
+                else
+                {
+                    LightThemeRadioButton.IsChecked = true;
+                    DarkThemeRadioButton.IsChecked = false;
+                    SystemThemeRadioButton.IsChecked = false;
+
+                }
+            }
+            else // no theme found
             {
                 LightThemeRadioButton.IsChecked = false;
                 DarkThemeRadioButton.IsChecked = false;
                 SystemThemeRadioButton.IsChecked = true;
-            }
-            else if (theme.Equals(ApplicationTheme.Light.ToString()))
-            {
-                LightThemeRadioButton.IsChecked = true;
-                DarkThemeRadioButton.IsChecked = false;
-                SystemThemeRadioButton.IsChecked = false;
-
-            }
-            else if (theme.Equals(ApplicationTheme.Dark.ToString()))
-            {
-                LightThemeRadioButton.IsChecked = false;
-                DarkThemeRadioButton.IsChecked = true;
-                SystemThemeRadioButton.IsChecked = false;
             }
         }
 
@@ -93,20 +95,16 @@ namespace SimpleZIP_UI.Presentation.View
 
         private void ThemeGroupToggleButton_OnChecked(object sender, RoutedEventArgs args)
         {
-            string theme;
-            if (sender.Equals(LightThemeRadioButton))
+            if (sender.Equals(SystemThemeRadioButton))
             {
-                theme = ApplicationTheme.Light.ToString();
+                Settings.Remove(Settings.Keys.ApplicationThemeKey);
             }
-            else if (sender.Equals(DarkThemeRadioButton))
+            else
             {
-                theme = ApplicationTheme.Dark.ToString();
+                var theme = sender.Equals(DarkThemeRadioButton)
+                    ? ApplicationTheme.Dark : ApplicationTheme.Light;
+                Settings.SaveTheme(theme);
             }
-            else // system theme
-            {
-                theme = null;
-            }
-            Settings.PushOrUpdate(Settings.Keys.ApplicationThemeKey, theme);
         }
 
         private void ArchiveHistorySizeTextBox_OnTextChanged(object sender, TextChangedEventArgs args)

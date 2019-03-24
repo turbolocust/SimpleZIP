@@ -198,17 +198,9 @@ namespace SimpleZIP_UI
         /// </summary>
         private void RequestApplicationTheme()
         {
-            Settings.TryGet(Settings.Keys.ApplicationThemeKey, out string theme);
-            if (theme != null)
+            if (Settings.TryGetTheme(out var theme))
             {
-                if (theme.Equals(ApplicationTheme.Light.ToString()))
-                {
-                    RequestedTheme = ApplicationTheme.Light;
-                }
-                else if (theme.Equals(ApplicationTheme.Dark.ToString()))
-                {
-                    RequestedTheme = ApplicationTheme.Dark;
-                }
+                RequestedTheme = theme;
             }
         }
 
