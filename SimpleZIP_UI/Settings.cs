@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 // ==--==
 
 using Windows.Storage;
+using Windows.UI.Xaml;
 
 namespace SimpleZIP_UI
 {
@@ -32,6 +33,36 @@ namespace SimpleZIP_UI
             //{
             //    PushOrUpdate(Keys.HideSomeArchiveTypesKey, true);
             //}
+        }
+
+        /// <summary>
+        /// Stores away the specified application theme preference.
+        /// </summary>
+        /// <param name="theme">The theme to be stored away.</param>
+        internal static void SaveTheme(ApplicationTheme theme)
+        {
+            PushOrUpdate(Keys.ApplicationThemeKey, theme.ToString());
+        }
+
+        /// <summary>
+        /// Returns the stored away theme. If no theme is in the storage,
+        /// then <see cref="ApplicationTheme.Light"/> is returned.
+        /// </summary>
+        /// <returns>False if no theme is in storage, true otherwise.</returns>
+        internal static bool TryGetTheme(out ApplicationTheme theme)
+        {
+            bool found = TryGet(Keys.ApplicationThemeKey, out string themeName);
+            if (!string.IsNullOrEmpty(themeName) && themeName
+                    .Equals(ApplicationTheme.Dark.ToString()))
+            {
+                theme = ApplicationTheme.Dark;
+            }
+            else
+            {
+                theme = ApplicationTheme.Light;
+            }
+
+            return found;
         }
 
         /// <summary>
@@ -52,6 +83,16 @@ namespace SimpleZIP_UI
         internal static object Get(string key)
         {
             return LocalSettings.Values[key];
+        }
+
+        /// <summary>
+        /// Removes the record with the specified key.
+        /// </summary>
+        /// <param name="key">The key of the record to be removed.</param>
+        /// <returns>False if no record with the specified key exists.</returns>
+        internal static bool Remove(string key)
+        {
+            return LocalSettings.Values.Remove(key);
         }
 
         /// <summary>
