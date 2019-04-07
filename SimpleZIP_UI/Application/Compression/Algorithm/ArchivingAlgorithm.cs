@@ -60,20 +60,22 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                 LeaveStreamOpen = false,
                 ArchiveEncoding = GetDefaultEncoding()
             };
-            var progressStream = Stream.Null;
+
+            var archiveStream = Stream.Null;
+            long totalBytesWritten = 0; // for accurate progress update
+
             try
             {
-                var archiveStream = await archive.OpenStreamForReadAsync();
-                progressStream = new ProgressObservableStream(this, archiveStream);
-
-                using (var reader = ReaderFactory.Open(progressStream, options))
+                archiveStream = await archive.OpenStreamForReadAsync();
+                using (var reader = ReaderFactory.Open(archiveStream, options))
                 {
                     while (reader.MoveToNextEntry())
                     {
                         Token.ThrowIfCancellationRequested();
                         if (!reader.Entry.IsDirectory)
                         {
-                            await WriteEntry(reader, location);
+                            (_, totalBytesWritten) = await WriteEntry(
+                                reader, location, totalBytesWritten);
                         }
                     }
                 }
@@ -82,11 +84,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             {
                 if (!options.LeaveStreamOpen)
                 {
-                    progressStream.Dispose();
+                    archiveStream.Dispose();
                 }
             }
 
-            return progressStream;
+            return archiveStream;
         }
 
         /// <inheritdoc />
@@ -152,19 +154,19 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
 
             int processedEntries = 0; // to count number of found entries
             var entriesMap = ConvertToMap(entries); // for faster access
+            long totalBytesWritten = 0; // for accurate progress update
+            var archiveStream = Stream.Null;
 
             options = options ?? new ReaderOptions
             {
                 LeaveStreamOpen = false,
                 ArchiveEncoding = GetDefaultEncoding()
             };
-            var progressStream = Stream.Null;
+
             try
             {
-                var archiveStream = await archive.OpenStreamForReadAsync();
-                progressStream = new ProgressObservableStream(this, archiveStream);
-
-                using (var reader = ReaderFactory.Open(progressStream, options))
+                archiveStream = await archive.OpenStreamForReadAsync();
+                using (var reader = ReaderFactory.Open(archiveStream, options))
                 {
                     while (reader.MoveToNextEntry())
                     {
@@ -173,13 +175,16 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                         {
                             if (collectFileNames)
                             {
-                                var name = await WriteEntry(reader, location);
+                                string fileName;
+                                (fileName, totalBytesWritten) = await WriteEntry(
+                                    reader, location, totalBytesWritten);
                                 var entry = entriesMap[reader.Entry.Key];
-                                entry.FileName = name; // save name
+                                entry.FileName = fileName; // save name
                             }
                             else
                             {
-                                await WriteEntry(reader, location);
+                                (_, totalBytesWritten) = await WriteEntry(
+                                    reader, location, totalBytesWritten);
                             }
 
                             ++processedEntries;
@@ -193,11 +198,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             {
                 if (!options.LeaveStreamOpen)
                 {
-                    progressStream.Dispose();
+                    archiveStream.Dispose();
                 }
             }
 
-            return progressStream;
+            return archiveStream;
         }
 
         private static IDictionary<string, FileEntry> ConvertToMap(
@@ -214,11 +219,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             return map;
         }
 
-        private async Task<string> WriteEntry(IReader reader, StorageFolder location)
+        private async Task<(string, long)> WriteEntry(IReader reader,
+            StorageFolder location, long totalBytesWritten)
         {
-            var relFilePath = reader.Entry.Key;
-            var file = await FileUtils.CreateFileAsync(location, relFilePath);
-            if (file == null) return null; // file could not be created
+            var file = await FileUtils.CreateFileAsync(location, reader.Entry.Key);
+            if (file == null) return (null, totalBytesWritten); // file could not be created
 
             using (var entryStream = reader.OpenEntryStream())
             {
@@ -229,11 +234,13 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                     while ((readBytes = entryStream.Read(bytes, 0, bytes.Length)) > 0)
                     {
                         await outputStream.WriteAsync(bytes, 0, readBytes, Token);
+                        totalBytesWritten += readBytes;
+                        Update(totalBytesWritten);
                     }
                 }
             }
 
-            return relFilePath;
+            return (file.Name, totalBytesWritten);
         }
 
         /// <summary>
