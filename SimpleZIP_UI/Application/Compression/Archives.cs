@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,6 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
 using SharpCompress.Archives.Rar;
 using SharpCompress.Readers;
 using SimpleZIP_UI.Application.Compression.Algorithm;
@@ -29,7 +30,7 @@ using Windows.Storage;
 
 namespace SimpleZIP_UI.Application.Compression
 {
-    internal static class Archives
+    public static class Archives
     {
         /// <summary>
         /// Enumeration to identify archive types.
@@ -103,14 +104,14 @@ namespace SimpleZIP_UI.Application.Compression
         /// <param name="value">The enum value of the archive type to be determined.</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when archive type matched no algorithm.</exception>
         /// <returns>An instance of the compressor algorithm that is mapped to the specified value.</returns>
-        internal static ICompressionAlgorithm DetermineAlgorithm(ArchiveType value)
+        public static ICompressionAlgorithm DetermineAlgorithm(ArchiveType value)
         {
             ICompressionAlgorithm algorithm;
             // ReSharper disable once SwitchStatementMissingSomeCases
             switch (value)
             {
                 case ArchiveType.Zip:
-                    algorithm = new Zip();
+                    algorithm = new Algorithm.Type.SZL.Zip();
                     break;
                 case ArchiveType.GZip:
                     algorithm = new GZip();
@@ -150,7 +151,7 @@ namespace SimpleZIP_UI.Application.Compression
         /// <returns>A task which returns the determined <see cref="ArchiveType"/>.</returns>
         /// <exception cref="InvalidArchiveTypeException">
         /// Thrown if archive type is not supported.</exception>
-        internal static async Task<ArchiveType> DetermineArchiveType(StorageFile file)
+        public static async Task<ArchiveType> DetermineArchiveType(StorageFile file)
         {
             var archiveType = ArchiveType.Unknown;
 
@@ -183,7 +184,7 @@ namespace SimpleZIP_UI.Application.Compression
         /// </summary>
         /// <param name="ext">The filename extension of the archive.</param>
         /// <returns>The determined <see cref="ArchiveType"/>.</returns>
-        internal static ArchiveType DetermineArchiveTypeByFileExtension(string ext)
+        public static ArchiveType DetermineArchiveTypeByFileExtension(string ext)
         {
             bool isArchive;
             if (!(isArchive = ArchiveFileTypes.TryGetValue(ext, out var archiveType)))

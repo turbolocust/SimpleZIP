@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ using Windows.Storage;
 
 namespace SimpleZIP_UI.Application.Util
 {
-    internal static class FileUtils
+    public static class FileUtils
     {
         /// <summary>
         /// Array that consists of characters which are not allowed in file names.
@@ -95,44 +95,6 @@ namespace SimpleZIP_UI.Application.Util
         }
 
         /// <summary>
-        /// Returns the specified temporary folder.
-        /// </summary>
-        /// <param name="location">The temporary folder to be get.</param>
-        /// <returns>The specified temporary folder.</returns>
-        public static async Task<StorageFolder> GetTempFolderAsync(
-            TempFolder location = TempFolder.Default)
-        {
-            string path = Path.GetTempPath();
-            var folder = await StorageFolder.GetFolderFromPathAsync(path);
-
-            if (location == TempFolder.Archives)
-            {
-                const string tempArchivesFolderName = "Archives";
-                folder = await folder.CreateFolderAsync(
-                    tempArchivesFolderName,
-                    CreationCollisionOption.OpenIfExists);
-            }
-
-            return folder;
-        }
-
-        /// <summary>
-        /// Deletes all files (non-recursive) from the specified storage folder.
-        /// </summary>
-        /// <returns>A task which can be awaited.</returns>
-        public static async Task CleanFolderAsync(StorageFolder folder)
-        {
-            if (folder != null)
-            {
-                var files = await folder.GetFilesAsync();
-                foreach (var file in files)
-                {
-                    Delete(file);
-                }
-            }
-        }
-
-        /// <summary>
         /// Returns the file size of the specified file.
         /// </summary>
         /// <param name="file">The file from which to get the file size.</param>
@@ -157,13 +119,52 @@ namespace SimpleZIP_UI.Application.Util
             }
             return totalSize;
         }
+
+        /// <summary>
+        /// Returns the specified temporary folder.
+        /// </summary>
+        /// <param name="location">The temporary folder to be get.</param>
+        /// <returns>The specified temporary folder.</returns>
+        internal static async Task<StorageFolder> GetTempFolderAsync(
+            TempFolder location = TempFolder.Default)
+        {
+            string path = Path.GetTempPath();
+            var folder = await StorageFolder.GetFolderFromPathAsync(path);
+
+            if (location == TempFolder.Archives)
+            {
+                const string tempArchivesFolderName = "Archives";
+                folder = await folder.CreateFolderAsync(
+                    tempArchivesFolderName,
+                    CreationCollisionOption.OpenIfExists);
+            }
+
+            return folder;
+        }
+
+        /// <summary>
+        /// Deletes all files (non-recursive) from the specified storage folder.
+        /// </summary>
+        /// <returns>A task which can be awaited.</returns>
+        internal static async Task CleanFolderAsync(StorageFolder folder)
+        {
+            if (folder != null)
+            {
+                var files = await folder.GetFilesAsync();
+                foreach (var file in files)
+                {
+                    Delete(file);
+                }
+            }
+        }
+
         /// <summary>
         /// Recursively gets a file (<code>filePath</code>) from the specified <code>location</code>.
         /// </summary>
         /// <param name="location">Used to get directories and eventually the file.</param>
         /// <param name="filePath">Relative path to the file to be get.</param>
         /// <returns>The file or <code>null</code> if path is <code>String.Empty</code>.</returns>
-        public static async Task<StorageFile> GetFileAsync(StorageFolder location, string filePath)
+        internal static async Task<StorageFile> GetFileAsync(StorageFolder location, string filePath)
         {
             var separatorChar = Path.DirectorySeparatorChar;
             var dirPath = filePath.Replace('/', separatorChar);
@@ -197,7 +198,7 @@ namespace SimpleZIP_UI.Application.Util
         /// <param name="location">Used to create directories and eventually the file.</param>
         /// <param name="filePath">Relative path to the file to be created.</param>
         /// <returns>The created file or <code>null</code> if path is <code>String.Empty</code>.</returns>
-        public static async Task<StorageFile> CreateFileAsync(StorageFolder location, string filePath)
+        internal static async Task<StorageFile> CreateFileAsync(StorageFolder location, string filePath)
         {
             var separatorChar = Path.DirectorySeparatorChar;
             var dirPath = filePath.Replace('/', separatorChar);
