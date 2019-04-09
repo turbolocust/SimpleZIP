@@ -21,7 +21,6 @@ using SharpCompress.Common;
 using SharpCompress.Readers;
 using SharpCompress.Writers;
 using SimpleZIP_UI.Application.Compression.Algorithm.Options;
-using SimpleZIP_UI.Application.Compression.Reader;
 using SimpleZIP_UI.Application.Streams;
 using SimpleZIP_UI.Application.Util;
 using System.Collections.Generic;
@@ -30,6 +29,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
+using SimpleZIP_UI.Application.Compression.Tree;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm
 {
@@ -100,14 +100,14 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
 
         /// <inheritdoc />
         public override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
-            IReadOnlyList<FileEntry> entries, IDecompressionOptions options = null)
+            IReadOnlyList<ArchiveTreeFile> entries, IDecompressionOptions options = null)
         {
             return await DecompressEntries(archive, location, entries, false, options);
         }
 
         /// <inheritdoc />
         public override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
-            IReadOnlyList<FileEntry> entries, bool collectFileNames, IDecompressionOptions options = null)
+            IReadOnlyList<ArchiveTreeFile> entries, bool collectFileNames, IDecompressionOptions options = null)
         {
             return await DecompressEntries(archive, location, entries, collectFileNames, options);
         }
@@ -151,7 +151,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
 
         #region Private Helper Methods
         private async Task<Stream> DecompressEntries(IStorageFile archive, StorageFolder location,
-            IReadOnlyCollection<FileEntry> entries, bool collectFileNames, IDecompressionOptions options = null)
+            IReadOnlyCollection<ArchiveTreeFile> entries, bool collectFileNames, IDecompressionOptions options = null)
         {
             if (archive == null || entries.IsNullOrEmpty() || location == null) return Stream.Null;
 

@@ -16,14 +16,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
 using System.Collections.Generic;
 
-namespace SimpleZIP_UI.Application.Compression.Reader
+namespace SimpleZIP_UI.Application.Compression.Tree
 {
     /// <summary>
     /// Represents a folder in the archive's hierarchy.
     /// </summary>
-    internal class Node : IArchiveEntry
+    internal class ArchiveTreeNode : IArchiveTreeElement
     {
         /// <inheritdoc />
         /// <summary>
@@ -54,15 +55,15 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         /// <summary>
         /// Children of this node, which can be nodes, entries or both.
         /// </summary>
-        internal ISet<IArchiveEntry> Children { get; }
+        internal ISet<IArchiveTreeElement> Children { get; }
 
-        internal Node(string id)
+        internal ArchiveTreeNode(string id)
         {
             Id = id;
-            Children = new HashSet<IArchiveEntry>();
+            Children = new HashSet<IArchiveTreeElement>();
         }
 
-        protected bool Equals(Node other)
+        protected bool Equals(ArchiveTreeNode other)
         {
             return string.Equals(Id, other.Id);
         }
@@ -71,7 +72,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((Node)obj);
+            return obj.GetType() == GetType() && Equals((ArchiveTreeNode)obj);
         }
 
         public override int GetHashCode()

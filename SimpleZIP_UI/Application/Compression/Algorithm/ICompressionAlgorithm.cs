@@ -19,13 +19,13 @@
 
 using SimpleZIP_UI.Application.Compression.Algorithm.Event;
 using SimpleZIP_UI.Application.Compression.Algorithm.Options;
-using SimpleZIP_UI.Application.Compression.Reader;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
+using SimpleZIP_UI.Application.Compression.Tree;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm
 {
@@ -70,7 +70,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not permitted.</exception>
         /// <exception cref="ArchiveEncryptedException">Thrown if encrypted archive could not be handled.</exception>
         Task<Stream> Decompress(StorageFile archive, StorageFolder location,
-            IReadOnlyList<FileEntry> entries, IDecompressionOptions options = null);
+            IReadOnlyList<ArchiveTreeFile> entries, IDecompressionOptions options = null);
 
         /// <summary>
         /// Decompresses (extracts) entries from the specified archive to the specified location.
@@ -79,7 +79,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <param name="location">The location where to extract the entries to.</param>
         /// <param name="entries">Entries of the archive to be extracted.</param>
         /// <param name="collectFileNames">True to collect file names, false otherwise.
-        /// Names of extracted files will be saved to <see cref="FileEntry.FileName"/>.</param>.
+        /// Names of extracted files will be saved to <see cref="ArchiveTreeFile.FileName"/>.</param>.
         /// <param name="options">Options for the reader. May be omitted.</param>
         /// <returns>Task which returns a stream that has been used to read the archive. The stream will not be 
         /// disposed if <see cref="IOptions.LeaveStreamOpen"/> in options is set to true.</returns>
@@ -87,7 +87,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not permitted.</exception>
         /// <exception cref="ArchiveEncryptedException">Thrown if encrypted archive could not be handled.</exception>
         Task<Stream> Decompress(StorageFile archive, StorageFolder location,
-            IReadOnlyList<FileEntry> entries, bool collectFileNames, IDecompressionOptions options = null);
+            IReadOnlyList<ArchiveTreeFile> entries, bool collectFileNames, IDecompressionOptions options = null);
 
         /// <summary>
         /// Compresses files to the specified location. If the writer options are omitted, the default

@@ -19,7 +19,6 @@
 
 using SimpleZIP_UI.Application.Compression.Algorithm.Event;
 using SimpleZIP_UI.Application.Compression.Algorithm.Options;
-using SimpleZIP_UI.Application.Compression.Reader;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,6 +26,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
+using SimpleZIP_UI.Application.Compression.Tree;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm
 {
@@ -71,15 +71,15 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         }
 
         /// <summary>
-        /// Converts the specified list of <see cref="FileEntry"/> to a dictionary.
+        /// Converts the specified list of <see cref="ArchiveTreeFile"/> to a dictionary.
         /// </summary>
-        /// <param name="entries">List of <see cref="FileEntry"/> to be converted.</param>
-        /// <returns>A dictionary consisting of <see cref="FileEntry"/>.</returns>
-        protected static IDictionary<string, FileEntry> ConvertToMap(
-            IReadOnlyCollection<FileEntry> entries)
+        /// <param name="entries">List of <see cref="ArchiveTreeFile"/> to be converted.</param>
+        /// <returns>A dictionary consisting of <see cref="ArchiveTreeFile"/>.</returns>
+        protected static IDictionary<string, ArchiveTreeFile> ConvertToMap(
+            IReadOnlyCollection<ArchiveTreeFile> entries)
         {
             int mapSize = entries.Count * 2;
-            var map = new Dictionary<string, FileEntry>(mapSize);
+            var map = new Dictionary<string, ArchiveTreeFile>(mapSize);
 
             foreach (var entry in entries)
             {
@@ -133,10 +133,10 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
 
         /// <inheritdoc />
         public abstract Task<Stream> Decompress(StorageFile archive, StorageFolder location,
-            IReadOnlyList<FileEntry> entries, IDecompressionOptions options = null);
+            IReadOnlyList<ArchiveTreeFile> entries, IDecompressionOptions options = null);
 
         /// <inheritdoc />
         public abstract Task<Stream> Decompress(StorageFile archive, StorageFolder location,
-            IReadOnlyList<FileEntry> entries, bool collectFileNames, IDecompressionOptions options = null);
+            IReadOnlyList<ArchiveTreeFile> entries, bool collectFileNames, IDecompressionOptions options = null);
     }
 }

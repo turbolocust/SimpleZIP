@@ -136,16 +136,16 @@
     <Compile Include="Application\Compression\Operation\Job\DecompressionJob.cs" />
     <Compile Include="Application\Compression\Operation\Job\IArchivingJob.cs" />
     <Compile Include="Application\Compression\Operation\Operations.cs" />
-    <Compile Include="Application\Compression\Reader\RootNode.cs" />
+    <Compile Include="Application\Compression\Tree\ArchiveTreeRoot.cs" />
     <Compile Include="Application\ArchiveEncryptedException.cs" />
     <Compile Include="Application\ICancellable.cs" />
     <Compile Include="Application\ICancelRequest.cs" />
     <Compile Include="Application\IPasswordRequest.cs" />
     <Compile Include="Application\IProgressObserver.cs" />
-    <Compile Include="Application\Compression\Reader\IArchiveEntry.cs" />
-    <Compile Include="Application\Compression\Reader\ArchiveTreeBuilder.cs" />
-    <Compile Include="Application\Compression\Reader\FileEntry.cs" />
-    <Compile Include="Application\Compression\Reader\Node.cs" />
+    <Compile Include="Application\Compression\Tree\IArchiveTreeElement.cs" />
+    <Compile Include="Application\Compression\Tree\ArchiveTreeBuilder.cs" />
+    <Compile Include="Application\Compression\Tree\ArchiveTreeFile.cs" />
+    <Compile Include="Application\Compression\Tree\ArchiveTreeNode.cs" />
     <Compile Include="Application\Compression\Model\CompressionInfo.cs" />
     <Compile Include="Application\Compression\Model\ExtractableItem.cs" />
     <Compile Include="Application\Compression\Model\Result.cs" />
@@ -370,7 +370,9 @@
       <Version>4.5.0</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Application\Compression\Archive\" />
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

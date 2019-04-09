@@ -19,7 +19,6 @@
 
 using SharpCompress.Compressors.Deflate;
 using SimpleZIP_UI.Application.Compression.Algorithm.Options;
-using SimpleZIP_UI.Application.Compression.Reader;
 using SimpleZIP_UI.Application.Streams;
 using SimpleZIP_UI.Application.Util;
 using System;
@@ -28,6 +27,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
+using SimpleZIP_UI.Application.Compression.Tree;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm
 {
@@ -38,7 +38,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
     public abstract class CompressorAlgorithm : AbstractAlgorithm
     {
         private async Task<Stream> DecompressArchive(IStorageFile archive, IStorageFolder location,
-            IReadOnlyCollection<FileEntry> entries, bool collectFileNames, IDecompressionOptions options = null)
+            IReadOnlyCollection<ArchiveTreeFile> entries, bool collectFileNames, IDecompressionOptions options = null)
         {
             if (archive == null || location == null) return Stream.Null;
 
@@ -99,7 +99,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <summary>Entries are not supported in non-archive formats,
         /// but will be used if file names are to be collected.</summary>
         public override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
-            IReadOnlyList<FileEntry> entries, bool collectFileNames, IDecompressionOptions options = null)
+            IReadOnlyList<ArchiveTreeFile> entries, bool collectFileNames, IDecompressionOptions options = null)
         {
             return await DecompressArchive(archive, location, entries, collectFileNames, options);
         }
@@ -108,7 +108,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <summary>Entries are not supported in non-archive formats,
         /// and hence will be ignored.</summary>
         public sealed override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
-            IReadOnlyList<FileEntry> entries, IDecompressionOptions options = null)
+            IReadOnlyList<ArchiveTreeFile> entries, IDecompressionOptions options = null)
         {
             return await DecompressArchive(archive, location, entries, false, options);
         }

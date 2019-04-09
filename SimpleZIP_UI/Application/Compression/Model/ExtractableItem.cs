@@ -17,9 +17,9 @@
 // 
 // ==--==
 
-using SimpleZIP_UI.Application.Compression.Reader;
 using System.Collections.Generic;
 using Windows.Storage;
+using SimpleZIP_UI.Application.Compression.Tree;
 
 namespace SimpleZIP_UI.Application.Compression.Model
 {
@@ -47,10 +47,10 @@ namespace SimpleZIP_UI.Application.Compression.Model
         /// Optional list of entries to be extracted. If this is not 
         /// <code>null</code>, then only these entries will be extracted.
         /// </summary>
-        internal IReadOnlyList<FileEntry> Entries { get; }
+        internal IReadOnlyList<ArchiveTreeFile> Entries { get; }
 
         internal ExtractableItem(string name, StorageFile archive,
-            IReadOnlyList<FileEntry> entries = null)
+            IReadOnlyList<ArchiveTreeFile> entries = null)
         {
             Name = name;
             Archive = archive;

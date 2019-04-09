@@ -19,12 +19,12 @@
 
 using SimpleZIP_UI.Application.Util;
 
-namespace SimpleZIP_UI.Application.Compression.Reader
+namespace SimpleZIP_UI.Application.Compression.Tree
 {
     /// <summary>
     /// Represents a file entry within a node.
     /// </summary>
-    public class FileEntry : IArchiveEntry
+    public class ArchiveTreeFile : IArchiveTreeElement
     {
         /// <inheritdoc />
         public string Id { get; }
@@ -55,7 +55,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         /// </summary>
         internal string FileName { get; set; }
 
-        internal FileEntry(string id, string name,
+        internal ArchiveTreeFile(string id, string name,
             ulong size, bool isArchive = false)
         {
             Id = id;
@@ -64,7 +64,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
             IsArchive = isArchive;
         }
 
-        protected bool Equals(FileEntry other)
+        protected bool Equals(ArchiveTreeFile other)
         {
             return string.Equals(Id, other.Id);
         }
@@ -74,7 +74,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((FileEntry)obj);
+            return obj.GetType() == GetType() && Equals((ArchiveTreeFile)obj);
         }
 
         /// <inheritdoc />
@@ -84,7 +84,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         }
 
         /// <summary>
-        /// Factory method which creates a new instance of <see cref="FileEntry"/>.
+        /// Factory method which creates a new instance of <see cref="ArchiveTreeFile"/>.
         /// This method also checks if the specified name consists of a filename
         /// extension which indicates that it is an archive. In this case,
         /// <see cref="IsArchive"/> is set to true.
@@ -93,12 +93,12 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         /// <param name="name">The name of the entry.</param>
         /// <param name="size">The size of the entry.</param>
         /// <returns></returns>
-        public static FileEntry CreateFileEntry(string id, string name, ulong size)
+        public static ArchiveTreeFile CreateFileEntry(string id, string name, ulong size)
         {
             string ext = FileUtils.GetFileNameExtension(name);
             var archiveType = Archives.DetermineArchiveTypeByFileExtension(ext);
             bool isArchive = archiveType != Archives.ArchiveType.Unknown;
-            return new FileEntry(id, name, size, isArchive);
+            return new ArchiveTreeFile(id, name, size, isArchive);
         }
     }
 }

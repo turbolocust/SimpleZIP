@@ -21,7 +21,6 @@ using SimpleZIP_UI.Application;
 using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Compression.Operation;
 using SimpleZIP_UI.Application.Compression.Operation.Job;
-using SimpleZIP_UI.Application.Compression.Reader;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.I18N;
 using SimpleZIP_UI.Presentation.Factory;
@@ -35,6 +34,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
+using SimpleZIP_UI.Application.Compression.Tree;
 
 namespace SimpleZIP_UI.Presentation.Controller
 {
@@ -70,7 +70,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// </summary>
         /// <param name="archive">The archive to be read.</param>
         /// <returns>The root node of the archive.</returns>
-        internal async Task<RootNode> ReadArchive(StorageFile archive)
+        internal async Task<ArchiveTreeRoot> ReadArchive(StorageFile archive)
         {
             string key = !string.IsNullOrEmpty(archive.Path)
                 ? archive.Path : archive.FolderRelativeId;
@@ -135,14 +135,14 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// holds the equivalent of the model.</param>
         /// <param name="model">The model to be converted.</param>
         /// <returns>A task which returns the extracted archive.</returns>
-        internal async Task<StorageFile> ExtractSubArchive(RootNode root,
-            Node node, ArchiveEntryModel model)
+        internal async Task<StorageFile> ExtractSubArchive(ArchiveTreeRoot root,
+            ArchiveTreeNode node, ArchiveEntryModel model)
         {
             StorageFile archive = null;
             // find entry in children of current node
             var entry = (from child in node.Children
                          where child.Name.Equals(model.DisplayName)
-                         select child as FileEntry).FirstOrDefault();
+                         select child as ArchiveTreeFile).FirstOrDefault();
 
             if (entry != null)
             {
@@ -205,7 +205,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// </summary>
         /// <param name="root">The root node of the archive.</param>
         /// <returns>True if archive only consists of one file entry.</returns>
-        internal bool IsSingleFileEntryArchive(RootNode root)
+        internal bool IsSingleFileEntryArchive(ArchiveTreeRoot root)
         {
             return root.Children.Count == 1
                 && !root.Children.First().IsBrowsable;
@@ -217,7 +217,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// </summary>
         /// <param name="root">The root node of the archive.</param>
         /// <returns>True if archive is empty, false otherwise.</returns>
-        internal bool IsEmptyArchive(RootNode root)
+        internal bool IsEmptyArchive(ArchiveTreeRoot root)
         {
             return root == null || root.Children.IsNullOrEmpty();
         }
@@ -227,7 +227,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// set archive as the argument (as <see cref="ExtractableItem"/>).
         /// </summary>
         /// <param name="root">The root node of the archive.</param>
-        internal void ExtractWholeArchiveButtonAction(RootNode root)
+        internal void ExtractWholeArchiveButtonAction(ArchiveTreeRoot root)
         {
             IsNavigating = true;
 
@@ -247,17 +247,17 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// <param name="root">The root node of the archive.</param>
         /// <param name="node">The currently active node that holds equivalents of the models.</param>
         /// <param name="models">The models to be converted.</param>
-        internal void ExtractSelectedEntriesButtonAction(RootNode root,
-            Node node, params ArchiveEntryModel[] models)
+        internal void ExtractSelectedEntriesButtonAction(ArchiveTreeRoot root,
+            ArchiveTreeNode node, params ArchiveEntryModel[] models)
         {
-            var entries = new List<FileEntry>(models.Length);
+            var entries = new List<ArchiveTreeFile>(models.Length);
             foreach (var model in models)
             {
                 foreach (var child in node.Children)
                 {
                     if (child.Name.Equals(model.DisplayName))
                     {
-                        if (child is FileEntry entry)
+                        if (child is ArchiveTreeFile entry)
                         {
                             entries.Add(entry);
                             break;

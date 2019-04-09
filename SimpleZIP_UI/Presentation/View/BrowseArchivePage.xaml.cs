@@ -18,7 +18,6 @@
 // ==--==
 
 using SimpleZIP_UI.Application;
-using SimpleZIP_UI.Application.Compression.Reader;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Presentation.Controller;
 using SimpleZIP_UI.Presentation.Factory;
@@ -36,6 +35,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using SimpleZIP_UI.Application.Compression.Tree;
 
 namespace SimpleZIP_UI.Presentation.View
 {
@@ -75,7 +75,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// <summary>
         /// Root nodes of sub-archives opened through another archive.
         /// </summary>
-        private readonly Stack<RootNode> _rootNodeStack;
+        private readonly Stack<ArchiveTreeRoot> _rootNodeStack;
 
         /// <summary>
         /// History when navigating back and to determine the currently active node
@@ -93,7 +93,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// <summary>
         /// The currently opened archive's root node.
         /// </summary>
-        private RootNode _curRootNode;
+        private ArchiveTreeRoot _curRootNode;
 
         /// <summary>
         /// Current position in <see cref="_rootNodeStack"/>. A negative
@@ -110,7 +110,7 @@ namespace SimpleZIP_UI.Presentation.View
             _controller = new BrowseArchiveController(this, this);
             _selectedModels = new HashSet<ArchiveEntryModel>();
             _nodeStackList = new List<Stack<NavNode>>(InitialStackCapacity);
-            _rootNodeStack = new Stack<RootNode>(InitialStackCapacity);
+            _rootNodeStack = new Stack<ArchiveTreeRoot>(InitialStackCapacity);
             EntryModels = new ObservableCollection<ArchiveEntryModel>();
         }
 
@@ -225,7 +225,7 @@ namespace SimpleZIP_UI.Presentation.View
                             if (child.Name.Equals(addItem.DisplayName) && child.IsBrowsable)
                             {
                                 IsProgressBarEnabled.IsTrue = true;
-                                await UpdateListContentAsync(child as Node);
+                                await UpdateListContentAsync(child as ArchiveTreeNode);
                                 return; // since node is a new folder
                             }
                         }
@@ -436,7 +436,7 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        private async Task UpdateListContentAsync(Node next, Sorting sorting = null)
+        private async Task UpdateListContentAsync(ArchiveTreeNode next, Sorting sorting = null)
         {
             if (next == null) return;
 
@@ -501,11 +501,11 @@ namespace SimpleZIP_UI.Presentation.View
         /// </summary>
         private sealed class NavNode
         {
-            internal Node Node { get; }
+            internal ArchiveTreeNode Node { get; }
 
             internal Sorting Sorting { get; set; }
 
-            internal NavNode(Node archiveNode)
+            internal NavNode(ArchiveTreeNode archiveNode)
             {
                 Node = archiveNode;
                 Sorting = new Sorting();

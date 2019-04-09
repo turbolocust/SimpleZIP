@@ -17,8 +17,8 @@
 // 
 // ==--==
 
-using SimpleZIP_UI.Application.Compression.Reader;
 using Windows.UI.Xaml.Controls;
+using SimpleZIP_UI.Application.Compression.Tree;
 
 namespace SimpleZIP_UI.Presentation.View.Model
 {
@@ -59,7 +59,7 @@ namespace SimpleZIP_UI.Presentation.View.Model
         /// </summary>
         /// <param name="entry">Entry of which to extract information for the model.</param>
         /// <returns>A new instance of <see cref="ArchiveEntryModel"/>.</returns>
-        internal static ArchiveEntryModel Create(IArchiveEntry entry)
+        internal static ArchiveEntryModel Create(IArchiveTreeElement entry)
         {
             ArchiveEntryModelType type;
             var symbol = Symbol.Preview;

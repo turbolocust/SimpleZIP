@@ -18,27 +18,27 @@
 // ==--==
 
 using SimpleZIP_UI.Application;
-using SimpleZIP_UI.Application.Compression.Reader;
 using SimpleZIP_UI.Application.Util;
 using System.Collections.Generic;
+using SimpleZIP_UI.Application.Compression.Tree;
 
 namespace SimpleZIP_UI.Presentation.Handler
 {
-    internal sealed class RootNodeCacheHandler : ICacheHandler<RootNode>
+    internal sealed class RootNodeCacheHandler : ICacheHandler<ArchiveTreeRoot>
     {
-        private readonly Dictionary<string, RootNode> _nodesCache;
+        private readonly Dictionary<string, ArchiveTreeRoot> _nodesCache;
 
         /// <inheritdoc />
-        public IReadOnlyDictionary<string, RootNode> Cache => _nodesCache;
+        public IReadOnlyDictionary<string, ArchiveTreeRoot> Cache => _nodesCache;
 
         /// <inheritdoc />
-        public void WriteToCache(string key, RootNode node)
+        public void WriteToCache(string key, ArchiveTreeRoot node)
         {
             _nodesCache.Add(key, node);
         }
 
         /// <inheritdoc />
-        public RootNode ReadFromCache(string key)
+        public ArchiveTreeRoot ReadFromCache(string key)
         {
             _nodesCache.TryGetValue(key, out var rootNode);
             return rootNode; // can be null
@@ -88,7 +88,7 @@ namespace SimpleZIP_UI.Presentation.Handler
 
         private RootNodeCacheHandler()
         {
-            _nodesCache = new Dictionary<string, RootNode>();
+            _nodesCache = new Dictionary<string, ArchiveTreeRoot>();
         }
         #endregion
     }
