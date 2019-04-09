@@ -138,11 +138,11 @@
     <Compile Include="Application\Compression\Operation\Operations.cs" />
     <Compile Include="Application\Compression\Tree\ArchiveTreeRoot.cs" />
     <Compile Include="Application\ArchiveEncryptedException.cs" />
-    <Compile Include="Application\Compression\Tree\Reader\ArchiveEntry.cs" />
-    <Compile Include="Application\Compression\Tree\Reader\ArchiveReader.cs" />
-    <Compile Include="Application\Compression\Tree\Reader\IArchiveEntry.cs" />
-    <Compile Include="Application\Compression\Tree\Reader\IArchiveReader.cs" />
-    <Compile Include="Application\Compression\Tree\Reader\SZL\ArchiveReader.cs" />
+    <Compile Include="Application\Compression\Reader\ArchiveEntry.cs" />
+    <Compile Include="Application\Compression\Reader\ArchiveReader.cs" />
+    <Compile Include="Application\Compression\Reader\IArchiveEntry.cs" />
+    <Compile Include="Application\Compression\Reader\IArchiveReader.cs" />
+    <Compile Include="Application\Compression\Reader\SZL\ArchiveReader.cs" />
     <Compile Include="Application\ICancellable.cs" />
     <Compile Include="Application\ICancelRequest.cs" />
     <Compile Include="Application\IPasswordRequest.cs" />
@@ -375,7 +375,9 @@
       <Version>4.5.0</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Application\Compression\Tree\Reader\SZL\" />
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

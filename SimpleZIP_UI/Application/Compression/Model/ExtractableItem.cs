@@ -17,9 +17,9 @@
 // 
 // ==--==
 
-using SimpleZIP_UI.Application.Compression.Tree.Reader;
 using System.Collections.Generic;
 using Windows.Storage;
+using SimpleZIP_UI.Application.Compression.Reader;
 
 namespace SimpleZIP_UI.Application.Compression.Model
 {
