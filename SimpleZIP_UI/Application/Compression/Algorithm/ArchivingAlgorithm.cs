@@ -222,11 +222,15 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         private async Task<(string, long)> WriteEntry(IReader reader,
             StorageFolder location, long totalBytesWritten)
         {
-            var file = await FileUtils.CreateFileAsync(location, reader.Entry.Key);
-            if (file == null) return (null, totalBytesWritten); // file could not be created
+            string fileName;
 
             using (var entryStream = reader.OpenEntryStream())
             {
+                var file = await FileUtils.CreateFileAsync(location, reader.Entry.Key);
+                if (file == null) return (null, totalBytesWritten); // file could not be created
+
+                fileName = file.Name;
+
                 using (var outputStream = await file.OpenStreamForWriteAsync())
                 {
                     var bytes = new byte[DefaultBufferSize];
@@ -240,7 +244,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                 }
             }
 
-            return (file.Name, totalBytesWritten);
+            return (fileName, totalBytesWritten);
         }
 
         /// <summary>
