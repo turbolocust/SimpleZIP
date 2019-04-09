@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Storage;
 
@@ -32,6 +33,11 @@ namespace SimpleZIP_UI.Application.Compression
 {
     public static class Archives
     {
+        /// <summary>
+        /// Default separator for entry names.
+        /// </summary>
+        public const char NameSeparatorChar = '/';
+
         /// <summary>
         /// Enumeration to identify archive types.
         /// </summary>
@@ -56,6 +62,11 @@ namespace SimpleZIP_UI.Application.Compression
         /// Maps <see cref="SharpCompress.Common.ArchiveType"/> to <see cref="ArchiveType"/>.
         /// </summary>
         internal static readonly IDictionary<SharpCompress.Common.ArchiveType, ArchiveType> ArchiveTypes;
+
+        /// <summary>
+        /// Regular expression used to match drive letter in paths.
+        /// </summary>
+        private static readonly Regex RegexDriveLetter = new Regex(@"[A-Za-z]{1}:\/");
 
         static Archives()
         {
@@ -99,6 +110,24 @@ namespace SimpleZIP_UI.Application.Compression
         }
 
         /// <summary>
+        /// Removes drive letters in the specified name and
+        /// replaces backslashes with <see cref="NameSeparatorChar"/>.
+        /// </summary>
+        /// <param name="name">The name to be normalized.</param>
+        /// <returns>A normalized name.</returns>
+        public static string NormalizeName(string name)
+        {
+            string normalized = name.Replace('\\', NameSeparatorChar);
+            var match = RegexDriveLetter.Match(normalized);
+            if (match.Success)
+            {
+                normalized = normalized.Replace(match.Value, string.Empty);
+            }
+
+            return normalized;
+        }
+
+        /// <summary>
         /// Returns the algorithm instance that is mapped to the specified archive type.
         /// </summary>
         /// <param name="value">The enum value of the archive type to be determined.</param>
@@ -111,7 +140,8 @@ namespace SimpleZIP_UI.Application.Compression
             switch (value)
             {
                 case ArchiveType.Zip:
-                    // make use of SharpZipLib for ZIP files
+                    // make use of SharpZipLib for ZIP files,
+                    // because it's more reliable than SharpCompress
                     algorithm = new Algorithm.Type.SZL.Zip();
                     break;
                 case ArchiveType.GZip:
@@ -207,7 +237,7 @@ namespace SimpleZIP_UI.Application.Compression
         /// <param name="password">The password of the file if encrypted.</param>
         /// <param name="rar5Only">True to only check for RAR5 format, false otherwise.</param>
         /// <returns>True if archive is RAR, false otherwise.</returns>
-        internal static bool IsRarArchive(Stream stream,
+        private static bool IsRarArchive(Stream stream,
             string password = null, bool rar5Only = false)
         {
             const int rar5HeaderSize = 8; // bytes

@@ -17,6 +17,7 @@
 // 
 // ==--==
 
+using SimpleZIP_UI.Application.Compression.Reader;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,7 +25,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
-using SimpleZIP_UI.Application.Compression.Reader;
 
 namespace SimpleZIP_UI.Application.Compression.Tree
 {
@@ -39,11 +39,6 @@ namespace SimpleZIP_UI.Application.Compression.Tree
         /// Pre-defined name of the root node.
         /// </summary>
         public const string RootNodeName = "root";
-
-        /// <summary>
-        /// Default path separator for entry names.
-        /// </summary>
-        public const char SeparatorChar = '/';
 
         /// <summary>
         /// To avoid too many calls of <see cref="Task.Delay(int)"/>.
@@ -83,14 +78,14 @@ namespace SimpleZIP_UI.Application.Compression.Tree
         private static async Task<IArchiveReader> GetReaderInstance(
             StorageFile file, CancellationToken token)
         {
-            var type = await Archives
-                .DetermineArchiveType(file);
-            IArchiveReader reader;
+            IArchiveReader reader; // to be returned
+            var type = await Archives.DetermineArchiveType(file);
 
             switch (type)
             {
                 case Archives.ArchiveType.Zip:
-                    // make use of SharpZipLib for ZIP files
+                    // make use of SharpZipLib for ZIP files,
+                    // because it's more reliable than SharpCompress
                     reader = new Reader.SZL.ArchiveReader(file, token);
                     break;
                 default: // using SharpCompress here
@@ -130,7 +125,7 @@ namespace SimpleZIP_UI.Application.Compression.Tree
                 // directories are considered anyway
                 if (entry.IsDirectory || entry.Key == null) continue;
 
-                string key = entry.Key.Replace('\\', SeparatorChar);
+                string key = Archives.NormalizeName(entry.Key);
                 UpdateEntryKeyPair(ref pair, key);
                 ArchiveTreeNode parentNode = rootNode;
 
@@ -139,7 +134,7 @@ namespace SimpleZIP_UI.Application.Compression.Tree
                     var c = key[i];
                     keyBuilder.Append(c);
 
-                    if (c == SeparatorChar) // next parent found
+                    if (c == Archives.NameSeparatorChar) // next parent found
                     {
                         var node = GetNode(keyBuilder.ToString());
                         if (parentNode.Children.Add(node))
@@ -200,8 +195,8 @@ namespace SimpleZIP_UI.Application.Compression.Tree
         /// <returns>An <see cref="EntryKeyPair"/>.</returns>
         private static void UpdateEntryKeyPair(ref EntryKeyPair pair, string key)
         {
-            string trimmedKey = key.TrimEnd(SeparatorChar);
-            int lastSeparatorPos = trimmedKey.LastIndexOf(SeparatorChar);
+            string trimmedKey = key.TrimEnd(Archives.NameSeparatorChar);
+            int lastSeparatorPos = trimmedKey.LastIndexOf(Archives.NameSeparatorChar);
             string entryName = trimmedKey.Substring(lastSeparatorPos + 1);
             string parentKey = lastSeparatorPos == -1 ? RootNodeName
                 : trimmedKey.Substring(0, trimmedKey.Length - entryName.Length);

@@ -19,13 +19,13 @@
 
 using ICSharpCode.SharpZipLib.Zip;
 using SimpleZIP_UI.Application.Compression.Algorithm.Options;
+using SimpleZIP_UI.Application.Compression.Reader;
 using SimpleZIP_UI.Application.Streams;
 using SimpleZIP_UI.Application.Util;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
-using SimpleZIP_UI.Application.Compression.Reader;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
 {
@@ -186,14 +186,15 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                     foreach (ZipEntry zipEntry in zipFile)
                     {
                         Token.ThrowIfCancellationRequested();
-                        if (entriesMap.ContainsKey(zipEntry.Name))
+                        string key = Archives.NormalizeName(zipEntry.Name);
+                        if (entriesMap.ContainsKey(key))
                         {
                             if (collectFileNames)
                             {
                                 string fileName;
                                 (fileName, totalBytesWritten) = await WriteEntry(
                                     zipFile, zipEntry, location, totalBytesWritten);
-                                var entry = entriesMap[zipEntry.Name];
+                                var entry = entriesMap[key];
                                 entry.FileName = fileName; // save name
                             }
                             else
