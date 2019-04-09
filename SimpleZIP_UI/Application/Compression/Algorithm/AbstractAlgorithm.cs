@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,10 +17,8 @@
 // 
 // ==--==
 
-using SharpCompress.Common;
-using SharpCompress.Readers;
-using SharpCompress.Writers;
 using SimpleZIP_UI.Application.Compression.Algorithm.Event;
+using SimpleZIP_UI.Application.Compression.Algorithm.Options;
 using SimpleZIP_UI.Application.Compression.Reader;
 using System;
 using System.Collections.Generic;
@@ -73,13 +71,22 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         }
 
         /// <summary>
-        /// Returns an instance of <see cref="ArchiveEncoding"/> with the default
-        /// encoding set to UTF-8.
+        /// Converts the specified list of <see cref="FileEntry"/> to a dictionary.
         /// </summary>
-        /// <returns>An instance of <see cref="ArchiveEncoding"/>.</returns>
-        protected ArchiveEncoding GetDefaultEncoding()
+        /// <param name="entries">List of <see cref="FileEntry"/> to be converted.</param>
+        /// <returns>A dictionary consisting of <see cref="FileEntry"/>.</returns>
+        protected static IDictionary<string, FileEntry> ConvertToMap(
+            IReadOnlyCollection<FileEntry> entries)
         {
-            return new ArchiveEncoding { Default = Encoding.UTF8, Password = Encoding.UTF8 };
+            int mapSize = entries.Count * 2;
+            var map = new Dictionary<string, FileEntry>(mapSize);
+
+            foreach (var entry in entries)
+            {
+                map.Add(entry.Id, entry);
+            }
+
+            return map;
         }
 
         /// <summary>
@@ -87,12 +94,13 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// using the specified parameter.
         /// </summary>
         /// <param name="processedBytes">The bytes processed so far.</param>
-        protected virtual void FireTotalBytesProcessed(long processedBytes)
+        protected void FireTotalBytesProcessed(long processedBytes)
         {
             var evtArgs = new TotalBytesProcessedEventArgs
             {
                 TotalBytesProcessed = processedBytes
             };
+
             TotalBytesProcessed?.Invoke(this, evtArgs);
         }
 
@@ -106,20 +114,29 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             }
         }
 
+        /// <summary>
+        /// Returns an instance of <see cref="Encoding"/> for UTF-8.
+        /// </summary>
+        /// <returns>An instance of <see cref="Encoding"/>.</returns>
+        protected virtual Encoding GetDefaultEncoding()
+        {
+            return Encoding.UTF8;
+        }
+
         /// <inheritdoc />
         public abstract Task<Stream> Compress(IReadOnlyList<StorageFile> files,
-            StorageFile archive, StorageFolder location, WriterOptions options = null);
+            StorageFile archive, StorageFolder location, ICompressionOptions options = null);
 
         /// <inheritdoc />
         public abstract Task<Stream> Decompress(StorageFile archive,
-            StorageFolder location, ReaderOptions options = null);
+            StorageFolder location, IDecompressionOptions options = null);
 
         /// <inheritdoc />
         public abstract Task<Stream> Decompress(StorageFile archive, StorageFolder location,
-            IReadOnlyList<FileEntry> entries, ReaderOptions options = null);
+            IReadOnlyList<FileEntry> entries, IDecompressionOptions options = null);
 
         /// <inheritdoc />
         public abstract Task<Stream> Decompress(StorageFile archive, StorageFolder location,
-            IReadOnlyList<FileEntry> entries, bool collectFileNames, ReaderOptions options = null);
+            IReadOnlyList<FileEntry> entries, bool collectFileNames, IDecompressionOptions options = null);
     }
 }

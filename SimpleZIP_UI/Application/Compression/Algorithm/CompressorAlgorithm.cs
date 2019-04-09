@@ -17,10 +17,8 @@
 // 
 // ==--==
 
-using SharpCompress.Common;
 using SharpCompress.Compressors.Deflate;
-using SharpCompress.Readers;
-using SharpCompress.Writers;
+using SimpleZIP_UI.Application.Compression.Algorithm.Options;
 using SimpleZIP_UI.Application.Compression.Reader;
 using SimpleZIP_UI.Application.Streams;
 using SimpleZIP_UI.Application.Util;
@@ -40,17 +38,14 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
     public abstract class CompressorAlgorithm : AbstractAlgorithm
     {
         private async Task<Stream> DecompressArchive(IStorageFile archive, IStorageFolder location,
-            IReadOnlyCollection<FileEntry> entries, bool collectFileNames, ReaderOptions options = null)
+            IReadOnlyCollection<FileEntry> entries, bool collectFileNames, IDecompressionOptions options = null)
         {
             if (archive == null || location == null) return Stream.Null;
 
             var compressorStream = Stream.Null;
             var compressorOptions = new CompressorOptions { IsCompression = false };
-            options = options ?? new ReaderOptions
-            {
-                LeaveStreamOpen = false,
-                ArchiveEncoding = GetDefaultEncoding()
-            };
+            options = options ?? new DecompressionOptions(false, GetDefaultEncoding());
+
             try
             {
                 var archiveStream = await archive.OpenStreamForReadAsync();
@@ -94,8 +89,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         }
 
         /// <inheritdoc />
-        public override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
-            ReaderOptions options = null)
+        public override async Task<Stream> Decompress(StorageFile archive,
+            StorageFolder location, IDecompressionOptions options = null)
         {
             return await DecompressArchive(archive, location, null, false, options);
         }
@@ -104,7 +99,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <summary>Entries are not supported in non-archive formats,
         /// but will be used if file names are to be collected.</summary>
         public override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
-            IReadOnlyList<FileEntry> entries, bool collectFileNames, ReaderOptions options = null)
+            IReadOnlyList<FileEntry> entries, bool collectFileNames, IDecompressionOptions options = null)
         {
             return await DecompressArchive(archive, location, entries, collectFileNames, options);
         }
@@ -113,25 +108,22 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <summary>Entries are not supported in non-archive formats,
         /// and hence will be ignored.</summary>
         public sealed override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
-            IReadOnlyList<FileEntry> entries, ReaderOptions options = null)
+            IReadOnlyList<FileEntry> entries, IDecompressionOptions options = null)
         {
             return await DecompressArchive(archive, location, entries, false, options);
         }
 
         /// <inheritdoc />
-        public override async Task<Stream> Compress(IReadOnlyList<StorageFile> files, StorageFile archive,
-            StorageFolder location, WriterOptions options = null)
+        public override async Task<Stream> Compress(IReadOnlyList<StorageFile> files,
+            StorageFile archive, StorageFolder location, ICompressionOptions options = null)
         {
             if (files.IsNullOrEmpty() || archive == null || location == null) return Stream.Null;
 
             var file = files[0]; // since multiple files are not supported
             var compressorStream = Stream.Null;
             var compressorOptions = new CompressorOptions { FileName = file.Name, IsCompression = true };
-            options = options ?? new WriterOptions(CompressionType.GZip)
-            {
-                LeaveStreamOpen = false,
-                ArchiveEncoding = GetDefaultEncoding()
-            };
+            options = options ?? new CompressionOptions(false, GetDefaultEncoding());
+
             try
             {
                 var archiveStream = await archive.OpenStreamForWriteAsync();

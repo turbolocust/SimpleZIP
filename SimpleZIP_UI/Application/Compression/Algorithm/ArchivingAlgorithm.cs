@@ -20,11 +20,13 @@
 using SharpCompress.Common;
 using SharpCompress.Readers;
 using SharpCompress.Writers;
+using SimpleZIP_UI.Application.Compression.Algorithm.Options;
 using SimpleZIP_UI.Application.Compression.Reader;
 using SimpleZIP_UI.Application.Streams;
 using SimpleZIP_UI.Application.Util;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -51,15 +53,17 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
 
         /// <inheritdoc />
         public override async Task<Stream> Decompress(StorageFile archive,
-            StorageFolder location, ReaderOptions options = null)
+            StorageFolder location, IDecompressionOptions options = null)
         {
             if (archive == null || location == null) return Stream.Null;
 
-            options = options ?? new ReaderOptions
-            {
-                LeaveStreamOpen = false,
-                ArchiveEncoding = GetDefaultEncoding()
-            };
+            var readerOptions = options != null
+                ? ConvertDecompressionOptions(options)
+                : new ReaderOptions
+                {
+                    LeaveStreamOpen = false,
+                    ArchiveEncoding = ConvertEncoding(GetDefaultEncoding())
+                };
 
             var archiveStream = Stream.Null;
             long totalBytesWritten = 0; // for accurate progress update
@@ -67,7 +71,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             try
             {
                 archiveStream = await archive.OpenStreamForReadAsync();
-                using (var reader = ReaderFactory.Open(archiveStream, options))
+                using (var reader = ReaderFactory.Open(archiveStream, readerOptions))
                 {
                     while (reader.MoveToNextEntry())
                     {
@@ -82,7 +86,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             }
             finally
             {
-                if (!options.LeaveStreamOpen)
+                if (!readerOptions.LeaveStreamOpen)
                 {
                     archiveStream.Dispose();
                 }
@@ -93,38 +97,33 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
 
         /// <inheritdoc />
         public override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
-            IReadOnlyList<FileEntry> entries, ReaderOptions options = null)
+            IReadOnlyList<FileEntry> entries, IDecompressionOptions options = null)
         {
             return await DecompressEntries(archive, location, entries, false, options);
         }
 
         /// <inheritdoc />
         public override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
-            IReadOnlyList<FileEntry> entries, bool collectFileNames, ReaderOptions options = null)
+            IReadOnlyList<FileEntry> entries, bool collectFileNames, IDecompressionOptions options = null)
         {
             return await DecompressEntries(archive, location, entries, collectFileNames, options);
         }
 
         /// <inheritdoc />
-        public override async Task<Stream> Compress(IReadOnlyList<StorageFile> files, StorageFile archive,
-            StorageFolder location, WriterOptions options = null)
+        public override async Task<Stream> Compress(IReadOnlyList<StorageFile> files,
+            StorageFile archive, StorageFolder location, ICompressionOptions options = null)
         {
             if (files.IsNullOrEmpty() | archive == null | location == null) return Stream.Null;
 
-            if (options == null)
-            {
-                options = GetWriterOptions();
-                options.LeaveStreamOpen = false;
-                options.ArchiveEncoding = GetDefaultEncoding();
-            }
-
+            var writerOptions = ConvertCompressionOptions(options);
             var progressStream = Stream.Null;
+
             try
             {
                 var archiveStream = await archive.OpenStreamForWriteAsync();
                 progressStream = new ProgressObservableStream(this, archiveStream);
 
-                using (var writer = WriterFactory.Open(progressStream, _type, options))
+                using (var writer = WriterFactory.Open(progressStream, _type, writerOptions))
                 {
                     foreach (var file in files)
                     {
@@ -138,7 +137,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             }
             finally
             {
-                if (!options.LeaveStreamOpen)
+                if (!writerOptions.LeaveStreamOpen)
                 {
                     progressStream.Dispose();
                 }
@@ -147,8 +146,9 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             return progressStream;
         }
 
+        #region Private Helper Methods
         private async Task<Stream> DecompressEntries(IStorageFile archive, StorageFolder location,
-            IReadOnlyCollection<FileEntry> entries, bool collectFileNames, ReaderOptions options = null)
+            IReadOnlyCollection<FileEntry> entries, bool collectFileNames, IDecompressionOptions options = null)
         {
             if (archive == null || entries.IsNullOrEmpty() || location == null) return Stream.Null;
 
@@ -157,16 +157,18 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             long totalBytesWritten = 0; // for accurate progress update
             var archiveStream = Stream.Null;
 
-            options = options ?? new ReaderOptions
-            {
-                LeaveStreamOpen = false,
-                ArchiveEncoding = GetDefaultEncoding()
-            };
+            var readerOptions = options != null
+                ? ConvertDecompressionOptions(options)
+                : new ReaderOptions
+                {
+                    LeaveStreamOpen = false,
+                    ArchiveEncoding = ConvertEncoding(GetDefaultEncoding())
+                };
 
             try
             {
                 archiveStream = await archive.OpenStreamForReadAsync();
-                using (var reader = ReaderFactory.Open(archiveStream, options))
+                using (var reader = ReaderFactory.Open(archiveStream, readerOptions))
                 {
                     while (reader.MoveToNextEntry())
                     {
@@ -196,27 +198,13 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             }
             finally
             {
-                if (!options.LeaveStreamOpen)
+                if (!readerOptions.LeaveStreamOpen)
                 {
                     archiveStream.Dispose();
                 }
             }
 
             return archiveStream;
-        }
-
-        private static IDictionary<string, FileEntry> ConvertToMap(
-            IReadOnlyCollection<FileEntry> entries)
-        {
-            int mapSize = entries.Count * 2;
-            var map = new Dictionary<string, FileEntry>(mapSize);
-
-            foreach (var entry in entries)
-            {
-                map.Add(entry.Id, entry);
-            }
-
-            return map;
         }
 
         private async Task<(string, long)> WriteEntry(IReader reader,
@@ -229,19 +217,60 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             {
                 using (var outputStream = await file.OpenStreamForWriteAsync())
                 {
-                    var bytes = new byte[DefaultBufferSize];
+                    var buffer = new byte[DefaultBufferSize];
                     int readBytes;
-                    while ((readBytes = entryStream.Read(bytes, 0, bytes.Length)) > 0)
+                    while ((readBytes = entryStream.Read(buffer, 0, buffer.Length)) > 0)
                     {
-                        await outputStream.WriteAsync(bytes, 0, readBytes, Token);
+                        await outputStream.WriteAsync(buffer, 0, readBytes, Token);
                         totalBytesWritten += readBytes;
                         Update(totalBytesWritten);
                     }
+
+                    await outputStream.FlushAsync(Token);
                 }
             }
 
             return (file.Name, totalBytesWritten);
         }
+
+        private static ArchiveEncoding ConvertEncoding(Encoding encoding)
+        {
+            return new ArchiveEncoding
+            {
+                Default = encoding,
+                Password = encoding
+            };
+        }
+
+        private static ReaderOptions ConvertDecompressionOptions(IDecompressionOptions options)
+        {
+            return new ReaderOptions
+            {
+                LeaveStreamOpen = options.LeaveStreamOpen,
+                ArchiveEncoding = ConvertEncoding(options.ArchiveEncoding),
+                Password = options.Password
+            };
+        }
+
+        // ReSharper disable once SuggestBaseTypeForParameter
+        private WriterOptions ConvertCompressionOptions(ICompressionOptions options)
+        {
+            var writerOptions = GetWriterOptions();
+
+            if (options != null)
+            {
+                writerOptions.LeaveStreamOpen = options.LeaveStreamOpen;
+                writerOptions.ArchiveEncoding = ConvertEncoding(options.ArchiveEncoding);
+            }
+            else
+            {
+                writerOptions.LeaveStreamOpen = false;
+                writerOptions.ArchiveEncoding = ConvertEncoding(GetDefaultEncoding());
+            }
+
+            return writerOptions;
+        }
+        #endregion
 
         /// <summary>
         /// Returns the writer instance with the default fallback compression type.

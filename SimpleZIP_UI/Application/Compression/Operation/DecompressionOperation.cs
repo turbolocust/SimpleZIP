@@ -18,8 +18,8 @@
 // ==--==
 
 using SharpCompress.Common;
-using SharpCompress.Readers;
 using SimpleZIP_UI.Application.Compression.Algorithm;
+using SimpleZIP_UI.Application.Compression.Algorithm.Options;
 using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.I18N;
@@ -58,16 +58,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                 string verboseMsg = string.Empty;
                 bool isSuccess = false;
 
-                var options = new ReaderOptions
-                {
-                    LeaveStreamOpen = false,
-                    Password = password,
-                    ArchiveEncoding = new ArchiveEncoding
-                    {
-                        Default = info.Encoding ?? Encoding.UTF8,
-                        Password = info.Encoding ?? Encoding.UTF8
-                    }
-                };
+                var options = new DecompressionOptions(false, Encoding.UTF8, password);
 
                 try
                 {
@@ -86,7 +77,8 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                         throw; // simply re-throw, but only if password not set
                     }
 
-                    message = await ExceptionMessages.GetStringFor(ex, false, passwordSet, archiveFile);
+                    message = await ExceptionMessages.GetStringFor(
+                        ex, false, passwordSet, archiveFile);
                     verboseMsg = ex.Message;
                 }
 

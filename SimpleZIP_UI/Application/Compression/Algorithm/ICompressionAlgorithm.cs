@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,10 +17,8 @@
 // 
 // ==--==
 
-using SharpCompress.Common;
-using SharpCompress.Readers;
-using SharpCompress.Writers;
 using SimpleZIP_UI.Application.Compression.Algorithm.Event;
+using SimpleZIP_UI.Application.Compression.Algorithm.Options;
 using SimpleZIP_UI.Application.Compression.Reader;
 using System;
 using System.Collections.Generic;
@@ -53,10 +51,10 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <param name="location">The location where to extract the archive to.</param>
         /// <param name="options">Options for the reader. May be omitted.></param>
         /// <returns>Task which returns a stream that has been used to read the archive. The stream will not be 
-        /// disposed if <see cref="OptionsBase.LeaveStreamOpen"/> in options is set to true.</returns>
+        /// disposed if <see cref="IOptions.LeaveStreamOpen"/> in options is set to true.</returns>
         /// <exception cref="IOException">Thrown on any error when reading from or writing to streams.</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not permitted.</exception>
-        Task<Stream> Decompress(StorageFile archive, StorageFolder location, ReaderOptions options = null);
+        Task<Stream> Decompress(StorageFile archive, StorageFolder location, IDecompressionOptions options = null);
 
         /// <summary>
         /// Decompresses (extracts) entries from the specified archive to the specified location.
@@ -66,11 +64,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <param name="entries">Entries of the archive to be extracted.</param>
         /// <param name="options">Options for the reader. May be omitted.</param>
         /// <returns>Task which returns a stream that has been used to read the archive. The stream will not be 
-        /// disposed if <see cref="OptionsBase.LeaveStreamOpen"/> in options is set to true.</returns>
+        /// disposed if <see cref="IOptions.LeaveStreamOpen"/> in options is set to true.</returns>
         /// <exception cref="IOException">Thrown on any error when reading from or writing to streams.</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not permitted.</exception>
         Task<Stream> Decompress(StorageFile archive, StorageFolder location,
-            IReadOnlyList<FileEntry> entries, ReaderOptions options = null);
+            IReadOnlyList<FileEntry> entries, IDecompressionOptions options = null);
 
         /// <summary>
         /// Decompresses (extracts) entries from the specified archive to the specified location.
@@ -82,11 +80,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// Names of extracted files will be saved to <see cref="FileEntry.FileName"/>.</param>.
         /// <param name="options">Options for the reader. May be omitted.</param>
         /// <returns>Task which returns a stream that has been used to read the archive. The stream will not be 
-        /// disposed if <see cref="OptionsBase.LeaveStreamOpen"/> in options is set to true.</returns>
+        /// disposed if <see cref="IOptions.LeaveStreamOpen"/> in options is set to true.</returns>
         /// <exception cref="IOException">Thrown on any error when reading from or writing to streams.</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not permitted.</exception>
         Task<Stream> Decompress(StorageFile archive, StorageFolder location,
-            IReadOnlyList<FileEntry> entries, bool collectFileNames, ReaderOptions options = null);
+            IReadOnlyList<FileEntry> entries, bool collectFileNames, IDecompressionOptions options = null);
 
         /// <summary>
         /// Compresses files to the specified location. If the writer options are omitted, the default
@@ -97,11 +95,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <param name="location">Where the archive is to be created.</param>
         /// <param name="options">Options for the writer. May be omitted.</param>
         /// <returns>Task which returns a stream that has been used to write the archive. The stream will not be 
-        /// disposed if <see cref="OptionsBase.LeaveStreamOpen"/> in options is set to true.</returns>
+        /// disposed if <see cref="IOptions.LeaveStreamOpen"/> in options is set to true.</returns>
         /// <exception cref="IOException">Thrown on any error when reading from or writing to streams.</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not allowed.</exception>
         /// <exception cref="NotSupportedException">Thrown when archive type does not have a writer.</exception>
         Task<Stream> Compress(IReadOnlyList<StorageFile> files, StorageFile archive,
-            StorageFolder location, WriterOptions options = null);
+            StorageFolder location, ICompressionOptions options = null);
     }
 }
