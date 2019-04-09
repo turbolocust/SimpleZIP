@@ -120,19 +120,21 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
 
                 using (var zipFile = new ZipFile(archiveStream))
                 {
+                    zipFile.Password = options.Password;
                     foreach (ZipEntry zipEntry in zipFile)
                     {
                         Token.ThrowIfCancellationRequested();
                         if (!zipEntry.IsDirectory)
                         {
-                            (_, totalBytesWritten) = await WriteEntry(zipFile, zipEntry, location, totalBytesWritten);
+                            (_, totalBytesWritten) = await WriteEntry(
+                                zipFile, zipEntry, location, totalBytesWritten);
                         }
                     }
                 }
             }
             catch (ICSharpCode.SharpZipLib.SharpZipBaseException ex)
             {
-                if (!ex.Message.Equals("No password set.")) throw;
+                if (!ex.Message.StartsWith("No password available")) throw;
                 throw new ArchiveEncryptedException(ex.Message, ex);
             }
             finally
@@ -183,6 +185,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
 
                 using (var zipFile = new ZipFile(archiveStream))
                 {
+                    zipFile.Password = options.Password;
                     foreach (ZipEntry zipEntry in zipFile)
                     {
                         Token.ThrowIfCancellationRequested();
@@ -212,7 +215,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
             }
             catch (ICSharpCode.SharpZipLib.SharpZipBaseException ex)
             {
-                if (!ex.Message.Equals("No password set.")) throw;
+                if (!ex.Message.StartsWith("No password available")) throw;
                 throw new ArchiveEncryptedException(ex.Message, ex);
             }
             finally
@@ -229,11 +232,15 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
         private async Task<(string, long)> WriteEntry(ZipFile zip,
             ZipEntry entry, StorageFolder location, long totalBytesWritten)
         {
-            var file = await FileUtils.CreateFileAsync(location, entry.Name);
-            if (file == null) return (null, totalBytesWritten); // file could not be created
+            string fileName;
 
             using (var entryStream = zip.GetInputStream(entry))
             {
+                var file = await FileUtils.CreateFileAsync(location, entry.Name);
+                if (file == null) return (null, totalBytesWritten); // file could not be created
+
+                fileName = file.Name;
+
                 using (var outputStream = await file.OpenStreamForWriteAsync())
                 {
                     var buffer = new byte[DefaultBufferSize];
@@ -249,7 +256,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                 }
             }
 
-            return (file.Name, totalBytesWritten);
+            return (fileName, totalBytesWritten);
         }
         #endregion
     }
