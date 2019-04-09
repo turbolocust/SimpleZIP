@@ -111,6 +111,7 @@ namespace SimpleZIP_UI.Application.Compression
             switch (value)
             {
                 case ArchiveType.Zip:
+                    // make use of SharpZipLib for ZIP files
                     algorithm = new Algorithm.Type.SZL.Zip();
                     break;
                 case ArchiveType.GZip:

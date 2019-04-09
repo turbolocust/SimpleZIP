@@ -21,6 +21,7 @@ using SimpleZIP_UI.Application;
 using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Compression.Operation;
 using SimpleZIP_UI.Application.Compression.Operation.Job;
+using SimpleZIP_UI.Application.Compression.Tree;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.I18N;
 using SimpleZIP_UI.Presentation.Factory;
@@ -34,7 +35,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
-using SimpleZIP_UI.Application.Compression.Tree;
 
 namespace SimpleZIP_UI.Presentation.Controller
 {
@@ -163,7 +163,7 @@ namespace SimpleZIP_UI.Presentation.Controller
                 // doesn't exist, hence extract and read again
                 var item = new ExtractableItem(
                     root.Archive.Name,
-                    root.Archive, new[] { entry });
+                    root.Archive, new[] { entry.ToArchiveEntry() });
                 var size = await FileUtils.GetFileSizeAsync(item.Archive);
                 // create operation and job for execution
                 var operationInfo = new DecompressionInfo(item, size)
@@ -270,7 +270,8 @@ namespace SimpleZIP_UI.Presentation.Controller
                 IsNavigating = true;
                 var item = new ExtractableItem(
                     root.Archive.Name,
-                    root.Archive, entries)
+                    root.Archive,
+                    entries.ConvertAll(e => e.ToArchiveEntry()))
                 {
                     Password = root.Password
                 };

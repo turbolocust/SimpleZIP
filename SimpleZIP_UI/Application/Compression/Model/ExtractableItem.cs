@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,9 +17,9 @@
 // 
 // ==--==
 
+using SimpleZIP_UI.Application.Compression.Tree.Reader;
 using System.Collections.Generic;
 using Windows.Storage;
-using SimpleZIP_UI.Application.Compression.Tree;
 
 namespace SimpleZIP_UI.Application.Compression.Model
 {
@@ -47,10 +47,10 @@ namespace SimpleZIP_UI.Application.Compression.Model
         /// Optional list of entries to be extracted. If this is not 
         /// <code>null</code>, then only these entries will be extracted.
         /// </summary>
-        internal IReadOnlyList<ArchiveTreeFile> Entries { get; }
+        internal IReadOnlyList<IArchiveEntry> Entries { get; }
 
         internal ExtractableItem(string name, StorageFile archive,
-            IReadOnlyList<ArchiveTreeFile> entries = null)
+            IReadOnlyList<IArchiveEntry> entries = null)
         {
             Name = name;
             Archive = archive;

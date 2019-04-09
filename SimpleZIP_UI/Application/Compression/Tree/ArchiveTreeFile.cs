@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
 // 
 // ==--==
 
+using SimpleZIP_UI.Application.Compression.Tree.Reader;
 using SimpleZIP_UI.Application.Util;
 
 namespace SimpleZIP_UI.Application.Compression.Tree
@@ -62,6 +63,11 @@ namespace SimpleZIP_UI.Application.Compression.Tree
             Name = name;
             Size = size;
             IsArchive = isArchive;
+        }
+
+        internal IArchiveEntry ToArchiveEntry()
+        {
+            return new ArchiveEntry(Id, IsBrowsable, Size);
         }
 
         protected bool Equals(ArchiveTreeFile other)

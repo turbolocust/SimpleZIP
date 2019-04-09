@@ -17,6 +17,7 @@
 // 
 // ==--==
 
+using SimpleZIP_UI.Application.Compression.Tree.Reader;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,8 +25,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
-using SharpCompress.Common;
-using SharpCompress.Readers;
 
 namespace SimpleZIP_UI.Application.Compression.Tree
 {
@@ -42,6 +41,11 @@ namespace SimpleZIP_UI.Application.Compression.Tree
         public const string RootNodeName = "root";
 
         /// <summary>
+        /// Default path separator for entry names.
+        /// </summary>
+        public const char SeparatorChar = '/';
+
+        /// <summary>
         /// To avoid too many calls of <see cref="Task.Delay(int)"/>.
         /// </summary>
         private const uint DefaultTaskDelayRate = 100;
@@ -53,10 +57,9 @@ namespace SimpleZIP_UI.Application.Compression.Tree
         private readonly IDictionary<string, ArchiveTreeNode> _nodes;
 
         /// <summary>
-        /// The reader used to read the archive entries. Will be instantiated when 
-        /// opening the archive, see <see cref="OpenArchiveAsync"/>.
+        /// The reader used to read the archive entries.
         /// </summary>
-        private IReader Reader { get; set; }
+        private IArchiveReader _reader;
 
         /// <summary>
         /// The token which can be used to interrupt the operation.
@@ -64,43 +67,38 @@ namespace SimpleZIP_UI.Application.Compression.Tree
         private CancellationToken _cancellationToken;
 
         /// <summary>
-        /// True if this reader is closed and thus cannot be used anymore. 
+        /// True if builder has been interrupted and thus cannot be used anymore. 
         /// Once this instance is disposed, this value will always be true.
         /// </summary>
-        internal bool Closed { get; private set; }
+        internal bool Interrupt { get; private set; }
 
         public ArchiveTreeBuilder(CancellationToken token)
         {
             _nodes = new Dictionary<string, ArchiveTreeNode>();
             _cancellationToken = token;
-            _cancellationToken.Register(() => Closed = true);
+            _cancellationToken.Register(() => Interrupt = true);
         }
 
-        /// <summary>
-        /// Opens the specified archive file asynchronously.
-        /// </summary>
-        /// <param name="archive">The archive to be opened.</param>
-        /// <param name="password">The password for the archive (if encrypted).</param>
-        /// <returns>The stream used to read the archive.</returns>
-        private async Task<Stream> OpenArchiveAsync(IStorageFile archive, string password = null)
+        // ReSharper disable once SwitchStatementMissingSomeCases
+        private static async Task<IArchiveReader> GetReaderInstance(
+            StorageFile file, CancellationToken token)
         {
-            var options = new ReaderOptions
+            var type = await Archives
+                .DetermineArchiveType(file);
+            IArchiveReader reader;
+
+            switch (type)
             {
-                LeaveStreamOpen = false,
-                ArchiveEncoding = new ArchiveEncoding
-                {
-                    Default = Encoding.UTF8,
-                    Password = Encoding.UTF8
-                }
-            };
-            if (password != null)
-            {
-                options.Password = password;
+                case Archives.ArchiveType.Zip:
+                    // make use of SharpZipLib for ZIP files
+                    reader = new Reader.SZL.ArchiveReader(file, token);
+                    break;
+                default: // using SharpCompress here
+                    reader = new ArchiveReader(file, token);
+                    break;
             }
 
-            var stream = await archive.OpenStreamForReadAsync();
-            Reader = ReaderFactory.Open(stream, options);
-            return stream;
+            return reader;
         }
 
         /// <summary>
@@ -114,11 +112,11 @@ namespace SimpleZIP_UI.Application.Compression.Tree
         /// <exception cref="ObjectDisposedException">Thrown if reader is closed.</exception>
         public async Task<ArchiveTreeRoot> Build(StorageFile archive, string password = null)
         {
-            if (Closed) throw new ObjectDisposedException(GetType().FullName);
+            if (Interrupt) throw new ObjectDisposedException(GetType().FullName);
 
-            await OpenArchiveAsync(archive, password);
+            _reader = await GetReaderInstance(archive, _cancellationToken);
+            await _reader.OpenArchiveAsync(password);
 
-            char separator = DetermineFileSeparator();
             var keyBuilder = new StringBuilder();
             var nameBuilder = new StringBuilder();
             var rootNode = new ArchiveTreeRoot(RootNodeName, archive, password);
@@ -127,20 +125,21 @@ namespace SimpleZIP_UI.Application.Compression.Tree
 
             uint delayRate = 0; // to avoid too many calls of Task.Delay
 
-            foreach (var entry in ReadArchive())
+            foreach (var entry in _reader.ReadArchive())
             {
                 // directories are considered anyway
                 if (entry.IsDirectory || entry.Key == null) continue;
 
-                UpdateEntryKeyPair(ref pair, entry.Key, separator);
+                string key = entry.Key.Replace('\\', SeparatorChar);
+                UpdateEntryKeyPair(ref pair, key);
                 ArchiveTreeNode parentNode = rootNode;
 
                 for (int i = 0; i <= pair.SeparatorPos; ++i)
                 {
-                    var c = entry.Key[i];
+                    var c = key[i];
                     keyBuilder.Append(c);
 
-                    if (c == separator) // next parent found
+                    if (c == SeparatorChar) // next parent found
                     {
                         var node = GetNode(keyBuilder.ToString());
                         if (parentNode.Children.Add(node))
@@ -160,7 +159,7 @@ namespace SimpleZIP_UI.Application.Compression.Tree
                     throw new ReadingArchiveException("Error reading archive.");
 
                 var fileEntry = ArchiveTreeFile.CreateFileEntry(
-                    entry.Key, pair.EntryName, (ulong)entry.Size);
+                    key, pair.EntryName, entry.Size);
                 parentNode.Children.Add(fileEntry);
                 keyBuilder.Clear();
 
@@ -173,19 +172,6 @@ namespace SimpleZIP_UI.Application.Compression.Tree
             }
 
             return rootNode; // return first element in tree, which is the root node
-        }
-
-        /// <summary>
-        /// Reads each entry of the archive.
-        /// </summary>
-        /// <returns>An enumerable element of type <see cref="IEntry"/>.</returns>
-        private IEnumerable<IEntry> ReadArchive()
-        {
-            while (!Closed && Reader.MoveToNextEntry())
-            {
-                _cancellationToken.ThrowIfCancellationRequested();
-                yield return Reader.Entry;
-            }
         }
 
         /// <summary>
@@ -206,26 +192,16 @@ namespace SimpleZIP_UI.Application.Compression.Tree
         }
 
         /// <summary>
-        /// Determines the file separator character used by the specific archive type.
-        /// </summary>
-        /// <returns>The correct file separator character for the archive type.</returns>
-        private char DetermineFileSeparator()
-        {
-            return Reader.ArchiveType == ArchiveType.Rar ? '\\' : '/';
-        }
-
-        /// <summary>
         /// Updates an <see cref="EntryKeyPair"/> which holds the name of the entry 
         /// and the key of its parent node, also considering the root node.
         /// </summary>
         /// <param name="pair">Reference to the pair to be updated.</param>
         /// <param name="key">The full key of the entry.</param>
-        /// <param name="separator">File separator character.</param>
         /// <returns>An <see cref="EntryKeyPair"/>.</returns>
-        private static void UpdateEntryKeyPair(ref EntryKeyPair pair, string key, char separator)
+        private static void UpdateEntryKeyPair(ref EntryKeyPair pair, string key)
         {
-            string trimmedKey = key.TrimEnd(separator);
-            int lastSeparatorPos = trimmedKey.LastIndexOf(separator);
+            string trimmedKey = key.TrimEnd(SeparatorChar);
+            int lastSeparatorPos = trimmedKey.LastIndexOf(SeparatorChar);
             string entryName = trimmedKey.Substring(lastSeparatorPos + 1);
             string parentKey = lastSeparatorPos == -1 ? RootNodeName
                 : trimmedKey.Substring(0, trimmedKey.Length - entryName.Length);
@@ -244,17 +220,15 @@ namespace SimpleZIP_UI.Application.Compression.Tree
         {
             if (disposing)
             {
-                Closed = true;
-                Reader?.Dispose();
+                Interrupt = true;
+                _reader.Dispose();
             }
         }
 
         private struct EntryKeyPair
         {
             internal int SeparatorPos;
-
             internal string EntryName;
-
             internal string ParentKey;
         }
     }

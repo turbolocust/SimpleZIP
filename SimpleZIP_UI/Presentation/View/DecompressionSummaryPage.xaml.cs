@@ -235,7 +235,7 @@ namespace SimpleZIP_UI.Presentation.View
                     var stringBuilder = new StringBuilder();
                     foreach (var entry in item.Entries)
                     {
-                        stringBuilder.Append("-> ").Append(entry.Name);
+                        stringBuilder.Append("-> ").Append(entry.Key);
                         ItemsListBox.Items.Add(new TextBlock
                         {
                             Text = stringBuilder.ToString(),
