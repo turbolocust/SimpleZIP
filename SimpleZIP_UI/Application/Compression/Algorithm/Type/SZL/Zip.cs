@@ -125,11 +125,15 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                         Token.ThrowIfCancellationRequested();
                         if (!zipEntry.IsDirectory)
                         {
-                            (_, totalBytesWritten) = await WriteEntry(
-                                zipFile, zipEntry, location, totalBytesWritten);
+                            (_, totalBytesWritten) = await WriteEntry(zipFile, zipEntry, location, totalBytesWritten);
                         }
                     }
                 }
+            }
+            catch (ICSharpCode.SharpZipLib.SharpZipBaseException ex)
+            {
+                if (!ex.Message.Equals("No password set.")) throw;
+                throw new ArchiveEncryptedException(ex.Message, ex);
             }
             finally
             {
@@ -204,6 +208,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                         if (processedEntries == entries.Count) break;
                     }
                 }
+            }
+            catch (ICSharpCode.SharpZipLib.SharpZipBaseException ex)
+            {
+                if (!ex.Message.Equals("No password set.")) throw;
+                throw new ArchiveEncryptedException(ex.Message, ex);
             }
             finally
             {

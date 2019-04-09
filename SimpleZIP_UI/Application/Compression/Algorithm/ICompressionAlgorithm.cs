@@ -54,6 +54,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// disposed if <see cref="IOptions.LeaveStreamOpen"/> in options is set to true.</returns>
         /// <exception cref="IOException">Thrown on any error when reading from or writing to streams.</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not permitted.</exception>
+        /// <exception cref="ArchiveEncryptedException">Thrown if encrypted archive could not be handled.</exception>
         Task<Stream> Decompress(StorageFile archive, StorageFolder location, IDecompressionOptions options = null);
 
         /// <summary>
@@ -67,6 +68,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// disposed if <see cref="IOptions.LeaveStreamOpen"/> in options is set to true.</returns>
         /// <exception cref="IOException">Thrown on any error when reading from or writing to streams.</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not permitted.</exception>
+        /// <exception cref="ArchiveEncryptedException">Thrown if encrypted archive could not be handled.</exception>
         Task<Stream> Decompress(StorageFile archive, StorageFolder location,
             IReadOnlyList<FileEntry> entries, IDecompressionOptions options = null);
 
@@ -83,6 +85,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// disposed if <see cref="IOptions.LeaveStreamOpen"/> in options is set to true.</returns>
         /// <exception cref="IOException">Thrown on any error when reading from or writing to streams.</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not permitted.</exception>
+        /// <exception cref="ArchiveEncryptedException">Thrown if encrypted archive could not be handled.</exception>
         Task<Stream> Decompress(StorageFile archive, StorageFolder location,
             IReadOnlyList<FileEntry> entries, bool collectFileNames, IDecompressionOptions options = null);
 

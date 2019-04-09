@@ -137,6 +137,7 @@
     <Compile Include="Application\Compression\Operation\Job\IArchivingJob.cs" />
     <Compile Include="Application\Compression\Operation\Operations.cs" />
     <Compile Include="Application\Compression\Reader\RootNode.cs" />
+    <Compile Include="Application\ArchiveEncryptedException.cs" />
     <Compile Include="Application\ICancellable.cs" />
     <Compile Include="Application\ICancelRequest.cs" />
     <Compile Include="Application\IPasswordRequest.cs" />

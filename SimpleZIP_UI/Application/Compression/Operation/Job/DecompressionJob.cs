@@ -57,14 +57,9 @@ namespace SimpleZIP_UI.Application.Compression.Operation.Job
                     {
                         subResult = await Operation.Perform(operationInfo, false);
                     }
-                    catch (SharpCompress.Common.CryptographicException)
+                    catch (ArchiveEncryptedException)
                     {
                         // archive is encrypted, will request password and try again
-                    }
-                    catch (ICSharpCode.SharpZipLib.SharpZipBaseException ex)
-                    {
-                        if (!ex.Message.Equals("No password set.")) throw;
-                        // only continue and request password if none is set
                     }
 
                     if (subResult == null)

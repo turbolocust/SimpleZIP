@@ -78,11 +78,14 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                         Token.ThrowIfCancellationRequested();
                         if (!reader.Entry.IsDirectory)
                         {
-                            (_, totalBytesWritten) = await WriteEntry(
-                                reader, location, totalBytesWritten);
+                            (_, totalBytesWritten) = await WriteEntry(reader, location, totalBytesWritten);
                         }
                     }
                 }
+            }
+            catch (CryptographicException ex)
+            {
+                throw new ArchiveEncryptedException(ex.Message, ex);
             }
             finally
             {
@@ -195,6 +198,10 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                         if (processedEntries == entries.Count) break;
                     }
                 }
+            }
+            catch (CryptographicException ex)
+            {
+                throw new ArchiveEncryptedException(ex.Message, ex);
             }
             finally
             {
