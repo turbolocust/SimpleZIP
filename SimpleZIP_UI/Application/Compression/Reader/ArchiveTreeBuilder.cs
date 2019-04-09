@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
     /// Traverses the archive hierarchy and generates nodes, which represent folders,
     /// and file entries. A node can have other nodes and file entries as children.
     /// </summary>
-    internal class ArchiveReader : IDisposable
+    internal class ArchiveTreeBuilder : IDisposable
     {
         /// <summary>
         /// Pre-defined name of the root node.
@@ -69,7 +69,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         /// </summary>
         internal bool Closed { get; private set; }
 
-        public ArchiveReader(CancellationToken token)
+        public ArchiveTreeBuilder(CancellationToken token)
         {
             _nodes = new Dictionary<string, Node>();
             _cancellationToken = token;
@@ -112,7 +112,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         /// <exception cref="IOException">Thrown when an error while reading the archive occurred.</exception>
         /// <exception cref="OperationCanceledException">Thrown if operation has been cancelled.</exception>
         /// <exception cref="ObjectDisposedException">Thrown if reader is closed.</exception>
-        public async Task<RootNode> Read(StorageFile archive, string password = null)
+        public async Task<RootNode> Build(StorageFile archive, string password = null)
         {
             if (Closed) throw new ObjectDisposedException(GetType().FullName);
 

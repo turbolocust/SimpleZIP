@@ -143,7 +143,7 @@
     <Compile Include="Application\IPasswordRequest.cs" />
     <Compile Include="Application\IProgressObserver.cs" />
     <Compile Include="Application\Compression\Reader\IArchiveEntry.cs" />
-    <Compile Include="Application\Compression\Reader\ArchiveReader.cs" />
+    <Compile Include="Application\Compression\Reader\ArchiveTreeBuilder.cs" />
     <Compile Include="Application\Compression\Reader\FileEntry.cs" />
     <Compile Include="Application\Compression\Reader\Node.cs" />
     <Compile Include="Application\Compression\Model\CompressionInfo.cs" />

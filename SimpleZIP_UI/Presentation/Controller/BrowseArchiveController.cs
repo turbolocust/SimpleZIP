@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -81,22 +81,23 @@ namespace SimpleZIP_UI.Presentation.Controller
             }
 
             string password = string.Empty;
+
             try
             {
                 try
                 {
-                    using (var reader = new ArchiveReader(_tokenSource.Token))
+                    using (var treeBuilder = new ArchiveTreeBuilder(_tokenSource.Token))
                     {
-                        node = await reader.Read(archive);
+                        node = await treeBuilder.Build(archive);
                     }
                 }
-                catch (SharpCompress.Common.CryptographicException)
+                catch (ArchiveEncryptedException)
                 {
                     // archive is encrypted, ask for password and try again
                     password = await PasswordRequest.RequestPassword(archive.DisplayName);
-                    using (var reader = new ArchiveReader(_tokenSource.Token))
+                    using (var treeBuilder = new ArchiveTreeBuilder(_tokenSource.Token))
                     {
-                        node = await reader.Read(archive, password);
+                        node = await treeBuilder.Build(archive, password);
                     }
                 }
             }
