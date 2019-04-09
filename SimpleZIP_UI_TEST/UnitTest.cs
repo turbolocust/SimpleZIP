@@ -147,7 +147,7 @@ namespace SimpleZIP_UI_TEST
 
             var zipStream = new ZipOutputStream(await archive.OpenStreamForWriteAsync())
             {
-                Password = "testPassword"
+                Password = "test"
             };
 
             zipStream.SetLevel(0); // no compression needed
@@ -174,14 +174,14 @@ namespace SimpleZIP_UI_TEST
             {
                 using (var zipFile = new ZipFile(await archive.OpenStreamForReadAsync()))
                 {
-                    zipFile.TestArchive(true);
+                    zipFile.GetInputStream(0); // password required here
                     Assert.Fail("Correct password provided. " +
                                 "This is not the purpose of this test.");
                 }
             }
-            catch (ZipException ex)
+            catch (Exception ex)
             {
-                Assert.Equals(ex.Message, "No password set.");
+                Assert.IsTrue(ex.Message.StartsWith("No password available"));
             }
         }
 
