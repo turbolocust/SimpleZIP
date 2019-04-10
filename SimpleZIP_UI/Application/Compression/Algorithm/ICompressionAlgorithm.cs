@@ -19,7 +19,6 @@
 
 using SimpleZIP_UI.Application.Compression.Algorithm.Event;
 using SimpleZIP_UI.Application.Compression.Algorithm.Options;
-using SimpleZIP_UI.Application.Compression.Tree;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,6 +26,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
 using SimpleZIP_UI.Application.Compression.Reader;
+using SimpleZIP_UI.Application.Compression.TreeBuilder;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm
 {

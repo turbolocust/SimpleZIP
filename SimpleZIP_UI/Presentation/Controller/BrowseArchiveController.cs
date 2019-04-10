@@ -21,7 +21,6 @@ using SimpleZIP_UI.Application;
 using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Compression.Operation;
 using SimpleZIP_UI.Application.Compression.Operation.Job;
-using SimpleZIP_UI.Application.Compression.Tree;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.I18N;
 using SimpleZIP_UI.Presentation.Factory;
@@ -35,6 +34,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
+using SimpleZIP_UI.Application.Compression.TreeBuilder;
 
 namespace SimpleZIP_UI.Presentation.Controller
 {

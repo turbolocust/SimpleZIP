@@ -16,28 +16,22 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
-namespace SimpleZIP_UI.Application.Compression.Tree
+
+using Windows.Storage;
+
+namespace SimpleZIP_UI.Application.Compression.TreeBuilder
 {
-    internal interface IArchiveTreeElement
+    internal class ArchiveTreeRoot : ArchiveTreeNode
     {
-        /// <summary>
-        /// The unique identifier of this entry.
-        /// </summary>
-        string Id { get; }
+        internal StorageFile Archive { get; }
 
-        /// <summary>
-        /// The friendly name of this entry.
-        /// </summary>
-        string Name { get; }
+        internal string Password { get; }
 
-        /// <summary>
-        /// True if this entry is browsable (directory), false otherwise.
-        /// </summary>
-        bool IsBrowsable { get; }
-
-        /// <summary>
-        /// True if this entry is an archive, false otherwise.
-        /// </summary>
-        bool IsArchive { get; }
+        internal ArchiveTreeRoot(string id, StorageFile archive,
+            string password = null) : base(id)
+        {
+            Archive = archive;
+            Password = password ?? string.Empty;
+        }
     }
 }

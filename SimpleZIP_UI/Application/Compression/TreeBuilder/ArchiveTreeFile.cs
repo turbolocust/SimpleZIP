@@ -20,7 +20,7 @@
 using SimpleZIP_UI.Application.Compression.Reader;
 using SimpleZIP_UI.Application.Util;
 
-namespace SimpleZIP_UI.Application.Compression.Tree
+namespace SimpleZIP_UI.Application.Compression.TreeBuilder
 {
     /// <summary>
     /// Represents a file entry within a node.

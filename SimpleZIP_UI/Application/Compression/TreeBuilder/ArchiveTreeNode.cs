@@ -19,7 +19,7 @@
 
 using System.Collections.Generic;
 
-namespace SimpleZIP_UI.Application.Compression.Tree
+namespace SimpleZIP_UI.Application.Compression.TreeBuilder
 {
     /// <summary>
     /// Represents a folder in the archive's hierarchy.

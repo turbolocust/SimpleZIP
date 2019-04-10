@@ -136,7 +136,7 @@
     <Compile Include="Application\Compression\Operation\Job\DecompressionJob.cs" />
     <Compile Include="Application\Compression\Operation\Job\IArchivingJob.cs" />
     <Compile Include="Application\Compression\Operation\Operations.cs" />
-    <Compile Include="Application\Compression\Tree\ArchiveTreeRoot.cs" />
+    <Compile Include="Application\Compression\TreeBuilder\ArchiveTreeRoot.cs" />
     <Compile Include="Application\ArchiveEncryptedException.cs" />
     <Compile Include="Application\Compression\Reader\ArchiveEntry.cs" />
     <Compile Include="Application\Compression\Reader\ArchiveReader.cs" />
@@ -147,10 +147,10 @@
     <Compile Include="Application\ICancelRequest.cs" />
     <Compile Include="Application\IPasswordRequest.cs" />
     <Compile Include="Application\IProgressObserver.cs" />
-    <Compile Include="Application\Compression\Tree\IArchiveTreeElement.cs" />
-    <Compile Include="Application\Compression\Tree\ArchiveTreeBuilder.cs" />
-    <Compile Include="Application\Compression\Tree\ArchiveTreeFile.cs" />
-    <Compile Include="Application\Compression\Tree\ArchiveTreeNode.cs" />
+    <Compile Include="Application\Compression\TreeBuilder\IArchiveTreeElement.cs" />
+    <Compile Include="Application\Compression\TreeBuilder\ArchiveTreeBuilder.cs" />
+    <Compile Include="Application\Compression\TreeBuilder\ArchiveTreeFile.cs" />
+    <Compile Include="Application\Compression\TreeBuilder\ArchiveTreeNode.cs" />
     <Compile Include="Application\Compression\Model\CompressionInfo.cs" />
     <Compile Include="Application\Compression\Model\ExtractableItem.cs" />
     <Compile Include="Application\Compression\Model\Result.cs" />
