@@ -17,14 +17,15 @@
 // 
 // ==--==
 
+using SharpCompress.Common;
+using SharpCompress.Readers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
-using SharpCompress.Common;
-using SharpCompress.Readers;
 
 namespace SimpleZIP_UI.Application.Compression.Reader
 {
@@ -36,7 +37,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         private IReader _reader;
 
         /// <summary>
-        /// True if this reader is closed, false otherwise.
+        /// True if this reader is closed/disposed, false otherwise.
         /// </summary>
         private bool _closed;
 
@@ -60,6 +61,8 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         /// <inheritdoc />
         public async Task OpenArchiveAsync(string password = null)
         {
+            if (_closed) throw new ObjectDisposedException(ToString());
+
             var options = new ReaderOptions
             {
                 LeaveStreamOpen = false,
@@ -78,6 +81,8 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         /// <inheritdoc />
         public IEnumerable<IArchiveEntry> ReadArchive()
         {
+            if (_closed) throw new ObjectDisposedException(ToString());
+
             while (!_closed && _reader.MoveToNextEntry())
             {
                 _cancellationToken.ThrowIfCancellationRequested();
@@ -92,6 +97,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         public void Dispose()
         {
             _reader?.Dispose();
+            _closed = true;
         }
     }
 }
