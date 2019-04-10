@@ -86,7 +86,7 @@ namespace SimpleZIP_UI.Application.Compression.Tree
                 case Archives.ArchiveType.Zip:
                     // make use of SharpZipLib for ZIP files,
                     // because it's more reliable than SharpCompress
-                    reader = new Reader.SZL.ArchiveReader(file, token);
+                    reader = new Reader.SZL.ArchiveReaderZip(file, token);
                     break;
                 default: // using SharpCompress here
                     reader = new ArchiveReader(file, token);

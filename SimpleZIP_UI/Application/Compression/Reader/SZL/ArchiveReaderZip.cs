@@ -27,7 +27,7 @@ using ICSharpCode.SharpZipLib.Zip;
 
 namespace SimpleZIP_UI.Application.Compression.Reader.SZL
 {
-    internal class ArchiveReader : IArchiveReader
+    internal class ArchiveReaderZip : IArchiveReader
     {
         /// <summary>
         /// The currently opened ZIP archive.
@@ -49,7 +49,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader.SZL
         /// </summary>
         private readonly IStorageFile _archive;
 
-        public ArchiveReader(IStorageFile archive, CancellationToken cancellationToken)
+        public ArchiveReaderZip(IStorageFile archive, CancellationToken cancellationToken)
         {
             _archive = archive;
             _cancellationToken = cancellationToken;

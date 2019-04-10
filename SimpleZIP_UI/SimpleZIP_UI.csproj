@@ -142,7 +142,7 @@
     <Compile Include="Application\Compression\Reader\ArchiveReader.cs" />
     <Compile Include="Application\Compression\Reader\IArchiveEntry.cs" />
     <Compile Include="Application\Compression\Reader\IArchiveReader.cs" />
-    <Compile Include="Application\Compression\Reader\SZL\ArchiveReader.cs" />
+    <Compile Include="Application\Compression\Reader\SZL\ArchiveReaderZip.cs" />
     <Compile Include="Application\ICancellable.cs" />
     <Compile Include="Application\ICancelRequest.cs" />
     <Compile Include="Application\IPasswordRequest.cs" />
