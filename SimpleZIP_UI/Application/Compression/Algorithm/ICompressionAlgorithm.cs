@@ -19,14 +19,14 @@
 
 using SimpleZIP_UI.Application.Compression.Algorithm.Event;
 using SimpleZIP_UI.Application.Compression.Algorithm.Options;
+using SimpleZIP_UI.Application.Compression.Reader;
+using SimpleZIP_UI.Application.Compression.TreeBuilder;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
-using SimpleZIP_UI.Application.Compression.Reader;
-using SimpleZIP_UI.Application.Compression.TreeBuilder;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm
 {
@@ -50,9 +50,9 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// </summary>
         /// <param name="archive">The archive to be extracted.</param>
         /// <param name="location">The location where to extract the archive to.</param>
-        /// <param name="options">Options for the reader. May be omitted.></param>
+        /// <param name="options">Options for the operation. May be omitted.</param>
         /// <returns>Task which returns a stream that has been used to read the archive. The stream will not be 
-        /// disposed if <see cref="IOptions.LeaveStreamOpen"/> in options is set to true.</returns>
+        /// disposed if <see cref="IOptions.LeaveStreamOpen"/> in <code>options</code> is set to true.</returns>
         /// <exception cref="IOException">Thrown on any error when reading from or writing to streams.</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not permitted.</exception>
         /// <exception cref="ArchiveEncryptedException">Thrown if encrypted archive could not be handled.</exception>
@@ -64,9 +64,9 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <param name="archive">The archive which contains the entries.</param>
         /// <param name="location">The location where to extract the entries to.</param>
         /// <param name="entries">Entries of the archive to be extracted.</param>
-        /// <param name="options">Options for the reader. May be omitted.</param>
+        /// <param name="options">Options for the operation. May be omitted.</param>
         /// <returns>Task which returns a stream that has been used to read the archive. The stream will not be 
-        /// disposed if <see cref="IOptions.LeaveStreamOpen"/> in options is set to true.</returns>
+        /// disposed if <see cref="IOptions.LeaveStreamOpen"/> in <code>options</code> is set to true.</returns>
         /// <exception cref="IOException">Thrown on any error when reading from or writing to streams.</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not permitted.</exception>
         /// <exception cref="ArchiveEncryptedException">Thrown if encrypted archive could not be handled.</exception>
@@ -81,9 +81,9 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <param name="entries">Entries of the archive to be extracted.</param>
         /// <param name="collectFileNames">True to collect file names, false otherwise.
         /// Names of extracted files will be saved to <see cref="ArchiveTreeFile.FileName"/>.</param>.
-        /// <param name="options">Options for the reader. May be omitted.</param>
+        /// <param name="options">Options for the operation. May be omitted.</param>
         /// <returns>Task which returns a stream that has been used to read the archive. The stream will not be 
-        /// disposed if <see cref="IOptions.LeaveStreamOpen"/> in options is set to true.</returns>
+        /// disposed if <see cref="IOptions.LeaveStreamOpen"/> in <code>options</code> is set to true.</returns>
         /// <exception cref="IOException">Thrown on any error when reading from or writing to streams.</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not permitted.</exception>
         /// <exception cref="ArchiveEncryptedException">Thrown if encrypted archive could not be handled.</exception>
@@ -97,9 +97,9 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <param name="files">The files to be put into the archive.</param>
         /// <param name="archive">The file to write compressed bytes to.</param>
         /// <param name="location">Where the archive is to be created.</param>
-        /// <param name="options">Options for the writer. May be omitted.</param>
+        /// <param name="options">Options for the operation. May be omitted.</param>
         /// <returns>Task which returns a stream that has been used to write the archive. The stream will not be 
-        /// disposed if <see cref="IOptions.LeaveStreamOpen"/> in options is set to true.</returns>
+        /// disposed if <see cref="IOptions.LeaveStreamOpen"/> in <code>options</code> is set to true.</returns>
         /// <exception cref="IOException">Thrown on any error when reading from or writing to streams.</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not allowed.</exception>
         /// <exception cref="NotSupportedException">Thrown when archive type does not have a writer.</exception>

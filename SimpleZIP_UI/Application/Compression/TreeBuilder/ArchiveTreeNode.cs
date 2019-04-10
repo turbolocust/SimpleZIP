@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -68,6 +68,7 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
             return string.Equals(Id, other.Id);
         }
 
+        /// <inheritdoc />
         public override bool Equals(object obj)
         {
             if (obj is null) return false;
@@ -75,6 +76,7 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
             return obj.GetType() == GetType() && Equals((ArchiveTreeNode)obj);
         }
 
+        /// <inheritdoc />
         public override int GetHashCode()
         {
             return Id != null ? Id.GetHashCode() : 0;

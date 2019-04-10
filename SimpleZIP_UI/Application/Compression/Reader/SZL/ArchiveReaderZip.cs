@@ -28,6 +28,13 @@ using Windows.Storage;
 
 namespace SimpleZIP_UI.Application.Compression.Reader.SZL
 {
+    /// <inheritdoc />
+    /// <summary>
+    /// Archive reader implementation for ZIP files only,
+    /// which uses capabilities of the SharpZipLib library.
+    /// This class was introduced because of some bugs in
+    /// the SharpCompress library.
+    /// </summary>
     internal class ArchiveReaderZip : IArchiveReader
     {
         /// <summary>

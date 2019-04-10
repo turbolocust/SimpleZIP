@@ -32,7 +32,6 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Options
         /// <inheritdoc />
         public string Password { get; set; }
 
-        /// <inheritdoc />
         public DecompressionOptions(bool leaveStreamOpen,
             Encoding encoding, string password = null)
         {

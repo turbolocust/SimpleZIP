@@ -17,6 +17,7 @@
 // 
 // ==--==
 
+using SimpleZIP_UI.Application.Compression.Reader;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,13 +25,12 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
-using SimpleZIP_UI.Application.Compression.Reader;
 
 namespace SimpleZIP_UI.Application.Compression.TreeBuilder
 {
     /// <inheritdoc />
     /// <summary>
-    /// Traverses the archive hierarchy and generates nodes, which represent folders,
+    /// Traverses the archive hierarchy and generates nodes, which represent directories,
     /// and file entries. A node can have other nodes and file entries as children.
     /// </summary>
     internal class ArchiveTreeBuilder : IDisposable

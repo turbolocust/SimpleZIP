@@ -70,8 +70,9 @@ namespace SimpleZIP_UI.Application.Compression
 
         static Archives()
         {
-            // populate dictionary that maps file types to archive types
-            ArchiveFileTypes = new Dictionary<string, ArchiveType>(Enum.GetNames(typeof(ArchiveType)).Length * 2)
+            // populate dictionary which maps file types to archive types
+            ArchiveFileTypes = new Dictionary<string, ArchiveType>(
+                Enum.GetNames(typeof(ArchiveType)).Length * 2)
             {
                 {".zip", ArchiveType.Zip},
                 {".tar", ArchiveType.Tar},
@@ -87,8 +88,7 @@ namespace SimpleZIP_UI.Application.Compression
                 {".tlz", ArchiveType.TarLz},
                 {".rar", ArchiveType.Rar }
             };
-
-            // populate dictionary that maps extended file types to archive types
+            // populate dictionary which maps extended file types to archive types
             ArchiveExtendedFileTypes = new Dictionary<string, ArchiveType>
             {
                 { ".tar.gz", ArchiveType.TarGz },
@@ -136,7 +136,7 @@ namespace SimpleZIP_UI.Application.Compression
         public static ICompressionAlgorithm DetermineAlgorithm(ArchiveType value)
         {
             ICompressionAlgorithm algorithm;
-            // ReSharper disable once SwitchStatementMissingSomeCases
+
             switch (value)
             {
                 case ArchiveType.Zip:
@@ -168,6 +168,9 @@ namespace SimpleZIP_UI.Application.Compression
                 case ArchiveType.Rar:
                     algorithm = new Rar();
                     break;
+                // ReSharper disable once RedundantCaseLabel
+                case ArchiveType.Unknown:
+                // fall-through
                 default:
                     throw new ArgumentOutOfRangeException(nameof(value), value, null);
             }

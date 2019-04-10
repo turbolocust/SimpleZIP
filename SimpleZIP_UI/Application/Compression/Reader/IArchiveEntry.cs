@@ -19,6 +19,9 @@
 
 namespace SimpleZIP_UI.Application.Compression.Reader
 {
+    /// <summary>
+    /// An archive entry which is used by <see cref="IArchiveReader"/>.
+    /// </summary>
     public interface IArchiveEntry
     {
         /// <summary>

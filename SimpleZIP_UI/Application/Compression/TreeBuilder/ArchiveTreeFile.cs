@@ -65,6 +65,12 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
             IsArchive = isArchive;
         }
 
+        /// <summary>
+        /// Converts this object to an instance of <see cref="IArchiveEntry"/>.
+        /// Any other information than <see cref="Id"/>, <see cref="IsBrowsable"/>
+        /// or <see cref="Size"/> is not supported by <see cref="IArchiveEntry"/>.
+        /// </summary>
+        /// <returns>An instance of <see cref="IArchiveEntry"/>.</returns>
         internal IArchiveEntry ToArchiveEntry()
         {
             return new ArchiveEntry(Id, IsBrowsable, Size);

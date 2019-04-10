@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,10 +21,20 @@ using Windows.Storage;
 
 namespace SimpleZIP_UI.Application.Compression.TreeBuilder
 {
+    /// <inheritdoc />
+    /// <summary>
+    /// Represents the root of the archive tree.
+    /// </summary>
     internal class ArchiveTreeRoot : ArchiveTreeNode
     {
+        /// <summary>
+        /// The associated archive file.
+        /// </summary>
         internal StorageFile Archive { get; }
 
+        /// <summary>
+        /// The password of the archive. May be <code>null</code>.
+        /// </summary>
         internal string Password { get; }
 
         internal ArchiveTreeRoot(string id, StorageFile archive,

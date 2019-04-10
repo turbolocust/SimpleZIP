@@ -21,6 +21,9 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Options
 {
     public interface IDecompressionOptions : IOptions
     {
+        /// <summary>
+        /// The optional password of the archive to be extracted.
+        /// </summary>
         string Password { get; set; }
     }
 }

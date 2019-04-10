@@ -29,7 +29,6 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Options
         /// <inheritdoc />
         public Encoding ArchiveEncoding { get; }
 
-        /// <inheritdoc />
         public CompressionOptions(bool leaveStreamOpen, Encoding encoding)
         {
             LeaveStreamOpen = leaveStreamOpen;

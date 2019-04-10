@@ -29,6 +29,11 @@ using Windows.Storage;
 
 namespace SimpleZIP_UI.Application.Compression.Reader
 {
+    /// <inheritdoc />
+    /// <summary>
+    /// Archive reader implementation which uses capabilities
+    /// of the SharpCompress library.
+    /// </summary>
     internal class ArchiveReader : IArchiveReader
     {
         /// <summary>

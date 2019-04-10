@@ -26,16 +26,16 @@ namespace SimpleZIP_UI.Application.Compression.Reader
     public interface IArchiveReader : IDisposable
     {
         /// <summary>
-        /// Opens the archive of this reader.
+        /// Opens the archive which is associated with this reader.
         /// </summary>
-        /// <param name="password">The password of the archive.</param>
+        /// <param name="password">The optional password of the archive.</param>
         /// <returns>An awaitable task.</returns>
         Task OpenArchiveAsync(string password = null);
 
         /// <summary>
         /// Reads each entry of the archive.
         /// </summary>
-        /// <returns>An enumerable of archive entries.</returns>
+        /// <returns>An enumerable of <see cref="IArchiveEntry"/>.</returns>
         IEnumerable<IArchiveEntry> ReadArchive();
     }
 }

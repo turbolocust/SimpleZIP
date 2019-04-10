@@ -19,6 +19,7 @@
 
 using SimpleZIP_UI.Application.Compression.Algorithm.Event;
 using SimpleZIP_UI.Application.Compression.Algorithm.Options;
+using SimpleZIP_UI.Application.Compression.Reader;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,7 +27,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
-using SimpleZIP_UI.Application.Compression.Reader;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm
 {
@@ -64,7 +64,6 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// </summary>
         private uint _delayRateCounter;
 
-        /// <inheritdoc />
         protected AbstractAlgorithm(uint updateDelayRate = DefaultUpdateDelayRate)
         {
             _updateDelayRate = updateDelayRate;
@@ -104,6 +103,15 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             TotalBytesProcessed?.Invoke(this, evtArgs);
         }
 
+        /// <summary>
+        /// Returns an instance of <see cref="Encoding"/> for UTF-8.
+        /// </summary>
+        /// <returns>An instance of <see cref="Encoding"/>.</returns>
+        protected virtual Encoding GetDefaultEncoding()
+        {
+            return Encoding.UTF8;
+        }
+
         /// <inheritdoc cref="IProgressObserver{T}.Update"/>
         public void Update(long value)
         {
@@ -114,15 +122,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             }
         }
 
-        /// <summary>
-        /// Returns an instance of <see cref="Encoding"/> for UTF-8.
-        /// </summary>
-        /// <returns>An instance of <see cref="Encoding"/>.</returns>
-        protected virtual Encoding GetDefaultEncoding()
-        {
-            return Encoding.UTF8;
-        }
-
+        #region Abstract methods
         /// <inheritdoc />
         public abstract Task<Stream> Compress(IReadOnlyList<StorageFile> files,
             StorageFile archive, StorageFolder location, ICompressionOptions options = null);
@@ -138,5 +138,6 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <inheritdoc />
         public abstract Task<Stream> Decompress(StorageFile archive, StorageFolder location,
             IReadOnlyList<IArchiveEntry> entries, bool collectFileNames, IDecompressionOptions options = null);
+        #endregion
     }
 }

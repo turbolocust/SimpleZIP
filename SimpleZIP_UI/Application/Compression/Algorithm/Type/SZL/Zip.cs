@@ -29,6 +29,12 @@ using Windows.Storage;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
 {
+    /// <inheritdoc />
+    /// <summary>
+    /// Implements <see cref="ICompressionAlgorithm"/> and offers
+    /// compression and extraction of ZIP files. This class was
+    /// introduced because of some bugs in the SharpCompress library.
+    /// </summary>
     public class Zip : AbstractAlgorithm
     {
         /// <inheritdoc />
