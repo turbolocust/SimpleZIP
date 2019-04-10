@@ -146,7 +146,11 @@ namespace SimpleZIP_UI.Presentation.View
             var infos = new List<DecompressionInfo>(_selectedItems.Count);
             var totalSize = await _controller.CheckFileSizes(_selectedItems);
 
-            infos.AddRange(_selectedItems.Select(item => new DecompressionInfo(item, totalSize)));
+            infos.AddRange(_selectedItems.Select(item =>
+                new DecompressionInfo(item, totalSize)
+                {
+                    Encoding = Encoding.UTF8
+                }));
 
             return await _controller.StartButtonAction(OnProgressUpdate, infos.ToArray());
         }

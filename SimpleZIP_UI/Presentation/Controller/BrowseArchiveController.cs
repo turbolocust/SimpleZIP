@@ -21,6 +21,7 @@ using SimpleZIP_UI.Application;
 using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Compression.Operation;
 using SimpleZIP_UI.Application.Compression.Operation.Job;
+using SimpleZIP_UI.Application.Compression.TreeBuilder;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.I18N;
 using SimpleZIP_UI.Presentation.Factory;
@@ -31,10 +32,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
-using SimpleZIP_UI.Application.Compression.TreeBuilder;
 
 namespace SimpleZIP_UI.Presentation.Controller
 {
@@ -169,7 +170,8 @@ namespace SimpleZIP_UI.Presentation.Controller
                 var operationInfo = new DecompressionInfo(item, size)
                 {
                     OutputFolder = folder,
-                    IsCollectFileNames = true
+                    IsCollectFileNames = true,
+                    Encoding = Encoding.UTF8
                 };
                 var operation = Operations.ForDecompression();
                 var job = new DecompressionJob(operation, operationInfo)

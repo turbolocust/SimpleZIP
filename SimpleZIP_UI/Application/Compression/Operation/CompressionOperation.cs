@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,31 +16,28 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
+using SimpleZIP_UI.Application.Compression.Algorithm;
+using SimpleZIP_UI.Application.Compression.Algorithm.Options;
+using SimpleZIP_UI.Application.Compression.Model;
+using SimpleZIP_UI.Application.Util;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
-using SimpleZIP_UI.Application.Compression.Algorithm;
-using SimpleZIP_UI.Application.Compression.Model;
-using SimpleZIP_UI.Application.Util;
 
 namespace SimpleZIP_UI.Application.Compression.Operation
 {
     internal class CompressionOperation : ArchivingOperation<CompressionInfo>
     {
-        /// <summary>
-        /// Creates a new archive with compressed versions of the specified files.
-        /// </summary>
-        /// <param name="files">The files to be compressed.</param>
-        /// <param name="archiveName">The name of the archive to be created.</param>
-        /// <param name="location">Where to store the archive.</param>
-        /// <returns>An object that consists of result parameters.</returns>
-        /// <exception cref="OperationCanceledException">Thrown if operation has been canceled.</exception>
-        private async Task<Result> CreateArchive(IReadOnlyList<StorageFile> files,
-            string archiveName, StorageFolder location)
+        private async Task<Result> CreateArchive(CompressionInfo info)
         {
+            string archiveName = info.ArchiveName;
+            var files = info.SelectedFiles;
+            var location = info.OutputFolder;
             var token = TokenSource.Token;
+
+            var options = new CompressionOptions(false, info.Encoding);
 
             return await Task.Run(async () => // execute compression asynchronously
             {
@@ -57,7 +54,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                     try
                     {
                         Algorithm.Token = token;
-                        var stream = await Algorithm.Compress(files, archive, location);
+                        var stream = await Algorithm.Compress(files, archive, location, options);
                         isSuccess = stream != Stream.Null;
                     }
                     catch (Exception ex)
@@ -77,6 +74,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                         }
                     }
                 }
+
                 return EvaluateResult(name, message, verboseMsg, isSuccess);
             }, token);
         }
@@ -90,10 +88,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         /// <inheritdoc cref="ArchivingOperation{T}.StartOperation"/>
         protected override async Task<Result> StartOperation(CompressionInfo info)
         {
-            return await CreateArchive(
-                info.SelectedFiles,
-                info.ArchiveName,
-                info.OutputFolder);
+            return await CreateArchive(info);
         }
     }
 }

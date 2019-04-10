@@ -245,16 +245,17 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             return (fileName, totalBytesWritten);
         }
 
-        private static ArchiveEncoding ConvertEncoding(Encoding encoding)
+        private ArchiveEncoding ConvertEncoding(Encoding encoding)
         {
+            var enc = encoding ?? GetDefaultEncoding();
             return new ArchiveEncoding
             {
-                Default = encoding,
-                Password = encoding
+                Default = enc,
+                Password = enc
             };
         }
 
-        private static ReaderOptions ConvertDecompressionOptions(IDecompressionOptions options)
+        private ReaderOptions ConvertDecompressionOptions(IDecompressionOptions options)
         {
             return new ReaderOptions
             {

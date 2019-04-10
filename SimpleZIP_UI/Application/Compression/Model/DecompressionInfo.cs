@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
 // 
 // ==--==
 
-using System.Text;
 
 namespace SimpleZIP_UI.Application.Compression.Model
 {
@@ -32,11 +31,6 @@ namespace SimpleZIP_UI.Application.Compression.Model
         /// True to collect extracted file names, false otherwise.
         /// </summary>
         internal bool IsCollectFileNames { get; set; }
-
-        /// <summary>
-        /// Encoding to be used when decompressing .
-        /// </summary>
-        internal Encoding Encoding { get; set; }
 
         internal DecompressionInfo(ExtractableItem item, ulong size) : base(size)
         {

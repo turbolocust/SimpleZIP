@@ -27,6 +27,7 @@ using SimpleZIP_UI.Presentation.Factory;
 using SimpleZIP_UI.Presentation.Handler;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Core;
@@ -259,7 +260,8 @@ namespace SimpleZIP_UI.Presentation.View
             var info = new CompressionInfo(key, totalSize)
             {
                 ArchiveName = archiveName,
-                SelectedFiles = _selectedFiles
+                SelectedFiles = _selectedFiles,
+                Encoding = Encoding.UTF8
             };
 
             return await _controller.StartButtonAction(OnProgressUpdate, info);

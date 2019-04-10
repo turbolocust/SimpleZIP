@@ -24,7 +24,6 @@ using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.I18N;
 using System;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SimpleZIP_UI.Application.Compression.Operation
@@ -57,12 +56,12 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                 string verboseMsg = string.Empty;
                 bool isSuccess = false;
 
-                var options = new DecompressionOptions(false, Encoding.UTF8, password);
+                var options = new DecompressionOptions(false, info.Encoding, password);
 
                 try
                 {
                     Algorithm.Token = token;
-                    var stream = entries == null
+                    var stream = entries.IsNullOrEmpty()
                         ? await Algorithm.Decompress(archiveFile, location, options)
                         : await Algorithm.Decompress(archiveFile, location, entries, collect, options);
                     isSuccess = stream != Stream.Null;

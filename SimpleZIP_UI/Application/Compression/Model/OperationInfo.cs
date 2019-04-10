@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,6 +16,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
+using System.Text;
 using Windows.Storage;
 
 namespace SimpleZIP_UI.Application.Compression.Model
@@ -31,6 +33,11 @@ namespace SimpleZIP_UI.Application.Compression.Model
         /// The output folder for archives or extracted files.
         /// </summary>
         internal StorageFolder OutputFolder { get; set; }
+
+        /// <summary>
+        /// Encoding to be used for the operation.
+        /// </summary>
+        internal Encoding Encoding { get; set; }
 
         protected OperationInfo(ulong totalFileSize)
         {
