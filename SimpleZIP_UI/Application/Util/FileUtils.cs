@@ -157,29 +157,41 @@ namespace SimpleZIP_UI.Application.Util
             }
             return totalSize;
         }
+
         /// <summary>
         /// Recursively gets a file (<code>filePath</code>) from the specified <code>location</code>.
         /// </summary>
         /// <param name="location">Used to get directories and eventually the file.</param>
-        /// <param name="filePath">Relative path to the file to be get.</param>
-        /// <returns>The file or <code>null</code> if path is <code>String.Empty</code>.</returns>
+        /// <param name="filePath">Path to the file below <code>location.Path</code>.</param>
+        /// <returns>The file or <code>null</code> if path is <code>string.Empty</code>.</returns>
         public static async Task<StorageFile> GetFileAsync(StorageFolder location, string filePath)
         {
-            var separatorChar = Path.DirectorySeparatorChar;
-            var dirPath = filePath.Replace('/', separatorChar);
+            char separatorChar = Path.DirectorySeparatorChar;
+            string dirPath = filePath.Replace('/', separatorChar);
+            string locPath = location.Path;
+
+            if (dirPath.StartsWith(locPath))
+            {
+                dirPath = dirPath.Remove(0, locPath.Length);
+            }
+
             var pathMembers = dirPath.Split(separatorChar);
 
             StorageFile file = null;
             if (pathMembers.Length > 1) // at least one directory in path
             {
-                var lastPos = pathMembers.Length - 1;
+                int lastPos = pathMembers.Length - 1;
                 var folder = location;
                 // ignore last position because it's supposed be a file
-                for (var i = 0; i < lastPos; ++i)
+                for (int i = 0; i < lastPos; ++i)
                 {
-                    var folderName = pathMembers[i];
-                    folder = await folder.GetFolderAsync(folderName);
+                    string folderName = pathMembers[i];
+                    if (!string.IsNullOrEmpty(folderName))
+                    {
+                        folder = await folder.GetFolderAsync(folderName);
+                    }
                 }
+
                 file = await folder.GetFileAsync(pathMembers[lastPos]);
             }
             else if (pathMembers.Length == 1)

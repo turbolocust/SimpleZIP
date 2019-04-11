@@ -229,7 +229,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                 var file = await FileUtils.CreateFileAsync(location, reader.Entry.Key);
                 if (file == null) return (null, totalBytesWritten); // file could not be created
 
-                fileName = file.Name;
+                fileName = file.Path;
 
                 using (var outputStream = await file.OpenStreamForWriteAsync())
                 {
