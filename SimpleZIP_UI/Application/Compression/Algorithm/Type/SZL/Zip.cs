@@ -245,7 +245,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                 var file = await FileUtils.CreateFileAsync(location, entry.Name);
                 if (file == null) return (null, totalBytesWritten); // file could not be created
 
-                fileName = file.Name;
+                fileName = file.Path;
 
                 using (var outputStream = await file.OpenStreamForWriteAsync())
                 {

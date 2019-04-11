@@ -164,7 +164,8 @@ namespace SimpleZIP_UI.Presentation.Controller
                 // doesn't exist, hence extract and read again
                 var item = new ExtractableItem(
                     root.Archive.Name,
-                    root.Archive, new[] { entry.ToArchiveEntry() });
+                    root.Archive,
+                    new[] { entry.ToArchiveEntry() });
                 var size = await FileUtils.GetFileSizeAsync(item.Archive);
                 // create operation and job for execution
                 var operationInfo = new DecompressionInfo(item, size)
@@ -181,6 +182,7 @@ namespace SimpleZIP_UI.Presentation.Controller
                 var result = await job.Run(this); // extraction happens here
                 if (result.StatusCode == Result.Status.Success)
                 {
+                    entry.FileName = item.Entries[0].FileName;
                     archive = await FileUtils.GetFileAsync(folder, entry.FileName);
                 }
             }
