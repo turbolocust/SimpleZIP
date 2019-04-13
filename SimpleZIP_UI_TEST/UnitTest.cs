@@ -75,6 +75,25 @@ namespace SimpleZIP_UI_TEST
         }
 
         /// <summary>
+        /// Tests the compression and extraction using TAR (uncompressed) archive type.
+        /// </summary>
+        [TestMethod]
+        public async Task TarCompressionExtractionTest()
+        {
+            try
+            {
+                var options = new CompressionOptions(false, Encoding.UTF8);
+                var algorithm = Archives.DetermineAlgorithm(Archives.ArchiveType.Tar);
+                Assert.IsTrue(await PerformArchiveOperations(algorithm, ".tar", options));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                Assert.Fail();
+            }
+        }
+
+        /// <summary>
         /// Tests the compression and extraction using TAR (gzip) archive type.
         /// </summary>
         [TestMethod]
