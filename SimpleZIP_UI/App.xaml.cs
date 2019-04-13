@@ -92,6 +92,8 @@ namespace SimpleZIP_UI
             {
                 DebugSettings.EnableFrameRateCounter = true;
             }
+
+            //Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = "de";
 #endif
             // do not repeat app initialization when the Window already has content
             if (!(Window.Current.Content is Frame rootFrame))
