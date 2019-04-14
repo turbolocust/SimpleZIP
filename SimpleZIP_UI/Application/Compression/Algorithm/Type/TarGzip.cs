@@ -16,6 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
 using SharpCompress.Common;
 using SharpCompress.Writers;
 
@@ -25,7 +26,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
     /// <summary>
     /// Represents the TAR+GZIP archiving algorithm.
     /// </summary>
-    public class TarGzip : Tar
+    public sealed class TarGzip : Tar
     {
         /// <inheritdoc />
         protected override WriterOptions GetWriterOptions()

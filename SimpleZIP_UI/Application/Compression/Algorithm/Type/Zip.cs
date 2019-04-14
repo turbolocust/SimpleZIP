@@ -16,6 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
 using SharpCompress.Common;
 using SharpCompress.Compressors.Deflate;
 using SharpCompress.Writers;
@@ -27,7 +28,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
     /// <summary>
     /// Represents the ZIP archiving algorithm.
     /// </summary>
-    public class Zip : ArchivingAlgorithm
+    public sealed class Zip : ArchivingAlgorithm
     {
         /// <inheritdoc />
         public Zip() : base(ArchiveType.Zip)
