@@ -22,6 +22,7 @@ using SimpleZIP_UI.Application.Compression.Algorithm.Options;
 using SimpleZIP_UI.Application.Compression.Reader;
 using SimpleZIP_UI.Application.Streams;
 using SimpleZIP_UI.Application.Util;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -33,9 +34,9 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
     /// <summary>
     /// Implements <see cref="ICompressionAlgorithm"/> and offers
     /// compression and extraction of ZIP files. This class was
-    /// introduced because of some bugs in the SharpCompress library.
+    /// introduced because it's more reliable than SharpCompress.
     /// </summary>
-    public class Zip : AbstractAlgorithm
+    internal class Zip : AbstractAlgorithm
     {
         /// <inheritdoc />
         public override async Task<Stream> Compress(IReadOnlyList<StorageFile> files,
@@ -65,11 +66,13 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                     foreach (var file in files)
                     {
                         Token.ThrowIfCancellationRequested();
-                        //await writer.WriteAsync(file.Name, inputStream, Token);
                         ulong size = await FileUtils.GetFileSizeAsync(file);
+                        var properties = await file.GetBasicPropertiesAsync();
+
                         var zipEntry = new ZipEntry(file.Name)
                         {
-                            DateTime = file.DateCreated.DateTime,
+                            DateTime = properties.DateModified.DateTime,
+                            CompressionMethod = CompressionMethod.Deflated,
                             Size = (long)size
                         };
 
