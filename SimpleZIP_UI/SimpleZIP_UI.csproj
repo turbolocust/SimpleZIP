@@ -118,6 +118,9 @@
     <Compile Include="Application\Compression\Algorithm\Type\BZip2.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\LZip.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\Rar.cs" />
+    <Compile Include="Application\Compression\Algorithm\Type\SZL\Tar.cs" />
+    <Compile Include="Application\Compression\Algorithm\Type\SZL\TarBzip2.cs" />
+    <Compile Include="Application\Compression\Algorithm\Type\SZL\TarGzip.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\SZL\Zip.cs" />
     <Compile Include="Application\Compression\Archives.cs" />
     <Compile Include="Application\Compression\Algorithm\Type\TarGzip.cs" />
