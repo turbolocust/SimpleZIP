@@ -17,10 +17,12 @@
 // 
 // ==--==
 
+using SharpCompress.Archives.GZip;
 using SharpCompress.Archives.Rar;
+using SharpCompress.Compressors.BZip2;
+using SharpCompress.Compressors.LZMA;
 using SharpCompress.Readers;
 using SimpleZIP_UI.Application.Compression.Algorithm;
-using SimpleZIP_UI.Application.Compression.Algorithm.Type;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -140,33 +142,31 @@ namespace SimpleZIP_UI.Application.Compression
             switch (value)
             {
                 case ArchiveType.Zip:
-                    // make use of SharpZipLib for ZIP files,
-                    // because it's more reliable than SharpCompress
                     algorithm = new Algorithm.Type.SZL.Zip();
                     break;
                 case ArchiveType.GZip:
-                    algorithm = new GZip();
+                    algorithm = new Algorithm.Type.GZip();
                     break;
                 case ArchiveType.BZip2:
-                    algorithm = new BZip2();
+                    algorithm = new Algorithm.Type.BZip2();
                     break;
                 case ArchiveType.LZip:
-                    algorithm = new LZip();
+                    algorithm = new Algorithm.Type.LZip();
                     break;
                 case ArchiveType.Tar:
-                    algorithm = new Tar();
+                    algorithm = new Algorithm.Type.SZL.Tar();
                     break;
                 case ArchiveType.TarGz:
-                    algorithm = new TarGzip();
+                    algorithm = new Algorithm.Type.SZL.TarGzip();
                     break;
                 case ArchiveType.TarBz2:
-                    algorithm = new TarBzip2();
+                    algorithm = new Algorithm.Type.SZL.TarBzip2();
                     break;
                 case ArchiveType.TarLz:
-                    algorithm = new TarLzip();
+                    algorithm = new Algorithm.Type.TarLzip();
                     break;
                 case ArchiveType.Rar:
-                    algorithm = new Rar();
+                    algorithm = new Algorithm.Type.Rar();
                     break;
                 // ReSharper disable once RedundantCaseLabel
                 case ArchiveType.Unknown:
@@ -191,14 +191,46 @@ namespace SimpleZIP_UI.Application.Compression
 
             try
             {
+                bool seekableStream;
                 // let SharpCompress' reader do the archive detection
                 using (var stream = await file.OpenStreamForReadAsync())
                 using (var reader = ReaderFactory.Open(stream))
                 {
-                    var type = reader.ArchiveType;
-                    if (ArchiveTypes.TryGetValue(type, out var localType))
+                    seekableStream = stream.CanSeek;
+                    if (ArchiveTypes.TryGetValue(
+                        reader.ArchiveType, out var localType))
                     {
                         archiveType = localType;
+                    }
+                }
+
+                // check for compressed TAR archive
+                if (archiveType == ArchiveType.Tar && seekableStream)
+                {
+                    using (var stream = await file.OpenStreamForReadAsync())
+                    {
+                        bool determined = false;
+                        if (GZipArchive.IsGZipFile(stream))
+                        {
+                            determined = true;
+                            archiveType = ArchiveType.TarGz;
+                        }
+                        if (!determined)
+                        {
+                            stream.Seek(0, SeekOrigin.Begin);
+                            determined = BZip2Stream.IsBZip2(stream);
+                            archiveType = ArchiveType.TarBz2;
+                        }
+                        if (!determined)
+                        {
+                            stream.Seek(0, SeekOrigin.Begin);
+                            determined = LZipStream.IsLZipFile(stream);
+                            archiveType = ArchiveType.TarLz;
+                        }
+                        if (!determined) // leave as TAR
+                        {
+                            archiveType = ArchiveType.Tar;
+                        }
                     }
                 }
             }
@@ -274,6 +306,7 @@ namespace SimpleZIP_UI.Application.Compression
                         {
                             header.AppendFormat("{0:X2}", value); // convert to HEX
                         }
+
                         isRarArchive = header.ToString().Equals(rar5HeaderSignature);
                     }
                 }
