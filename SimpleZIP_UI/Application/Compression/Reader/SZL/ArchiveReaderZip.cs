@@ -35,10 +35,11 @@ namespace SimpleZIP_UI.Application.Compression.Reader.SZL
     /// This class was introduced because of some bugs in
     /// the SharpCompress library.
     /// </summary>
-    internal class ArchiveReaderZip : IArchiveReader
+    internal sealed class ArchiveReaderZip : IArchiveReader
     {
         /// <summary>
         /// The currently opened ZIP archive.
+        /// Is <code>null</code> if not yet opened.
         /// </summary>
         private ZipFile _zipFile;
 
@@ -48,15 +49,20 @@ namespace SimpleZIP_UI.Application.Compression.Reader.SZL
         private bool _closed;
 
         /// <summary>
-        /// Token used for cancellation of reading archive.
+        /// Token used for cancelling archive reading.
         /// </summary>
         private CancellationToken _cancellationToken;
 
         /// <summary>
-        /// The archive as <see cref="IStorageFile"/>.
+        /// The archive to be read by this reader.
         /// </summary>
         private readonly IStorageFile _archive;
 
+        /// <summary>
+        /// Creates a new instance of a reader for ZIP archives.
+        /// </summary>
+        /// <param name="archive">The archive to be read.</param>
+        /// <param name="cancellationToken">Token used for cancellation.</param>
         public ArchiveReaderZip(IStorageFile archive, CancellationToken cancellationToken)
         {
             _archive = archive;

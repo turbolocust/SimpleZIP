@@ -17,29 +17,24 @@
 // 
 // ==--==
 
-using SharpCompress.Common;
-using SharpCompress.Readers;
+using ICSharpCode.SharpZipLib.Tar;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
 
-namespace SimpleZIP_UI.Application.Compression.Reader
+namespace SimpleZIP_UI.Application.Compression.Reader.SZL
 {
     /// <inheritdoc />
-    /// <summary>
-    /// Archive reader implementation which uses capabilities
-    /// of the SharpCompress library.
-    /// </summary>
-    internal sealed class ArchiveReader : IArchiveReader
+    internal class ArchiveReaderTar : IArchiveReader
     {
         /// <summary>
-        /// The reader (SharpCompress) associated with this instance.
+        /// The input stream for the TAR archive.
+        /// Is <code>null</code> if not yet opened.
         /// </summary>
-        private IReader _reader;
+        private TarInputStream _tarInputStream;
 
         /// <summary>
         /// True if this reader is closed/disposed, false otherwise.
@@ -47,20 +42,37 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         private bool _closed;
 
         /// <summary>
-        /// Token used for cancellation of reading archive.
+        /// Token used for cancelling archive reading.
         /// </summary>
         private CancellationToken _cancellationToken;
 
         /// <summary>
-        /// The archive as <see cref="IStorageFile"/>.
+        /// The archive to be read by this reader.
         /// </summary>
         private readonly IStorageFile _archive;
 
-        public ArchiveReader(IStorageFile archive, CancellationToken cancellationToken)
+        /// <summary>
+        /// Creates a new instance of a reader for TAR archives.
+        /// </summary>
+        /// <param name="archive">The archive to be read.</param>
+        /// <param name="cancellationToken">Token used for cancellation.</param>
+        public ArchiveReaderTar(IStorageFile archive, CancellationToken cancellationToken)
         {
             _archive = archive;
             _cancellationToken = cancellationToken;
             _cancellationToken.Register(() => _closed = true);
+        }
+
+        /// <summary>
+        /// Returns an input stream for reading the specified archive.
+        /// This may be overridden by subclasses in case the archive
+        /// is compressed (e.g. GZIP compressed entries)
+        /// </summary>
+        /// <param name="stream">The stream of the archive to be read.</param>
+        /// <returns>The compressor stream to be used.</returns>
+        protected virtual Stream GetCompressorStream(Stream stream)
+        {
+            return stream; // is uncompressed
         }
 
         /// <inheritdoc />
@@ -68,19 +80,12 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         {
             if (_closed) throw new ObjectDisposedException(ToString());
 
-            var options = new ReaderOptions
+            var fileStream = await _archive.OpenStreamForReadAsync();
+            var stream = GetCompressorStream(fileStream);
+            _tarInputStream = new TarInputStream(stream)
             {
-                LeaveStreamOpen = false,
-                Password = password,
-                ArchiveEncoding = new ArchiveEncoding
-                {
-                    Default = Encoding.UTF8,
-                    Password = Encoding.UTF8
-                }
+                IsStreamOwner = true
             };
-
-            var stream = await _archive.OpenStreamForReadAsync();
-            _reader = ReaderFactory.Open(stream, options);
         }
 
         /// <inheritdoc />
@@ -88,20 +93,21 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         {
             if (_closed) throw new ObjectDisposedException(ToString());
 
-            while (!_closed && _reader.MoveToNextEntry())
+            TarEntry entry;
+            while ((entry = _tarInputStream.GetNextEntry()) != null)
             {
                 _cancellationToken.ThrowIfCancellationRequested();
                 yield return new ArchiveEntry(
-                    _reader.Entry.Key,
-                    _reader.Entry.IsDirectory,
-                    (ulong)_reader.Entry.Size);
+                    entry.Name,
+                    entry.IsDirectory,
+                    (ulong)entry.Size);
             }
         }
 
         /// <inheritdoc />
         public void Dispose()
         {
-            _reader?.Dispose();
+            _tarInputStream?.Close();
             _closed = true;
         }
     }
