@@ -146,8 +146,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
             try
             {
                 var archiveStream = await archive.OpenStreamForReadAsync();
-                var progressStream = new ProgressObservableStream(this, archiveStream);
-                compressorStream = GetCompressorInputStream(progressStream);
+                compressorStream = GetCompressorInputStream(archiveStream);
 
                 using (var tarStream = new TarInputStream(compressorStream))
                 {
@@ -207,8 +206,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
             try
             {
                 var archiveStream = await archive.OpenStreamForReadAsync();
-                var progressStream = new ProgressObservableStream(this, archiveStream);
-                compressorStream = GetCompressorInputStream(progressStream);
+                compressorStream = GetCompressorInputStream(archiveStream);
 
                 using (var tarStream = new TarInputStream(compressorStream))
                 {
