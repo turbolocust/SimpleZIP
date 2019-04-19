@@ -51,7 +51,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
 
         /// <summary>
         /// May be overridden by subclasses to provide an additional
-        /// compressor output stream if entries are compressed.
+        /// compressor output stream if entries are to be compressed.
         /// </summary>
         /// <param name="stream">The archive stream.</param>
         /// <returns>The compressor output stream.</returns>
