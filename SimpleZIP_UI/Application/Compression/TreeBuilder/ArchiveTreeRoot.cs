@@ -41,7 +41,7 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
             string password = null) : base(id)
         {
             Archive = archive;
-            Password = password ?? string.Empty;
+            Password = password;
         }
     }
 }

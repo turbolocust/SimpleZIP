@@ -18,6 +18,7 @@
 // ==--==
 
 using SimpleZIP_UI.Application;
+using SimpleZIP_UI.Application.Compression.TreeBuilder;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Presentation.Controller;
 using SimpleZIP_UI.Presentation.Factory;
@@ -35,7 +36,6 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
-using SimpleZIP_UI.Application.Compression.TreeBuilder;
 
 namespace SimpleZIP_UI.Presentation.View
 {
@@ -367,6 +367,8 @@ namespace SimpleZIP_UI.Presentation.View
         private async Task LoadArchive(StorageFile archive)
         {
             var rootNode = await _controller.ReadArchive(archive);
+            if (rootNode == null) return;
+
             _rootNodeStack.Push(rootNode);
             ++_rootNodeStackPointer; // will be zero if new archive
 
