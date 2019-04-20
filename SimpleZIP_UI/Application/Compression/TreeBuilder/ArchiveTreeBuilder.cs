@@ -41,11 +41,6 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
         public const string RootNodeName = "root";
 
         /// <summary>
-        /// To avoid too many calls of <see cref="Task.Delay(int)"/>.
-        /// </summary>
-        private const uint DefaultTaskDelayRate = 100;
-
-        /// <summary>
         /// Dictionary that consists of existing nodes. Each node is unique and this 
         /// dictionary is used to access existing nodes as fast as possible => O(1).
         /// </summary>
@@ -119,61 +114,58 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
             _reader = await GetReaderInstance(archive, _cancellationToken);
             await _reader.OpenArchiveAsync(password);
 
-            var keyBuilder = new StringBuilder();
-            var nameBuilder = new StringBuilder();
-            var rootNode = new ArchiveTreeRoot(RootNodeName, archive, password);
-            var pair = new EntryKeyPair();
-            _nodes.Add(rootNode.Id, rootNode);
-
-            uint delayRate = 0; // to avoid too many calls of Task.Delay
-
-            foreach (var entry in _reader.ReadArchive())
+            var task = Task.Run(() =>
             {
-                // directories are considered anyway
-                if (entry.IsDirectory || entry.Key == null) continue;
+                var keyBuilder = new StringBuilder();
+                var nameBuilder = new StringBuilder();
+                var rootNode = new ArchiveTreeRoot(RootNodeName, archive, password);
+                var pair = new EntryKeyPair();
+                _nodes.Add(rootNode.Id, rootNode);
 
-                string key = Archives.NormalizeName(entry.Key);
-                UpdateEntryKeyPair(ref pair, key);
-                ArchiveTreeNode parentNode = rootNode;
-
-                for (int i = 0; i <= pair.SeparatorPos; ++i)
+                foreach (var entry in _reader.ReadArchive())
                 {
-                    var c = key[i];
-                    keyBuilder.Append(c);
+                    // directories are considered anyway
+                    if (entry.IsDirectory || entry.Key == null) continue;
 
-                    if (c == Archives.NameSeparatorChar) // next parent found
+                    string key = Archives.NormalizeName(entry.Key);
+                    UpdateEntryKeyPair(ref pair, key);
+                    ArchiveTreeNode parentNode = rootNode;
+
+                    for (int i = 0; i <= pair.SeparatorPos; ++i)
                     {
-                        var node = GetNode(keyBuilder.ToString());
-                        if (parentNode.Children.Add(node))
+                        var c = key[i];
+                        keyBuilder.Append(c);
+
+                        if (c == Archives.NameSeparatorChar) // next parent found
                         {
-                            node.Name = nameBuilder.ToString();
+                            var node = GetNode(keyBuilder.ToString());
+                            if (parentNode.Children.Add(node))
+                            {
+                                node.Name = nameBuilder.ToString();
+                            }
+
+                            parentNode = node;
+                            nameBuilder.Clear();
                         }
-                        parentNode = node;
-                        nameBuilder.Clear();
+                        else
+                        {
+                            nameBuilder.Append(c);
+                        }
                     }
-                    else
-                    {
-                        nameBuilder.Append(c);
-                    }
+
+                    if (!parentNode.Id.Equals(pair.ParentKey))
+                        throw new ReadingArchiveException("Error reading archive.");
+
+                    var fileEntry = ArchiveTreeFile.CreateFileEntry(key, pair.EntryName, entry.Size);
+                    parentNode.Children.Add(fileEntry);
+                    keyBuilder.Clear();
                 }
 
-                if (!parentNode.Id.Equals(pair.ParentKey))
-                    throw new ReadingArchiveException("Error reading archive.");
+                return rootNode; // return first element in tree, which is the root node
 
-                var fileEntry = ArchiveTreeFile.CreateFileEntry(
-                    key, pair.EntryName, entry.Size);
-                parentNode.Children.Add(fileEntry);
-                keyBuilder.Clear();
+            }, _cancellationToken);
 
-                if (++delayRate == DefaultTaskDelayRate)
-                {
-                    // to keep any waiting thread responsive
-                    await Task.Delay(1, _cancellationToken);
-                    delayRate = 0;
-                }
-            }
-
-            return rootNode; // return first element in tree, which is the root node
+            return await task;
         }
 
         /// <summary>
