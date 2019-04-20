@@ -127,16 +127,24 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                 ZipStrings.CodePage = options.ArchiveEncoding.CodePage;
                 archiveStream = await archive.OpenStreamForReadAsync();
 
+                var writeInfo = new WriteEntryInfo
+                {
+                    Location = location,
+                    IgnoreDirectories = false
+                };
+
                 using (var zipFile = new ZipFile(archiveStream))
                 {
+                    writeInfo.Zip = zipFile;
                     zipFile.Password = options.Password;
                     foreach (ZipEntry zipEntry in zipFile)
                     {
                         Token.ThrowIfCancellationRequested();
                         if (!zipEntry.IsDirectory)
                         {
-                            (_, totalBytesWritten) = await WriteEntry(
-                                zipFile, zipEntry, location, totalBytesWritten);
+                            writeInfo.Entry = zipEntry;
+                            writeInfo.TotalBytesWritten = totalBytesWritten;
+                            (_, totalBytesWritten) = await WriteEntry(writeInfo);
                         }
                     }
                 }
@@ -171,7 +179,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
             return await DecompressEntries(archive, location, entries, collectFileNames, options);
         }
 
-        #region Private Helper Methods
+        #region Private Members
         private async Task<Stream> DecompressEntries(IStorageFile archive, StorageFolder location,
             IReadOnlyCollection<IArchiveEntry> entries, bool collectFileNames, IDecompressionOptions options = null)
         {
@@ -192,8 +200,15 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                 ZipStrings.CodePage = options.ArchiveEncoding.CodePage;
                 archiveStream = await archive.OpenStreamForReadAsync();
 
+                var writeInfo = new WriteEntryInfo
+                {
+                    Location = location,
+                    IgnoreDirectories = true
+                };
+
                 using (var zipFile = new ZipFile(archiveStream))
                 {
+                    writeInfo.Zip = zipFile;
                     zipFile.Password = options.Password;
                     foreach (ZipEntry zipEntry in zipFile)
                     {
@@ -201,18 +216,19 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                         string key = Archives.NormalizeName(zipEntry.Name);
                         if (entriesMap.ContainsKey(key))
                         {
+                            writeInfo.Entry = zipEntry;
+                            writeInfo.TotalBytesWritten = totalBytesWritten;
+
                             if (collectFileNames)
                             {
                                 string fileName;
-                                (fileName, totalBytesWritten) = await WriteEntry(
-                                    zipFile, zipEntry, location, totalBytesWritten);
+                                (fileName, totalBytesWritten) = await WriteEntry(writeInfo);
                                 var entry = entriesMap[key];
                                 entry.FileName = fileName; // save name
                             }
                             else
                             {
-                                (_, totalBytesWritten) = await WriteEntry(
-                                    zipFile, zipEntry, location, totalBytesWritten);
+                                (_, totalBytesWritten) = await WriteEntry(writeInfo);
                             }
 
                             ++processedEntries;
@@ -238,17 +254,27 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
             return archiveStream;
         }
 
-        private async Task<(string, long)> WriteEntry(ZipFile zip,
-            ZipEntry entry, StorageFolder location, long totalBytesWritten)
+        private async Task<(string, long)> WriteEntry(WriteEntryInfo info)
         {
             string fileName;
+            long totalBytesWritten = info.TotalBytesWritten;
 
-            using (var entryStream = zip.GetInputStream(entry))
+            using (var entryStream = info.Zip.GetInputStream(info.Entry))
             {
-                var file = await FileUtils.CreateFileAsync(location, entry.Name);
-                if (file == null) return (null, totalBytesWritten); // file could not be created
+                StorageFile file;
+                if (info.IgnoreDirectories)
+                {
+                    string name = Path.GetFileName(info.Entry.Name);
+                    file = await info.Location.CreateFileAsync(
+                        name, CreationCollisionOption.GenerateUniqueName);
+                }
+                else
+                {
+                    file = await FileUtils.CreateFileAsync(info.Location, info.Entry.Name);
+                }
 
-                fileName = file.Path;
+                if (file == null) return (null, totalBytesWritten); // file could not be created
+                fileName = file.Path; // use path in case of sub-directories
 
                 using (var outputStream = await file.OpenStreamForWriteAsync())
                 {
@@ -266,6 +292,15 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
             }
 
             return (fileName, totalBytesWritten);
+        }
+
+        private struct WriteEntryInfo
+        {
+            internal ZipFile Zip { get; set; }
+            internal ZipEntry Entry { get; set; }
+            internal StorageFolder Location { get; set; }
+            internal bool IgnoreDirectories { get; set; }
+            internal long TotalBytesWritten { get; set; }
         }
         #endregion
     }
