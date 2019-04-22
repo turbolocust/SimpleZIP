@@ -141,7 +141,7 @@ namespace SimpleZIP_UI.Application.Compression
 
             switch (value)
             {
-                case ArchiveType.Zip:
+                case ArchiveType.Zip: // use SharpZipLib
                     algorithm = new Algorithm.Type.SZL.Zip();
                     break;
                 case ArchiveType.GZip:
@@ -154,12 +154,12 @@ namespace SimpleZIP_UI.Application.Compression
                     algorithm = new Algorithm.Type.LZip();
                     break;
                 case ArchiveType.Tar:
-                    algorithm = new Algorithm.Type.SZL.Tar();
+                    algorithm = new Algorithm.Type.Tar();
                     break;
                 case ArchiveType.TarGz:
-                    algorithm = new Algorithm.Type.SZL.TarGzip();
+                    algorithm = new Algorithm.Type.TarGzip();
                     break;
-                case ArchiveType.TarBz2:
+                case ArchiveType.TarBz2: // use SharpZipLib
                     algorithm = new Algorithm.Type.SZL.TarBzip2();
                     break;
                 case ArchiveType.TarLz:
