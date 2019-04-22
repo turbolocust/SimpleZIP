@@ -23,6 +23,7 @@ using SharpCompress.Writers;
 using SimpleZIP_UI.Application.Compression.Reader;
 using SimpleZIP_UI.Application.Streams;
 using SimpleZIP_UI.Application.Util;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
@@ -75,7 +76,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                         if (!reader.Entry.IsDirectory)
                         {
                             (_, totalBytesWritten) = await WriteEntry(
-                                reader, location, totalBytesWritten);
+                                reader, location, totalBytesWritten, false);
                         }
                     }
                 }
@@ -177,14 +178,14 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                             {
                                 string fileName;
                                 (fileName, totalBytesWritten) = await WriteEntry(
-                                    reader, location, totalBytesWritten);
+                                    reader, location, totalBytesWritten, true);
                                 var entry = entriesMap[reader.Entry.Key];
                                 entry.FileName = fileName; // save name
                             }
                             else
                             {
                                 (_, totalBytesWritten) = await WriteEntry(
-                                    reader, location, totalBytesWritten);
+                                    reader, location, totalBytesWritten, true);
                             }
 
                             ++processedEntries;
@@ -220,16 +221,26 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         }
 
         private async Task<(string, long)> WriteEntry(IReader reader,
-            StorageFolder location, long totalBytesWritten)
+            StorageFolder location, long totalBytesWritten, bool ignoreDirectories)
         {
             string fileName;
 
             using (var entryStream = reader.OpenEntryStream())
             {
-                var file = await FileUtils.CreateFileAsync(location, reader.Entry.Key);
-                if (file == null) return (null, totalBytesWritten); // file could not be created
+                StorageFile file;
+                if (ignoreDirectories)
+                {
+                    string name = Path.GetFileName(reader.Entry.Key);
+                    file = await location.CreateFileAsync(
+                        name, CreationCollisionOption.GenerateUniqueName);
+                }
+                else
+                {
+                    file = await FileUtils.CreateFileAsync(location, reader.Entry.Key);
+                }
 
-                fileName = file.Path;
+                if (file == null) return (null, totalBytesWritten); // file could not be created
+                fileName = file.Path; // use path in case of sub-directories
 
                 using (var outputStream = await file.OpenStreamForWriteAsync())
                 {
@@ -241,6 +252,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                         totalBytesWritten += readBytes;
                         Update(totalBytesWritten);
                     }
+
+                    await outputStream.FlushAsync();
                 }
             }
 

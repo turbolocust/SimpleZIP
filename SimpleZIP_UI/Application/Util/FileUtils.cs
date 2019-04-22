@@ -162,9 +162,10 @@ namespace SimpleZIP_UI.Application.Util
         /// Recursively gets a file (<code>filePath</code>) from the specified <code>location</code>.
         /// </summary>
         /// <param name="location">Used to get directories and eventually the file.</param>
-        /// <param name="filePath">Path to the file below <code>location.Path</code>.</param>
+        /// <param name="filePath">Path to the file below <code>location.Path</code>.
+        /// Can either be absolute or relative.</param>
         /// <returns>The file or <code>null</code> if path is <code>string.Empty</code>.</returns>
-        public static async Task<StorageFile> GetFileAsync(StorageFolder location, string filePath)
+        internal static async Task<StorageFile> GetFileAsync(StorageFolder location, string filePath)
         {
             char separatorChar = Path.DirectorySeparatorChar;
             string dirPath = filePath.Replace('/', separatorChar);

@@ -71,6 +71,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                     {
                         await outputStream.WriteAsync(bytes, 0, readBytes, Token);
                     }
+
+                    await outputStream.FlushAsync();
                 }
 
                 await GZipOutputFileNameWorkaround(file, compressorStream);
@@ -147,6 +149,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                     {
                         await compressorStream.WriteAsync(bytes, 0, readBytes, Token);
                     }
+
+                    await compressorStream.FlushAsync();
                 }
             }
             finally
