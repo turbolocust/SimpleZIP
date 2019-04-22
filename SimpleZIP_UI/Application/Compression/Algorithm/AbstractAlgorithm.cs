@@ -45,14 +45,14 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <summary>
         /// Default buffer size for streams.
         /// </summary>
-        protected const int DefaultBufferSize = 16384;
+        protected const int DefaultBufferSize = 32768;
 
         /// <summary>
         /// Delay rate to lessen <see cref="TotalBytesProcessed"/> events. As a result,
         /// e.g. <code>bufferSize</code> times <code>x</code> (update rate) bytes are
         /// not reported to any observers.
         /// </summary>
-        protected const uint DefaultUpdateDelayRate = 125;
+        protected const uint DefaultUpdateDelayRate = 32;
 
         /// <summary>
         /// See <see cref="DefaultUpdateDelayRate"/> for more details.
