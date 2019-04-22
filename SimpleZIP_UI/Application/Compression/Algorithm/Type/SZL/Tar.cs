@@ -111,7 +111,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                                 Update(totalBytesWritten);
                             }
 
-                            await fileStream.FlushAsync(Token);
+                            await tarStream.FlushAsync();
                         }
 
                         tarStream.CloseEntry();
@@ -296,6 +296,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                     totalBytesWritten += readBytes;
                     Update(totalBytesWritten);
                 }
+
+                await outputStream.FlushAsync();
             }
 
             return (fileName, totalBytesWritten);

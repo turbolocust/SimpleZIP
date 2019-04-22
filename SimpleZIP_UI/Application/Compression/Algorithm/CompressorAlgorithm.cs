@@ -19,6 +19,7 @@
 
 using SharpCompress.Compressors.Deflate;
 using SimpleZIP_UI.Application.Compression.Algorithm.Options;
+using SimpleZIP_UI.Application.Compression.Reader;
 using SimpleZIP_UI.Application.Streams;
 using SimpleZIP_UI.Application.Util;
 using System;
@@ -27,7 +28,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
-using SimpleZIP_UI.Application.Compression.Reader;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm
 {
@@ -66,6 +66,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                     {
                         await outputStream.WriteAsync(bytes, 0, readBytes, Token);
                     }
+
+                    await outputStream.FlushAsync();
                 }
 
                 await GZipOutputFileNameWorkaround(file, compressorStream);
@@ -139,6 +141,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                     {
                         await compressorStream.WriteAsync(bytes, 0, readBytes, Token);
                     }
+
+                    await compressorStream.FlushAsync();
                 }
             }
             finally

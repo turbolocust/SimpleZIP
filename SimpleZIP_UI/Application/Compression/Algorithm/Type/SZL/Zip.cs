@@ -90,7 +90,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                                 Update(totalBytesWritten);
                             }
 
-                            await fileStream.FlushAsync(Token);
+                            await zipStream.FlushAsync(Token);
                         }
 
                         zipStream.CloseEntry();
@@ -287,7 +287,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                         Update(totalBytesWritten);
                     }
 
-                    await entryStream.FlushAsync(Token);
+                    await outputStream.FlushAsync(Token);
                 }
             }
 
