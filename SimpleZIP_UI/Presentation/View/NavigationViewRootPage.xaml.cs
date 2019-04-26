@@ -17,7 +17,9 @@
 // 
 // ==--==
 
+using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Presentation.Factory;
+using SimpleZIP_UI.Presentation.Handler;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -159,6 +161,11 @@ namespace SimpleZIP_UI.Presentation.View
             {
                 _isNavigateBack = false;
                 UpdateSelectedMenuItem(args.SourcePageType);
+            }
+            // try initialize cache if back stack is empty
+            if (ContentFrame.BackStack.IsNullOrEmpty())
+            {
+                RootNodeCacheHandler.CheckInitialize();
             }
         }
 
