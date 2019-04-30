@@ -32,14 +32,5 @@
             <Frame x:Name="ContentFrame" IsTabStop="True" Navigated="ContentFrame_OnNavigated" NavigationStopped="ContentFrame_OnNavigationStopped" />
         </NavigationView>
     </Grid>
-    <Page.Transitions>
-        <TransitionCollection>
-            <NavigationThemeTransition>
-                <NavigationThemeTransition.DefaultNavigationTransitionInfo>
-                    <CommonNavigationTransitionInfo />
-                </NavigationThemeTransition.DefaultNavigationTransitionInfo>
-            </NavigationThemeTransition>
-        </TransitionCollection>
-    </Page.Transitions>
 </Page>
 

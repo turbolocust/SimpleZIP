@@ -16,15 +16,28 @@
     </Page.Resources>
 
     <Grid Background="Transparent" Padding="12,8,0,8">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="480" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="StackPanelTop.Orientation" Value="Horizontal" />
+                        <Setter Target="HashAlgorithmComboBox.Margin" Value="0,0,24,0" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="7.0*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" VerticalAlignment="Center" Orientation="Horizontal" Margin="8,0,0,0">
+        <StackPanel x:Name="StackPanelTop" Grid.Row="0" VerticalAlignment="Center" Orientation="Vertical" Margin="8,0,0,0">
             <ComboBox x:Name="HashAlgorithmComboBox" x:Uid="HashAlgorithm" Header=""
-                      Margin="0,0,24,0" SelectionChanged="HashAlgorithmComboBox_OnSelectionChanged"
+                      Margin="0,0,24,10" SelectionChanged="HashAlgorithmComboBox_OnSelectionChanged"
                       ItemsSource="{x:Bind HashAlgorithmModels}" DisplayMemberPath="HashAlgorithm" 
                       SelectedValuePath="HashAlgorithm" SelectedItem="{x:Bind SelectedAlgorithm, Mode=TwoWay}"
                       IsEnabled="{x:Bind IsPopulateListBox.IsTrue, Mode=TwoWay, Converter={StaticResource FlipBooleanConverter}}" />
