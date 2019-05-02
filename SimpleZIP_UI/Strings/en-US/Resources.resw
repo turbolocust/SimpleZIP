@@ -266,7 +266,7 @@
     <comment>Asks whether the user has any questions or feedback.</comment>
   </data>
   <data name="License.Text" xml:space="preserve">
-    <value>This app makes use of the SharpCompress library by Adam Hathcock and is licensed under the {0} without any warranty.</value>
+    <value>This app makes use of the SharpCompress library by Adam Hathcock as well as SharpZipLib and is licensed under the {0} without any warranty.</value>
     <comment>License text.</comment>
   </data>
   <data name="SendEmail.Text" xml:space="preserve">

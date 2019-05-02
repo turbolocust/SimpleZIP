@@ -210,7 +210,7 @@
     <comment>Something took less than one second.</comment>
   </data>
   <data name="License.Text" xml:space="preserve">
-    <value>Diese Anwendung nutzt die SharpCompress Bibliothek von Adam Hathcock und ist lizenziert unter der {0} unter Ausschluss jeglicher Garantie.</value>
+    <value>Diese Anwendung nutzt die SharpCompress Bibliothek von Adam Hathcock sowie SharpZipLib und ist lizenziert unter der {0} unter Ausschluss jeglicher Garantie.</value>
     <comment>License text.</comment>
   </data>
   <data name="MightTakeWhile.Text" xml:space="preserve">

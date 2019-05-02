@@ -32,7 +32,8 @@ namespace SimpleZIP_UI.Presentation.View
         private const string License = "GNU General Public License 3";
 
         private const string LicenseUri = @"https://www.gnu.org/licenses/gpl-3.0";
-        private const string LibraryUri = @"https://github.com/adamhathcock/sharpcompress";
+        private const string LibraryScUri = @"https://github.com/adamhathcock/sharpcompress";
+        private const string LibrarySzlUri = @"https://github.com/icsharpcode/SharpZipLib";
 
         public AboutPage()
         {
@@ -41,7 +42,8 @@ namespace SimpleZIP_UI.Presentation.View
             DevelopedByRun.Text = I18N.Resources.GetString("DevelopedBy/Text", Author);
             LicenseRun.Text = I18N.Resources.GetString("License/Text", License);
 
-            LibraryHyperlinkButton.NavigateUri = new Uri(LibraryUri);
+            LibraryScHyperlinkButton.NavigateUri = new Uri(LibraryScUri);
+            LibrarySzlHyperlinkButton.NavigateUri = new Uri(LibrarySzlUri);
             LicenseHyperlinkButton.NavigateUri = new Uri(LicenseUri);
         }
 
