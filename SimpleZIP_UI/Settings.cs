@@ -114,7 +114,7 @@ namespace SimpleZIP_UI
                 value = (T)val;
                 return true;
             }
-            value = default(T);
+            value = default;
             return false;
         }
 

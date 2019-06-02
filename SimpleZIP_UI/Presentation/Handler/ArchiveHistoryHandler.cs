@@ -119,7 +119,7 @@ namespace SimpleZIP_UI.Presentation.Handler
         /// <returns>A task which returns <see cref="RecentArchiveModelCollection"/>.</returns>
         internal async Task<RecentArchiveModelCollection> GetHistoryAsync()
         {
-            return await Task.Run(() => GetHistory());
+            return await Task.Run(GetHistory);
         }
 
         /// <summary>
