@@ -68,7 +68,7 @@ namespace SimpleZIP_UI.Application.Compression
         /// <summary>
         /// Regular expression used to match drive letter in paths.
         /// </summary>
-        private static readonly Regex RegexDriveLetter = new Regex(@"[A-Za-z]{1}:\/");
+        private static readonly Regex RegexDriveLetter = new Regex(@"[A-Za-z]{1}:(\/|\\)");
 
         static Archives()
         {
@@ -121,6 +121,7 @@ namespace SimpleZIP_UI.Application.Compression
         {
             string normalized = name.Replace('\\', NameSeparatorChar);
             var match = RegexDriveLetter.Match(normalized);
+
             if (match.Success)
             {
                 normalized = normalized.Replace(match.Value, string.Empty);
