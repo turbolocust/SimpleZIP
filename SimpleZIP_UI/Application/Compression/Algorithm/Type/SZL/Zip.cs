@@ -185,8 +185,6 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
         {
             if (archive == null || entries.IsNullOrEmpty() || location == null) return Stream.Null;
 
-            int processedEntries = 0; // to count number of found entries
-            var entriesMap = ConvertToMap(entries); // for faster access
             long totalBytesWritten = 0; // for accurate progress update
             var archiveStream = Stream.Null;
 
@@ -210,31 +208,32 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                 {
                     writeInfo.Zip = zipFile;
                     zipFile.Password = options.Password;
-                    foreach (ZipEntry zipEntry in zipFile)
+
+                    foreach (var entry in entries)
                     {
                         Token.ThrowIfCancellationRequested();
-                        string key = Archives.NormalizeName(zipEntry.Name);
-                        if (entriesMap.ContainsKey(key))
+                        string key = Archives.NormalizeName(entry.Key);
+                        var zipEntry = zipFile.GetEntry(key);
+
+                        if (zipEntry == null)
                         {
-                            writeInfo.Entry = zipEntry;
-                            writeInfo.TotalBytesWritten = totalBytesWritten;
-
-                            if (collectFileNames)
-                            {
-                                string fileName;
-                                (fileName, totalBytesWritten) = await WriteEntry(writeInfo);
-                                var entry = entriesMap[key];
-                                entry.FileName = fileName; // save name
-                            }
-                            else
-                            {
-                                (_, totalBytesWritten) = await WriteEntry(writeInfo);
-                            }
-
-                            ++processedEntries;
+                            const string msg = "Entry {0} does not exist in archive.";
+                            throw new ReadingArchiveException(string.Format(msg, key));
                         }
 
-                        if (processedEntries == entries.Count) break;
+                        writeInfo.Entry = zipEntry;
+                        writeInfo.TotalBytesWritten = totalBytesWritten;
+
+                        if (collectFileNames)
+                        {
+                            string fileName;
+                            (fileName, totalBytesWritten) = await WriteEntry(writeInfo);
+                            entry.FileName = fileName; // save name
+                        }
+                        else
+                        {
+                            (_, totalBytesWritten) = await WriteEntry(writeInfo);
+                        }
                     }
                 }
             }
