@@ -42,7 +42,7 @@ This application uses the <a href="https://github.com/adamhathcock/sharpcompress
 
 The minimum requirements for this project are currently as follows:
 
-  - Visual Studio 2017
+  - Visual Studio 2019
   - Microsoft Windows 1803 (April 2018 Update)
 
 If you are planning to fork this application you may want to change this in the project configuration file.
