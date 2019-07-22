@@ -30,6 +30,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -254,31 +255,28 @@ namespace SimpleZIP_UI.Presentation.View
             if (args.OriginalSource is FrameworkElement elem &&
                 elem.DataContext is ArchiveEntryModel model)
             {
-                if (model.EntryType == ArchiveEntryModel.ArchiveEntryModelType.Archive)
-                {
-                    try
-                    {
-                        IsProgressBarEnabled.IsTrue = true;
-                        ModelsList.SelectedItem = model; // in case of multi-selection
-                        var curNode = GetNodesForCurrentRoot().Peek();
-                        var file = await _controller.ExtractSubArchive(
-                            _curRootNode, curNode.Node, model);
-                        if (file == null) // something went wrong
-                        {
-                            throw new FileNotFoundException(
-                                "File not found. Extraction of sub archive failed.");
-                        }
+                string errResource = string.Empty;
 
-                        await LoadArchive(file); // will push first node onto nodeStack
-                        ExtractWholeArchiveButton.IsEnabled = !_controller.IsEmptyArchive(_curRootNode);
-                    }
-                    catch (Exception)
+                try
+                {
+                    if (model.EntryType == ArchiveEntryModel.ArchiveEntryModelType.Archive)
                     {
-                        IsProgressBarEnabled.IsTrue = false;
-                        string errMsg = I18N.Resources.GetString("ErrorReadingArchive/Text");
-                        var dialog = DialogFactory.CreateErrorDialog(errMsg);
-                        await dialog.ShowAsync();
+                        errResource = "ErrorReadingArchive/Text";
+                        await OpenArchive(model);
                     }
+                    else if (model.EntryType == ArchiveEntryModel.ArchiveEntryModelType.File)
+                    {
+                        errResource = "ErrorReadingFile/Text";
+                        await OpenFile(model);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    IsProgressBarEnabled.IsTrue = false;
+                    string errMsg = !string.IsNullOrEmpty(errResource)
+                        ? I18N.Resources.GetString(errResource) : ex.Message;
+                    var dialog = DialogFactory.CreateErrorDialog(errMsg);
+                    await dialog.ShowAsync();
                 }
 
                 args.Handled = true;
@@ -379,6 +377,43 @@ namespace SimpleZIP_UI.Presentation.View
 
             _curRootNode = rootNode;
             await UpdateListContentAsync(rootNode);
+        }
+
+        private async Task OpenFile(ArchiveEntryModel model)
+        {
+            IsProgressBarEnabled.IsTrue = true;
+            ModelsList.SelectedItem = model; // in case of multi-selection
+            var curNode = GetNodesForCurrentRoot().Peek();
+            var file = await _controller.ExtractSubEntry(
+                _curRootNode, curNode.Node, model);
+
+            if (file == null) // something went wrong
+            {
+                throw new FileNotFoundException(
+                    "File not found. Extraction of sub-entry failed.");
+            }
+
+            var options = new LauncherOptions { DisplayApplicationPicker = true };
+            await Launcher.LaunchFileAsync(file, options);
+            IsProgressBarEnabled.IsTrue = false;
+        }
+
+        private async Task OpenArchive(ArchiveEntryModel model)
+        {
+            IsProgressBarEnabled.IsTrue = true;
+            ModelsList.SelectedItem = model; // in case of multi-selection
+            var curNode = GetNodesForCurrentRoot().Peek();
+            var file = await _controller.ExtractSubEntry(
+                _curRootNode, curNode.Node, model);
+
+            if (file == null) // something went wrong
+            {
+                throw new FileNotFoundException(
+                    "File not found. Extraction of sub-archive failed.");
+            }
+
+            await LoadArchive(file); // pushes first node onto nodeStack and disables progress bar
+            ExtractWholeArchiveButton.IsEnabled = !_controller.IsEmptyArchive(_curRootNode);
         }
 
         private Stack<NavNode> GetNodesForCurrentRoot()
