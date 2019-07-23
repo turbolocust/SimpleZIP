@@ -509,4 +509,8 @@
     <value>Der zu vergleichende Hash-Wert kommt hier hin...</value>
     <comment>Placeholder text for the CompareHashDialog. Informs the user that the hash to be compared is to be typed here.</comment>
   </data>
+  <data name="ErrorReadingFile.Text" xml:space="preserve">
+    <value>Datei konnte nicht verarbeitet werden. Bitte erneut versuchen.</value>
+    <comment>Indicates that a file could not be processed by the application.</comment>
+  </data>
 </root>
