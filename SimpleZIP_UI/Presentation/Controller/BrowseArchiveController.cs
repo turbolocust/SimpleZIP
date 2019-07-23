@@ -127,17 +127,17 @@ namespace SimpleZIP_UI.Presentation.Controller
         }
 
         /// <summary>
-        /// Extracts a sub-archive within the current archive.
+        /// Extracts a sub-entry within the current archive.
         /// </summary>
-        /// <param name="root">The root node of the sub-archive.</param>
+        /// <param name="root">The root node of the sub-entry.</param>
         /// <param name="node">The currently active node that
         /// holds the equivalent of the model.</param>
         /// <param name="model">The model to be converted.</param>
-        /// <returns>A task which returns the extracted archive.</returns>
-        internal async Task<StorageFile> ExtractSubArchive(RootNode root,
+        /// <returns>A task which returns the extracted sub-entry.</returns>
+        internal async Task<StorageFile> ExtractSubEntry(RootNode root,
             Node node, ArchiveEntryModel model)
         {
-            StorageFile archive = null;
+            StorageFile subFile = null;
             // find entry in children of current node
             var entry = (from child in node.Children
                          where child.Name.Equals(model.DisplayName)
@@ -178,11 +178,12 @@ namespace SimpleZIP_UI.Presentation.Controller
                 var result = await job.Run(this); // extraction happens here
                 if (result.StatusCode == Result.Status.Success)
                 {
-                    archive = await FileUtils.GetFileAsync(folder, entry.FileName);
+                    entry.FileName = item.Entries[0].FileName;
+                    subFile = await FileUtils.GetFileAsync(folder, entry.FileName);
                 }
             }
 
-            return archive;
+            return subFile;
         }
 
         /// <summary>
