@@ -485,4 +485,8 @@
     <value>Descending</value>
     <comment>Descending sort order.</comment>
   </data>
+  <data name="ErrorReadingFile.Text" xml:space="preserve">
+    <value>File could not be read. Please try again.</value>
+    <comment>Indicates that a file could not be processed by the application.</comment>
+  </data>
 </root>
