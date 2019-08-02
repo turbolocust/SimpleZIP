@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,56 +19,104 @@
 
 using SimpleZIP_UI.Application.Compression;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
+using SimpleZIP_UI.Application;
 
 namespace SimpleZIP_UI.I18N
 {
     internal static class ExceptionMessages
     {
+        internal enum OperationType
+        {
+            None = 0,
+            Reading = 1,
+            ReadingPasswordSet = 2,
+            Writing = 4
+        }
+
         /// <summary>
         /// Gets an internationalized string for the specified exception. 
         /// The string is a friendly error message which can be shown to users.
         /// </summary>
         /// <param name="ex">Exception from which to receive an internationalized message.</param>
-        /// <param name="acceptDefault">Returns a generic error message instead of
-        /// an empty string when there is no friendly message defined for the concrete type
-        /// of the specified exception.</param>
-        /// <param name="passwordSet">True to indicate that password is set.</param>
+        /// <param name="operationType">Specifies the type of the operation.
+        /// This affects the returned message.</param>
         /// <param name="file">File that was processed when exception occurred.</param>
-        /// <returns>String value of a resource.</returns>
+        /// <returns>Internationalized error message.</returns>
         internal static async Task<string> GetStringFor(Exception ex,
-            bool acceptDefault, bool passwordSet, StorageFile file = null)
+            OperationType operationType = OperationType.None, StorageFile file = null)
         {
-            var message = string.Empty;
+            string message;
+
             switch (ex)
             {
-                case SharpCompress.Common.CryptographicException _:
-                    message = passwordSet
-                        ? "ErrorReadingArchiveWithPassword/Text"
-                        : "FileEncryptedMessage/Text"; // not all encryption types are supported
-                    break;
+                case ArchiveEncryptedException _:
+                    {
+                        message = operationType == OperationType.ReadingPasswordSet
+                            ? "ErrorReadingArchiveWithPassword/Text"
+                            : "FileEncryptedMessage/Text";
+
+                        break;
+                    }
                 case InvalidOperationException _:
-                    if (file != null)
                     {
-                        // to inform that file format is not supported
-                        message = await Archives.IsRarArchive(file)
-                            ? "RAR5FormatNotSupported/Text"
-                            : "FileFormatNotSupported/Text";
+                        if (file != null)
+                        {
+                            // to inform that file format is not supported
+                            message = await Archives.IsRarArchive(file)
+                                ? "RAR5FormatNotSupported/Text"
+                                : "FileFormatNotSupported/Text";
+                        }
+                        else
+                        {
+                            message = "FileFormatNotSupported/Text";
+                        }
+
+                        break;
                     }
-                    else
+
+                case IOException _:
                     {
-                        message = "FileFormatNotSupported/Text";
+                        if (operationType == OperationType.Writing && IsDiskFull(ex))
+                        {
+                            message = "ErrorDiskFull/Text";
+                        }
+                        else if (operationType == OperationType.Writing)
+                        {
+                            message = "ErrorWritingFile/Text";
+                        }
+                        else if (operationType == OperationType.Reading ||
+                                 operationType == OperationType.ReadingPasswordSet)
+                        {
+                            message = "ErrorReadingArchive/Text";
+                        }
+                        else
+                        {
+                            goto default;
+                        }
+
+                        break;
                     }
-                    break;
                 default:
-                    if (acceptDefault)
-                    {
-                        message = "ErrorReadingArchive/Text";
-                    }
+                    message = Resources.GetString(
+                        "ErrorMessageDisplay/Text", ex.Message);
                     break;
             }
-            return message.Length > 0 ? Resources.GetString(message) : message;
+
+            return !string.IsNullOrEmpty(message)
+                ? Resources.GetString(message)
+                : string.Empty; // leave initial
+        }
+
+        private static bool IsDiskFull(Exception ex)
+        {
+            const int hResultErrHandleDiskFull = unchecked((int)0x80070027);
+            const int hResultErrDiskFull = unchecked((int)0x80070070);
+
+            return ex.HResult == hResultErrHandleDiskFull
+                   || ex.HResult == hResultErrDiskFull;
         }
     }
 }

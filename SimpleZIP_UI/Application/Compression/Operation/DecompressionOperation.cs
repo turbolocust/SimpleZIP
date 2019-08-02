@@ -75,8 +75,11 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                         throw; // simply re-throw, but only if password not set
                     }
 
-                    message = await ExceptionMessages.GetStringFor(
-                        ex, false, passwordSet, archiveFile);
+                    var opType = passwordSet
+                        ? ExceptionMessages.OperationType.ReadingPasswordSet
+                        : ExceptionMessages.OperationType.Reading;
+
+                    message = await ExceptionMessages.GetStringFor(ex, opType, archiveFile);
                     verboseMsg = ex.Message;
                 }
 
