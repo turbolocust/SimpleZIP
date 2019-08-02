@@ -242,7 +242,7 @@
     <comment>Allows the user to open an archive.</comment>
   </data>
   <data name="OpenWebBrowserMessage.Text" xml:space="preserve">
-    <value>Dies wird dich auf die Homepage der App weiterleiten.</value>
+    <value>Sie werden zur Homepage der App weitergeleitet.</value>
     <comment>Informs the user that the web browser will open after confirmation.</comment>
   </data>
   <data name="OperationCancelled.Text" xml:space="preserve">
@@ -266,7 +266,7 @@
     <comment>Amount of seconds.</comment>
   </data>
   <data name="SendEmail.Text" xml:space="preserve">
-    <value>Schick mir eine Mail.</value>
+    <value>Schicken Sie mir eine Mail.</value>
     <comment>Allows the user to send an email to the author of the software.</comment>
   </data>
   <data name="SeparateArchive.Text" xml:space="preserve">
@@ -378,7 +378,7 @@
     <comment>Informs the user that any action will have no effect until a restart of the app.</comment>
   </data>
   <data name="RAR5FormatNotSupported.Text" xml:space="preserve">
-    <value>Beachte, dass das RAR5 Format derzeit nicht vollständig unterstützt wird.</value>
+    <value>Beachten Sie, dass das RAR5 Format derzeit nicht vollständig unterstützt wird.</value>
     <comment>Informs the user that the RAR5 archive format is not supported.</comment>
   </data>
   <data name="FileEncryptedMessage.Text" xml:space="preserve">
@@ -451,10 +451,10 @@
   </data>
   <data name="ErrorNoFilesProvided.Text" xml:space="preserve">
     <value>Keine gültigen Dateien zur Verfügung gestellt.</value>
-    <comment>Tells the user that no valid files have been provided.</comment>
+    <comment>Informs the user that no valid files have been provided.</comment>
   </data>
   <data name="WhatWouldYouLikeToDo.Text" xml:space="preserve">
-    <value>Was möchtest du tun?</value>
+    <value>Was möchten Sie tun?</value>
     <comment>Asks the user what he/she would like to do.</comment>
   </data>
   <data name="FolderMissing.Text" xml:space="preserve">
@@ -512,5 +512,17 @@
   <data name="ErrorReadingFile.Text" xml:space="preserve">
     <value>Datei konnte nicht verarbeitet werden. Bitte erneut versuchen.</value>
     <comment>Indicates that a file could not be processed by the application.</comment>
+  </data>
+  <data name="ErrorDiskFull.Text" xml:space="preserve">
+    <value>Es ist nicht genügend freier Speicherplatz vorhanden. Bitte schaffen Sie Platz und wiederholen Sie den Vorgang.</value>
+    <comment>Informs the user that there is not enough free disk space available.</comment>
+  </data>
+  <data name="ErrorMessageDisplay.Text" xml:space="preserve">
+    <value>Ein Fehler ist aufgetreten. Die technische Fehlermeldung lautet: {0}.</value>
+    <comment>Informs the user that an error occurred and allows for displaying a technical error message.</comment>
+  </data>
+  <data name="ErrorWritingFile.Text" xml:space="preserve">
+    <value>Datei konnte nicht geschrieben werden. Bitte erneut versuchen.</value>
+    <comment>Informs the user that a file could be written successfully.</comment>
   </data>
 </root>

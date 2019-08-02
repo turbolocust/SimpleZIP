@@ -451,7 +451,7 @@
   </data>
   <data name="ErrorNoFilesProvided.Text" xml:space="preserve">
     <value>No valid files have been provided.</value>
-    <comment>Tells the user that no valid files have been provided.</comment>
+    <comment>Informs the user that no valid files have been provided.</comment>
   </data>
   <data name="WhatWouldYouLikeToDo.Text" xml:space="preserve">
     <value>What would you like to do?</value>
@@ -512,5 +512,17 @@
   <data name="ErrorReadingFile.Text" xml:space="preserve">
     <value>File could not be read. Please try again.</value>
     <comment>Indicates that a file could not be processed by the application.</comment>
+  </data>
+  <data name="ErrorDiskFull.Text" xml:space="preserve">
+    <value>There is not enough free disk space available. Please free up some space and try again.</value>
+    <comment>Informs the user that there is not enough free disk space available.</comment>
+  </data>
+  <data name="ErrorMessageDisplay.Text" xml:space="preserve">
+    <value>An error occurred. The technical error message is: {0}.</value>
+    <comment>Informs the user that an error occurred and allows for displaying a technical error message.</comment>
+  </data>
+  <data name="ErrorWritingFile.Text" xml:space="preserve">
+    <value>File could not be written. Please try again.</value>
+    <comment>Informs the user that a file could be written successfully.</comment>
   </data>
 </root>
