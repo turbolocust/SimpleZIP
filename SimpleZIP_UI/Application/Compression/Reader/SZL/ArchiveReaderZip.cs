@@ -94,10 +94,13 @@ namespace SimpleZIP_UI.Application.Compression.Reader.SZL
             {
                 _cancellationToken.ThrowIfCancellationRequested();
                 var entry = (ZipEntry)entries.Current;
+                if (entry == null) break; // shouldn't happen
+
                 yield return new ArchiveEntry(
                     entry.Name,
                     entry.IsDirectory,
-                    (ulong)entry.Size);
+                    (ulong)entry.Size
+                );
             }
         }
 

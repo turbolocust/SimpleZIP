@@ -144,10 +144,13 @@ namespace SimpleZIP_UI.Presentation.View
                 var selectedItem = (ComboBoxItem)ArchiveTypeComboBox.SelectedItem;
                 var archiveName = ArchiveNameTextBox.Text;
 
-                if (archiveName.Length > 0 && !FileUtils.ContainsIllegalChars(archiveName))
+                if (archiveName.Length > 0 && selectedItem != null &&
+                    !FileUtils.ContainsIllegalChars(archiveName))
                 {
                     // set the algorithm by archive file type
                     FileTypesComboBoxItems.TryGetValue(selectedItem, out var archiveType);
+                    if (archiveType == null) throw new NullReferenceException("Archive type must not be null.");
+
                     Archives.ArchiveFileTypes.TryGetValue(archiveType, out var value);
 
                     archiveName += archiveType;
@@ -194,6 +197,7 @@ namespace SimpleZIP_UI.Presentation.View
         {
             if (_selectedFiles.Count <= 1) return;
             var selectedItem = (ComboBoxItem)ArchiveTypeComboBox.SelectedItem;
+            if (selectedItem == null) return; // shouldn't happen
 
             if (FileTypesComboBoxItems.TryGetValue(selectedItem, out var value) && value.Equals(".gzip"))
             {
