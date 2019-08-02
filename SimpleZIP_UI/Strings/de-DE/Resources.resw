@@ -518,8 +518,8 @@
     <comment>Informs the user that there is not enough free disk space available.</comment>
   </data>
   <data name="ErrorMessageDisplay.Text" xml:space="preserve">
-    <value>Ein Fehler ist aufgetreten. Die technische Fehlermeldung lautet: {0}.</value>
-    <comment>Informs the user that an error occurred and allows for displaying a technical error message.</comment>
+    <value>Die technische Fehlermeldung lautet: {0}.</value>
+    <comment>Displays a technical error message.</comment>
   </data>
   <data name="ErrorWritingFile.Text" xml:space="preserve">
     <value>Datei konnte nicht geschrieben werden. Bitte erneut versuchen.</value>
