@@ -49,6 +49,7 @@ namespace SimpleZIP_UI.I18N
             OperationType operationType = OperationType.None, StorageFile file = null)
         {
             string message;
+            bool resolved = false;
 
             switch (ex)
             {
@@ -101,13 +102,15 @@ namespace SimpleZIP_UI.I18N
                     }
                 default:
                     message = Resources.GetString(
-                        "ErrorMessageDisplay/Text", ex.Message);
+                        "ErrorMessageDisplay/Text",
+                        ex.Message);
+                    resolved = true;
                     break;
             }
 
-            return !string.IsNullOrEmpty(message)
-                ? Resources.GetString(message)
-                : string.Empty; // leave initial
+
+
+            return !resolved ? Resources.GetString(message) : message;
         }
 
         private static bool IsDiskFull(Exception ex)
