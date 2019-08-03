@@ -70,7 +70,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                     {
                         if (token.IsCancellationRequested)
                         {
-                            FileUtils.Delete(archive);
+                            FileUtils.DeleteSafe(archive);
                         }
                     }
                 }

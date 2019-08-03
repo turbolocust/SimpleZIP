@@ -85,13 +85,29 @@ namespace SimpleZIP_UI.Application.Util
             return fileNameExtension;
         }
 
+
         /// <summary>
-        /// Deletes the specified item.
+        /// Deletes the specified item safely.
         /// </summary>
         /// <param name="item">The item to be deleted.</param>
-        public static async void Delete(IStorageItem item)
+        /// <param name="permanent">True to delete the item permanently.</param>
+        public static async void DeleteSafe(IStorageItem item, bool permanent = true)
         {
-            await item.DeleteAsync();
+            try
+            {
+                if (permanent)
+                {
+                    await item.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                }
+                else
+                {
+                    await item.DeleteAsync(StorageDeleteOption.Default);
+                }
+            }
+            catch
+            {
+                // swallow exception
+            }
         }
 
         /// <summary>
@@ -153,7 +169,7 @@ namespace SimpleZIP_UI.Application.Util
                 var files = await folder.GetFilesAsync();
                 foreach (var file in files)
                 {
-                    Delete(file);
+                    DeleteSafe(file);
                 }
             }
         }
