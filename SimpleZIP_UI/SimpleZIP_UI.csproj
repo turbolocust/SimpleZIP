@@ -356,9 +356,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <SDKReference Include="Microsoft.Services.Store.Engagement, Version=10.0">
-      <Name>Microsoft Engagement Framework</Name>
-    </SDKReference>
     <SDKReference Include="Microsoft.VCLibs, Version=14.0">
       <Name>Visual C++ 2015 Runtime for Universal Windows Platform Apps</Name>
     </SDKReference>
@@ -366,9 +363,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.8</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Services.Store.Engagement">
-      <Version>10.1901.28001</Version>
     </PackageReference>
     <PackageReference Include="secure-file">
       <Version>1.0.31</Version>

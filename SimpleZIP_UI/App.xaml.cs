@@ -33,9 +33,6 @@ using Windows.UI.Xaml.Navigation;
 using SimpleZIP_UI.Application;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Presentation.Handler;
-#if !DEBUG
-using Microsoft.Services.Store.Engagement;
-#endif
 using SimpleZIP_UI.Presentation.View;
 
 namespace SimpleZIP_UI
@@ -67,9 +64,7 @@ namespace SimpleZIP_UI
             InitializeComponent();
             InitializeTempDir();
             Suspending += OnSuspending;
-#if !DEBUG
-            RegisterEngagementNotification(); // to be able to send notifications to users
-#endif
+
             if (!DeviceInfo.IsMobileDevice)
             {
                 // set default launch size (has no effect on phones)
@@ -131,29 +126,6 @@ namespace SimpleZIP_UI
             }
         }
 
-        /// <summary>
-        /// Invoked when application is in foreground.
-        /// </summary>
-        /// <param name="args">Consists of event parameters.</param>
-        protected override void OnActivated(IActivatedEventArgs args)
-        {
-            base.OnActivated(args);
-#if !DEBUG
-            try
-            {
-                if (args is ToastNotificationActivatedEventArgs toastActivationArgs)
-                {
-                    var engagementManager = StoreServicesEngagementManager.GetDefault();
-                    engagementManager.ParseArgumentsAndTrackAppLaunch(toastActivationArgs.Argument);
-                }
-            }
-            catch
-            {
-                // ignore
-            }
-#endif
-        }
-
         /// <inheritdoc />
         protected override void OnFileActivated(FileActivatedEventArgs args)
         {
@@ -205,14 +177,6 @@ namespace SimpleZIP_UI
                 RequestedTheme = theme;
             }
         }
-
-#if !DEBUG
-        private static async void RegisterEngagementNotification()
-        {
-            var engagementManager = StoreServicesEngagementManager.GetDefault();
-            await engagementManager.RegisterNotificationChannelAsync();
-        }
-#endif
 
         private static async void InitializeTempDir()
         {

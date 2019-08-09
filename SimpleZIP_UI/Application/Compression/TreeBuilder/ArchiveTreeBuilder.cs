@@ -54,7 +54,7 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
         /// <summary>
         /// The token which can be used to interrupt the operation.
         /// </summary>
-        private CancellationToken _cancellationToken;
+        private readonly CancellationToken _cancellationToken;
 
         /// <summary>
         /// True if builder has been interrupted and thus cannot be used anymore. 
