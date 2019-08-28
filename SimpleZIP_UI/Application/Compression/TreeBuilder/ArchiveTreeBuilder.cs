@@ -81,15 +81,6 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
                 case Archives.ArchiveType.Zip:
                     reader = new Reader.SZL.ArchiveReaderZip(file, token);
                     break;
-                case Archives.ArchiveType.Tar:
-                    reader = new Reader.SZL.ArchiveReaderTar(file, token);
-                    break;
-                case Archives.ArchiveType.TarGz:
-                    reader = new Reader.SZL.ArchiveReaderTarGz(file, token);
-                    break;
-                case Archives.ArchiveType.TarBz2:
-                    reader = new Reader.SZL.ArchiveReaderTarBz2(file, token);
-                    break;
                 default: // using SharpCompress here
                     reader = new ArchiveReader(file, token);
                     break;

@@ -160,8 +160,8 @@ namespace SimpleZIP_UI.Application.Compression
                 case ArchiveType.TarGz:
                     algorithm = new Algorithm.Type.TarGzip();
                     break;
-                case ArchiveType.TarBz2: // use SharpZipLib
-                    algorithm = new Algorithm.Type.SZL.TarBzip2();
+                case ArchiveType.TarBz2:
+                    algorithm = new Algorithm.Type.TarBzip2();
                     break;
                 case ArchiveType.TarLz:
                     algorithm = new Algorithm.Type.TarLzip();
