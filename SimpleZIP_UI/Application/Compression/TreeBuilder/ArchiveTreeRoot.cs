@@ -33,7 +33,7 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
         internal StorageFile Archive { get; }
 
         /// <summary>
-        /// The password of the archive. May be <code>null</code>.
+        /// The password of the archive. May be <c>null</c>.
         /// </summary>
         internal string Password { get; }
 

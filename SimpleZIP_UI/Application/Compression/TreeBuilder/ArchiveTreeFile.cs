@@ -52,7 +52,7 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
 
         /// <summary>
         /// Name of the file if already extracted. This may
-        /// be <code>null</code> if not yet extracted.
+        /// be <c>null</c> if not yet extracted.
         /// </summary>
         internal string FileName { get; set; }
 

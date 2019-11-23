@@ -32,7 +32,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader.SZL
     {
         /// <summary>
         /// The input stream for the TAR archive.
-        /// Is <code>null</code> if not yet opened.
+        /// Is <c>null</c> if not yet opened.
         /// </summary>
         private TarInputStream _tarInputStream;
 

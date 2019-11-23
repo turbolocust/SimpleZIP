@@ -32,7 +32,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         INavigation Navigation { get; }
 
         /// <summary>
-        /// Aggregated object for password requests. Can be <code>null</code>.
+        /// Aggregated object for password requests. Can be <c>null</c>.
         /// </summary>
         IPasswordRequest PasswordRequest { get; }
     }

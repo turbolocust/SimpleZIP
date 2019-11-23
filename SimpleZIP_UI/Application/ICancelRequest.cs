@@ -28,7 +28,7 @@ namespace SimpleZIP_UI.Application
 
         /// <summary>
         /// Resets the current request for cancellation. After this operation
-        /// <see cref="IsCancelRequest"/> returns <code>false</code>.
+        /// <see cref="IsCancelRequest"/> returns <c>false</c>.
         /// </summary>
         void Reset();
     }

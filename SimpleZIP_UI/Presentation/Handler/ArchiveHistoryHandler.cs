@@ -124,7 +124,7 @@ namespace SimpleZIP_UI.Presentation.Handler
 
         /// <summary>
         /// Stores a new entry to the history for each item in the specified array
-        /// consisting of file names. Each entry holds the specified <code>location</code>
+        /// consisting of file names. Each entry holds the specified <c>location</c>
         /// as well as the current datetime with the format as specified in <see cref="DefaultDateFormat"/>.
         /// </summary>
         /// <param name="folder">The folder to be stored with each entry.</param>

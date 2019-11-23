@@ -45,7 +45,7 @@ namespace SimpleZIP_UI.Application.Compression.Model
 
         /// <summary>
         /// Optional list of entries to be extracted. If this is not 
-        /// <code>null</code>, then only these entries will be extracted.
+        /// <c>null</c>, then only these entries will be extracted.
         /// </summary>
         internal IReadOnlyList<IArchiveEntry> Entries { get; }
 

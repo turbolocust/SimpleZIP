@@ -49,7 +49,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
 
         /// <summary>
         /// Delay rate to lessen <see cref="TotalBytesProcessed"/> events. As a result,
-        /// e.g. <code>bufferSize</code> times <code>x</code> (update rate) bytes are
+        /// e.g. <c>bufferSize</c> times <c>x</c> (update rate) bytes are
         /// not reported to any observers.
         /// </summary>
         protected const uint DefaultUpdateDelayRate = 32;

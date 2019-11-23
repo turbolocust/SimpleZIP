@@ -37,10 +37,10 @@ namespace SimpleZIP_UI.Presentation.Handler
 
         /// <summary>
         /// Reads a value from the cache. If the value with the specified
-        /// key is not found, then <code>null</code> is returned.
+        /// key is not found, then <c>null</c> is returned.
         /// </summary>
         /// <param name="key">The key of the cached value.</param>
-        /// <returns>The cached value or <code>null</code>.</returns>
+        /// <returns>The cached value or <c>null</c>.</returns>
         T ReadFromCache(string key);
 
         /// <summary>

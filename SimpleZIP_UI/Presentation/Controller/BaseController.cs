@@ -133,8 +133,8 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// </summary>
         /// <param name="title">The title of the toast notification.</param>
         /// <param name="content">The content of the toast notification.</param>
-        /// <param name="seconds">Timer in seconds after which toast will disappear. Defaults to <code>8</code>.</param>
-        /// <param name="muteAudio">True to mute audio, false otherwise. Defaults to <code>false</code>.</param>
+        /// <param name="seconds">Timer in seconds after which toast will disappear. Defaults to <c>8</c>.</param>
+        /// <param name="muteAudio">True to mute audio, false otherwise. Defaults to <c>false</c>.</param>
         internal void ShowToastNotification(string title, string content, uint seconds = 8, bool muteAudio = false)
         {
             var notifier = ToastNotificationManager.CreateToastNotifier();

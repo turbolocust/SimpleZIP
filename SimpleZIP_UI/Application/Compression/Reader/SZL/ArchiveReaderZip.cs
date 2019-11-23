@@ -39,7 +39,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader.SZL
     {
         /// <summary>
         /// The currently opened ZIP archive.
-        /// Is <code>null</code> if not yet opened.
+        /// Is <c>null</c> if not yet opened.
         /// </summary>
         private ZipFile _zipFile;
 

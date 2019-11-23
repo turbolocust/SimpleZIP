@@ -59,8 +59,8 @@ namespace SimpleZIP_UI.Application.Util
         /// extensions are also being considered, e.g. ".tar.gz" or ".tar.bz2".
         /// </summary>
         /// <param name="path">The path string from which to get the extension(s).</param>
-        /// <returns>The extension(s) as string or <code>null</code> if path is <code>null</code>
-        /// or <code>String.Empty</code> if path does not have an extension.</returns>
+        /// <returns>The extension(s) as string or <c>null</c> if path is <c>null</c>
+        /// or <c>String.Empty</c> if path does not have an extension.</returns>
         public static string GetFileNameExtension(string path)
         {
             var fileNameExtension = string.Empty;
@@ -175,12 +175,12 @@ namespace SimpleZIP_UI.Application.Util
         }
 
         /// <summary>
-        /// Recursively gets a file (<code>filePath</code>) from the specified <code>location</code>.
+        /// Recursively gets a relative <c>filePath</c> from the specified <c>location</c>.
         /// </summary>
         /// <param name="location">Used to get directories and eventually the file.</param>
-        /// <param name="filePath">Path to the file below <code>location.Path</code>.
+        /// <param name="filePath">Path to the file below <c>location.Path</c>.
         /// Can either be absolute or relative.</param>
-        /// <returns>The file or <code>null</code> if path is <code>string.Empty</code>.</returns>
+        /// <returns>The file or <c>null</c> if the path equals <see cref="string.Empty"/>.</returns>
         internal static async Task<StorageFile> GetFileAsync(StorageFolder location, string filePath)
         {
             char separatorChar = Path.DirectorySeparatorChar;
@@ -220,12 +220,12 @@ namespace SimpleZIP_UI.Application.Util
         }
 
         /// <summary>
-        /// Creates a file (<code>filePath</code>) in the specified <code>location</code>
+        /// Creates a file by its relative <c>filePath</c> in the specified <c>location</c>
         /// including all the missing directories in the path.
         /// </summary>
         /// <param name="location">Used to create directories and eventually the file.</param>
         /// <param name="filePath">Relative path to the file to be created.</param>
-        /// <returns>The created file or <code>null</code> if path is <code>String.Empty</code>.</returns>
+        /// <returns>The created file or <c>null</c> if path is <see cref="string.Empty"/>.</returns>
         internal static async Task<StorageFile> CreateFileAsync(StorageFolder location, string filePath)
         {
             var separatorChar = Path.DirectorySeparatorChar;

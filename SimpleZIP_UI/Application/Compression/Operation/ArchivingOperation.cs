@@ -88,7 +88,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         }
 
         /// <summary>
-        /// Performs the operation as specified in the <code>OperationInfo</code> object.
+        /// Performs the operation as specified in the <c>OperationInfo</c> object.
         /// </summary>
         /// <param name="operationInfo">Information required for the operation.</param>
         /// <param name="resetBytesProcessed">True to reset the current amount 

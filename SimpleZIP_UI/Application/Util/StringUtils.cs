@@ -26,7 +26,7 @@ namespace SimpleZIP_UI.Application.Util
         /// <summary>
         /// Appends a copy of the specified string followed by the default line terminator
         /// to the end of the current <see cref="T:System.Text.StringBuilder" /> object.
-        /// If the specified string is <code>null</code> or empty, this is a no-op.
+        /// If the specified string is <c>null</c> or empty, this is a no-op.
         /// </summary>
         /// <param name="sb">Instance of <see cref="StringBuilder"/>.</param>
         /// <param name="value">The string to be appended.</param>

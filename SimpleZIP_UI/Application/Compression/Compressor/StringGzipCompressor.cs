@@ -50,7 +50,7 @@ namespace SimpleZIP_UI.Application.Compression.Compressor
         /// <param name="value">The string to be compressed.</param>
         /// <returns>BASE64 encoded string representation of compressed data.</returns>
         /// <exception cref="IOException">Thrown by streams if something went wrong.</exception>
-        /// <exception cref="ArgumentNullException">Thrown if specified argument is <code>null</code>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown if specified argument is <c>null</c>.</exception>
         /// <exception cref="EncoderFallbackException">Thrown if a fallback occurred.</exception>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public string Compress(string value)
@@ -80,7 +80,7 @@ namespace SimpleZIP_UI.Application.Compression.Compressor
         /// <returns>The decompressed string.</returns>
         /// <exception cref="FormatException">Thrown if input is not BASE64 encoded.</exception>
         /// <exception cref="ArgumentException">Thrown if input is not compressed with GZIP.</exception>
-        /// <exception cref="ArgumentNullException">Thrown if specified argument is <code>null</code>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown if specified argument is <c>null</c>.</exception>
         /// <exception cref="DecoderFallbackException">Thrown if a fallback occurred.</exception>
         public string Decompress(string input)
         {
