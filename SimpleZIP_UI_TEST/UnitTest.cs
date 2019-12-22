@@ -69,8 +69,7 @@ namespace SimpleZIP_UI_TEST
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                Assert.Fail();
+                Assert.Fail(ex.ToString());
             }
         }
 
@@ -88,8 +87,7 @@ namespace SimpleZIP_UI_TEST
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                Assert.Fail();
+                Assert.Fail(ex.ToString());
             }
         }
 
@@ -107,8 +105,7 @@ namespace SimpleZIP_UI_TEST
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                Assert.Fail();
+                Assert.Fail(ex.ToString());
             }
         }
 
@@ -126,8 +123,7 @@ namespace SimpleZIP_UI_TEST
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                Assert.Fail();
+                Assert.Fail(ex.ToString());
             }
         }
 
@@ -145,8 +141,7 @@ namespace SimpleZIP_UI_TEST
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                Assert.Fail();
+                Assert.Fail(ex.ToString());
             }
         }
 
