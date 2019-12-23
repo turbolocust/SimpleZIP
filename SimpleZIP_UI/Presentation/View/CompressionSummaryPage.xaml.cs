@@ -130,10 +130,11 @@ namespace SimpleZIP_UI.Presentation.View
                 var selectedItem = (ComboBoxItem)ArchiveTypeComboBox.SelectedItem;
                 var archiveName = ArchiveNameTextBox.Text;
 
-                if (archiveName.Length > 0 && !FileUtils.ContainsIllegalChars(archiveName))
+                if (selectedItem != null && archiveName.Length > 0 && !FileUtils.ContainsIllegalChars(archiveName))
                 {
                     // set the algorithm by archive file type
                     FileTypesComboBoxItems.TryGetValue(selectedItem, out var archiveType);
+                    if (archiveType == null) return; // should never be the case
                     Archives.ArchiveFileTypes.TryGetValue(archiveType, out var value);
 
                     archiveName += archiveType;
@@ -145,22 +146,18 @@ namespace SimpleZIP_UI.Presentation.View
                             _controller.OutputFolder, result.ArchiveNames);
                     }
 
-                    FinishOperation();
-                    if (_controller.IsShareTargetActivated())
+                    if (_controller.IsShareTargetActivated() &&
+                        result.StatusCode != Result.Status.Success)
                     {
-                        if (result.StatusCode != Result.Status.Success)
-                        {
-                            // allow error dialog to be displayed
-                            await _controller.CreateResultDialog(result).ShowAsync();
-                        }
+                        // allow error dialog to be displayed
+                        await _controller.CreateResultDialog(result).ShowAsync();
                     }
                     else
                     {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        _controller.CreateResultDialog(result).ShowAsync();
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        await _controller.CreateResultDialog(result).ShowAsync();
                     }
 
+                    FinishOperation();
                     _controller.NavigateBackHome();
                 }
             }
@@ -180,11 +177,14 @@ namespace SimpleZIP_UI.Presentation.View
             if (_selectedFiles.Count <= 1) return;
             var selectedItem = (ComboBoxItem)ArchiveTypeComboBox.SelectedItem;
 
-            if (FileTypesComboBoxItems.TryGetValue(selectedItem, out var value) && value.Equals(".gzip"))
+            if (selectedItem != null)
             {
-                ArchiveTypeToolTip.Content = I18N.Resources.GetString("OnlySingleFileCompression/Text")
-                    + "\r\n" + I18N.Resources.GetString("SeparateArchive/Text");
-                ArchiveTypeToolTip.IsOpen = true;
+                if (FileTypesComboBoxItems.TryGetValue(selectedItem, out var value) && value.Equals(".gzip"))
+                {
+                    ArchiveTypeToolTip.Content = I18N.Resources.GetString("OnlySingleFileCompression/Text") + "\r\n" +
+                                                 I18N.Resources.GetString("SeparateArchive/Text");
+                    ArchiveTypeToolTip.IsOpen = true;
+                }
             }
         }
 

@@ -31,9 +31,6 @@ using Windows.UI.Xaml.Navigation;
 using SimpleZIP_UI.Application;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Presentation.Handler;
-#if !DEBUG
-using Microsoft.Services.Store.Engagement;
-#endif
 using SimpleZIP_UI.Presentation.View;
 
 namespace SimpleZIP_UI
@@ -54,9 +51,6 @@ namespace SimpleZIP_UI
             RequestApplicationTheme();
             InitializeComponent();
             InitializeTempDir();
-#if !DEBUG
-            RegisterEngagementNotification(); // register notification channel to send notifications to users
-#endif
             Suspending += OnSuspending;
         }
 
@@ -107,29 +101,6 @@ namespace SimpleZIP_UI
                 // Ensure the current window is active
                 Window.Current.Activate();
             }
-        }
-
-        /// <summary>
-        /// Invoked when application is in foreground.
-        /// </summary>
-        /// <param name="args">Consists of event parameters.</param>
-        protected override void OnActivated(IActivatedEventArgs args)
-        {
-            base.OnActivated(args);
-#if !DEBUG
-            try
-            {
-                if (args is ToastNotificationActivatedEventArgs toastActivationArgs)
-                {
-                    var engagementManager = StoreServicesEngagementManager.GetDefault();
-                    engagementManager.ParseArgumentsAndTrackAppLaunch(toastActivationArgs.Argument);
-                }
-            }
-            catch
-            {
-                // ignore
-            }
-#endif
         }
 
         /// <inheritdoc />
@@ -194,14 +165,6 @@ namespace SimpleZIP_UI
                 }
             }
         }
-
-#if !DEBUG
-        private static async void RegisterEngagementNotification()
-        {
-            var engagementManager = StoreServicesEngagementManager.GetDefault();
-            await engagementManager.RegisterNotificationChannelAsync();
-        }
-#endif
 
         private static async void InitializeTempDir()
         {

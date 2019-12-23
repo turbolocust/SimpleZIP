@@ -25,7 +25,7 @@
                 <StackPanel Background="Transparent" Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock x:Name="ArchiveHistorySizeTextBlock" x:Uid="ArchiveHistorySize" Text="" TextWrapping="Wrap" 
                                Margin="0,0,16,0" Padding="0,4,0,0"/>
-                    <TextBox x:Name="ArchiveHistorySizeTextBox" Width="32" TextWrapping="NoWrap" AcceptsReturn="False"
+                    <TextBox x:Name="ArchiveHistorySizeTextBox" Width="Auto" TextWrapping="NoWrap" AcceptsReturn="False"
                              IsSpellCheckEnabled="False" Text="" TextChanged="ArchiveHistorySizeTextBox_OnTextChanged"/>
                 </StackPanel>
                 <TextBlock x:Uid="Theme" Text="" FontSize="16" FontWeight="Medium" CharacterSpacing="36" Margin="0,8,0,4"/>

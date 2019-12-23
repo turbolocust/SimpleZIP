@@ -65,8 +65,7 @@ namespace SimpleZIP_UI_TEST
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                Assert.Fail();
+                Assert.Fail(ex.ToString());
             }
         }
 
@@ -83,8 +82,7 @@ namespace SimpleZIP_UI_TEST
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                Assert.Fail();
+                Assert.Fail(ex.ToString());
             }
         }
 
@@ -101,8 +99,7 @@ namespace SimpleZIP_UI_TEST
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                Assert.Fail();
+                Assert.Fail(ex.ToString());
             }
         }
 
@@ -119,8 +116,7 @@ namespace SimpleZIP_UI_TEST
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                Assert.Fail();
+                Assert.Fail(ex.ToString());
             }
         }
 
@@ -163,6 +159,7 @@ namespace SimpleZIP_UI_TEST
             using (var streamReader = new StreamReader(await file.OpenStreamForReadAsync()))
             {
                 var line = streamReader.ReadLine();
+                Assert.IsNotNull(line);
                 if (!line.Equals(FileText))
                 {
                     Assert.Fail("Files do not match.");
