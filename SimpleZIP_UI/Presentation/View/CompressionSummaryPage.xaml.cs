@@ -162,23 +162,19 @@ namespace SimpleZIP_UI.Presentation.View
                             _controller.OutputFolder, result.ArchiveNames);
                     }
 
-                    FinishOperation();
-                    if (_controller.IsShareTargetActivated())
+                    RootNodeCacheHandler.CheckInitialize();
+
+                    if (_controller.IsShareTargetActivated() &&
+                        result.StatusCode != Result.Status.Success)
                     {
-                        if (result.StatusCode != Result.Status.Success)
-                        {
-                            // allow error dialog to be displayed
-                            await _controller.CreateResultDialog(result).ShowAsync();
-                        }
+                        // allow error dialog to be displayed
+                        await _controller.CreateResultDialog(result).ShowAsync();
                     }
                     else
                     {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        _controller.CreateResultDialog(result).ShowAsync();
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        await _controller.CreateResultDialog(result).ShowAsync();
                     }
 
-                    RootNodeCacheHandler.CheckInitialize();
                     _controller.NavigateBackHome();
                 }
             }

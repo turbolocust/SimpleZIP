@@ -98,9 +98,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// <see cref="ArchivingOperation{T}.ProgressUpdate"/> event.</param>
         /// <param name="operationInfos">The amount of operations to be performed.</param>
         /// <returns>True on success, false otherwise.</returns>
-        internal async Task<Result> StartButtonAction(
-            EventHandler<ProgressUpdateEventArgs> listener,
-            params T[] operationInfos)
+        internal async Task<Result> StartButtonAction(EventHandler<ProgressUpdateEventArgs> listener, params T[] operationInfos)
         {
             using (Operation = GetArchivingOperation())
             {

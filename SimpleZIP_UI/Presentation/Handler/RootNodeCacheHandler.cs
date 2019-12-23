@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -60,9 +60,15 @@ namespace SimpleZIP_UI.Presentation.Handler
             if (force || Instance.Cache.Count > 10)
             {
                 Instance.ClearCache();
-                var tempFolder = await FileUtils
-                    .GetTempFolderAsync(TempFolder.Archives);
-                await FileUtils.CleanFolderAsync(tempFolder);
+                try
+                {
+                    var tempFolder = await FileUtils.GetTempFolderAsync(TempFolder.Archives);
+                    await FileUtils.CleanFolderAsync(tempFolder);
+                }
+                catch
+                {
+                    // ignore (execution cannot be awaited)
+                }
             }
         }
 
