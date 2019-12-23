@@ -189,23 +189,31 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        private void SortOrderToggleMenuFlyoutItem_OnTapped(
-            object sender, TappedRoutedEventArgs args)
+        private void SortOrderToggleMenuFlyoutItem_OnTapped(object sender, TappedRoutedEventArgs args)
         {
-            var sorting = new Sorting(
-                ActiveNode.Sorting.SortMode,
-                IsSortOrderDescending.IsTrue);
-            SortArchiveEntryModels(sorting);
+            SortArchiveEntryModels();
+        }
+        private void SortOrderToggleMenuFlyoutItem_OnClick(object sender, RoutedEventArgs args)
+        {
+            SortArchiveEntryModels();
         }
 
-        private void SortByNameFlyoutItem_OnTapped(
-            object sender, TappedRoutedEventArgs args)
+        private void SortByNameFlyoutItem_OnTapped(object sender, TappedRoutedEventArgs args)
         {
             SortArchiveEntryModelsByName(IsSortOrderDescending.IsTrue);
         }
 
-        private void SortByTypeFlyoutItem_OnTapped(
-            object sender, TappedRoutedEventArgs args)
+        private void SortByNameFlyoutItem_OnClick(object sender, RoutedEventArgs args)
+        {
+            SortArchiveEntryModelsByName(IsSortOrderDescending.IsTrue);
+        }
+
+        private void SortByTypeFlyoutItem_OnTapped(object sender, TappedRoutedEventArgs args)
+        {
+            SortArchiveEntryModelsByType(IsSortOrderDescending.IsTrue);
+        }
+
+        private void SortByTypeFlyoutItem_OnClick(object sender, RoutedEventArgs args)
         {
             SortArchiveEntryModelsByType(IsSortOrderDescending.IsTrue);
         }
@@ -471,6 +479,14 @@ namespace SimpleZIP_UI.Presentation.View
                 int oldIndex = EntryModels.IndexOf(model);
                 EntryModels.Move(oldIndex, newIndex++);
             }
+        }
+
+        private void SortArchiveEntryModels()
+        {
+            var sorting = new Sorting(
+                ActiveNode.Sorting.SortMode,
+                IsSortOrderDescending.IsTrue);
+            SortArchiveEntryModels(sorting);
         }
 
         private async Task UpdateListContentAsync(ArchiveTreeNode next, Sorting sorting = null)

@@ -148,8 +148,8 @@
                               Holding="RecentArchivesGrid_OnHolding" RightTapped="RecentArchivesGrid_OnRightTapped">
                                 <FlyoutBase.AttachedFlyout>
                                     <MenuFlyout>
-                                        <MenuFlyoutItem x:Uid="LaunchFolderFlyoutItem" Text="" Tapped="LaunchFolderFlyoutItem_OnTapped" />
-                                        <MenuFlyoutItem x:Uid="RemoveFromHistoryFlyoutItem" Text="" Tapped="RemoveFromHistoryFlyOutItem_OnTapped" />
+                                        <MenuFlyoutItem x:Uid="LaunchFolderFlyoutItem" Text="" Tapped="LaunchFolderFlyoutItem_OnTapped" Click="LaunchFolderFlyoutItem_OnClick" />
+                                        <MenuFlyoutItem x:Uid="RemoveFromHistoryFlyoutItem" Text="" Tapped="RemoveFromHistoryFlyOutItem_OnTapped" Click="RemoveFromHistoryFlyOutItem_OnClick" />
                                     </MenuFlyout>
                                 </FlyoutBase.AttachedFlyout>
                                 <Grid.RowDefinitions>

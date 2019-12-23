@@ -24,6 +24,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Devices.Input;
 using Windows.System;
@@ -95,6 +96,36 @@ namespace SimpleZIP_UI.Presentation.View
                 }
                 // only enable button to clear list if at least one item is present
                 ClearListButton.IsEnabled = RecentArchiveModels.Count > 0;
+            }
+        }
+
+        private async Task RevealInExplorer(RecentArchiveModel model)
+        {
+            var mru = ArchiveHistoryHandler.MruList;
+            if (!mru.ContainsItem(model.MruToken)) return;
+            try
+            {
+                var folder = await mru.GetFolderAsync(model.MruToken);
+                if (folder == null) return; // shouldn't be null
+                var options = new FolderLauncherOptions();
+                try
+                {
+                    var file = await folder.GetFileAsync(model.FileName);
+                    options.ItemsToSelect.Add(file);
+                }
+                catch (FileNotFoundException)
+                {
+                    // file probably got deleted by someone;
+                    // thus, ignore and just launch directory
+                }
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                Launcher.LaunchFolderAsync(folder, options);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            }
+            catch (FileNotFoundException)
+            {
+                string errMsg = I18N.Resources.GetString("FolderMissing/Text");
+                await DialogFactory.CreateErrorDialog(errMsg).ShowAsync();
             }
         }
 
@@ -197,36 +228,30 @@ namespace SimpleZIP_UI.Presentation.View
             if (sender is MenuFlyoutItem flyoutItem)
             {
                 var model = (RecentArchiveModel)flyoutItem.DataContext;
-                var mru = ArchiveHistoryHandler.MruList;
-                if (!mru.ContainsItem(model.MruToken)) return;
-                try
-                {
-                    var folder = await mru.GetFolderAsync(model.MruToken);
-                    if (folder == null) return; // shouldn't be null
-                    var options = new FolderLauncherOptions();
-                    try
-                    {
-                        var file = await folder.GetFileAsync(model.FileName);
-                        options.ItemsToSelect.Add(file);
-                    }
-                    catch (FileNotFoundException)
-                    {
-                        // file probably got deleted by someone;
-                        // thus, ignore and just launch directory
-                    }
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    Launcher.LaunchFolderAsync(folder, options);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                }
-                catch (FileNotFoundException)
-                {
-                    string errMsg = I18N.Resources.GetString("FolderMissing/Text");
-                    await DialogFactory.CreateErrorDialog(errMsg).ShowAsync();
-                }
+                await RevealInExplorer(model);
+            }
+        }
+
+        private async void LaunchFolderFlyoutItem_OnClick(object sender, RoutedEventArgs args)
+        {
+            if (sender is MenuFlyoutItem flyoutItem)
+            {
+                var model = (RecentArchiveModel)flyoutItem.DataContext;
+                await RevealInExplorer(model);
             }
         }
 
         private void RemoveFromHistoryFlyOutItem_OnTapped(object sender, TappedRoutedEventArgs args)
+        {
+            if (sender is MenuFlyoutItem flyoutItem)
+            {
+                var model = (RecentArchiveModel)flyoutItem.DataContext;
+                ArchiveHistoryHandler.Instance.RemoveFromHistory(model);
+                RecentArchiveModels.Remove(model);
+            }
+        }
+
+        private void RemoveFromHistoryFlyOutItem_OnClick(object sender, RoutedEventArgs args)
         {
             if (sender is MenuFlyoutItem flyoutItem)
             {

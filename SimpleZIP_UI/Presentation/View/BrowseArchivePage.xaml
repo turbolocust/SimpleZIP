@@ -49,11 +49,11 @@
                 </ToolTipService.ToolTip>
                 <Button.Flyout>
                     <MenuFlyout>
-                        <ToggleMenuFlyoutItem x:Uid="Descending" Text="" Tapped="SortOrderToggleMenuFlyoutItem_OnTapped" 
+                        <ToggleMenuFlyoutItem x:Uid="Descending" Text="" Tapped="SortOrderToggleMenuFlyoutItem_OnTapped" Click="SortOrderToggleMenuFlyoutItem_OnClick"
                                               IsChecked="{x:Bind IsSortOrderDescending.IsTrue, Mode=TwoWay}" />
                         <MenuFlyoutSeparator />
-                        <MenuFlyoutItem x:Uid="SortByName" Text="" Tapped="SortByNameFlyoutItem_OnTapped" />
-                        <MenuFlyoutItem x:Uid="SortByType" Text="" Tapped="SortByTypeFlyoutItem_OnTapped"/>
+                        <MenuFlyoutItem x:Uid="SortByName" Text="" Tapped="SortByNameFlyoutItem_OnTapped" Click="SortByNameFlyoutItem_OnClick" />
+                        <MenuFlyoutItem x:Uid="SortByType" Text="" Tapped="SortByTypeFlyoutItem_OnTapped" Click="SortByTypeFlyoutItem_OnClick" />
                     </MenuFlyout>
                 </Button.Flyout>
             </Button>
