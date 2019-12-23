@@ -317,6 +317,16 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
+        private async void CompareHashFlyoutItem_OnClick(object sender, RoutedEventArgs args)
+        {
+            if (sender is MenuFlyoutItem flyoutItem)
+            {
+                var model = (MessageDigestModel)flyoutItem.DataContext;
+                var dialog = new CompareHashDialog(model.HashValue);
+                await dialog.ShowAsync();
+            }
+        }
+
         /// <inheritdoc />
         protected override void OnNavigatedTo(NavigationEventArgs args)
         {

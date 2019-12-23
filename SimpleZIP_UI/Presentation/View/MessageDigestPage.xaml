@@ -61,7 +61,7 @@
                         <Grid Background="Transparent" RightTapped="MessageDigestModelsGrid_OnRightTapped">
                             <FlyoutBase.AttachedFlyout>
                                 <MenuFlyout>
-                                    <MenuFlyoutItem x:Uid="CompareHashFlyoutItem" Text="" 
+                                    <MenuFlyoutItem x:Uid="CompareHashFlyoutItem" Text="" Click="CompareHashFlyoutItem_OnClick"
                                                     Tapped="CompareHashFlyoutItem_OnTapped" />
                                 </MenuFlyout>
                             </FlyoutBase.AttachedFlyout>
