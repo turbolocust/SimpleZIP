@@ -298,7 +298,7 @@
     <comment>Informs that an archive could not be extracted.</comment>
   </data>
   <data name="ErrorReadingArchive.Text" xml:space="preserve">
-    <value>Error reading archive. Please check password (if encrypted) or file format and try again. If this happens again, the archive is most likely corrupt or its format not fully supported.</value>
+    <value>Please check password (if encrypted) or file format and try again. If this happens again, the archive is most likely corrupt or its format not fully supported.</value>
     <comment>Reading archive failed, hence give further instructions to user.</comment>
   </data>
   <data name="FileFormatNotSupported.Text" xml:space="preserve">

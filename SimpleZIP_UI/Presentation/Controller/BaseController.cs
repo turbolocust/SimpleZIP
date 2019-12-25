@@ -94,14 +94,14 @@ namespace SimpleZIP_UI.Presentation.Controller
             {
                 case Result.Status.Success:
                     {
-                        var durationText = BuildDurationText(result.ElapsedTime);
+                        string durationText = BuildDurationText(result.ElapsedTime);
                         dialog = DialogFactory.CreateInformationDialog(
                             I18N.Resources.GetString("Success/Text"), durationText);
                         break;
                     }
                 case Result.Status.Fail:
                     {
-                        var message = !string.IsNullOrEmpty(result.Message)
+                        string message = !string.IsNullOrEmpty(result.Message)
                             ? result.Message
                             : I18N.Resources.GetString("SomethingWentWrong/Text");
                         dialog = DialogFactory.CreateErrorDialog(message);
@@ -116,11 +116,13 @@ namespace SimpleZIP_UI.Presentation.Controller
                     }
                 case Result.Status.PartialFail:
                     {
-                        var message = new StringBuilder(I18N.Resources
-                            .GetString("NotAllProcessed/Text"));
-                        message.AppendLine();
-                        message.AppendLine(result.Message);
-                        dialog = DialogFactory.CreateErrorDialog(message.ToString());
+                        string resultMessage = result.Message;
+                        if (string.IsNullOrEmpty(resultMessage))
+                        {
+                            resultMessage = I18N.Resources.GetString("NotAllProcessed/Text");
+                        }
+
+                        dialog = DialogFactory.CreateErrorDialog(resultMessage);
                         break;
                     }
                 default: throw new ArgumentOutOfRangeException(nameof(result.StatusCode));
