@@ -70,11 +70,6 @@ namespace SimpleZIP_UI.Presentation.View
         private readonly MessageDigestController _controller;
 
         /// <summary>
-        /// Instance used to compute hashes.
-        /// </summary>
-        private readonly IMessageDigestProvider _messageDigestProvider;
-
-        /// <summary>
         /// List of selected files needed for re-computation of hash values.
         /// </summary>
         private IReadOnlyList<StorageFile> _selectedFiles = new StorageFile[] { };
@@ -82,8 +77,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// <inheritdoc />
         public MessageDigestPage()
         {
-            _controller = new MessageDigestController(this);
-            _messageDigestProvider = new MessageDigestProvider();
+            _controller = new MessageDigestController(this, new MessageDigestProvider());
             HashAlgorithmModels = new ObservableCollection<HashAlgorithmModel>();
             MessageDigestModels = new ObservableCollection<MessageDigestModel>();
             InitializeComponent(); // has to be called after creating lists
@@ -93,7 +87,7 @@ namespace SimpleZIP_UI.Presentation.View
 
         private void InitHashAlgorithmComboBox()
         {
-            var algorithms = _messageDigestProvider.SupportedAlgorithms;
+            var algorithms = _controller.MdProvider.SupportedAlgorithms;
             foreach (string algorithm in algorithms)
             {
                 HashAlgorithmModels.Add(new HashAlgorithmModel(algorithm));
@@ -142,14 +136,12 @@ namespace SimpleZIP_UI.Presentation.View
         {
             var models = new List<MessageDigestModel>();
 
-            if (_messageDigestProvider.SupportedAlgorithms.Contains(algorithmName))
+            if (_controller.MdProvider.SupportedAlgorithms.Contains(algorithmName))
             {
                 // start computation of hash value for each file
                 foreach (var file in _selectedFiles)
                 {
-                    // suppress hashed bytes (string is sufficient)
-                    var (_, hash) = await _messageDigestProvider
-                        .ComputeHashValue(file, algorithmName);
+                    string hash = await _controller.TryComputeHashValue(file, algorithmName);
 
                     if (isLowercase)
                     {

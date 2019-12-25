@@ -35,7 +35,7 @@
                 Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
             <StackPanel Orientation="Horizontal">
                 <SymbolIcon Symbol="World"/>
-                <TextBlock x:Uid="GetSourceCode" Text="" FontSize="18" Margin="10,0,0,0"
+                <TextBlock x:Uid="GetSourceCode" Text="" FontSize="16" Margin="10,0,0,0"
                            VerticalAlignment="Center" HorizontalAlignment="Left" />
             </StackPanel>
         </Button>

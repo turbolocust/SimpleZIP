@@ -50,6 +50,7 @@ namespace SimpleZIP_UI.I18N
         {
             string message;
             bool resolved = false;
+            bool prependReason = true;
 
             switch (ex)
             {
@@ -77,7 +78,18 @@ namespace SimpleZIP_UI.I18N
 
                         break;
                     }
-
+                case NullReferenceException _:
+                    {
+                        // assume illegal format
+                        message = "ErrorReadingArchive/Text";
+                        break;
+                    }
+                case FileNotFoundException _:
+                    {
+                        message = Resources.GetString("FileNotFound/Text");
+                        resolved = true; // since resource string already set
+                        break;
+                    }
                 case IOException _:
                     {
                         if (operationType == OperationType.Writing && IsDiskFull(ex))
@@ -101,16 +113,30 @@ namespace SimpleZIP_UI.I18N
                         break;
                     }
                 default:
-                    message = Resources.GetString(
-                        "ErrorMessageDisplay/Text",
-                        ex.Message);
+                    message = Resources.GetString("ErrorMessageDisplay/Text", ex.Message);
                     resolved = true;
+                    prependReason = false;
                     break;
             }
 
+            return PostProcessMessage(message, !resolved, prependReason);
+        }
 
+        private static string PostProcessMessage(string message, bool resolve, bool prependReasonString)
+        {
+            string processed = message;
 
-            return !resolved ? Resources.GetString(message) : message;
+            if (resolve)
+            {
+                processed = Resources.GetString(processed);
+            }
+
+            if (prependReasonString)
+            {
+                processed = $"{Resources.GetString("Reason/Text")}: {processed}";
+            }
+
+            return processed;
         }
 
         private static bool IsDiskFull(Exception ex)
