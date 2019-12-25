@@ -298,7 +298,7 @@
     <comment>Informs that an archive could not be extracted.</comment>
   </data>
   <data name="ErrorReadingArchive.Text" xml:space="preserve">
-    <value>Please check password (if encrypted) or file format and try again. If this happens again, the archive is most likely corrupt or its format not fully supported.</value>
+    <value>Error reading archive. Please check password (if encrypted) or file format and try again. If this happens again, the archive is most likely corrupt or its format not fully supported.</value>
     <comment>Reading archive failed, hence give further instructions to user.</comment>
   </data>
   <data name="FileFormatNotSupported.Text" xml:space="preserve">
@@ -524,5 +524,13 @@
   <data name="ErrorWritingFile.Text" xml:space="preserve">
     <value>File could not be written. Please try again.</value>
     <comment>Informs the user that a file could be written successfully.</comment>
+  </data>
+  <data name="FileNotFound.Text" xml:space="preserve">
+    <value>File not found</value>
+    <comment>Informs the user that a file could not be found.</comment>
+  </data>
+  <data name="Reason.Text" xml:space="preserve">
+    <value>Reason</value>
+    <comment>Cause of an event or situation.</comment>
   </data>
 </root>
