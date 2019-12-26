@@ -16,6 +16,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -32,7 +34,8 @@ namespace SimpleZIP_UI.Presentation.View.Model
             get => _algorithm;
             set
             {
-                if (!value.Equals(_algorithm))
+                if (value == null) throw new ArgumentNullException(nameof(value));
+                if (!value.Equals(_algorithm, StringComparison.Ordinal))
                 {
                     _algorithm = value;
                     OnPropertyChanged(nameof(HashAlgorithm));

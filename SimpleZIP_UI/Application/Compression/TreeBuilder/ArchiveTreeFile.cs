@@ -17,6 +17,7 @@
 // 
 // ==--==
 
+using System;
 using SimpleZIP_UI.Application.Compression.Reader;
 using SimpleZIP_UI.Application.Util;
 
@@ -78,7 +79,8 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
 
         protected bool Equals(ArchiveTreeFile other)
         {
-            return string.Equals(Id, other.Id);
+            if (other == null) throw new ArgumentNullException(nameof(other));
+            return string.Equals(Id, other.Id, StringComparison.Ordinal);
         }
 
         /// <inheritdoc />
@@ -92,7 +94,7 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
         /// <inheritdoc />
         public override int GetHashCode()
         {
-            return Id != null ? Id.GetHashCode() : 0;
+            return Id != null ? Id.GetHashCode(StringComparison.Ordinal) : 0;
         }
 
         /// <summary>

@@ -17,6 +17,7 @@
 // 
 // ==--==
 
+using System;
 using Windows.Storage;
 using Windows.UI.Xaml;
 
@@ -24,16 +25,7 @@ namespace SimpleZIP_UI
 {
     internal static class Settings
     {
-        private static readonly ApplicationDataContainer LocalSettings;
-
-        static Settings()
-        {
-            LocalSettings = ApplicationData.Current.LocalSettings;
-            //if (LocalSettings.Values.Count == 0) // no settings stored yet, hence initialize defaults
-            //{
-            //    PushOrUpdate(Keys.HideSomeArchiveTypesKey, true);
-            //}
-        }
+        private static readonly ApplicationDataContainer LocalSettings = ApplicationData.Current.LocalSettings;
 
         /// <summary>
         /// Stores away the specified application theme preference.
@@ -52,8 +44,8 @@ namespace SimpleZIP_UI
         internal static bool TryGetTheme(out ApplicationTheme theme)
         {
             bool found = TryGet(Keys.ApplicationThemeKey, out string themeName);
-            if (!string.IsNullOrEmpty(themeName) && themeName
-                    .Equals(ApplicationTheme.Dark.ToString()))
+            if (!string.IsNullOrEmpty(themeName) && themeName.Equals(
+                    ApplicationTheme.Dark.ToString(), StringComparison.Ordinal))
             {
                 theme = ApplicationTheme.Dark;
             }

@@ -22,6 +22,7 @@ using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Presentation.Factory;
 using SimpleZIP_UI.Presentation.View;
 using System;
+using System.Globalization;
 using System.Text;
 using Windows.ApplicationModel.DataTransfer.ShareTarget;
 using Windows.System.Display;
@@ -127,7 +128,7 @@ namespace SimpleZIP_UI.Presentation.Controller
                         break;
                     }
                 // default case should never be the case (assertion error)
-                default: throw new ArgumentOutOfRangeException(nameof(result.StatusCode));
+                default: throw new ArgumentOutOfRangeException(nameof(result));
             }
 
             return dialog;
@@ -181,7 +182,9 @@ namespace SimpleZIP_UI.Presentation.Controller
             }
             else
             {
-                durationText.Append(timeSpan.ToString(@"hh\:mm\:ss")).Append(" ");
+                const string format = @"hh\:mm\:ss";
+                durationText.Append(timeSpan.ToString(format,
+                    CultureInfo.CurrentCulture)).Append(" ");
                 if (timeSpan.Minutes < 1)
                 {
                     durationText.Append(I18N.Resources.GetString("seconds/Text"));

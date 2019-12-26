@@ -69,7 +69,7 @@ namespace SimpleZIP_UI.Application.Util
                 foreach (var extendedFileType in Archives.ArchiveExtendedFileTypes)
                 {
                     var key = extendedFileType.Key;
-                    if (path.EndsWith(key))
+                    if (path.EndsWith(key, StringComparison.OrdinalIgnoreCase))
                     {
                         fileNameExtension = key;
                         break;
@@ -91,8 +91,11 @@ namespace SimpleZIP_UI.Application.Util
         /// </summary>
         /// <param name="item">The item to be deleted.</param>
         /// <param name="permanent">True to delete the item permanently.</param>
+        /// <exception cref="ArgumentNullException">Thrown if storage item is <c>null</c>.</exception>
         public static async void DeleteSafe(IStorageItem item, bool permanent = true)
         {
+            if (item == null) throw new ArgumentNullException(nameof(item));
+
             try
             {
                 if (permanent)
@@ -115,8 +118,10 @@ namespace SimpleZIP_UI.Application.Util
         /// </summary>
         /// <param name="file">The file from which to get the file size.</param>
         /// <returns>The file size as unsigned long.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if the specified file is <c>null</c>.</exception>
         public static async Task<ulong> GetFileSizeAsync(StorageFile file)
         {
+            if (file == null) throw new ArgumentNullException(nameof(file));
             var properties = await file.GetBasicPropertiesAsync();
             return properties.Size;
         }
@@ -178,7 +183,7 @@ namespace SimpleZIP_UI.Application.Util
         /// Recursively gets a relative <c>filePath</c> from the specified <c>location</c>.
         /// </summary>
         /// <param name="location">Used to get directories and eventually the file.</param>
-        /// <param name="filePath">Path to the file below <c>location.Path</c>.
+        /// <param name="filePath">Path to the file in <c>location.Path</c>.
         /// Can either be absolute or relative.</param>
         /// <returns>The file or <c>null</c> if the path equals <see cref="string.Empty"/>.</returns>
         internal static async Task<StorageFile> GetFileAsync(StorageFolder location, string filePath)
@@ -187,7 +192,7 @@ namespace SimpleZIP_UI.Application.Util
             string dirPath = filePath.Replace('/', separatorChar);
             string locPath = location.Path;
 
-            if (dirPath.StartsWith(locPath))
+            if (dirPath.StartsWith(locPath, StringComparison.OrdinalIgnoreCase))
             {
                 dirPath = dirPath.Remove(0, locPath.Length);
             }

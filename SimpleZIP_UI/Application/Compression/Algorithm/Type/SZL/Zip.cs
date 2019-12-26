@@ -24,6 +24,7 @@ using SimpleZIP_UI.Application.Streams;
 using SimpleZIP_UI.Application.Util;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -151,7 +152,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
             }
             catch (ICSharpCode.SharpZipLib.SharpZipBaseException ex)
             {
-                if (!ex.Message.StartsWith("No password available")) throw;
+                if (!ex.Message.StartsWith("No password available",
+                    StringComparison.OrdinalIgnoreCase))
+                {
+                    throw;
+                }
                 throw new ArchiveEncryptedException(ex.Message, ex);
             }
             finally
@@ -218,7 +223,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                         if (zipEntry == null)
                         {
                             const string msg = "Entry {0} does not exist in archive.";
-                            throw new ReadingArchiveException(string.Format(msg, key));
+                            throw new ReadingArchiveException(string.Format(CultureInfo.CurrentCulture, msg, key));
                         }
 
                         writeInfo.Entry = zipEntry;
@@ -239,7 +244,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
             }
             catch (ICSharpCode.SharpZipLib.SharpZipBaseException ex)
             {
-                if (!ex.Message.StartsWith("No password available")) throw;
+                if (!ex.Message.StartsWith("No password available",
+                    StringComparison.OrdinalIgnoreCase))
+                {
+                    throw;
+                }
                 throw new ArchiveEncryptedException(ex.Message, ex);
             }
             finally

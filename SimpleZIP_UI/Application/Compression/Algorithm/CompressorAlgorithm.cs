@@ -42,14 +42,17 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         {
             if (archive == null || location == null) return Stream.Null;
 
+            var archiveStream = Stream.Null;
+            var progressStream = Stream.Null;
             var compressorStream = Stream.Null;
+
             var compressorOptions = new CompressorOptions { IsCompression = false };
             options = options ?? new DecompressionOptions(false, GetDefaultEncoding());
 
             try
             {
-                var archiveStream = await archive.OpenStreamForReadAsync();
-                var progressStream = new ProgressObservableStream(this, archiveStream);
+                archiveStream = await archive.OpenStreamForReadAsync();
+                progressStream = new ProgressObservableStream(this, archiveStream);
                 compressorStream = GetCompressorStream(progressStream, compressorOptions);
 
                 string outputFileName = archive.Name.Substring(0, archive.Name.Length - archive.FileType.Length);
@@ -84,6 +87,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                 if (!options.LeaveStreamOpen)
                 {
                     compressorStream.Dispose();
+                    progressStream.Dispose();
+                    archiveStream.Dispose();
                 }
             }
 
@@ -122,14 +127,18 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             if (files.IsNullOrEmpty() || archive == null || location == null) return Stream.Null;
 
             var file = files[0]; // since multiple files are not supported
+
+            var archiveStream = Stream.Null;
+            var progressStream = Stream.Null;
             var compressorStream = Stream.Null;
+
             var compressorOptions = new CompressorOptions { FileName = file.Name, IsCompression = true };
             options = options ?? new CompressionOptions(false, GetDefaultEncoding());
 
             try
             {
-                var archiveStream = await archive.OpenStreamForWriteAsync();
-                var progressStream = new ProgressObservableStream(this, archiveStream);
+                archiveStream = await archive.OpenStreamForWriteAsync();
+                progressStream = new ProgressObservableStream(this, archiveStream);
                 compressorStream = GetCompressorStream(progressStream, compressorOptions);
 
                 using (var inputStream = await file.OpenStreamForReadAsync())
@@ -150,6 +159,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                 if (!options.LeaveStreamOpen)
                 {
                     compressorStream.Dispose();
+                    progressStream.Dispose();
+                    archiveStream.Dispose();
                 }
             }
 
@@ -158,24 +169,23 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
 
         /// <summary>
         /// This method only exists to provide a workaround for renaming a file to its
-        /// filename as it should be defined in the GZip header. The SharpCompress library 
-        /// only sets the filename after the first call of <see cref="Stream.Read"/> and 
-        /// not when the stream instance is constructed.
+        /// filename as it should be defined in the GZip header.
         /// </summary>
+        /// <remarks>
+        /// The SharpCompress library sets the filename after the first call of
+        /// <see cref="Stream.Read"/> and not when the stream instance is constructed.
+        /// </remarks>
         /// <param name="file">The file to be renamed.</param>
         /// <param name="stream">The possible <see cref="GZipStream"/> which holds the filename.</param>
-        /// <returns>True if stream is <see cref="GZipStream"/> and file was successfully renamed.</returns>
-        private static async Task<bool> GZipOutputFileNameWorkaround(IStorageItem file, Stream stream)
+        /// <returns>A task that can be awaited.</returns>
+        private static async Task GZipOutputFileNameWorkaround(IStorageItem file, Stream stream)
         {
             if (stream is GZipStream gzipStream
                 && !string.IsNullOrEmpty(gzipStream.FileName))
             {
                 await file.RenameAsync(gzipStream.FileName,
                     NameCollisionOption.GenerateUniqueName);
-                return true;
             }
-
-            return false;
         }
 
         /// <summary>

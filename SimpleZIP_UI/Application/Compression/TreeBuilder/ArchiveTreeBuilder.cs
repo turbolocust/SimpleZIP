@@ -144,8 +144,8 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
                         }
                     }
 
-                    if (!parentNode.Id.Equals(pair.ParentKey))
-                        throw new ReadingArchiveException("Error reading archive.");
+                    if (!parentNode.Id.Equals(pair.ParentKey, StringComparison.Ordinal))
+                        throw new ReadingArchiveException(@"Error reading archive.");
 
                     var fileEntry = ArchiveTreeFile.CreateFileEntry(key, pair.EntryName, entry.Size);
                     parentNode.Children.Add(fileEntry);

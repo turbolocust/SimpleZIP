@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 
@@ -29,7 +28,7 @@ namespace SimpleZIP_UI.Application.Hashing
 {
     /// <inheritdoc />
     /// <summary>
-    /// Implementation for computing hash values using <see cref="N:System.Security.Cryptography" />.
+    /// Implementation for computing hash values using <c>System.Security.Cryptography</c>.
     /// </summary>
     internal class MessageDigestProvider : IMessageDigestProvider
     {
@@ -73,21 +72,18 @@ namespace SimpleZIP_UI.Application.Hashing
         private static (byte[] HashedBytes, string HashedValue)
             ComputeHash(Stream stream, string algorithmName)
         {
-            var algorithm = GetHashAlgorithm(algorithmName);
-            var hashedBytes = algorithm.ComputeHash(stream);
-            var hashedValue = ConvertHashValueToString(hashedBytes);
-            return (hashedBytes, hashedValue);
+            using (var algorithm = GetHashAlgorithm(algorithmName))
+            {
+                var hashedBytes = algorithm.ComputeHash(stream);
+                string hashedValue = ConvertHashValueToString(hashedBytes);
+                return (hashedBytes, hashedValue);
+            }
         }
 
-        private static string ConvertHashValueToString(IReadOnlyCollection<byte> hashedBytes)
+        private static string ConvertHashValueToString(byte[] hashedBytes)
         {
-            var stringBuilder = new StringBuilder(hashedBytes.Count);
-            foreach (var byteValue in hashedBytes)
-            {
-                // convert to upper case hex format
-                stringBuilder.AppendFormat("{0:X2}", byteValue);
-            }
-            return stringBuilder.ToString();
+            // convert to upper case hex format
+            return BitConverter.ToString(hashedBytes).Replace("-", "", StringComparison.Ordinal);
         }
 
         private static HashAlgorithm GetHashAlgorithm(string algorithmName)

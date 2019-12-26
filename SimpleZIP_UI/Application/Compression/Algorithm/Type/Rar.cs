@@ -37,7 +37,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
         /// <inheritdoc />
         protected override WriterOptions GetWriterOptions()
         {
-            throw new NotSupportedException("Writing not supported for RAR.");
+            throw new NotSupportedException($"Writing not supported for {nameof(Rar)}.");
         }
     }
 }

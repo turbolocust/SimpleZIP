@@ -74,8 +74,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// </summary>
         /// <param name="entries">List of <see cref="IArchiveEntry"/> to be converted.</param>
         /// <returns>A dictionary consisting of <see cref="IArchiveEntry"/>.</returns>
-        protected static IDictionary<string, IArchiveEntry> ConvertToMap(
-            IReadOnlyCollection<IArchiveEntry> entries)
+        protected static IDictionary<string, IArchiveEntry>
+            ConvertToMap(IReadOnlyCollection<IArchiveEntry> entries)
         {
             int mapSize = entries.Count * 2;
             var map = new Dictionary<string, IArchiveEntry>(mapSize);

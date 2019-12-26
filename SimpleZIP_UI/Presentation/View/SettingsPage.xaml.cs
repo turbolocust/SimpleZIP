@@ -17,6 +17,7 @@
 // 
 // ==--==
 
+using System.Globalization;
 using SimpleZIP_UI.Presentation.Handler;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -32,7 +33,7 @@ namespace SimpleZIP_UI.Presentation.View
             SetToggleButtonsToggledState();
             SetThemeGroupToggleButton();
             ArchiveHistorySizeTextBlock.Text += " (0-" + ArchiveHistoryHandler.MaxHistoryItems + "):";
-            ArchiveHistorySizeTextBox.Text = GetCurrentSizeLimit().ToString();
+            ArchiveHistorySizeTextBox.Text = GetCurrentSizeLimit().ToString(CultureInfo.InvariantCulture);
         }
 
         private static int GetCurrentSizeLimit()
@@ -116,9 +117,9 @@ namespace SimpleZIP_UI.Presentation.View
                 {
                     Settings.PushOrUpdate(Settings.Keys.ArchiveHistorySize, value);
                 }
-                else
+                else // reset
                 {
-                    textBox.Text = GetCurrentSizeLimit().ToString(); // reset
+                    textBox.Text = GetCurrentSizeLimit().ToString(CultureInfo.InvariantCulture);
                 }
             }
         }

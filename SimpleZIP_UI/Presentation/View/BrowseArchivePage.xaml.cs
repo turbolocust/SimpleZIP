@@ -231,7 +231,7 @@ namespace SimpleZIP_UI.Presentation.View
                         var curNode = GetNodesForCurrentRoot().Peek();
                         foreach (var child in curNode.Node.Children)
                         {
-                            if (child.Name.Equals(addItem.DisplayName) && child.IsBrowsable)
+                            if (child.Name.Equals(addItem.DisplayName, StringComparison.Ordinal) && child.IsBrowsable)
                             {
                                 IsProgressBarEnabled.IsTrue = true;
                                 await UpdateListContentAsync(child as ArchiveTreeNode);
@@ -296,7 +296,7 @@ namespace SimpleZIP_UI.Presentation.View
         {
             StorageFile archive = null;
             // check for file activated event (opened via file explorer)
-            var eventArgs = args.Parameter as Windows.ApplicationModel.Activation.IActivatedEventArgs;
+            var eventArgs = args?.Parameter as Windows.ApplicationModel.Activation.IActivatedEventArgs;
             if (eventArgs?.Kind == Windows.ApplicationModel.Activation.ActivationKind.File)
             {
                 var fileArgs = eventArgs as Windows.ApplicationModel.Activation.FileActivatedEventArgs;
@@ -305,7 +305,7 @@ namespace SimpleZIP_UI.Presentation.View
                 {
                     // ReSharper disable once AssignNullToNotNullAttribute
                     // since extension method already checks for null
-                    archive = files.First() as StorageFile;
+                    archive = files?[0] as StorageFile;
                     // add main page to back stack to allow navigation via back button
                     Frame.BackStack.Add(new PageStackEntry(typeof(HomePage),
                         null, new CommonNavigationTransitionInfo()));
@@ -313,12 +313,12 @@ namespace SimpleZIP_UI.Presentation.View
             }
             else
             {
-                archive = args.Parameter as StorageFile;
+                archive = args?.Parameter as StorageFile;
             }
 
             if (archive == null)
             {
-                throw new NullReferenceException("Cannot handle null parameter.");
+                throw new NullReferenceException(nameof(archive));
             }
 
             await LoadArchive(archive); // load initial archive
@@ -397,8 +397,7 @@ namespace SimpleZIP_UI.Presentation.View
 
             if (file == null) // something went wrong
             {
-                throw new FileNotFoundException(
-                    "File not found. Extraction of sub-entry failed.");
+                throw new FileNotFoundException(@"File not found. Extraction of sub-entry failed.");
             }
 
             var options = new LauncherOptions { DisplayApplicationPicker = true };
@@ -416,8 +415,7 @@ namespace SimpleZIP_UI.Presentation.View
 
             if (file == null) // something went wrong
             {
-                throw new FileNotFoundException(
-                    "File not found. Extraction of sub-archive failed.");
+                throw new FileNotFoundException(@"File not found. Extraction of sub-archive failed.");
             }
 
             await LoadArchive(file); // pushes first node onto nodeStack and disables progress bar
@@ -466,8 +464,7 @@ namespace SimpleZIP_UI.Presentation.View
                 case SortMode.None:
                     break;
                 default:
-                    const string name = nameof(sorting.SortMode);
-                    throw new ArgumentOutOfRangeException(name);
+                    throw new ArgumentOutOfRangeException(nameof(sorting));
             }
         }
 

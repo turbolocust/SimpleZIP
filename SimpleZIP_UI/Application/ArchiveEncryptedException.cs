@@ -21,7 +21,7 @@ using System;
 
 namespace SimpleZIP_UI.Application
 {
-    internal class ArchiveEncryptedException : Exception
+    public class ArchiveEncryptedException : Exception
     {
         public ArchiveEncryptedException()
         {

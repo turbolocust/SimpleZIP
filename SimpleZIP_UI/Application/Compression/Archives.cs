@@ -26,7 +26,6 @@ using SimpleZIP_UI.Application.Compression.Algorithm;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -117,14 +116,17 @@ namespace SimpleZIP_UI.Application.Compression
         /// </summary>
         /// <param name="name">The name to be normalized.</param>
         /// <returns>A normalized name.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if the specified name is <c>null</c>.</exception>
         public static string NormalizeName(string name)
         {
+            if (name == null) throw new ArgumentNullException(nameof(name));
+
             string normalized = name.Replace('\\', NameSeparatorChar);
             var match = RegexDriveLetter.Match(normalized);
 
             if (match.Success)
             {
-                normalized = normalized.Replace(match.Value, string.Empty);
+                normalized = normalized.Replace(match.Value, "", StringComparison.Ordinal);
             }
 
             return normalized;
@@ -237,8 +239,7 @@ namespace SimpleZIP_UI.Application.Compression
             }
             catch (Exception ex) // due to missing documentation in SharpCompress
             {
-                throw new InvalidArchiveTypeException(
-                    "Archive type is unknown or not supported.", ex);
+                throw new InvalidArchiveTypeException(@"Archive type is unknown or not supported.", ex);
             }
 
             return archiveType;
@@ -302,13 +303,8 @@ namespace SimpleZIP_UI.Application.Compression
                     var readBytes = stream.Read(buffer, 0, rar5HeaderSize);
                     if (readBytes > 0)
                     {
-                        var header = new StringBuilder(rar5HeaderSize * 2);
-                        foreach (var value in buffer)
-                        {
-                            header.AppendFormat("{0:X2}", value); // convert to HEX
-                        }
-
-                        isRarArchive = header.ToString().Equals(rar5HeaderSignature);
+                        string header = BitConverter.ToString(buffer).Replace("-", "", StringComparison.Ordinal);
+                        isRarArchive = header.Equals(rar5HeaderSignature, StringComparison.Ordinal);
                     }
                 }
             }

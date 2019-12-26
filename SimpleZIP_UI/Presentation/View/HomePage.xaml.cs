@@ -99,7 +99,7 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        private async Task RevealInExplorer(RecentArchiveModel model)
+        private static async Task RevealInExplorer(RecentArchiveModel model)
         {
             var mru = ArchiveHistoryHandler.MruList;
             if (!mru.ContainsItem(model.MruToken)) return;
@@ -189,7 +189,7 @@ namespace SimpleZIP_UI.Presentation.View
                     RequestedOperation = DataPackageOperation.Copy
                 };
 
-                string path = model.Location.EndsWith("\\")
+                string path = model.Location.EndsWith("\\", StringComparison.Ordinal)
                     ? model.Location
                     : model.Location + "\\";
 

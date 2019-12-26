@@ -17,6 +17,7 @@
 // 
 // ==--==
 
+using System;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
@@ -76,7 +77,7 @@ namespace SimpleZIP_UI.Presentation.View.Model
         {
             [XmlArray("RecentArchives")]
             [XmlArrayItem("RecentArchive", typeof(RecentArchiveModel))]
-            public RecentArchiveModel[] Models { get; set; } = new RecentArchiveModel[0];
+            public RecentArchiveModel[] Models { get; set; } = Array.Empty<RecentArchiveModel>();
 
             /// <summary>
             /// Factory method to deserialize the specified XML string.

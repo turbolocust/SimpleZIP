@@ -17,6 +17,7 @@
 // 
 // ==--==
 
+using System;
 using System.Collections.Generic;
 
 namespace SimpleZIP_UI.Application.Compression.TreeBuilder
@@ -35,8 +36,7 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
         /// <inheritdoc />
         /// <summary>
         /// Friendly name of this node. Can be set differently but should ideally
-        /// consist of the <see cref="P:SimpleZIP_UI.Application.Compression.Reader.Node.Id" /> 
-        /// without the path.
+        /// consist of the <see cref="Id" /> without the path.
         /// </summary>
         public string Name { get; internal set; }
 
@@ -65,7 +65,7 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
 
         protected bool Equals(ArchiveTreeNode other)
         {
-            return string.Equals(Id, other.Id);
+            return string.Equals(Id, other.Id, StringComparison.Ordinal);
         }
 
         /// <inheritdoc />
@@ -79,7 +79,7 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
         /// <inheritdoc />
         public override int GetHashCode()
         {
-            return Id != null ? Id.GetHashCode() : 0;
+            return Id != null ? Id.GetHashCode(StringComparison.Ordinal) : 0;
         }
     }
 }

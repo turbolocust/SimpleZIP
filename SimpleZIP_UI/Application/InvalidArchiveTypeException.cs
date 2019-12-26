@@ -20,7 +20,7 @@ using System;
 
 namespace SimpleZIP_UI.Application
 {
-    internal class InvalidArchiveTypeException : Exception
+    public class InvalidArchiveTypeException : Exception
     {
         public InvalidArchiveTypeException()
         {

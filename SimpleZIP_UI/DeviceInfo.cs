@@ -17,6 +17,7 @@
 // 
 // ==--==
 
+using System;
 using Windows.Foundation.Metadata;
 using Windows.System.Profile;
 
@@ -27,12 +28,12 @@ namespace SimpleZIP_UI
         /// <summary>
         /// Holds the device family of this device as string.
         /// </summary>
-        internal static readonly string DeviceFamily;
+        internal static readonly string DeviceFamily = AnalyticsInfo.VersionInfo.DeviceFamily;
 
         /// <summary>
         /// True, if the current device is a mobile device, false otherwise.
         /// </summary>
-        internal static bool IsMobileDevice => DeviceFamily.Equals("Windows.Mobile");
+        internal static bool IsMobileDevice => DeviceFamily.Equals("Windows.Mobile", StringComparison.Ordinal);
 
         /// <summary>
         /// True, if the minimum API contract is that of the Creators Update.
@@ -43,11 +44,6 @@ namespace SimpleZIP_UI
         {
             const string contractName = "Windows.Foundation.UniversalApiContract";
             return ApiInformation.IsApiContractPresent(contractName, majorVersion);
-        }
-
-        static DeviceInfo()
-        {
-            DeviceFamily = AnalyticsInfo.VersionInfo.DeviceFamily;
         }
     }
 }

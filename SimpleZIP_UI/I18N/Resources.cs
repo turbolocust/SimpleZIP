@@ -17,18 +17,14 @@
 // 
 // ==--==
 
+using System.Globalization;
 using Windows.ApplicationModel.Resources;
 
 namespace SimpleZIP_UI.I18N
 {
     internal static class Resources
     {
-        private static readonly ResourceLoader Loader;
-
-        static Resources()
-        {
-            Loader = new ResourceLoader();
-        }
+        private static readonly ResourceLoader Loader = new ResourceLoader();
 
         /// <summary>
         /// Gets the string with the specified name.
@@ -50,7 +46,7 @@ namespace SimpleZIP_UI.I18N
         internal static string GetString(string name, params object[] objects)
         {
             var value = Loader.GetString(name);
-            return string.Format(value, objects);
+            return string.Format(CultureInfo.CurrentCulture, value, objects);
         }
     }
 }

@@ -72,7 +72,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// <summary>
         /// List of selected files needed for re-computation of hash values.
         /// </summary>
-        private IReadOnlyList<StorageFile> _selectedFiles = new StorageFile[] { };
+        private IReadOnlyList<StorageFile> _selectedFiles = Array.Empty<StorageFile>();
 
         /// <inheritdoc />
         public MessageDigestPage()
@@ -322,7 +322,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// <inheritdoc />
         protected override void OnNavigatedTo(NavigationEventArgs args)
         {
-            if (args.Parameter is FilesNavigationArgs navigationArgs)
+            if (args?.Parameter is FilesNavigationArgs navigationArgs)
             {
                 _selectedFiles = navigationArgs.StorageFiles;
                 _controller.ShareOperation = navigationArgs.ShareOperation;

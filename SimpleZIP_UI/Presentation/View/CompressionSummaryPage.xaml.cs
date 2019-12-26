@@ -27,6 +27,7 @@ using SimpleZIP_UI.Presentation.Factory;
 using SimpleZIP_UI.Presentation.Handler;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -54,7 +55,8 @@ namespace SimpleZIP_UI.Presentation.View
         /// <summary>
         /// Maps combo box items to file types for archives.
         /// </summary>
-        private static readonly Dictionary<ComboBoxItem, string> FileTypesComboBoxItems;
+        private static readonly Dictionary<ComboBoxItem, string>
+            FileTypesComboBoxItems = new Dictionary<ComboBoxItem, string>();
 
         /// <summary>
         /// True if tooltip timer is active. The timer is used to automatically
@@ -62,18 +64,14 @@ namespace SimpleZIP_UI.Presentation.View
         /// </summary>
         private volatile bool _isTooltipTimerActive;
 
-        static CompressionSummaryPage()
-        {
-            FileTypesComboBoxItems = new Dictionary<ComboBoxItem, string>();
-        }
-
         /// <inheritdoc />
         public CompressionSummaryPage()
         {
             InitializeComponent();
 
             // to indicate that an algorithm does not use a compressor stream
-            string uncompressedText = I18N.Resources.GetString("Uncompressed/Text").ToLower();
+            string uncompressedText = I18N.Resources.GetString("Uncompressed/Text");
+            uncompressedText = uncompressedText.ToLower(CultureInfo.CurrentUICulture);
 
             Settings.TryGet(Settings.Keys.HideSomeArchiveTypesKey, out bool isHideSome);
 
@@ -149,7 +147,7 @@ namespace SimpleZIP_UI.Presentation.View
                 {
                     // set the algorithm by archive file type
                     FileTypesComboBoxItems.TryGetValue(selectedItem, out var archiveType);
-                    if (archiveType == null) throw new NullReferenceException("Archive type must not be null.");
+                    if (archiveType == null) throw new NullReferenceException(nameof(archiveType));
 
                     Archives.ArchiveFileTypes.TryGetValue(archiveType, out var value);
 
@@ -195,7 +193,8 @@ namespace SimpleZIP_UI.Presentation.View
             var selectedItem = (ComboBoxItem)ArchiveTypeComboBox.SelectedItem;
             if (selectedItem == null) return; // shouldn't happen
 
-            if (FileTypesComboBoxItems.TryGetValue(selectedItem, out var value) && value.Equals(".gzip"))
+            if (FileTypesComboBoxItems.TryGetValue(selectedItem, out var value) &&
+                value.Equals(".gzip", StringComparison.OrdinalIgnoreCase))
             {
                 ArchiveTypeToolTip.Content = I18N.Resources.GetString("OnlySingleFileCompression/Text")
                     + "\r\n" + I18N.Resources.GetString("SeparateArchive/Text");
@@ -317,7 +316,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// <inheritdoc />
         protected override void OnNavigatedTo(NavigationEventArgs args)
         {
-            if (!(args.Parameter is FilesNavigationArgs navigationArgs)) return;
+            if (!(args?.Parameter is FilesNavigationArgs navigationArgs)) return;
 
             _selectedFiles = navigationArgs.StorageFiles;
             _controller.ShareOperation = navigationArgs.ShareOperation;
@@ -333,6 +332,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// <inheritdoc />
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs args)
         {
+            if (args == null) throw new ArgumentNullException(nameof(args));
             args.Cancel = _controller.Operation?.IsRunning ?? false;
         }
 

@@ -143,7 +143,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             StorageFile subFile = null;
             // find entry in children of current node
             var entry = (from child in node.Children
-                         where child.Name.Equals(model.DisplayName)
+                         where child.Name.Equals(model.DisplayName, StringComparison.Ordinal)
                          select child as ArchiveTreeFile).FirstOrDefault();
 
             if (entry != null)
@@ -212,8 +212,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// <returns>True if archive only consists of one file entry.</returns>
         internal bool IsSingleFileEntryArchive(ArchiveTreeRoot root)
         {
-            return root.Children.Count == 1
-                && !root.Children.First().IsBrowsable;
+            return root.Children.Count == 1 && !root.Children.First().IsBrowsable;
         }
 
         /// <summary>
@@ -260,7 +259,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             {
                 foreach (var child in node.Children)
                 {
-                    if (child.Name.Equals(model.DisplayName))
+                    if (child.Name.Equals(model.DisplayName, StringComparison.Ordinal))
                     {
                         if (child is ArchiveTreeFile entry)
                         {
