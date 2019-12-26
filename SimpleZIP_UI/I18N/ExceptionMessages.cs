@@ -36,6 +36,11 @@ namespace SimpleZIP_UI.I18N
             Writing = 4
         }
 
+        private static bool IsReadOperation(this OperationType type)
+        {
+            return type == OperationType.Reading || type == OperationType.ReadingPasswordSet;
+        }
+
         /// <summary>
         /// Gets an internationalized string for the specified exception. 
         /// The string is a friendly error message which can be shown to users.
@@ -64,7 +69,7 @@ namespace SimpleZIP_UI.I18N
                     }
                 case InvalidOperationException _:
                     {
-                        if (file != null)
+                        if (file != null && operationType.IsReadOperation())
                         {
                             // to inform that file format is not supported
                             message = await Archives.IsRarArchive(file)
@@ -80,8 +85,15 @@ namespace SimpleZIP_UI.I18N
                     }
                 case NullReferenceException _:
                     {
-                        // assume illegal format
-                        message = "ErrorReadingArchive/Text";
+                        if (operationType.IsReadOperation())
+                        {
+                            message = "ErrorReadingArchive/Text"; // assume illegal format
+                        }
+                        else
+                        {
+                            goto default;
+                        }
+
                         break;
                     }
                 case FileNotFoundException _:
@@ -100,8 +112,7 @@ namespace SimpleZIP_UI.I18N
                         {
                             message = "ErrorWritingFile/Text";
                         }
-                        else if (operationType == OperationType.Reading ||
-                                 operationType == OperationType.ReadingPasswordSet)
+                        else if (operationType.IsReadOperation())
                         {
                             message = "ErrorReadingArchive/Text";
                         }
