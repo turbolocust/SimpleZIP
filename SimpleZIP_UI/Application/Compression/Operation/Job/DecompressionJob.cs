@@ -92,6 +92,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation.Job
                         cancelReq.Reset();
                         break;
                     }
+
                     statusCode = Result.Status.PartialFail;
                     verboseMessage.AppendLine(ex.Message);
                 }

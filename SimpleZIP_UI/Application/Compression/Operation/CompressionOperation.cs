@@ -25,6 +25,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
+using SimpleZIP_UI.I18N;
 
 namespace SimpleZIP_UI.Application.Compression.Operation
 {
@@ -64,6 +65,8 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                             throw;
                         }
 
+                        message = await ExceptionMessages.GetStringFor(ex,
+                            ExceptionMessages.OperationType.Writing, archive);
                         verboseMsg = ex.Message;
                     }
                     finally

@@ -254,7 +254,7 @@ namespace SimpleZIP_UI.Presentation.View
             CheckLockNavigation();
             SetOperationActive(true);
 
-            var totalSize = await _controller.CheckFileSizes(_selectedFiles);
+            ulong totalSize = await _controller.CheckFileSizes(_selectedFiles);
             var info = new CompressionInfo(key, totalSize)
             {
                 ArchiveName = archiveName,

@@ -90,13 +90,14 @@ namespace SimpleZIP_UI.Presentation.Controller
         internal MessageDialog CreateResultDialog(Result result)
         {
             MessageDialog dialog;
+
             switch (result.StatusCode)
             {
                 case Result.Status.Success:
                     {
+                        string title = I18N.Resources.GetString("Success/Text");
                         string durationText = BuildDurationText(result.ElapsedTime);
-                        dialog = DialogFactory.CreateInformationDialog(
-                            I18N.Resources.GetString("Success/Text"), durationText);
+                        dialog = DialogFactory.CreateInformationDialog(title, durationText);
                         break;
                     }
                 case Result.Status.Fail:
@@ -109,9 +110,9 @@ namespace SimpleZIP_UI.Presentation.Controller
                     }
                 case Result.Status.Interrupt:
                     {
-                        dialog = DialogFactory.CreateInformationDialog(
-                            I18N.Resources.GetString("Interrupted/Text"),
-                            I18N.Resources.GetString("OperationCancelled/Text"));
+                        string title = I18N.Resources.GetString("Interrupted/Text");
+                        string message = I18N.Resources.GetString("OperationCancelled/Text");
+                        dialog = DialogFactory.CreateInformationDialog(title, message);
                         break;
                     }
                 case Result.Status.PartialFail:
@@ -125,8 +126,10 @@ namespace SimpleZIP_UI.Presentation.Controller
                         dialog = DialogFactory.CreateErrorDialog(resultMessage);
                         break;
                     }
+                // default case should never be the case (assertion error)
                 default: throw new ArgumentOutOfRangeException(nameof(result.StatusCode));
             }
+
             return dialog;
         }
 
@@ -147,14 +150,17 @@ namespace SimpleZIP_UI.Presentation.Controller
             toastXml.SelectSingleNode("/toast");
             var audio = toastXml.CreateElement("audio");
             audio.SetAttribute("src", "ms-winsoundevent:Notification.SMS");
+
             if (muteAudio)
             {
                 audio.SetAttribute("silent", "true");
             }
+
             var toast = new ToastNotification(toastXml)
             {
                 ExpirationTime = DateTime.Now.AddSeconds(seconds)
             };
+
             notifier.Show(toast);
         }
 
@@ -190,6 +196,7 @@ namespace SimpleZIP_UI.Presentation.Controller
                 }
                 durationText.Append(".");
             }
+
             return durationText.ToString();
         }
     }
