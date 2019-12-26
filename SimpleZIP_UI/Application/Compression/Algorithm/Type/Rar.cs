@@ -17,9 +17,9 @@
 // 
 // ==--==
 
-using System;
 using SharpCompress.Common;
 using SharpCompress.Writers;
+using System;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
 {

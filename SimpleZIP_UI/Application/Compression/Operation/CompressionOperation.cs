@@ -21,11 +21,11 @@ using SimpleZIP_UI.Application.Compression.Algorithm;
 using SimpleZIP_UI.Application.Compression.Algorithm.Options;
 using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Util;
+using SimpleZIP_UI.I18N;
 using System;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
-using SimpleZIP_UI.I18N;
 
 namespace SimpleZIP_UI.Application.Compression.Operation
 {

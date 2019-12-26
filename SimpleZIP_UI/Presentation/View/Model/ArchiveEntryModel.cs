@@ -17,8 +17,8 @@
 // 
 // ==--==
 
-using Windows.UI.Xaml.Controls;
 using SimpleZIP_UI.Application.Compression.TreeBuilder;
+using Windows.UI.Xaml.Controls;
 
 namespace SimpleZIP_UI.Presentation.View.Model
 {

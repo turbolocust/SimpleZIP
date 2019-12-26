@@ -16,9 +16,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
-using System.IO;
 using SharpCompress.Compressors;
 using SharpCompress.Compressors.BZip2;
+using System.IO;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
 {

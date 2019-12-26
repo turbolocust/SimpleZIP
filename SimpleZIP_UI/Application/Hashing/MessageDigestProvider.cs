@@ -16,6 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+using SimpleZIP_UI.Application.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,7 +24,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
-using SimpleZIP_UI.Application.Util;
 
 namespace SimpleZIP_UI.Application.Hashing
 {

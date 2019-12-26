@@ -17,12 +17,12 @@
 // 
 // ==--==
 
+using SimpleZIP_UI.Application;
 using SimpleZIP_UI.Application.Compression;
 using System;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
-using SimpleZIP_UI.Application;
 
 namespace SimpleZIP_UI.I18N
 {

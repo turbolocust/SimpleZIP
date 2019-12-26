@@ -17,10 +17,10 @@
 // 
 // ==--==
 
+using SimpleZIP_UI.Application.Hashing;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
-using SimpleZIP_UI.Application.Hashing;
 
 namespace SimpleZIP_UI.Presentation.Controller
 {
