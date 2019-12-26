@@ -104,7 +104,7 @@
         <Pivot x:Name="Pivot" Grid.Row="0" Margin="8,8,0,0" Padding="0,0,0,0" 
                SelectionChanged="Pivot_OnSelectionChanged" IsHeaderItemsCarouselEnabled="True">
             <Pivot.Title>
-                <TextBlock Text="SimpleZIP" FontSize="28" FontStyle="Normal" 
+                <TextBlock Text="SimpleZIP" FontSize="30" FontStyle="Normal" 
                            CharacterSpacing="32" FontWeight="Bold" 
                            Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
             </Pivot.Title>
