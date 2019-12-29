@@ -18,6 +18,7 @@
 // ==--==
 
 using System;
+using System.Runtime.CompilerServices;
 #if DEBUG
 using System.Diagnostics;
 #endif
@@ -34,6 +35,8 @@ using SimpleZIP_UI.Application;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Presentation.Handler;
 using SimpleZIP_UI.Presentation.View;
+
+[assembly: InternalsVisibleTo("SimpleZIP_UI_TEST")]
 
 namespace SimpleZIP_UI
 {
