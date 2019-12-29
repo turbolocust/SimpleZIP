@@ -51,7 +51,7 @@ namespace SimpleZIP_UI.Application.Progress
         /// <inheritdoc />
         internal override double UpdateProgress(object id, Progress progress)
         {
-            return UpdateProgress(id, progress.PercentageExact);
+            return UpdateProgress(id, progress.Percentage);
         }
 
         /// <inheritdoc />

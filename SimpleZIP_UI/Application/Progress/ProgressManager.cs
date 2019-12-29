@@ -69,7 +69,9 @@ namespace SimpleZIP_UI.Application.Progress
         /// <returns>The previously assigned value.</returns>
         public TNumber Exchange(TNumber newValue)
         {
-            return TotalProgress = newValue;
+            var previous = TotalProgress;
+            TotalProgress = newValue;
+            return previous;
         }
 
         /// <summary>
@@ -83,9 +85,7 @@ namespace SimpleZIP_UI.Application.Progress
         /// <returns>The total progress value considering all mappings.</returns>
         public TNumber UpdateProgress(object id, TNumber newValue)
         {
-            return ProgressValues.Count > 1
-                ? CalculateTotalProgress(id, newValue)
-                : newValue;
+            return CalculateTotalProgress(id, newValue);
         }
 
         /// <summary>

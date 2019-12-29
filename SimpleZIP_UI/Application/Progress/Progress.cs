@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2019 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -32,12 +32,12 @@ namespace SimpleZIP_UI.Application.Progress
         /// <summary>
         /// Returns the percentage value of the current progress.
         /// </summary>
-        internal double PercentageExact => _totalBytesProcessed / (float)_totalBytesToProcess * 100;
+        internal double Percentage => _totalBytesProcessed / (float)_totalBytesToProcess * 100;
 
         /// <summary>
         /// Returns the rounded percentage value of the current progress.
         /// </summary>
-        internal int Percentage => (int)Math.Round(PercentageExact);
+        internal int PercentageInexact => (int)Math.Round(Percentage);
 
         internal Progress(long totalBytesToProcess, long totalBytesProcessed)
         {
