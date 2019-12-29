@@ -17,9 +17,9 @@
 // 
 // ==--==
 
-using System;
 using SimpleZIP_UI.Application.Compression.Reader;
 using SimpleZIP_UI.Application.Util;
+using System;
 
 namespace SimpleZIP_UI.Application.Compression.TreeBuilder
 {

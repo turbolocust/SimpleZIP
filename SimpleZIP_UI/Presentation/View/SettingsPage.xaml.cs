@@ -17,8 +17,8 @@
 // 
 // ==--==
 
-using System.Globalization;
 using SimpleZIP_UI.Presentation.Handler;
+using System.Globalization;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 

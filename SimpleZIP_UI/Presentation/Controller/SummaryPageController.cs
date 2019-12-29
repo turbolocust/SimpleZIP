@@ -21,6 +21,7 @@ using SimpleZIP_UI.Application;
 using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Compression.Operation;
 using SimpleZIP_UI.Application.Compression.Operation.Event;
+using SimpleZIP_UI.Application.Progress;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Presentation.Factory;
 using System;
@@ -29,7 +30,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.System.Display;
-using SimpleZIP_UI.Application.Progress;
 
 namespace SimpleZIP_UI.Presentation.Controller
 {
