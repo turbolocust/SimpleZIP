@@ -139,11 +139,13 @@ namespace SimpleZIP_UI.Application.Compression.Operation
             // that have already been processed by this instance
             TotalBytesProcessed += args.TotalBytesProcessed - _previousBytesProcessed;
             _previousBytesProcessed = args.TotalBytesProcessed;
+
             // fire event to inform listeners about progress update
             var evtArgs = new ProgressUpdateEventArgs
             {
                 Progress = new Progress.Progress(_totalBytesToProcess, TotalBytesProcessed)
             };
+
             ProgressUpdate?.Invoke(this, evtArgs);
         }
 

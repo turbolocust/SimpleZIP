@@ -24,14 +24,19 @@ namespace SimpleZIP_UI.Application.Progress
     /// <summary>
     /// Stores values for progress calculation.
     /// </summary>
-    public struct Progress
+    public struct Progress : IEquatable<Progress>
     {
         private readonly long _totalBytesToProcess;
-
         private readonly long _totalBytesProcessed;
 
+        /// <summary>
+        /// Returns the percentage value of the current progress.
+        /// </summary>
         internal double PercentageExact => _totalBytesProcessed / (float)_totalBytesToProcess * 100;
 
+        /// <summary>
+        /// Returns the rounded percentage value of the current progress.
+        /// </summary>
         internal int Percentage => (int)Math.Round(PercentageExact);
 
         internal Progress(long totalBytesToProcess, long totalBytesProcessed)
@@ -39,5 +44,54 @@ namespace SimpleZIP_UI.Application.Progress
             _totalBytesToProcess = totalBytesToProcess;
             _totalBytesProcessed = totalBytesProcessed;
         }
+
+        #region Equality members
+
+        /// <inheritdoc />
+        public bool Equals(Progress other)
+        {
+            return _totalBytesToProcess == other._totalBytesToProcess
+                   && _totalBytesProcessed == other._totalBytesProcessed;
+        }
+
+        /// <inheritdoc />
+        public override bool Equals(object obj)
+        {
+            return obj is Progress other && Equals(other);
+        }
+
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (_totalBytesToProcess.GetHashCode() * 397) ^
+                       _totalBytesProcessed.GetHashCode();
+            }
+        }
+
+        /// <summary>
+        /// Compares the current progress (left side) to another one (right side).
+        /// </summary>
+        /// <param name="left">Progress that is to be compared to the right one.</param>
+        /// <param name="right">Progress that is to be compared to the left one.</param>
+        /// <returns>True if the right progress matches the left one, false otherwise.</returns>
+        public static bool operator ==(Progress left, Progress right)
+        {
+            return left.Equals(right);
+        }
+
+        /// <summary>
+        /// Compares the current progress (left side) to another one (right side).
+        /// </summary>
+        /// <param name="left">Progress that is to be compared to the right one.</param>
+        /// <param name="right">Progress that is to be compared to the left one.</param>
+        /// <returns>True if the right progress does not match the left one, false otherwise.</returns>
+        public static bool operator !=(Progress left, Progress right)
+        {
+            return !left.Equals(right);
+        }
+
+        #endregion
     }
 }
