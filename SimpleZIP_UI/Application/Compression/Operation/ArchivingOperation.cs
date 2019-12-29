@@ -142,7 +142,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
             // fire event to inform listeners about progress update
             var evtArgs = new ProgressUpdateEventArgs
             {
-                Progress = new Progress(_totalBytesToProcess, TotalBytesProcessed)
+                Progress = new Progress.Progress(_totalBytesToProcess, TotalBytesProcessed)
             };
             ProgressUpdate?.Invoke(this, evtArgs);
         }

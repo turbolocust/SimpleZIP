@@ -29,6 +29,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.System.Display;
+using SimpleZIP_UI.Application.Progress;
 
 namespace SimpleZIP_UI.Presentation.Controller
 {
