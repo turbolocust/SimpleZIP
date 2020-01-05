@@ -14,7 +14,19 @@
         <cv:FlipBooleanConverter x:Key="FlipBooleanConverter" />
     </Page.Resources>
 
-    <Grid Background="Transparent" Padding="0,0,0,8">
+    <Grid x:Name="GridMain" Background="Transparent" Padding="0,0,0,8" Margin="0,40,0,0">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="640" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="GridMain.Margin" Value="0,0,0,0" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -63,12 +75,12 @@
                      Visibility="{x:Bind IsProgressBarEnabled.IsTrue, Mode=TwoWay, Converter={StaticResource BoolToVisibilityConverter}}" />
         <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" Margin="0,16,0,0" VerticalScrollBarVisibility="Auto">
             <ListBox x:Name="ModelsList" ItemsSource="{Binding EntryModels}" SelectionChanged="ItemsListBox_OnSelectionChanged"
-                     Margin="8,0,8,0" SelectionMode="Multiple" CanDrag="False" HorizontalContentAlignment="Stretch" 
+                     Margin="0,0,8,0" SelectionMode="Multiple" CanDrag="False" HorizontalContentAlignment="Stretch" 
                      IsDoubleTapEnabled="True" DoubleTapped="ItemsListBox_OnDoubleTapped"
                      Background="Transparent" Height="Auto" Foreground="{ThemeResource ButtonForegroundThemeBrush}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Stretch" Padding="4,0,0,0">
                             <SymbolIcon Symbol="{Binding Symbol}" Margin="0,0,8,0" Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" />
                             <TextBlock FontSize="20" IsTextSelectionEnabled="False" TextWrapping="NoWrap" Text="{Binding DisplayName}" />
                         </StackPanel>

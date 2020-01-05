@@ -53,7 +53,7 @@ namespace SimpleZIP_UI.Presentation.View
 
             if (DeviceInfo.IsMobileDevice)
             {
-                Pivot.Margin = new Thickness(0);
+                PivotMain.Margin = new Thickness(0, 28, 0, 0);
                 CompressButton.Margin = new Thickness(0, 32, 0, 0);
             }
         }

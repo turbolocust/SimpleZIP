@@ -20,8 +20,6 @@
             <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
             <Setter Property="FontWeight" Value="Normal"/>
             <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
-            <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
-            <Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}"/>
             <Setter Property="FocusVisualMargin" Value="-3"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -101,12 +99,10 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <Pivot x:Name="Pivot" Grid.Row="0" Margin="8,8,0,0" Padding="0,0,0,0" 
-               SelectionChanged="Pivot_OnSelectionChanged" IsHeaderItemsCarouselEnabled="True">
+        <Pivot x:Name="PivotMain" Grid.Row="0" Margin="8,28,0,0" SelectionChanged="Pivot_OnSelectionChanged" IsHeaderItemsCarouselEnabled="True">
             <Pivot.Title>
-                <TextBlock Text="SimpleZIP" FontSize="30" FontStyle="Normal" 
-                           CharacterSpacing="32" FontWeight="Bold" 
-                           Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
+                <TextBlock Text="SimpleZIP" FontSize="30" FontStyle="Normal" CharacterSpacing="32" 
+                           FontWeight="Bold" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
             </Pivot.Title>
             <Pivot.RightHeader>
                 <CommandBar x:Name="CommandBar" ClosedDisplayMode="Compact" Background="Transparent">

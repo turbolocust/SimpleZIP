@@ -7,16 +7,17 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
 
-    <Grid Background="Transparent" Padding="0,0,0,8">
+    <Grid x:Name="GridMain" Background="Transparent" Padding="0,0,0,8" Margin="0,28,0,0">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="680" />
+                        <AdaptiveTrigger MinWindowWidth="640" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="StackPanelTop.Orientation" Value="Horizontal" />
                         <Setter Target="ArchiveTypeComboBox.Margin" Value="0,0,16,0" />
+                        <Setter Target="GridMain.Margin" Value="0,0,0,0" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -29,7 +30,6 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <!-- ReSharper disable once UnusedMember.Local -->
         <StackPanel x:Name="StackPanelTop" Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="12,8,0,16">
             <ComboBox x:Uid="ArchiveType" x:Name="ArchiveTypeComboBox" DropDownClosed="ArchiveTypeComboBox_OnDropDownClosed" Width="225"
                       Margin="0,0,0,16" Header="" Foreground="{ThemeResource ButtonForegroundThemeBrush}">
@@ -38,22 +38,22 @@
                 </ToolTipService.ToolTip>
             </ComboBox>
             <TextBox x:Uid="ArchiveName" x:Name="ArchiveNameTextBox" TextChanged="ArchiveNameTextBox_OnTextChanged" AcceptsReturn="False"
-                     Text="" Width="225" Height="60" Header="" IsReadOnly="False" TextWrapping="NoWrap" MaxLength="32" IsSpellCheckEnabled="False" InputScope="Url" >
+                     Text="" Width="225" Height="Auto" Header="" IsReadOnly="False" TextWrapping="NoWrap" MaxLength="32" IsSpellCheckEnabled="False" InputScope="Url" >
                 <ToolTipService.ToolTip>
                     <ToolTip x:Name="ArchiveNameToolTip" FontSize="13" HorizontalOffset="20" VerticalOffset="10" />
                 </ToolTipService.ToolTip>
             </TextBox>
         </StackPanel>
         <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center" Background="Transparent" Margin="12,0,0,16">
-            <TextBlock x:Uid="OutputFolder" Text="" IsTapEnabled="False" FontSize="16" Margin="0,0,0,8" FocusVisualPrimaryBrush="Transparent" FocusVisualSecondaryBrush="Transparent" />
+            <TextBlock x:Uid="OutputFolder" Text="" IsTapEnabled="False" FontSize="16" FontWeight="Medium" Margin="0,0,0,8" FocusVisualPrimaryBrush="Transparent" FocusVisualSecondaryBrush="Transparent" />
             <Button x:Name="OutputPathButton" AllowFocusWhenDisabled="False" Width="Auto" Height="40" FontWeight="Normal" BorderBrush="{ThemeResource SystemControlBackgroundAccentBrush}"
                     BorderThickness="2" IsTapEnabled="True" Background="Transparent" IsHoldingEnabled="False" IsDoubleTapEnabled="False" Tapped="OutputPathButton_OnTapped">
                 <TextBlock x:Uid="TapToChoose" Text="" TextWrapping="NoWrap" />
             </Button>
         </StackPanel>
-        <TextBlock x:Uid="FilesToCompress" Text="" Grid.Row="2" FontWeight="Medium" FontSize="16" CharacterSpacing="56" Margin="12,0,0,8" VerticalAlignment="Center" />
+        <TextBlock x:Uid="FilesToCompress" Text="" Grid.Row="2" FontWeight="SemiBold" FontSize="16" CharacterSpacing="32" Margin="12,0,0,8" VerticalAlignment="Center" />
         <ScrollViewer Grid.Row="3" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-            <ListBox x:Name="ItemsListBox"  Margin="4,0,0,0" SelectionMode="Single" CanDrag="False" HorizontalContentAlignment="Stretch"
+            <ListBox x:Name="ItemsListBox" SelectionMode="Single" CanDrag="False" HorizontalContentAlignment="Stretch"
                      Background="Transparent" Height="Auto" Foreground="{ThemeResource ButtonForegroundThemeBrush}" />
         </ScrollViewer>
         <ProgressBar x:Name="ProgressBar" Grid.Row="4" HorizontalAlignment="Stretch" IsIndeterminate="False" IsEnabled="False" Visibility="Collapsed" />

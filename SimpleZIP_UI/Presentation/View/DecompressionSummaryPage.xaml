@@ -7,7 +7,19 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
 
-    <Grid Background="Transparent" Padding="0,0,0,8">
+    <Grid x:Name="GridMain" Background="Transparent" Padding="0,0,0,8" Margin="0,28,0,0">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="640" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="GridMain.Margin" Value="0,0,0,0" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -16,15 +28,16 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="12,8,0,20" Background="Transparent">
-            <TextBlock x:Uid="OutputFolder" Text="" IsTapEnabled="False" FontSize="16" Margin="0,0,0,12" FocusVisualPrimaryBrush="Transparent" FocusVisualSecondaryBrush="Transparent" />
+            <TextBlock x:Uid="OutputFolder" Text="" IsTapEnabled="False" FontSize="16" FontWeight="Medium" Margin="0,0,0,12" FocusVisualPrimaryBrush="Transparent" FocusVisualSecondaryBrush="Transparent" />
             <Button x:Name="OutputPathButton" AllowFocusWhenDisabled="False" Width="Auto" Height="40" FontWeight="Normal" BorderBrush="{ThemeResource SystemControlBackgroundAccentBrush}"
                     BorderThickness="2" IsTapEnabled="True" Background="Transparent" IsHoldingEnabled="False" IsDoubleTapEnabled="False" Tapped="OutputPathButton_OnTapped">
                 <TextBlock x:Uid="TapToChoose" Text="" TextWrapping="NoWrap" />
             </Button>
         </StackPanel>
-        <TextBlock x:Uid="FilesToDecompress" Text="" Grid.Row="1" FontWeight="Medium" FontSize="16" CharacterSpacing="56" Margin="12,0,0,8" VerticalAlignment="Center" />
+        <TextBlock x:Uid="FilesToDecompress" Text="" Grid.Row="1" FontWeight="SemiBold" FontSize="16" CharacterSpacing="32" Margin="12,0,0,8" VerticalAlignment="Center" />
         <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-            <ListBox x:Name="ItemsListBox" Margin="4,0,0,0" SelectionMode="Single" CanDrag="False" HorizontalContentAlignment="Stretch" Background="Transparent" Height="Auto" />
+            <ListBox x:Name="ItemsListBox" SelectionMode="Single" CanDrag="False" HorizontalContentAlignment="Stretch"
+                     Background="Transparent" Height="Auto" Foreground="{ThemeResource ButtonForegroundThemeBrush}" />
         </ScrollViewer>
         <ProgressBar x:Name="ProgressBar" Grid.Row="3" HorizontalAlignment="Stretch" IsIndeterminate="False" IsEnabled="False" Visibility="Collapsed" />
         <StackPanel Grid.Row="4" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,8,16,0">

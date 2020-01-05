@@ -15,7 +15,7 @@
         <cv:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
     </Page.Resources>
 
-    <Grid Background="Transparent" Padding="12,8,0,8">
+    <Grid x:Name="GridMain" Background="Transparent" Padding="0,8,0,8" Margin="0,28,0,0">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
@@ -24,7 +24,17 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="StackPanelTop.Orientation" Value="Horizontal" />
-                        <Setter Target="HashAlgorithmComboBox.Margin" Value="0,0,24,0" />
+                        <Setter Target="HashAlgorithmComboBox.Margin" Value="0,0,32,0" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="640" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="GridMain.Margin" Value="0,0,0,0" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -35,9 +45,9 @@
             <RowDefinition Height="7.0*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <StackPanel x:Name="StackPanelTop" Grid.Row="0" VerticalAlignment="Center" Orientation="Vertical" Margin="8,0,0,0">
+        <StackPanel x:Name="StackPanelTop" Grid.Row="0" VerticalAlignment="Center" Orientation="Vertical" Margin="16,0,0,0">
             <ComboBox x:Name="HashAlgorithmComboBox" x:Uid="HashAlgorithm" Header=""
-                      Margin="0,0,24,10" SelectionChanged="HashAlgorithmComboBox_OnSelectionChanged"
+                      Margin="0,0,0,10" SelectionChanged="HashAlgorithmComboBox_OnSelectionChanged"
                       ItemsSource="{x:Bind HashAlgorithmModels}" DisplayMemberPath="HashAlgorithm" 
                       SelectedValuePath="HashAlgorithm" SelectedItem="{x:Bind SelectedAlgorithm, Mode=TwoWay}"
                       IsEnabled="{x:Bind IsPopulateListBox.IsTrue, Mode=TwoWay, Converter={StaticResource FlipBooleanConverter}}" />

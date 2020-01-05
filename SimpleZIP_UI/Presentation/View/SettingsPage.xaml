@@ -7,10 +7,22 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
 
-    <Grid Background="Transparent" Padding="12,0,12,8">
+    <Grid x:Name="GridMain" Background="Transparent" Padding="12,0,12,8" Margin="0,28,0,0">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="640" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="GridMain.Margin" Value="0,0,0,0" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <ScrollViewer VerticalScrollBarVisibility="Auto" VerticalScrollMode="Enabled">
             <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Top">
-                <TextBlock x:Uid="General" Text="" FontSize="16" FontWeight="Medium" CharacterSpacing="36" Margin="0,8,0,8"/>
+                <TextBlock x:Uid="General" Text="" FontSize="18" FontWeight="Medium" CharacterSpacing="36" Margin="0,8,0,8"/>
                 <ToggleSwitch x:Name="BrowseArchiveToggleSwitch" Toggled="ToggleSwitch_OnToggled" Margin="0,4,0,8">
                     <TextBlock x:Uid="BrowseArchiveSetting" Text="" TextWrapping="Wrap"/>
                 </ToggleSwitch>
@@ -23,7 +35,7 @@
                     <TextBox x:Name="ArchiveHistorySizeTextBox" Width="Auto" TextWrapping="NoWrap" AcceptsReturn="False"
                              IsSpellCheckEnabled="False" Text="" TextChanged="ArchiveHistorySizeTextBox_OnTextChanged"/>
                 </StackPanel>
-                <TextBlock x:Uid="Theme" Text="" FontSize="16" FontWeight="Medium" CharacterSpacing="36" Margin="0,8,0,4"/>
+                <TextBlock x:Uid="Theme" Text="" FontSize="18" FontWeight="Medium" CharacterSpacing="36" Margin="0,12,0,4"/>
                 <TextBlock x:Uid="requiresRestart" Text="" FontSize="14" FontStyle="Italic" Margin="0,8,0,8"/>
                 <RadioButton x:Name="LightThemeRadioButton" Checked="ThemeGroupToggleButton_OnChecked" GroupName="ThemeGroup">
                     <TextBlock x:Uid="Light" Text=""/>
