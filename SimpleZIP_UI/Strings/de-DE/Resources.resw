@@ -190,8 +190,8 @@
     <comment>Files that are to be decompressed.</comment>
   </data>
   <data name="GetSourceCode.Text" xml:space="preserve">
-    <value>Unter der Haube</value>
-    <comment>User can get the source code of this software.</comment>
+    <value>Quellcode herunterladen</value>
+    <comment>User can get the source code of this software via this command.</comment>
   </data>
   <data name="hours.Text" xml:space="preserve">
     <value>Stunden</value>
@@ -210,8 +210,8 @@
     <comment>Something took less than one second.</comment>
   </data>
   <data name="License.Text" xml:space="preserve">
-    <value>Diese Anwendung nutzt die SharpCompress Bibliothek von Adam Hathcock sowie SharpZipLib und ist lizenziert unter der {0} unter Ausschluss jeglicher Garantie.</value>
-    <comment>License text.</comment>
+    <value>Diese Anwendung ist lizenziert unter der {0} unter Ausschluss jeglicher Garantie und Haftung. Es werden die SharpCompress Bibliothek sowie die SharpZipLib Bibliothek verwendet. Links zu diesen Projekten sowie der Lizenz befinden sich am Ende dieser Seite.</value>
+    <comment>License text and used libraries.</comment>
   </data>
   <data name="MightTakeWhile.Text" xml:space="preserve">
     <value>Das könnte etwas dauern...</value>

@@ -166,8 +166,8 @@
     <comment>Files that are to be decompressed.</comment>
   </data>
   <data name="GetSourceCode.Text" xml:space="preserve">
-    <value>Under the Hood</value>
-    <comment>User can get the source code of this software.</comment>
+    <value>Download Source Code</value>
+    <comment>User can get the source code of this software via this command.</comment>
   </data>
   <data name="hours.Text" xml:space="preserve">
     <value>hours</value>
@@ -266,8 +266,8 @@
     <comment>Asks whether the user has any questions or feedback.</comment>
   </data>
   <data name="License.Text" xml:space="preserve">
-    <value>This app makes use of the SharpCompress library by Adam Hathcock as well as SharpZipLib and is licensed under the {0} without any warranty.</value>
-    <comment>License text.</comment>
+    <value>This application is licensed under the {0} without any warranty or liability. It makes use of the SharpCompress library and the SharpZipLib library. Links to these projects and the license can be found at the bottom of this page.</value>
+    <comment>License text and used libraries.</comment>
   </data>
   <data name="SendEmail.Text" xml:space="preserve">
     <value>Send me an Email.</value>
