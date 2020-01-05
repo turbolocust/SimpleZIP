@@ -101,7 +101,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// Populates the list box with file names and computed hash values.
         /// This may only be called once UI components are initialized.
         /// </summary>
-        private async void PopulateListBox()
+        private async Task PopulateListBox()
         {
             try
             {
@@ -214,11 +214,11 @@ namespace SimpleZIP_UI.Presentation.View
             Clipboard.SetContent(package);
         }
 
-        private void HashAlgorithmComboBox_OnSelectionChanged(
+        private async void HashAlgorithmComboBox_OnSelectionChanged(
             object sender, SelectionChangedEventArgs args)
         {
             SaveHashAlgorithmIndex();
-            PopulateListBox();
+            await PopulateListBox();
         }
 
         private async void ViewFullHashButton_OnTapped(object sender, TappedRoutedEventArgs args)

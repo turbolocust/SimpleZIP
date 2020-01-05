@@ -17,6 +17,7 @@
 // 
 // ==--==
 
+using System;
 using SimpleZIP_UI.Application.Hashing;
 using System.IO;
 using System.Threading.Tasks;
@@ -60,6 +61,10 @@ namespace SimpleZIP_UI.Presentation.Controller
             catch (FileNotFoundException)
             {
                 hash = $"<<{I18N.Resources.GetString("FileNotFound/Text")}>>";
+            }
+            catch (Exception)
+            {
+                hash = $"<<{I18N.Resources.GetString("Error/Text")}>>";
             }
 
             return hash;

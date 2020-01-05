@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2019 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,6 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
 using SimpleZIP_UI.Application.Util;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,9 @@ namespace SimpleZIP_UI.Application.Hashing
     internal class MessageDigestProvider : IMessageDigestProvider
     {
         /// <inheritdoc />
+        /// <remarks>
+        /// If used in a more public manner, then a copy should be returned.
+        /// </remarks>
         public IReadOnlyList<string> SupportedAlgorithms { get; }
 
         /// <summary>
@@ -47,13 +51,16 @@ namespace SimpleZIP_UI.Application.Hashing
         }
 
         /// <inheritdoc />
-        public async Task<(byte[] HashedBytes, string HashedValue)>
+        public Task<(byte[] HashedBytes, string HashedValue)>
             ComputeHashValue(StorageFile file, string algorithmName)
         {
-            using (var stream = await file.OpenStreamForReadAsync())
+            return Task.Run(async () =>
             {
-                return ComputeHash(stream, algorithmName);
-            }
+                using (var stream = await file.OpenStreamForReadAsync())
+                {
+                    return ComputeHash(stream, algorithmName);
+                }
+            });
         }
 
         /// <inheritdoc />
@@ -86,9 +93,16 @@ namespace SimpleZIP_UI.Application.Hashing
             return BitConverter.ToString(hashedBytes).Replace("-", "", StringComparison.Ordinal);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security",
+            "CA5351:Do Not Use Broken Cryptographic Algorithms",
+            Justification = "Only for the purpose of visualization.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security",
+            "CA5350:Do Not Use Weak Cryptographic Algorithms",
+            Justification = "Only for the purpose of visualization.")]
         private static HashAlgorithm GetHashAlgorithm(string algorithmName)
         {
             HashAlgorithm algorithm;
+
             switch (algorithmName)
             {
                 case "MD5":
@@ -109,6 +123,7 @@ namespace SimpleZIP_UI.Application.Hashing
                 default:
                     throw new ArgumentOutOfRangeException(nameof(algorithmName));
             }
+
             return algorithm;
         }
     }
