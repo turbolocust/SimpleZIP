@@ -121,18 +121,17 @@ namespace SimpleZIP_UI.Presentation.View
         private async void NavView_OnItemInvoked(NavigationView sender,
             NavigationViewItemInvokedEventArgs args)
         {
-            if (args.IsSettingsInvoked)
+            if (!NavigationLock.Instance.IsLocked)
             {
-                // opening a content dialog here causes an exception
-                ContentFrameNavigate(typeof(SettingsPage));
-            }
-            // invoked item is TextBlock (content of NavigationViewItem)
-            else if (args.InvokedItem is FrameworkElement elem &&
-                     elem.Parent is NavigationViewItem item)
-            {
-                if (!NavigationLock.Instance.IsLocked)
+                if (args.IsSettingsInvoked)
                 {
-                    // ReSharper disable once SwitchStatementMissingSomeCases
+                    // opening a content dialog here causes an exception
+                    ContentFrameNavigate(typeof(SettingsPage));
+                }
+                // invoked item is TextBlock (content of NavigationViewItem)
+                else if (args.InvokedItem is FrameworkElement elem &&
+                         elem.Parent is NavigationViewItem item)
+                {
                     switch (item.Tag)
                     {
                         case TagHome:
