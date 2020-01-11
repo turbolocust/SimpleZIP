@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,32 +16,25 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
-using System.Collections.Generic;
 
-namespace SimpleZIP_UI.Presentation.Handler
+namespace SimpleZIP_UI.Presentation.Cache
 {
-    internal interface ICacheHandler<T>
+    internal interface ICache<in TKey, TValue>
     {
-        /// <summary>
-        /// The actual cache.
-        /// </summary>
-        IReadOnlyDictionary<string, T> Cache { get; }
-
         /// <summary>
         /// Writes a new value to the cache using the specified key.
         /// </summary>
         /// <param name="key">The key to be associated with the value.</param>
-        /// <param name="node">The value to be cached.</param>
-        void WriteToCache(string key, T node);
-
-
+        /// <param name="value">The value to be cached.</param>
+        void WriteTo(TKey key, TValue value);
+        
         /// <summary>
         /// Reads a value from the cache. If the value with the specified
         /// key is not found, then <c>null</c> is returned.
         /// </summary>
         /// <param name="key">The key of the cached value.</param>
         /// <returns>The cached value or <c>null</c>.</returns>
-        T ReadFromCache(string key);
+        TValue ReadFrom(TKey key);
 
         /// <summary>
         /// Clears the entire cache.

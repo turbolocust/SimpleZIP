@@ -71,6 +71,8 @@ namespace SimpleZIP_UI.Presentation.Handler
         /// </summary>
         private static readonly object LockObj = new object();
 
+        #region Singleton members
+
         /// <summary>
         /// Singleton instance of this class.
         /// </summary>
@@ -102,6 +104,8 @@ namespace SimpleZIP_UI.Presentation.Handler
             // XML file produced by System.Xml.Serialization
             _compressor = new StringGzipCompressor(Encoding.Unicode);
         }
+
+        #endregion
 
         /// <summary>
         /// Reads the history of recently created archives synchronously.

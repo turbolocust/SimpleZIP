@@ -19,7 +19,6 @@
 
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Presentation.Factory;
-using SimpleZIP_UI.Presentation.Handler;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +27,7 @@ using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using SimpleZIP_UI.Presentation.Cache;
 
 namespace SimpleZIP_UI.Presentation.View
 {
@@ -164,7 +164,7 @@ namespace SimpleZIP_UI.Presentation.View
             // try initialize cache if back stack is empty
             if (ContentFrame.BackStack.IsNullOrEmpty())
             {
-                RootNodeCacheHandler.CheckInitialize();
+                RootNodeCache.CheckInitialize();
             }
         }
 

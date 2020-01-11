@@ -23,7 +23,6 @@ using SimpleZIP_UI.Application.Compression.Operation.Event;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Presentation.Controller;
 using SimpleZIP_UI.Presentation.Factory;
-using SimpleZIP_UI.Presentation.Handler;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +35,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using SimpleZIP_UI.Presentation.Cache;
 
 namespace SimpleZIP_UI.Presentation.View
 {
@@ -96,7 +96,7 @@ namespace SimpleZIP_UI.Presentation.View
             if (await _controller.CheckOutputFolder())
             {
                 var result = await InitOperation();
-                RootNodeCacheHandler.CheckInitialize();
+                RootNodeCache.CheckInitialize();
 
                 if (_controller.IsShareTargetActivated() &&
                     result.StatusCode != Result.Status.Success)

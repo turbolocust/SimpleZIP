@@ -36,6 +36,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using SimpleZIP_UI.Presentation.Cache;
 
 namespace SimpleZIP_UI.Presentation.View
 {
@@ -160,7 +161,7 @@ namespace SimpleZIP_UI.Presentation.View
                             _controller.OutputFolder, result.ArchiveNames);
                     }
 
-                    RootNodeCacheHandler.CheckInitialize();
+                    RootNodeCache.CheckInitialize();
 
                     if (_controller.IsShareTargetActivated() &&
                         result.StatusCode != Result.Status.Success)

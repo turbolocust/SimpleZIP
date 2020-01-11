@@ -25,7 +25,6 @@ using SimpleZIP_UI.Application.Compression.TreeBuilder;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.I18N;
 using SimpleZIP_UI.Presentation.Factory;
-using SimpleZIP_UI.Presentation.Handler;
 using SimpleZIP_UI.Presentation.View;
 using SimpleZIP_UI.Presentation.View.Model;
 using System;
@@ -36,6 +35,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
+using SimpleZIP_UI.Presentation.Cache;
 
 namespace SimpleZIP_UI.Presentation.Controller
 {
@@ -75,7 +75,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         {
             string key = !string.IsNullOrEmpty(archive.Path)
                 ? archive.Path : archive.FolderRelativeId;
-            var node = RootNodeCacheHandler.Instance.ReadFromCache(key);
+            var node = RootNodeCache.Instance[key];
             if (node != null) // return immediately if cached
             {
                 return node;
@@ -122,7 +122,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             {
                 if (node != null)
                 {
-                    RootNodeCacheHandler.Instance.WriteToCache(key, node);
+                    RootNodeCache.Instance[key] = node;
                 }
             }
 
