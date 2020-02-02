@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2019 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SimpleZIP_UI.Application.Compression;
 using SimpleZIP_UI.Application.Compression.Algorithm;
 using SimpleZIP_UI.Application.Compression.Algorithm.Options;
@@ -48,96 +48,28 @@ namespace SimpleZIP_UI_TEST
         {
             var sb = new StringBuilder(length);
             var rand = new Random();
-            for (var i = 0; i < length; ++i)
+
+            for (int i = 0; i < length; ++i)
             {
                 sb.Append((char)rand.Next(65, 122));
             }
+
             return sb.ToString();
         }
 
-        /// <summary>
-        /// Tests the compression and extraction using ZIP archive type.
-        /// </summary>
-        [TestMethod]
-        public async Task ZipCompressionExtractionTest()
+        [DataRow(Archives.ArchiveType.Zip, ".zip")]
+        [DataRow(Archives.ArchiveType.Tar, ".tar")]
+        [DataRow(Archives.ArchiveType.TarGz, ".tgz")]
+        [DataRow(Archives.ArchiveType.TarBz2, ".tbz2")]
+        [DataRow(Archives.ArchiveType.TarLz, ".tlz")]
+        [DataTestMethod]
+        public async Task CompressionExtractionTest(Archives.ArchiveType archiveType, string fileNameExtension)
         {
             try
             {
                 var options = new CompressionOptions(false, Encoding.UTF8);
-                var algorithm = Archives.DetermineAlgorithm(Archives.ArchiveType.Zip);
-                Assert.IsTrue(await PerformArchiveOperations(algorithm, ".zip", options));
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.ToString());
-            }
-        }
-
-        /// <summary>
-        /// Tests the compression and extraction using TAR (uncompressed) archive type.
-        /// </summary>
-        [TestMethod]
-        public async Task TarCompressionExtractionTest()
-        {
-            try
-            {
-                var options = new CompressionOptions(false, Encoding.UTF8);
-                var algorithm = Archives.DetermineAlgorithm(Archives.ArchiveType.Tar);
-                Assert.IsTrue(await PerformArchiveOperations(algorithm, ".tar", options));
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.ToString());
-            }
-        }
-
-        /// <summary>
-        /// Tests the compression and extraction using TAR (gzip) archive type.
-        /// </summary>
-        [TestMethod]
-        public async Task TarGzipCompressionExtractionTest()
-        {
-            try
-            {
-                var options = new CompressionOptions(false, Encoding.UTF8);
-                var algorithm = Archives.DetermineAlgorithm(Archives.ArchiveType.TarGz);
-                Assert.IsTrue(await PerformArchiveOperations(algorithm, ".tgz", options));
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.ToString());
-            }
-        }
-
-        /// <summary>
-        /// Tests the compression and extraction using TAR (bzip2) archive type.
-        /// </summary>
-        [TestMethod]
-        public async Task TarBzip2CompressionExtractionTest()
-        {
-            try
-            {
-                var options = new CompressionOptions(false, Encoding.UTF8);
-                var algorithm = Archives.DetermineAlgorithm(Archives.ArchiveType.TarBz2);
-                Assert.IsTrue(await PerformArchiveOperations(algorithm, ".tbz2", options));
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.ToString());
-            }
-        }
-
-        /// <summary>
-        /// Tests the compression and extraction using TAR (lzip) archive type.
-        /// </summary>
-        [TestMethod]
-        public async Task TarLzipCompressionExtractionTest()
-        {
-            try
-            {
-                var options = new CompressionOptions(false, Encoding.UTF8);
-                var algorithm = Archives.DetermineAlgorithm(Archives.ArchiveType.TarLz);
-                Assert.IsTrue(await PerformArchiveOperations(algorithm, ".tlz", options));
+                var algorithm = Archives.DetermineAlgorithm(archiveType);
+                Assert.IsTrue(await PerformArchiveOperations(algorithm, fileNameExtension, options));
             }
             catch (Exception ex)
             {
@@ -226,6 +158,7 @@ namespace SimpleZIP_UI_TEST
                 string archiveName = ArchiveName + fileType;
                 var archive = await _workingDir.CreateFileAsync(
                     archiveName, CreationCollisionOption.GenerateUniqueName);
+
                 Assert.AreNotEqual(await compressionAlgorithm.Compress(
                     _files, archive, _workingDir, options), Stream.Null);
 
@@ -257,7 +190,7 @@ namespace SimpleZIP_UI_TEST
                 }
             }
 
-            // clean up when done
+            // clean up once done
             await outputFolder.DeleteAsync();
             await file.DeleteAsync();
             return true;
