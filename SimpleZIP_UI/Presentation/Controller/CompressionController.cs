@@ -41,8 +41,8 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// <inheritdoc cref="SummaryPageController{T}.PerformOperation"/>
         protected override async Task<Result> PerformOperation(CompressionInfo[] operationInfos)
         {
-            var operation = operationInfos[0]; // multiple archives not supported
-            var job = new CompressionJob(Operation, operation);
+            var operationInfo = operationInfos[0]; // multiple archives not supported
+            var job = new CompressionJob(Operation, operationInfo);
             return await job.Run(this);
         }
     }
