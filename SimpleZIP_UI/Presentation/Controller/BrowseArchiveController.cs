@@ -148,14 +148,12 @@ namespace SimpleZIP_UI.Presentation.Controller
 
             if (entry != null)
             {
-                var folder = await FileUtils
-                    .GetTempFolderAsync(TempFolder.Archives);
+                var folder = await FileUtils.GetTempFolderAsync(TempFolder.Archives);
                 if (!string.IsNullOrEmpty(entry.FileName))
                 {
                     try
                     {
-                        return await FileUtils
-                            .GetFileAsync(folder, entry.FileName);
+                        return await FileUtils.GetFileAsync(folder, entry.FileName);
                     }
                     catch (FileNotFoundException)
                     {
@@ -210,7 +208,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// </summary>
         /// <param name="root">The root node of the archive.</param>
         /// <returns>True if archive only consists of one file entry.</returns>
-        internal bool IsSingleFileEntryArchive(ArchiveTreeRoot root)
+        internal static bool IsSingleFileEntryArchive(ArchiveTreeRoot root)
         {
             return root.Children.Count == 1 && !root.Children.First().IsBrowsable;
         }
@@ -221,7 +219,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// </summary>
         /// <param name="root">The root node of the archive.</param>
         /// <returns>True if archive is empty, false otherwise.</returns>
-        internal bool IsEmptyArchive(ArchiveTreeRoot root)
+        internal static bool IsEmptyArchive(ArchiveTreeRoot root)
         {
             return root == null || root.Children.IsNullOrEmpty();
         }

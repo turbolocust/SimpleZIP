@@ -74,7 +74,7 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
             StorageFile file, CancellationToken token)
         {
             IArchiveReader reader; // to be returned
-            var type = await Archives.DetermineArchiveType(file);
+            var type = await Archives.DetermineArchiveType(file).ConfigureAwait(false);
 
             switch (type)
             {
@@ -102,8 +102,8 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
         {
             if (Interrupt) throw new ObjectDisposedException(GetType().FullName);
 
-            _reader = await GetReaderInstance(archive, _cancellationToken);
-            await _reader.OpenArchiveAsync(password);
+            _reader = await GetReaderInstance(archive, _cancellationToken).ConfigureAwait(false);
+            await _reader.OpenArchiveAsync(password).ConfigureAwait(false);
 
             var task = Task.Run(() =>
             {
@@ -156,7 +156,7 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
 
             }, _cancellationToken);
 
-            return await task;
+            return await task.ConfigureAwait(false);
         }
 
         /// <summary>

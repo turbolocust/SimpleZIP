@@ -55,7 +55,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation.Job
                 {
                     try
                     {
-                        subResult = await Operation.Perform(operationInfo, false);
+                        subResult = await Operation.Perform(operationInfo, false).ConfigureAwait(false);
                     }
                     catch (ArchiveEncryptedException)
                     {
@@ -65,16 +65,15 @@ namespace SimpleZIP_UI.Application.Compression.Operation.Job
                     if (subResult == null)
                     {
                         operationInfo.Item.Password = await PasswordRequest
-                            .RequestPassword(operationInfo.Item.Name);
-                        subResult = await Operation.Perform(operationInfo, false);
+                            .RequestPassword(operationInfo.Item.Name).ConfigureAwait(false);
+                        subResult = await Operation.Perform(operationInfo, false).ConfigureAwait(false);
                     }
 
                     if (subResult.StatusCode != Result.Status.Success)
                     {
                         statusCode = Result.Status.PartialFail;
-                        resultMessage.AppendLine(I18N.Resources
-                            .GetString("ArchiveNotExtracted/Text",
-                                operationInfo.Item.Name));
+                        resultMessage.AppendLine(I18N.Resources.GetString(
+                            "ArchiveNotExtracted/Text", operationInfo.Item.Name));
                     }
                     else
                     {

@@ -69,8 +69,9 @@ namespace SimpleZIP_UI.Presentation.Cache
                 Instance.ClearCache();
                 try
                 {
-                    var tempFolder = await FileUtils.GetTempFolderAsync(TempFolder.Archives);
-                    await FileUtils.CleanFolderAsync(tempFolder);
+                    var tempFolder = await FileUtils.GetTempFolderAsync(
+                        TempFolder.Archives).ConfigureAwait(false);
+                    await FileUtils.CleanFolderAsync(tempFolder).ConfigureAwait(false);
                 }
                 catch
                 {

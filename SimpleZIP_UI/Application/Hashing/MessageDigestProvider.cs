@@ -56,7 +56,7 @@ namespace SimpleZIP_UI.Application.Hashing
         {
             return Task.Run(async () =>
             {
-                using (var stream = await file.OpenStreamForReadAsync())
+                using (var stream = await file.OpenStreamForReadAsync().ConfigureAwait(false))
                 {
                     return ComputeHash(stream, algorithmName);
                 }

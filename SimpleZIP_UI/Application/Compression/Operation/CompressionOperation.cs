@@ -55,7 +55,8 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                     try
                     {
                         Algorithm.Token = token;
-                        var stream = await Algorithm.Compress(files, archive, location, options);
+                        var stream = await Algorithm.Compress(files,
+                            archive, location, options).ConfigureAwait(false);
                         isSuccess = stream != Stream.Null;
                     }
                     catch (Exception ex)
@@ -65,8 +66,8 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                             throw;
                         }
 
-                        message = await ExceptionMessages.GetStringFor(ex,
-                            ExceptionMessages.OperationType.Writing, archive);
+                        const ExceptionMessages.OperationType opType = ExceptionMessages.OperationType.Writing;
+                        message = await ExceptionMessages.GetStringFor(ex, opType, archive).ConfigureAwait(false);
                         verboseMsg = ex.Message;
                     }
                     finally
@@ -79,7 +80,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                 }
 
                 return EvaluateResult(name, message, verboseMsg, isSuccess);
-            }, token);
+            }, token).ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="ArchivingOperation{T}.GetAlgorithmAsync"/>
@@ -91,7 +92,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         /// <inheritdoc cref="ArchivingOperation{T}.StartOperation"/>
         protected override async Task<Result> StartOperation(CompressionInfo info)
         {
-            return await CreateArchive(info);
+            return await CreateArchive(info).ConfigureAwait(false);
         }
     }
 }

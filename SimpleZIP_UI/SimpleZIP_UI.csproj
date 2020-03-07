@@ -191,7 +191,7 @@
     <Compile Include="Presentation\Controller\MessageDigestController.cs" />
     <Compile Include="Presentation\Controller\SummaryPageController.cs" />
     <Compile Include="Application\Progress\ProgressManager.cs" />
-    <Compile Include="Presentation\Handler\ArchiveHistoryHandler.cs" />
+    <Compile Include="Presentation\Handler\ArchiveHistory.cs" />
     <Compile Include="Presentation\Cache\ICache.cs" />
     <Compile Include="Presentation\Cache\RootNodeCache.cs" />
     <Compile Include="Presentation\INavigation.cs" />

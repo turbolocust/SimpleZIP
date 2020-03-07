@@ -133,11 +133,14 @@ namespace SimpleZIP_UI.Application.Util
         /// <returns>The total size of all files as unsigned long.</returns>
         public static async Task<ulong> GetFileSizesAsync(IReadOnlyList<StorageFile> files)
         {
+            if (files == null) throw new ArgumentNullException(nameof(files));
+
             ulong totalSize = 0L;
             foreach (var file in files)
             {
-                totalSize += await GetFileSizeAsync(file);
+                totalSize += await GetFileSizeAsync(file).ConfigureAwait(false);
             }
+
             return totalSize;
         }
 

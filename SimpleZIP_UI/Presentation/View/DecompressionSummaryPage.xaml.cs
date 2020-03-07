@@ -250,9 +250,9 @@ namespace SimpleZIP_UI.Presentation.View
         }
 
         /// <inheritdoc />
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs args)
         {
-            e.Cancel = _controller.Operation?.IsRunning ?? false;
+            args.Cancel = _controller.Operation?.IsRunning ?? false;
         }
 
         /// <inheritdoc />
@@ -265,11 +265,12 @@ namespace SimpleZIP_UI.Presentation.View
         public async Task<string> RequestPassword(string fileName)
         {
             var dialog = DialogFactory.CreateRequestPasswordDialog(fileName);
-            return await Dispatcher.RunTaskAsync(async () =>
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
                 await dialog.ShowAsync();
-                return dialog.Password;
             });
+
+            return dialog.Password;
         }
 
         /// <inheritdoc />

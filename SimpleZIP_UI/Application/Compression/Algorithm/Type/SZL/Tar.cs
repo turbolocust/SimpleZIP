@@ -71,13 +71,15 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                 options = new CompressionOptions(false, GetDefaultEncoding());
             }
 
+            var archiveStream = Stream.Null;
+            var progressStream = Stream.Null;
             var compressorStream = Stream.Null;
             long totalBytesWritten = 0;
 
             try
             {
-                var archiveStream = await archive.OpenStreamForWriteAsync();
-                var progressStream = new ProgressObservableStream(this, archiveStream);
+                archiveStream = await archive.OpenStreamForWriteAsync().ConfigureAwait(false);
+                progressStream = new ProgressObservableStream(this, archiveStream);
                 compressorStream = GetCompressorOutputStream(progressStream);
 
                 using (var tarStream = new TarOutputStream(compressorStream))
@@ -85,7 +87,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                     foreach (var file in files)
                     {
                         Token.ThrowIfCancellationRequested();
-                        ulong size = await FileUtils.GetFileSizeAsync(file);
+                        ulong size = await FileUtils.GetFileSizeAsync(file).ConfigureAwait(false);
                         var properties = await file.GetBasicPropertiesAsync();
 
                         var tarEntry = TarEntry.CreateTarEntry(file.Name);
@@ -100,18 +102,18 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                         tarStream.PutNextEntry(tarEntry);
                         var buffer = new byte[DefaultBufferSize];
 
-                        using (var fileStream = await file.OpenStreamForReadAsync())
+                        using (var fileStream = await file.OpenStreamForReadAsync().ConfigureAwait(false))
                         {
                             int readBytes;
                             while ((readBytes = await fileStream.ReadAsync(
-                                       buffer, 0, buffer.Length, Token)) > 0)
+                                buffer, 0, buffer.Length, Token).ConfigureAwait(false)) > 0)
                             {
-                                await tarStream.WriteAsync(buffer, 0, readBytes, Token);
+                                await tarStream.WriteAsync(buffer, 0, readBytes, Token).ConfigureAwait(false);
                                 totalBytesWritten += readBytes;
                                 Update(totalBytesWritten);
                             }
 
-                            await tarStream.FlushAsync();
+                            await tarStream.FlushAsync().ConfigureAwait(false);
                         }
 
                         tarStream.CloseEntry();
@@ -122,6 +124,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
             {
                 if (!options.LeaveStreamOpen)
                 {
+                    archiveStream.Dispose();
+                    progressStream.Dispose();
                     compressorStream.Dispose();
                 }
             }
@@ -140,12 +144,13 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                 options = new DecompressionOptions(false, GetDefaultEncoding());
             }
 
+            var archiveStream = Stream.Null;
             var compressorStream = Stream.Null;
             long totalBytesWritten = 0; // for accurate progress update
 
             try
             {
-                var archiveStream = await archive.OpenStreamForReadAsync();
+                archiveStream = await archive.OpenStreamForReadAsync().ConfigureAwait(false);
                 compressorStream = GetCompressorInputStream(archiveStream);
 
                 var writeInfo = new WriteEntryInfo
@@ -165,7 +170,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                         {
                             writeInfo.Entry = entry;
                             writeInfo.TotalBytesWritten = totalBytesWritten;
-                            (_, totalBytesWritten) = await WriteEntry(writeInfo);
+                            (_, totalBytesWritten) = await WriteEntry(writeInfo).ConfigureAwait(false);
                         }
                     }
                 }
@@ -174,6 +179,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
             {
                 if (!options.LeaveStreamOpen)
                 {
+                    archiveStream.Dispose();
                     compressorStream.Dispose();
                 }
             }
@@ -185,14 +191,16 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
         public override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
             IReadOnlyList<IArchiveEntry> entries, IDecompressionOptions options = null)
         {
-            return await DecompressEntries(archive, location, entries, false, options);
+            return await DecompressEntries(archive, location,
+                entries, false, options).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
         public override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
             IReadOnlyList<IArchiveEntry> entries, bool collectFileNames, IDecompressionOptions options = null)
         {
-            return await DecompressEntries(archive, location, entries, collectFileNames, options);
+            return await DecompressEntries(archive, location,
+                entries, collectFileNames, options).ConfigureAwait(false);
         }
 
         #region Private Members
@@ -213,7 +221,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
 
             try
             {
-                var archiveStream = await archive.OpenStreamForReadAsync();
+                var archiveStream = await archive.OpenStreamForReadAsync().ConfigureAwait(false);
                 compressorStream = GetCompressorInputStream(archiveStream);
 
                 var writeInfo = new WriteEntryInfo
@@ -238,13 +246,13 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                             if (collectFileNames)
                             {
                                 string fileName;
-                                (fileName, totalBytesWritten) = await WriteEntry(writeInfo);
+                                (fileName, totalBytesWritten) = await WriteEntry(writeInfo).ConfigureAwait(false);
                                 var entry = entriesMap[key];
                                 entry.FileName = fileName; // save name
                             }
                             else
                             {
-                                (_, totalBytesWritten) = await WriteEntry(writeInfo);
+                                (_, totalBytesWritten) = await WriteEntry(writeInfo).ConfigureAwait(false);
                             }
 
                             ++processedEntries;
@@ -278,26 +286,27 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
             }
             else
             {
-                file = await FileUtils.CreateFileAsync(info.Location, info.Entry.Name);
+                file = await FileUtils.CreateFileAsync(
+                    info.Location, info.Entry.Name).ConfigureAwait(false);
             }
 
 
             if (file == null) return (null, totalBytesWritten); // file could not be created
             string fileName = file.Path; // use path in case of sub-directories
 
-            using (var outputStream = await file.OpenStreamForWriteAsync())
+            using (var outputStream = await file.OpenStreamForWriteAsync().ConfigureAwait(false))
             {
                 var buffer = new byte[DefaultBufferSize];
                 int readBytes;
                 while ((readBytes = await info.TarStream.ReadAsync(
-                           buffer, 0, buffer.Length, Token)) > 0)
+                           buffer, 0, buffer.Length, Token).ConfigureAwait(false)) > 0)
                 {
-                    await outputStream.WriteAsync(buffer, 0, readBytes, Token);
+                    await outputStream.WriteAsync(buffer, 0, readBytes, Token).ConfigureAwait(false);
                     totalBytesWritten += readBytes;
                     Update(totalBytesWritten);
                 }
 
-                await outputStream.FlushAsync();
+                await outputStream.FlushAsync().ConfigureAwait(false);
             }
 
             return (fileName, totalBytesWritten);

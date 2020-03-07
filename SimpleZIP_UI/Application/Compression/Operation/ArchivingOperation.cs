@@ -97,12 +97,12 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         public async Task<Result> Perform(T operationInfo, bool resetBytesProcessed = true)
         {
             IsRunning = true;
-            Algorithm = await GetAlgorithmAsync(operationInfo);
+            Algorithm = await GetAlgorithmAsync(operationInfo).ConfigureAwait(false);
             _totalBytesToProcess = (long)operationInfo.TotalFileSize;
             try
             {
                 Algorithm.TotalBytesProcessed += OnTotalBytesProcessed;
-                return await StartOperation(operationInfo);
+                return await StartOperation(operationInfo).ConfigureAwait(false);
             }
             finally
             {

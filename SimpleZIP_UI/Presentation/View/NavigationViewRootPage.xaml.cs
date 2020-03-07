@@ -138,10 +138,10 @@ namespace SimpleZIP_UI.Presentation.View
                             ContentFrameNavigate(typeof(HomePage));
                             break;
                         case TagOpenArchive:
-                            await OpenArchiveAction();
+                            await OpenArchiveAction().ConfigureAwait(false);
                             break;
                         case TagHashCalculation:
-                            await CalculateHashAction();
+                            await CalculateHashAction().ConfigureAwait(false);
                             break;
                         //case TagProjectHome:
                         //    NavigateToProjectHome();

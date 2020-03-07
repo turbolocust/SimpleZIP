@@ -80,7 +80,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader.SZL
         {
             if (_closed) throw new ObjectDisposedException(ToString());
 
-            var fileStream = await _archive.OpenStreamForReadAsync();
+            var fileStream = await _archive.OpenStreamForReadAsync().ConfigureAwait(false);
             var stream = GetCompressorStream(fileStream);
             _tarInputStream = new TarInputStream(stream)
             {

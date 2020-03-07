@@ -153,7 +153,7 @@ namespace SimpleZIP_UI
                 var handler = new ShareTargetHandler();
                 await handler.Handle(shareOperation);
             }
-            catch (Exception)
+            catch
             {
                 if (DeviceInfo.IsMinCreatorsUpdate)
                 {
@@ -183,9 +183,8 @@ namespace SimpleZIP_UI
 
         private static async void InitializeTempDir()
         {
-            var folder = await FileUtils
-                .GetTempFolderAsync(TempFolder.Archives);
-            await FileUtils.CleanFolderAsync(folder);
+            var folder = await FileUtils.GetTempFolderAsync(TempFolder.Archives).ConfigureAwait(false);
+            await FileUtils.CleanFolderAsync(folder).ConfigureAwait(false);
         }
 
         /// <summary>

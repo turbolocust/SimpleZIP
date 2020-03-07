@@ -253,8 +253,7 @@ namespace SimpleZIP_UI.Presentation.View
             // enable button if at least one item is selected and
             // archive does not only consist of a single file entry
             ExtractSelectedEntriesButton.IsEnabled =
-                _selectedModels.Count > 0 &&
-                !_controller.IsSingleFileEntryArchive(_curRootNode);
+                _selectedModels.Count > 0 && !BrowseArchiveController.IsSingleFileEntryArchive(_curRootNode);
         }
 
         private async void ItemsListBox_OnDoubleTapped(
@@ -323,7 +322,7 @@ namespace SimpleZIP_UI.Presentation.View
 
             await LoadArchive(archive); // load initial archive
             ExtractWholeArchiveButton.IsEnabled
-                = !_controller.IsEmptyArchive(_curRootNode);
+                = !BrowseArchiveController.IsEmptyArchive(_curRootNode);
         }
 
         /// <inheritdoc />
@@ -356,11 +355,12 @@ namespace SimpleZIP_UI.Presentation.View
         public async Task<string> RequestPassword(string fileName)
         {
             var dialog = DialogFactory.CreateRequestPasswordDialog(fileName);
-            return await Dispatcher.RunTaskAsync(async () =>
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
                 await dialog.ShowAsync();
-                return dialog.Password;
             });
+
+            return dialog.Password;
         }
 
         /// <inheritdoc />
@@ -410,8 +410,7 @@ namespace SimpleZIP_UI.Presentation.View
             IsProgressBarEnabled.IsTrue = true;
             ModelsList.SelectedItem = model; // in case of multi-selection
             var curNode = GetNodesForCurrentRoot().Peek();
-            var file = await _controller.ExtractSubEntry(
-                _curRootNode, curNode.Node, model);
+            var file = await _controller.ExtractSubEntry(_curRootNode, curNode.Node, model);
 
             if (file == null) // something went wrong
             {
@@ -419,7 +418,7 @@ namespace SimpleZIP_UI.Presentation.View
             }
 
             await LoadArchive(file); // pushes first node onto nodeStack and disables progress bar
-            ExtractWholeArchiveButton.IsEnabled = !_controller.IsEmptyArchive(_curRootNode);
+            ExtractWholeArchiveButton.IsEnabled = !BrowseArchiveController.IsEmptyArchive(_curRootNode);
         }
 
         private Stack<NavNode> GetNodesForCurrentRoot()

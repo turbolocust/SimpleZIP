@@ -51,7 +51,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
 
             try
             {
-                archiveStream = await archive.OpenStreamForReadAsync();
+                archiveStream = await archive.OpenStreamForReadAsync().ConfigureAwait(false);
                 progressStream = new ProgressObservableStream(this, archiveStream);
                 compressorStream = GetCompressorStream(progressStream, compressorOptions);
 
@@ -60,20 +60,20 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                 var file = await location.CreateFileAsync(outputFileName, CreationCollisionOption.GenerateUniqueName);
                 if (file == null) return Stream.Null; // file was not created
 
-                using (var outputStream = await file.OpenStreamForWriteAsync())
+                using (var outputStream = await file.OpenStreamForWriteAsync().ConfigureAwait(false))
                 {
                     var bytes = new byte[DefaultBufferSize];
                     int readBytes;
 
                     while ((readBytes = compressorStream.Read(bytes, 0, bytes.Length)) > 0)
                     {
-                        await outputStream.WriteAsync(bytes, 0, readBytes, Token);
+                        await outputStream.WriteAsync(bytes, 0, readBytes, Token).ConfigureAwait(false);
                     }
 
-                    await outputStream.FlushAsync();
+                    await outputStream.FlushAsync().ConfigureAwait(false);
                 }
 
-                await GZipOutputFileNameWorkaround(file, compressorStream);
+                await GZipOutputFileNameWorkaround(file, compressorStream).ConfigureAwait(false);
 
                 // update file name of corresponding entry
                 if (collectFileNames && !entries.IsNullOrEmpty())
@@ -99,7 +99,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         public override async Task<Stream> Decompress(StorageFile archive,
             StorageFolder location, IDecompressionOptions options = null)
         {
-            return await DecompressArchive(archive, location, null, false, options);
+            return await DecompressArchive(archive, location,
+                null, false, options).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -108,7 +109,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         public override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
             IReadOnlyList<IArchiveEntry> entries, bool collectFileNames, IDecompressionOptions options = null)
         {
-            return await DecompressArchive(archive, location, entries, collectFileNames, options);
+            return await DecompressArchive(archive, location,
+                entries, collectFileNames, options).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -117,7 +119,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         public sealed override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
             IReadOnlyList<IArchiveEntry> entries, IDecompressionOptions options = null)
         {
-            return await DecompressArchive(archive, location, entries, false, options);
+            return await DecompressArchive(archive, location,
+                entries, false, options).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -137,21 +140,21 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
 
             try
             {
-                archiveStream = await archive.OpenStreamForWriteAsync();
+                archiveStream = await archive.OpenStreamForWriteAsync().ConfigureAwait(false);
                 progressStream = new ProgressObservableStream(this, archiveStream);
                 compressorStream = GetCompressorStream(progressStream, compressorOptions);
 
-                using (var inputStream = await file.OpenStreamForReadAsync())
+                using (var inputStream = await file.OpenStreamForReadAsync().ConfigureAwait(false))
                 {
                     var bytes = new byte[DefaultBufferSize];
                     int readBytes;
 
                     while ((readBytes = inputStream.Read(bytes, 0, bytes.Length)) > 0)
                     {
-                        await compressorStream.WriteAsync(bytes, 0, readBytes, Token);
+                        await compressorStream.WriteAsync(bytes, 0, readBytes, Token).ConfigureAwait(false);
                     }
 
-                    await compressorStream.FlushAsync();
+                    await compressorStream.FlushAsync().ConfigureAwait(false);
                 }
             }
             finally

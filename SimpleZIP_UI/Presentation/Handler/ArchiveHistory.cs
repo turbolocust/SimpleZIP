@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -36,12 +36,30 @@ namespace SimpleZIP_UI.Presentation.Handler
     /// <summary>
     /// Singleton class which manages the history of created archives.
     /// </summary>
-    internal sealed class ArchiveHistoryHandler
+    internal sealed class ArchiveHistory
     {
         /// <summary>
         /// The default date format that is being used by history items.
         /// </summary>
         public const string DefaultDateFormat = @"dd/MM/yyyy - hh:mm tt";
+
+        /// <summary>
+        /// The maximum allowed items in the archive history. This value
+        /// is retrieved from the <see cref="StorageApplicationPermissions.MostRecentlyUsedList"/>.
+        /// </summary>
+        internal static uint MaxHistoryItems => MruList.MaximumItemsAllowed;
+
+        /// <summary>
+        /// Holds the most recently used items.
+        /// </summary>
+        private static StorageItemMostRecentlyUsedList MruList
+            => StorageApplicationPermissions.MostRecentlyUsedList;
+
+        /// <summary>
+        /// Lock object which is used for double-checked locking
+        /// when retrieving the singleton instance of this class.
+        /// </summary>
+        private static readonly object LockObj = new object();
 
         /// <summary>
         /// Instance used for hashing the MRU token.
@@ -53,35 +71,17 @@ namespace SimpleZIP_UI.Presentation.Handler
         /// </summary>
         private readonly ICompressor<string, string> _compressor;
 
-        /// <summary>
-        /// Stores most recently used <see cref="StorageFile"/> (archives) objects.
-        /// </summary>
-        internal static StorageItemMostRecentlyUsedList MruList
-            => StorageApplicationPermissions.MostRecentlyUsedList;
-
-        /// <summary>
-        /// The maximum allowed items in the archive history. This value
-        /// is retrieved from the <see cref="StorageApplicationPermissions.MostRecentlyUsedList"/>.
-        /// </summary>
-        internal static uint MaxHistoryItems => MruList.MaximumItemsAllowed;
-
-        /// <summary>
-        /// Lock object which is used for double-checked locking
-        /// when retrieving the singleton instance of this class.
-        /// </summary>
-        private static readonly object LockObj = new object();
-
         #region Singleton members
 
         /// <summary>
         /// Singleton instance of this class.
         /// </summary>
-        private static ArchiveHistoryHandler _instance;
+        private static ArchiveHistory _instance;
 
         /// <summary>
         /// The singleton instance of this class. This property is thread-safe.
         /// </summary>
-        public static ArchiveHistoryHandler Instance
+        public static ArchiveHistory Instance
         {
             get
             {
@@ -89,7 +89,7 @@ namespace SimpleZIP_UI.Presentation.Handler
                 {
                     lock (LockObj)
                     {
-                        _instance = new ArchiveHistoryHandler();
+                        _instance = new ArchiveHistory();
                     }
                 }
 
@@ -97,7 +97,7 @@ namespace SimpleZIP_UI.Presentation.Handler
             }
         }
 
-        private ArchiveHistoryHandler()
+        private ArchiveHistory()
         {
             _msgDigestProvider = new MessageDigestProvider();
             // Unicode encoding is important here, see the generated
@@ -106,6 +106,26 @@ namespace SimpleZIP_UI.Presentation.Handler
         }
 
         #endregion
+
+        /// <summary>
+        /// Checks whether the specified token exists in the history or not.
+        /// </summary>
+        /// <param name="mruToken">The token to be checked.</param>
+        /// <returns>True if the specified token exists, false otherwise.</returns>
+        internal bool ContainsItem(string mruToken)
+        {
+            return MruList.ContainsItem(mruToken);
+        }
+
+        /// <summary>
+        /// Returns the specified folder from the history.
+        /// </summary>
+        /// <param name="mruToken">The folder that is associated with the specified token.</param>
+        /// <returns>A task which returns a <see cref="StorageFolder"/>.</returns>
+        internal async Task<StorageFolder> GetFolderAsync(string mruToken)
+        {
+            return await MruList.GetFolderAsync(mruToken);
+        }
 
         /// <summary>
         /// Reads the history of recently created archives synchronously.
@@ -124,7 +144,7 @@ namespace SimpleZIP_UI.Presentation.Handler
         /// <returns>A task which returns <see cref="RecentArchiveModelCollection"/>.</returns>
         internal async Task<RecentArchiveModelCollection> GetHistoryAsync()
         {
-            return await Task.Run(GetHistory);
+            return await Task.Run(GetHistory).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -150,8 +170,8 @@ namespace SimpleZIP_UI.Presentation.Handler
 
             foreach (string name in fileNames)
             {
-                var model = new RecentArchiveModel(whenUsed, name,
-                    folder.Path, await CreateTokenAsync(folder.Path, name));
+                var mruToken = await CreateTokenAsync(folder.Path, name).ConfigureAwait(false);
+                var model = new RecentArchiveModel(whenUsed, name, folder.Path, mruToken);
                 models.Add(model);
             }
 
@@ -265,8 +285,8 @@ namespace SimpleZIP_UI.Presentation.Handler
 
             // project path to fixed length string to avoid
             // length limitation of MRU token
-            var (_, hash) = await _msgDigestProvider
-                .ComputeHashValue(sb.ToString(), "SHA256");
+            var (_, hash) = await _msgDigestProvider.ComputeHashValue(
+                sb.ToString(), "SHA256").ConfigureAwait(false);
 
             return hash;
         }

@@ -72,7 +72,7 @@ namespace SimpleZIP_UI.I18N
                         if (file != null && operationType.IsReadOperation())
                         {
                             // to inform that file format is not supported
-                            message = await Archives.IsRarArchive(file)
+                            message = await Archives.IsRarArchive(file).ConfigureAwait(false)
                                 ? "RAR5FormatNotSupported/Text"
                                 : "FileFormatNotSupported/Text";
                         }

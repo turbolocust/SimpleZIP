@@ -60,7 +60,7 @@ namespace SimpleZIP_UI.Presentation.View
 
         private async void PopulateOrUpdateRecentArchivesList()
         {
-            var collection = await ArchiveHistoryHandler.Instance.GetHistoryAsync();
+            var collection = await ArchiveHistory.Instance.GetHistoryAsync();
             if (collection.Models.Length > 0)
             {
                 RecentArchiveModels.Clear(); // important
@@ -84,7 +84,7 @@ namespace SimpleZIP_UI.Presentation.View
                     {
                         // format to culture specific date
                         var dateTime = DateTime.ParseExact(model.WhenUsed,
-                            ArchiveHistoryHandler.DefaultDateFormat,
+                            ArchiveHistory.DefaultDateFormat,
                             CultureInfo.InvariantCulture);
                         model.WhenUsed = dateTime.ToString(cultureInfo);
                     }
@@ -101,11 +101,12 @@ namespace SimpleZIP_UI.Presentation.View
 
         private static async Task RevealInExplorer(RecentArchiveModel model)
         {
-            var mru = ArchiveHistoryHandler.MruList;
-            if (!mru.ContainsItem(model.MruToken)) return;
+            var historyManager = ArchiveHistory.Instance;
+            if (!historyManager.ContainsItem(model.MruToken)) return;
+
             try
             {
-                var folder = await mru.GetFolderAsync(model.MruToken);
+                var folder = await historyManager.GetFolderAsync(model.MruToken);
                 if (folder == null) return; // shouldn't be null
                 var options = new FolderLauncherOptions();
                 try
@@ -176,7 +177,7 @@ namespace SimpleZIP_UI.Presentation.View
             if (RecentArchiveModels.Count > 0)
             {
                 RecentArchiveModels.Clear();
-                ArchiveHistoryHandler.Instance.ClearHistory();
+                ArchiveHistory.Instance.ClearHistory();
             }
         }
 
@@ -228,7 +229,7 @@ namespace SimpleZIP_UI.Presentation.View
             if (sender is MenuFlyoutItem flyoutItem)
             {
                 var model = (RecentArchiveModel)flyoutItem.DataContext;
-                await RevealInExplorer(model);
+                await RevealInExplorer(model).ConfigureAwait(false);
             }
         }
 
@@ -237,7 +238,7 @@ namespace SimpleZIP_UI.Presentation.View
             if (sender is MenuFlyoutItem flyoutItem)
             {
                 var model = (RecentArchiveModel)flyoutItem.DataContext;
-                await RevealInExplorer(model);
+                await RevealInExplorer(model).ConfigureAwait(false);
             }
         }
 
@@ -246,7 +247,7 @@ namespace SimpleZIP_UI.Presentation.View
             if (sender is MenuFlyoutItem flyoutItem)
             {
                 var model = (RecentArchiveModel)flyoutItem.DataContext;
-                ArchiveHistoryHandler.Instance.RemoveFromHistory(model);
+                ArchiveHistory.Instance.RemoveFromHistory(model);
                 RecentArchiveModels.Remove(model);
             }
         }
@@ -256,7 +257,7 @@ namespace SimpleZIP_UI.Presentation.View
             if (sender is MenuFlyoutItem flyoutItem)
             {
                 var model = (RecentArchiveModel)flyoutItem.DataContext;
-                ArchiveHistoryHandler.Instance.RemoveFromHistory(model);
+                ArchiveHistory.Instance.RemoveFromHistory(model);
                 RecentArchiveModels.Remove(model);
             }
         }

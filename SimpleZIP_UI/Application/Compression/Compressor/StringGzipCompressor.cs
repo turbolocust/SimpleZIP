@@ -65,6 +65,7 @@ namespace SimpleZIP_UI.Application.Compression.Compressor
                 {
                     inputStream.CopyTo(gzipStream);
                 }
+
                 var compressed = outputStream.ToArray();
                 base64 = Convert.ToBase64String(compressed);
             }

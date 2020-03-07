@@ -76,7 +76,7 @@ namespace SimpleZIP_UI.Presentation.Handler
 
             foreach (var file in files)
             {
-                bool isArchive = await IsArchiveFile(file);
+                bool isArchive = await IsArchiveFile(file).ConfigureAwait(false);
                 if (!isArchive) return false;
             }
 
@@ -88,7 +88,7 @@ namespace SimpleZIP_UI.Presentation.Handler
             var type = Archives.ArchiveType.Unknown;
             try
             {
-                type = await Archives.DetermineArchiveType(file);
+                type = await Archives.DetermineArchiveType(file).ConfigureAwait(false);
             }
             catch (InvalidArchiveTypeException)
             {

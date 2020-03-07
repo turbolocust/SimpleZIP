@@ -62,8 +62,8 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                 {
                     Algorithm.Token = token;
                     var stream = entries.IsNullOrEmpty()
-                        ? await Algorithm.Decompress(archiveFile, location, options)
-                        : await Algorithm.Decompress(archiveFile, location, entries, collect, options);
+                        ? await Algorithm.Decompress(archiveFile, location, options).ConfigureAwait(false)
+                        : await Algorithm.Decompress(archiveFile, location, entries, collect, options).ConfigureAwait(false);
                     isSuccess = stream != Stream.Null;
                 }
                 catch (Exception ex)
@@ -79,12 +79,13 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                         ? ExceptionMessages.OperationType.ReadingPasswordSet
                         : ExceptionMessages.OperationType.Reading;
 
-                    message = await ExceptionMessages.GetStringFor(ex, opType, archiveFile);
+                    message = await ExceptionMessages.GetStringFor(
+                        ex, opType, archiveFile).ConfigureAwait(false);
                     verboseMsg = ex.Message;
                 }
 
                 return EvaluateResult(archiveFile.Name, message, verboseMsg, isSuccess);
-            }, token);
+            }, token).ConfigureAwait(false);
         }
 
         /// <inheritdoc cref="ArchivingOperation{T}.GetAlgorithmAsync"/>
@@ -101,7 +102,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
             try
             {
                 // try to detect archive by reading file headers
-                var result = await Archives.DetermineArchiveType(info.Item.Archive);
+                var result = await Archives.DetermineArchiveType(info.Item.Archive).ConfigureAwait(false);
 
                 if (result != Archives.ArchiveType.Unknown)
                 {
@@ -121,7 +122,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         /// <inheritdoc cref="ArchivingOperation{T}.StartOperation"/>
         protected override async Task<Result> StartOperation(DecompressionInfo info)
         {
-            return await ExtractFromArchive(info);
+            return await ExtractFromArchive(info).ConfigureAwait(false);
         }
     }
 }
