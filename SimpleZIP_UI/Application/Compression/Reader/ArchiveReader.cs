@@ -76,8 +76,8 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         /// </summary>
         /// <param name="archive">The archive to be opened.</param>
         /// <param name="password">The password for the archive (if encrypted).</param>
-        /// <returns>The stream used to read the archive.</returns>
-        private async Task<Stream> OpenArchiveAsync(IStorageFile archive, string password = null)
+        /// <returns>A task that can be awaited.</returns>
+        private async Task OpenArchiveAsync(IStorageFile archive, string password = null)
         {
             var options = new ReaderOptions
             {
@@ -93,9 +93,8 @@ namespace SimpleZIP_UI.Application.Compression.Reader
                 options.Password = password;
             }
 
-            var stream = await archive.OpenStreamForReadAsync();
+            var stream = await archive.OpenStreamForReadAsync().ConfigureAwait(false);
             Reader = ReaderFactory.Open(stream, options);
-            return stream;
         }
 
         /// <summary>
@@ -111,7 +110,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         {
             if (Closed) throw new ObjectDisposedException(GetType().FullName);
 
-            await OpenArchiveAsync(archive, password);
+            await OpenArchiveAsync(archive, password).ConfigureAwait(false);
 
             var task = Task.Run(() =>
             {
@@ -151,7 +150,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
                         }
                     }
 
-                    if (!parentNode.Id.Equals(pair.ParentKey))
+                    if (!parentNode.Id.Equals(pair.ParentKey, StringComparison.Ordinal))
                         throw new ReadingArchiveException("Error reading archive.");
 
                     var fileEntry = FileEntry.CreateFileEntry(
@@ -163,7 +162,7 @@ namespace SimpleZIP_UI.Application.Compression.Reader
                 return rootNode; // return first element in tree, which is the root node
             }, _cancellationToken);
 
-            return await task;
+            return await task.ConfigureAwait(false);
         }
 
         /// <summary>

@@ -53,8 +53,8 @@ namespace SimpleZIP_UI.Application.Compression.Operation.Job
                     var key = operationInfo.ArchiveType;
                     var subResult = key.Equals(Archives.ArchiveType.GZip)
                                  || key.Equals(Archives.ArchiveType.BZip2)
-                        ? await CompressSeparately(operationInfo, cancelReq)
-                        : await Operation.Perform(operationInfo);
+                        ? await CompressSeparately(operationInfo, cancelReq).ConfigureAwait(false)
+                        : await Operation.Perform(operationInfo).ConfigureAwait(false);
                     archiveNames.AddRange(subResult.ArchiveNames);
 
                     if (subResult.StatusCode != Result.Status.Success)
@@ -113,7 +113,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation.Job
                     if (cancelReq.IsCancelRequest) break;
 
                     operationInfo.SelectedFiles = new[] { file };
-                    var subResult = await Operation.Perform(operationInfo, false);
+                    var subResult = await Operation.Perform(operationInfo, false).ConfigureAwait(false);
                     archiveNames.AddRange(subResult.ArchiveNames);
 
                     if (subResult.StatusCode != Result.Status.Success)

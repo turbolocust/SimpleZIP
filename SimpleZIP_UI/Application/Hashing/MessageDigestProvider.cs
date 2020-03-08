@@ -29,7 +29,7 @@ namespace SimpleZIP_UI.Application.Hashing
 {
     /// <inheritdoc />
     /// <summary>
-    /// Implementation for computing hash values using <see cref="N:System.Security.Cryptography" />.
+    /// Implementation for computing hash values using <see cref="System.Security.Cryptography" />.
     /// </summary>
     internal class MessageDigestProvider : IMessageDigestProvider
     {
@@ -51,7 +51,7 @@ namespace SimpleZIP_UI.Application.Hashing
         public async Task<(byte[] HashedBytes, string HashedValue)>
             ComputeHashValue(StorageFile file, string algorithmName)
         {
-            using (var stream = await file.OpenStreamForReadAsync())
+            using (var stream = await file.OpenStreamForReadAsync().ConfigureAwait(false))
             {
                 return ComputeHash(stream, algorithmName);
             }
@@ -73,10 +73,12 @@ namespace SimpleZIP_UI.Application.Hashing
         private static (byte[] HashedBytes, string HashedValue)
             ComputeHash(Stream stream, string algorithmName)
         {
-            var algorithm = GetHashAlgorithm(algorithmName);
-            var hashedBytes = algorithm.ComputeHash(stream);
-            var hashedValue = ConvertHashValueToString(hashedBytes);
-            return (hashedBytes, hashedValue);
+            using (var algorithm = GetHashAlgorithm(algorithmName))
+            {
+                var hashedBytes = algorithm.ComputeHash(stream);
+                var hashedValue = ConvertHashValueToString(hashedBytes);
+                return (hashedBytes, hashedValue);
+            }
         }
 
         private static string ConvertHashValueToString(IReadOnlyCollection<byte> hashedBytes)

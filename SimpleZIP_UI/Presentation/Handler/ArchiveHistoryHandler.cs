@@ -23,6 +23,7 @@ using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Presentation.View.Model;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -119,7 +120,7 @@ namespace SimpleZIP_UI.Presentation.Handler
         /// <returns>A task which returns <see cref="RecentArchiveModelCollection"/>.</returns>
         internal async Task<RecentArchiveModelCollection> GetHistoryAsync()
         {
-            return await Task.Run(() => GetHistory());
+            return await Task.Run(GetHistory).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -140,13 +141,13 @@ namespace SimpleZIP_UI.Presentation.Handler
 
             var collection = RecentArchiveModelCollection.From(xml);
             var history = collection.Models.ToList();
-            var whenUsed = DateTime.Now.ToString(DefaultDateFormat);
+            var whenUsed = DateTime.Now.ToString(DefaultDateFormat, CultureInfo.InvariantCulture);
             var models = new List<RecentArchiveModel>(fileNames.Length);
 
             foreach (string name in fileNames)
             {
-                var model = new RecentArchiveModel(whenUsed, name,
-                    folder.Path, await CreateTokenAsync(folder.Path, name));
+                var model = new RecentArchiveModel(whenUsed, name, folder.Path,
+                    await CreateTokenAsync(folder.Path, name).ConfigureAwait(false));
                 models.Add(model);
             }
 
@@ -188,7 +189,7 @@ namespace SimpleZIP_UI.Presentation.Handler
                 try
                 {
                     var modelRemove = models.SingleOrDefault(m =>
-                        m.MruToken.Equals(model.MruToken));
+                        m.MruToken.Equals(model.MruToken, StringComparison.Ordinal));
                     models.Remove(modelRemove);
                     // check if contains first to avoid exception
                     if (MruList.ContainsItem(model.MruToken))
@@ -238,7 +239,7 @@ namespace SimpleZIP_UI.Presentation.Handler
                     xml = _compressor.Decompress(value);
                 }
             }
-            catch (Exception)
+            catch
             {
                 found = false;
             }
@@ -252,7 +253,7 @@ namespace SimpleZIP_UI.Presentation.Handler
             string loc = location.Replace('/', '\\');
             var sb = new StringBuilder(loc);
 
-            if (!loc.EndsWith("\\"))
+            if (!loc.EndsWith("\\", StringComparison.Ordinal))
             {
                 sb.Append("\\");
             }
@@ -261,8 +262,8 @@ namespace SimpleZIP_UI.Presentation.Handler
 
             // project path to fixed length string to avoid
             // length limitation of MRU token
-            var (_, hash) = await _msgDigestProvider
-                .ComputeHashValue(sb.ToString(), "SHA256");
+            var (_, hash) = await _msgDigestProvider.ComputeHashValue(
+                sb.ToString(), "SHA256").ConfigureAwait(false);
 
             return hash;
         }

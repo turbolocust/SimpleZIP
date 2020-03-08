@@ -69,7 +69,7 @@ namespace SimpleZIP_UI.Application.Util
                 foreach (var extendedFileType in Archives.ArchiveExtendedFileTypes)
                 {
                     var key = extendedFileType.Key;
-                    if (path.EndsWith(key))
+                    if (path.EndsWith(key, StringComparison.OrdinalIgnoreCase))
                     {
                         fileNameExtension = key;
                         break;
@@ -153,7 +153,7 @@ namespace SimpleZIP_UI.Application.Util
             ulong totalSize = 0L;
             foreach (var file in files)
             {
-                totalSize += await GetFileSizeAsync(file);
+                totalSize += await GetFileSizeAsync(file).ConfigureAwait(false);
             }
             return totalSize;
         }
@@ -171,7 +171,7 @@ namespace SimpleZIP_UI.Application.Util
             string dirPath = filePath.Replace('/', separatorChar);
             string locPath = location.Path;
 
-            if (dirPath.StartsWith(locPath))
+            if (dirPath.StartsWith(locPath, StringComparison.OrdinalIgnoreCase))
             {
                 dirPath = dirPath.Remove(0, locPath.Length);
             }

@@ -157,7 +157,7 @@ namespace SimpleZIP_UI.Application.Compression
             try
             {
                 // let SharpCompress' reader do the archive detection
-                using (var stream = await file.OpenStreamForReadAsync())
+                using (var stream = await file.OpenStreamForReadAsync().ConfigureAwait(false))
                 using (var reader = ReaderFactory.Open(stream))
                 {
                     var type = reader.ArchiveType;
@@ -239,7 +239,7 @@ namespace SimpleZIP_UI.Application.Compression
                         {
                             header.AppendFormat("{0:X2}", value); // convert to HEX
                         }
-                        isRarArchive = header.ToString().Equals(rar5HeaderSignature);
+                        isRarArchive = header.ToString().Equals(rar5HeaderSignature, StringComparison.Ordinal);
                     }
                 }
             }
@@ -258,7 +258,7 @@ namespace SimpleZIP_UI.Application.Compression
         /// <returns>True if file is RAR4 or RAR5 archive, false otherwise.</returns>
         internal static async Task<bool> IsRarArchive(StorageFile file, string password = null)
         {
-            using (var stream = await file.OpenStreamForReadAsync())
+            using (var stream = await file.OpenStreamForReadAsync().ConfigureAwait(false))
             {
                 if (!stream.CanSeek)
                 {
@@ -266,7 +266,7 @@ namespace SimpleZIP_UI.Application.Compression
                     if (!(isRarArchive = IsRarArchive(stream, password)))
                     {
                         // not RAR4, hence check for RAR5 only
-                        using (var stream2 = await file.OpenStreamForReadAsync())
+                        using (var stream2 = await file.OpenStreamForReadAsync().ConfigureAwait(false))
                         {
                             isRarArchive = IsRarArchive(stream2, password, true);
                         }

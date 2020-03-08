@@ -66,7 +66,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// </summary>
         private uint _delayRateCounter;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="ICompressionAlgorithm" />
         protected AbstractAlgorithm(uint updateDelayRate = DefaultUpdateDelayRate)
         {
             _updateDelayRate = updateDelayRate;
