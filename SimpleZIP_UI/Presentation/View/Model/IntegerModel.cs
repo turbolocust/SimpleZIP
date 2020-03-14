@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,34 +21,34 @@ using System.Runtime.CompilerServices;
 
 namespace SimpleZIP_UI.Presentation.View.Model
 {
-    public class BooleanModel : INotifyPropertyChanged
+    public class IntegerModel : INotifyPropertyChanged
     {
-        private bool _isTrue;
+        private int _value;
 
         /// <inheritdoc />
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public bool IsTrue
+        public int Value
         {
-            get => _isTrue;
+            get => _value;
             set
             {
-                if (value != _isTrue)
+                if (value != _value)
                 {
-                    _isTrue = value;
-                    OnPropertyChanged(nameof(IsTrue));
+                    _value = value;
+                    OnPropertyChanged(nameof(Value));
                 }
             }
         }
 
-        public BooleanModel(bool isTrue = false)
+        public IntegerModel(int value)
         {
-            _isTrue = isTrue;
+            _value = value;
         }
 
-        public static implicit operator BooleanModel(bool value)
+        public static implicit operator IntegerModel(int value)
         {
-            return new BooleanModel(value);
+            return new IntegerModel(value);
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

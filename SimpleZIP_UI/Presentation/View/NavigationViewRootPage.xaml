@@ -4,28 +4,30 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Background="Transparent" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
+    DataContext="{Binding RelativeSource={RelativeSource Self}}"
+    Background="{ThemeResource SystemControlAcrylicElementBrush}" 
+    VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
     mc:Ignorable="d">
 
     <Grid Background="Transparent">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <NavigationView x:Name="NavView" Grid.Row="0" Background="Transparent" IsPaneToggleButtonVisible="True"
-                        AlwaysShowHeader="False" IsSettingsVisible="True" ItemInvoked="NavView_OnItemInvoked" 
+        <NavigationView x:Name="NavView" Grid.Row="0" Background="Transparent" IsPaneToggleButtonVisible="True" FontSize="{Binding FontSizeViewItem.Value}"
+                        AlwaysShowHeader="False" IsSettingsVisible="True" ItemInvoked="NavView_OnItemInvoked" Loaded="NavigationView_OnLoaded"
                         IsPaneOpen="True" IsBackButtonVisible="Auto" IsBackEnabled="True" BackRequested="NavigationView_OnBackRequested">
             <NavigationView.MenuItems>
                 <NavigationViewItem Icon="Home" Tag="Home">
-                    <TextBlock x:Uid="Home" Text="" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                    <TextBlock x:Uid="Home" Text="" FontSize="{Binding FontSizeViewItem.Value}" VerticalAlignment="Center" HorizontalAlignment="Left" />
                 </NavigationViewItem>
                 <NavigationViewItem Icon="OpenFile" Tag="OpenArchive">
-                    <TextBlock x:Uid="OpenArchive" Text="" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                    <TextBlock x:Uid="OpenArchive" Text="" FontSize="{Binding FontSizeViewItem.Value}" VerticalAlignment="Center" HorizontalAlignment="Left" />
                 </NavigationViewItem>
                 <NavigationViewItem Icon="Calculator" Tag="HashCalculation">
-                    <TextBlock x:Uid="ComputeHash" Text="" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                    <TextBlock x:Uid="ComputeHash" Text="" FontSize="{Binding FontSizeViewItem.Value}" VerticalAlignment="Center" HorizontalAlignment="Left" />
                 </NavigationViewItem>
                 <NavigationViewItem Icon="ContactInfo" Tag="About">
-                    <TextBlock x:Uid="HelpFeedback" Text="" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                    <TextBlock x:Uid="HelpFeedback" Text="" FontSize="{Binding FontSizeViewItem.Value}" VerticalAlignment="Center" HorizontalAlignment="Left" />
                 </NavigationViewItem>
             </NavigationView.MenuItems>
             <!-- Pages for each use-case are loaded within the following frame -->

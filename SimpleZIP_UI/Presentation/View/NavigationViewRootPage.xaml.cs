@@ -22,12 +22,18 @@ using SimpleZIP_UI.Presentation.Factory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
+using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Hosting;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using SimpleZIP_UI.Presentation.Cache;
+using SimpleZIP_UI.Presentation.View.Model;
 
 namespace SimpleZIP_UI.Presentation.View
 {
@@ -40,6 +46,8 @@ namespace SimpleZIP_UI.Presentation.View
         private const string TagHashCalculation = "HashCalculation";
         private const string TagAbout = "About";
 
+        private const int DefaultControlsFontSize = 16;
+
         /// <summary>
         /// Consists of value tuples for defined pages in <see cref="NavView"/>.
         /// </summary>
@@ -51,6 +59,11 @@ namespace SimpleZIP_UI.Presentation.View
         /// menu item in case the navigation process got cancelled.
         /// </summary>
         private volatile bool _isNavigateBack;
+
+        /// <summary>
+        /// Specifies the default font size of texts of controls.
+        /// </summary>
+        public IntegerModel FontSizeViewItem { get; set; } = DefaultControlsFontSize;
 
         /// <inheritdoc />
         public NavigationViewRootPage()
@@ -183,9 +196,27 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
+        private void NavigationView_OnLoaded(object sender, RoutedEventArgs args)
+        {
+            if (sender is NavigationView navView &&
+                navView.SettingsItem is NavigationViewItem navViewItem)
+            {
+                var binding = new Binding
+                {
+                    Source = FontSizeViewItem,
+                    Path = new PropertyPath("Value"),
+                    Mode = BindingMode.OneWay
+                };
+
+                navViewItem.SetBinding(FontSizeProperty, binding);
+            }
+        }
+
         /// <inheritdoc />
         protected override void OnNavigatedTo(NavigationEventArgs args)
         {
+            if (args == null) return;
+
             // arguments may hold a specified page type
             if (args.Parameter is PageNavigationArgs navArgs)
             {
