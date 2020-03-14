@@ -213,6 +213,7 @@
       <DependentUpon>HomePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Presentation\View\Model\BooleanModel.cs" />
+    <Compile Include="Presentation\View\Model\IntegerModel.cs" />
     <Compile Include="Presentation\View\Model\HashAlgorithmModel.cs" />
     <Compile Include="Presentation\View\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
