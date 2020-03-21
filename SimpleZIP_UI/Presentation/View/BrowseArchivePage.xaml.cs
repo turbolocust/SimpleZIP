@@ -370,6 +370,7 @@ namespace SimpleZIP_UI.Presentation.View
         }
 
         #region Private helper methods
+
         private async Task LoadArchive(StorageFile archive)
         {
             var rootNode = await _controller.ReadArchive(archive);
@@ -519,6 +520,7 @@ namespace SimpleZIP_UI.Presentation.View
                 NavigationLock.Instance.IsLocked = false;
             });
         }
+
         #endregion
 
         private enum SortMode

@@ -26,10 +26,13 @@ using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Presentation.Factory;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.System.Display;
+using Windows.UI.Popups;
 
 namespace SimpleZIP_UI.Presentation.Controller
 {
@@ -65,6 +68,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// <inheritdoc />
         public bool IsCancelRequest { get; protected set; }
 
+        /// <inheritdoc />
         internal SummaryPageController(INavigation navHandler,
             IPasswordRequest pwRequest) : base(navHandler, pwRequest)
         {
@@ -77,6 +81,8 @@ namespace SimpleZIP_UI.Presentation.Controller
         {
             IsCancelRequest = false;
         }
+
+        #region Private methos
 
         /// <summary>
         /// Validates the specified size and displays a toast notification 
@@ -91,6 +97,48 @@ namespace SimpleZIP_UI.Presentation.Controller
                     I18N.Resources.GetString("MightTakeWhile/Text"));
             }
         }
+
+        /// <summary>
+        /// Builds the text that shows the total duration converted into minutes.
+        /// </summary>
+        /// <param name="timeSpan">The duration as time span.</param>
+        /// <returns>A friendly string that shows the total duration in minutes.
+        /// If the duration is less than one second it will not contain a number.</returns>
+        private static string BuildDurationText(TimeSpan timeSpan)
+        {
+            var durationText = new StringBuilder(I18N.Resources.GetString("TotalDuration/Text"));
+            durationText.Append(": ");
+
+            if (timeSpan.Seconds < 1)
+            {
+                durationText.Append(I18N.Resources.GetString("LessThanSecond/Text"));
+            }
+            else
+            {
+                const string format = @"hh\:mm\:ss";
+                durationText.Append(timeSpan.ToString(format,
+                    CultureInfo.CurrentCulture)).Append(" ");
+                if (timeSpan.Minutes < 1)
+                {
+                    durationText.Append(I18N.Resources.GetString("seconds/Text"));
+                }
+                else if (timeSpan.Hours < 1)
+                {
+                    durationText.Append(I18N.Resources.GetString("minutes/Text"));
+                }
+                else
+                {
+                    durationText.Append(I18N.Resources.GetString("hours/Text"));
+                }
+                durationText.Append(".");
+            }
+
+            return durationText.ToString();
+        }
+
+        #endregion
+
+        #region Internal methods
 
         /// <summary>
         /// Performs an action when the start button has been tapped.
@@ -196,6 +244,57 @@ namespace SimpleZIP_UI.Presentation.Controller
         }
 
         /// <summary>
+        /// Evaluates the specified result and shows a dialog depending on the status.
+        /// </summary>
+        /// <param name="result">The result to be evaluated.</param>
+        /// <returns>True on successful evaluation, false otherwise.</returns>
+        internal MessageDialog CreateResultDialog(Result result)
+        {
+            MessageDialog dialog;
+
+            switch (result.StatusCode)
+            {
+                case Result.Status.Success:
+                    {
+                        string title = I18N.Resources.GetString("Success/Text");
+                        string durationText = BuildDurationText(result.ElapsedTime);
+                        dialog = DialogFactory.CreateInformationDialog(title, durationText);
+                        break;
+                    }
+                case Result.Status.Fail:
+                    {
+                        string message = !string.IsNullOrEmpty(result.Message)
+                            ? result.Message
+                            : I18N.Resources.GetString("SomethingWentWrong/Text");
+                        dialog = DialogFactory.CreateErrorDialog(message);
+                        break;
+                    }
+                case Result.Status.Interrupt:
+                    {
+                        string title = I18N.Resources.GetString("Interrupted/Text");
+                        string message = I18N.Resources.GetString("OperationCancelled/Text");
+                        dialog = DialogFactory.CreateInformationDialog(title, message);
+                        break;
+                    }
+                case Result.Status.PartialFail:
+                    {
+                        string resultMessage = result.Message;
+                        if (string.IsNullOrEmpty(resultMessage))
+                        {
+                            resultMessage = I18N.Resources.GetString("NotAllProcessed/Text");
+                        }
+
+                        dialog = DialogFactory.CreateErrorDialog(resultMessage);
+                        break;
+                    }
+                // default case should never be the case (assertion error)
+                default: throw new ArgumentOutOfRangeException(nameof(result));
+            }
+
+            return dialog;
+        }
+
+        /// <summary>
         /// Checks the total size of the specified items and its entries and displays a toast 
         /// notification if a threshold has been passed (<see cref="FileSizeWarningThreshold"/>).
         /// </summary>
@@ -256,6 +355,10 @@ namespace SimpleZIP_UI.Presentation.Controller
             return false;
         }
 
+        #endregion
+
+        #region Protected methods
+
         protected void InitOperation(params T[] operationInfos)
         {
             if (OutputFolder == null)
@@ -302,6 +405,8 @@ namespace SimpleZIP_UI.Presentation.Controller
                 Operation?.Dispose();
             }
         }
+
+        #endregion
 
         public void Dispose()
         {

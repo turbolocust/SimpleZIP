@@ -39,6 +39,11 @@ namespace SimpleZIP_UI.Presentation
             set => _isLocked = value;
         }
 
+        private NavigationLock()
+        {
+            // is singleton
+        }
+
         /// <summary>
         /// Lock object which is used for double-checked locking
         /// when retrieving the singleton instance of this class.
