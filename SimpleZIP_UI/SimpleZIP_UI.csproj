@@ -185,6 +185,7 @@
     <Compile Include="I18N\ExceptionMessages.cs" />
     <Compile Include="I18N\Resources.cs" />
     <Compile Include="ISerializable.cs" />
+    <Compile Include="Presentation\Util\PageUtils.cs" />
     <Compile Include="Presentation\NavigationLock.cs" />
     <Compile Include="Presentation\Controller\BrowseArchiveController.cs" />
     <Compile Include="Presentation\Controller\IGuiController.cs" />
@@ -215,6 +216,7 @@
     <Compile Include="Presentation\View\Model\BooleanModel.cs" />
     <Compile Include="Presentation\View\Model\IntegerModel.cs" />
     <Compile Include="Presentation\View\Model\HashAlgorithmModel.cs" />
+    <Compile Include="Presentation\View\Model\SolidColorBrushModel.cs" />
     <Compile Include="Presentation\View\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
