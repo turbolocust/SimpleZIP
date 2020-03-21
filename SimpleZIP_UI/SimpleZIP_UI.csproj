@@ -375,7 +375,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.2.9</Version>
+      <Version>6.2.10</Version>
     </PackageReference>
     <PackageReference Include="secure-file">
       <Version>1.0.31</Version>
