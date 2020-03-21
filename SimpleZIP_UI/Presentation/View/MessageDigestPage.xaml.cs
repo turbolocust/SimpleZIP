@@ -35,6 +35,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using SimpleZIP_UI.Presentation.Util;
 
 namespace SimpleZIP_UI.Presentation.View
 {
@@ -142,6 +143,7 @@ namespace SimpleZIP_UI.Presentation.View
                 foreach (var file in _selectedFiles)
                 {
                     string hash = await _controller.TryComputeHashValue(file, algorithmName);
+                    var colorBrush = this.DetermineSystemAccentColorBrush();
 
                     if (isLowercase)
                     {
@@ -150,7 +152,8 @@ namespace SimpleZIP_UI.Presentation.View
 
                     models.Add(new MessageDigestModel(file.Name, file.Path, hash)
                     {
-                        IsDisplayLocation = isDisplayLocation
+                        IsDisplayLocation = isDisplayLocation,
+                        FileNameColorBrush = new SolidColorBrushModel(colorBrush)
                     });
                 }
             }

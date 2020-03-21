@@ -28,12 +28,15 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Devices.Input;
 using Windows.System;
+using Windows.UI;
 using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using SimpleZIP_UI.Presentation.Util;
 
 namespace SimpleZIP_UI.Presentation.View
 {
@@ -56,11 +59,17 @@ namespace SimpleZIP_UI.Presentation.View
                 PivotMain.Margin = new Thickness(0, 28, 0, 0);
                 CompressButton.Margin = new Thickness(0, 32, 0, 0);
             }
+
+            if (EnvironmentInfo.IsDarkThemeEnabled)
+            {
+                TitleText.Foreground = new SolidColorBrush(Colors.White);
+            }
         }
 
         private async void PopulateOrUpdateRecentArchivesList()
         {
             var collection = await ArchiveHistory.Instance.GetHistoryAsync();
+
             if (collection.Models.Length > 0)
             {
                 RecentArchiveModels.Clear(); // important
@@ -80,6 +89,9 @@ namespace SimpleZIP_UI.Presentation.View
 
                 foreach (var model in collection.Models)
                 {
+                    var colorBrush = this.DetermineSystemAccentColorBrush();
+                    model.FileNameColorBrush = new SolidColorBrushModel(colorBrush);
+
                     try
                     {
                         // format to culture specific date
@@ -92,6 +104,7 @@ namespace SimpleZIP_UI.Presentation.View
                     {
                         // use date string unformatted
                     }
+
                     RecentArchiveModels.Add(model);
                 }
                 // only enable button to clear list if at least one item is present

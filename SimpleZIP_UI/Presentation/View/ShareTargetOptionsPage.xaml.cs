@@ -18,9 +18,11 @@
 // ==--==
 
 using System;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace SimpleZIP_UI.Presentation.View
@@ -36,6 +38,11 @@ namespace SimpleZIP_UI.Presentation.View
         public ShareTargetOptionsPage()
         {
             InitializeComponent();
+
+            if (EnvironmentInfo.IsDarkThemeEnabled)
+            {
+                TitleText.Foreground = new SolidColorBrush(Colors.White);
+            }
         }
 
         private void CompressFilesButton_OnTapped(object sender, TappedRoutedEventArgs args)

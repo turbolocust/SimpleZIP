@@ -20,6 +20,7 @@
 using System;
 using Windows.Foundation.Metadata;
 using Windows.System.Profile;
+using Windows.UI.Xaml;
 
 namespace SimpleZIP_UI
 {
@@ -31,14 +32,19 @@ namespace SimpleZIP_UI
         internal static readonly string DeviceFamily = AnalyticsInfo.VersionInfo.DeviceFamily;
 
         /// <summary>
-        /// True, if the current device is a mobile device, false otherwise.
+        /// Returns true, if the current device is a mobile device, false otherwise.
         /// </summary>
         internal static bool IsMobileDevice => DeviceFamily.Equals("Windows.Mobile", StringComparison.Ordinal);
 
         /// <summary>
-        /// True, if the minimum API contract is that of the Creators Update.
+        /// Returns true, if the minimum API contract is that of the Creators Update.
         /// </summary>
         internal static bool IsMinCreatorsUpdate => CheckApiContract(4);
+
+        /// <summary>
+        /// Returns true, if the requested theme equals the dark theme.
+        /// </summary>
+        internal static bool IsDarkThemeEnabled => Windows.UI.Xaml.Application.Current.RequestedTheme == ApplicationTheme.Dark;
 
         private static bool CheckApiContract(ushort majorVersion)
         {

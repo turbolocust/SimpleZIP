@@ -93,8 +93,8 @@
                                     Grid.Column="1" Margin="0,0,0,0" Width="40" Background="Transparent">
                                 <SymbolIcon Symbol="Copy"/>
                             </Button>
-                            <TextBlock Foreground="{ThemeResource SystemControlForegroundAccentBrush}" FontWeight="Medium"
-                                       CharacterSpacing="32" Grid.Row="0" Grid.Column="2" Text="{Binding FileName}" Margin="8,0,0,0" />
+                            <TextBlock Foreground="{Binding FileNameColorBrush}" FontWeight="Medium" Text="{Binding FileName}"
+                                       CharacterSpacing="32" Grid.Row="0" Grid.Column="2" Margin="8,0,0,0" />
                             <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding HashValue}" TextTrimming="CharacterEllipsis" Margin="8,0,0,0" />
                             <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding Location}" TextTrimming="CharacterEllipsis" Margin="8,0,0,0"
                                        Visibility="{Binding IsDisplayLocation.IsTrue, Mode=TwoWay, Converter={StaticResource BoolToVisibilityConverter}}" />

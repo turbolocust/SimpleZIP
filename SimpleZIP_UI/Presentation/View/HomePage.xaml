@@ -157,8 +157,8 @@
                                     <ColumnDefinition Width="2.0*"/>
                                     <ColumnDefinition Width="8.0*"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Foreground="{ThemeResource SystemControlForegroundAccentBrush}" FontWeight="Medium"
-                                       CharacterSpacing="32" Grid.Row="0" Grid.Column="1" Text="{Binding FileName}" />
+                                <TextBlock FontWeight="Medium" CharacterSpacing="32" Grid.Row="0" Grid.Column="1" 
+                                           Text="{Binding FileName}" Foreground="{Binding FileNameColorBrush}" />
                                 <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding WhenUsed}" />
                                 <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Location}" TextTrimming="CharacterEllipsis" />
                             </Grid>

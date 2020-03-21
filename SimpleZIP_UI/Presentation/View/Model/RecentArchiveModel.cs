@@ -51,6 +51,12 @@ namespace SimpleZIP_UI.Presentation.View.Model
         public string MruToken { get; set; }
 
         /// <summary>
+        /// Sets the color brush of the <see cref="FileName"/>.
+        /// </summary>
+        [XmlIgnore]
+        public SolidColorBrushModel FileNameColorBrush { get; set; }
+
+        /// <summary>
         /// Constructs a new model for the ListBox in <see cref="HomePage"/>.
         /// </summary>
         public RecentArchiveModel()
@@ -98,6 +104,7 @@ namespace SimpleZIP_UI.Presentation.View.Model
                         }
                     }
                 }
+
                 return new RecentArchiveModelCollection();
             }
 
@@ -107,11 +114,13 @@ namespace SimpleZIP_UI.Presentation.View.Model
                 string xml; // may be empty at return
                 var serializer = new XmlSerializer(typeof(RecentArchiveModelCollection));
                 var stringWriter = new StringWriter();
+
                 using (var xmlWriter = XmlWriter.Create(stringWriter))
                 {
                     serializer.Serialize(xmlWriter, this);
                     xml = stringWriter.ToString();
                 }
+
                 return xml;
             }
         }

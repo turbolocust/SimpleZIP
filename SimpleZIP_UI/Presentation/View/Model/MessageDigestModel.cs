@@ -45,6 +45,11 @@ namespace SimpleZIP_UI.Presentation.View.Model
         public BooleanModel IsDisplayLocation { get; set; } = false;
 
         /// <summary>
+        /// Sets the color brush of the <see cref="FileName"/>.
+        /// </summary>
+        public SolidColorBrushModel FileNameColorBrush { get; set; }
+
+        /// <summary>
         /// Constructs a new model for the ListBox in <see cref="MessageDigestPage"/>.
         /// </summary>
         /// <param name="fileName">The name of the file to be displayed.</param>

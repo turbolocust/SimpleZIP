@@ -14,8 +14,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" x:Uid="WhatWouldYouLikeToDo" Text="" TextWrapping="NoWrap" FontSize="20px" FontWeight="Bold"
-                   Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
+        <TextBlock x:Name="TitleText" Grid.Row="0" x:Uid="WhatWouldYouLikeToDo" Text="" TextWrapping="NoWrap" FontSize="20px" 
+                   FontWeight="Bold" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
         <Button Grid.Row="1" Width="280" Height="64" MaxHeight="75" Margin="0,32,32,0" 
                 VerticalContentAlignment="Center" Tapped="CompressFilesButton_OnTapped"
                 Foreground="{ThemeResource ButtonForegroundThemeBrush}" 
