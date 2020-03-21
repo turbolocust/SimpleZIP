@@ -33,12 +33,12 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
     /// Traverses the archive hierarchy and generates nodes, which represent directories,
     /// and file entries. A node can have other nodes and file entries as children.
     /// </summary>
-    internal class ArchiveTreeBuilder : IDisposable
+    internal sealed class ArchiveTreeBuilder : IDisposable
     {
         /// <summary>
         /// Pre-defined name of the root node.
         /// </summary>
-        public const string RootNodeName = "root";
+        private const string RootNodeName = "root";
 
         /// <summary>
         /// Dictionary that consists of existing nodes. Each node is unique and this 
@@ -57,21 +57,19 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
         private readonly CancellationToken _cancellationToken;
 
         /// <summary>
-        /// True if builder has been interrupted and thus cannot be used anymore. 
-        /// Once this instance is disposed, this value will always be true.
+        /// True if builder has been disposed and thus cannot be used anymore. 
         /// </summary>
-        internal bool Interrupt { get; private set; }
+        private bool _disposed;
 
         public ArchiveTreeBuilder(CancellationToken token)
         {
             _nodes = new Dictionary<string, ArchiveTreeNode>();
             _cancellationToken = token;
-            _cancellationToken.Register(() => Interrupt = true);
+            _cancellationToken.Register(() => _disposed = true);
         }
 
         // ReSharper disable once SwitchStatementMissingSomeCases
-        private static async Task<IArchiveReader> GetReaderInstance(
-            StorageFile file, CancellationToken token)
+        private static async Task<IArchiveReader> GetReaderInstance(StorageFile file, CancellationToken token)
         {
             IArchiveReader reader; // to be returned
             var type = await Archives.DetermineArchiveType(file).ConfigureAwait(false);
@@ -100,7 +98,7 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
         /// <exception cref="ObjectDisposedException">Thrown if reader is closed.</exception>
         public async Task<ArchiveTreeRoot> Build(StorageFile archive, string password = null)
         {
-            if (Interrupt) throw new ObjectDisposedException(GetType().FullName);
+            if (_disposed) throw new ObjectDisposedException(GetType().FullName);
 
             _reader = await GetReaderInstance(archive, _cancellationToken).ConfigureAwait(false);
             await _reader.OpenArchiveAsync(password).ConfigureAwait(false);
@@ -110,7 +108,7 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
                 var keyBuilder = new StringBuilder();
                 var nameBuilder = new StringBuilder();
                 var rootNode = new ArchiveTreeRoot(RootNodeName, archive, password);
-                var pair = new EntryKeyPair();
+                var tuple = new ArchiveEntryTuple();
                 _nodes.Add(rootNode.Id, rootNode);
 
                 foreach (var entry in _reader.ReadArchive())
@@ -119,10 +117,10 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
                     if (entry.IsDirectory || entry.Key == null) continue;
 
                     string key = Archives.NormalizeName(entry.Key);
-                    UpdateEntryKeyPair(ref pair, key);
+                    UpdateEntryKeyPair(tuple, key);
                     ArchiveTreeNode parentNode = rootNode;
 
-                    for (int i = 0; i <= pair.SeparatorPos; ++i)
+                    for (int i = 0; i <= tuple.SeparatorPos; ++i)
                     {
                         var c = key[i];
                         keyBuilder.Append(c);
@@ -144,55 +142,42 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
                         }
                     }
 
-                    if (!parentNode.Id.Equals(pair.ParentKey, StringComparison.Ordinal))
+                    if (!parentNode.Id.Equals(tuple.ParentKey, StringComparison.Ordinal))
                         throw new ReadingArchiveException(@"Error reading archive.");
 
-                    var fileEntry = ArchiveTreeFile.CreateFileEntry(key, pair.EntryName, entry.Size);
+                    var fileEntry = ArchiveTreeFile.CreateFileEntry(key, tuple.EntryName, entry.Size);
                     parentNode.Children.Add(fileEntry);
                     keyBuilder.Clear();
                 }
 
                 return rootNode; // return first element in tree, which is the root node
-
             }, _cancellationToken);
 
             return await task.ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Returns the node with the specified key. If it does not exist, it 
-        /// will first be created and added to <see cref="_nodes"/>.
-        /// </summary>
-        /// <param name="key">The key of the node as string.</param>
-        /// <returns>The node with the specified key.</returns>
         private ArchiveTreeNode GetNode(string key)
         {
-            _nodes.TryGetValue(key, out var node);
-            if (node == null)
+            if (!_nodes.TryGetValue(key, out var node))
             {
                 node = new ArchiveTreeNode(key);
                 _nodes.Add(key, node);
             }
+
             return node;
         }
 
-        /// <summary>
-        /// Updates an <see cref="EntryKeyPair"/> which holds the name of the entry 
-        /// and the key of its parent node, also considering the root node.
-        /// </summary>
-        /// <param name="pair">Reference to the pair to be updated.</param>
-        /// <param name="key">The full key of the entry.</param>
-        /// <returns>An <see cref="EntryKeyPair"/>.</returns>
-        private static void UpdateEntryKeyPair(ref EntryKeyPair pair, string key)
+        private static void UpdateEntryKeyPair(ArchiveEntryTuple tuple, string key)
         {
             string trimmedKey = key.TrimEnd(Archives.NameSeparatorChar);
             int lastSeparatorPos = trimmedKey.LastIndexOf(Archives.NameSeparatorChar);
             string entryName = trimmedKey.Substring(lastSeparatorPos + 1);
-            string parentKey = lastSeparatorPos == -1 ? RootNodeName
+            string parentKey = lastSeparatorPos == -1
+                ? RootNodeName // is root node, if no separator is present
                 : trimmedKey.Substring(0, trimmedKey.Length - entryName.Length);
-            pair.SeparatorPos = lastSeparatorPos;
-            pair.EntryName = entryName;
-            pair.ParentKey = parentKey;
+            tuple.SeparatorPos = lastSeparatorPos;
+            tuple.EntryName = entryName;
+            tuple.ParentKey = parentKey;
         }
 
         public void Dispose()
@@ -201,16 +186,16 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (disposing)
             {
-                Interrupt = true;
+                _disposed = true;
                 _reader.Dispose();
             }
         }
 
-        private struct EntryKeyPair
+        private class ArchiveEntryTuple
         {
             internal int SeparatorPos;
             internal string EntryName;
