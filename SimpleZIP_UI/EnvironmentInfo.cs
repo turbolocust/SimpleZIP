@@ -23,7 +23,7 @@ using Windows.System.Profile;
 
 namespace SimpleZIP_UI
 {
-    internal static class DeviceInfo
+    internal static class EnvironmentInfo
     {
         /// <summary>
         /// Holds the device family of this device as string.

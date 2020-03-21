@@ -101,7 +101,7 @@
         </VisualStateManager.VisualStateGroups>
         <Pivot x:Name="PivotMain" Grid.Row="0" Margin="8,28,0,0" SelectionChanged="Pivot_OnSelectionChanged" IsHeaderItemsCarouselEnabled="True">
             <Pivot.Title>
-                <TextBlock Text="SimpleZIP" FontSize="30" FontStyle="Normal" CharacterSpacing="32" 
+                <TextBlock x:Name="TitleText" Text="SimpleZIP" FontSize="30" FontStyle="Normal" CharacterSpacing="32" 
                            FontWeight="Bold" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
             </Pivot.Title>
             <Pivot.RightHeader>

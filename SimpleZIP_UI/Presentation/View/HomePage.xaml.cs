@@ -51,7 +51,7 @@ namespace SimpleZIP_UI.Presentation.View
             RecentArchiveModels = new ObservableCollection<RecentArchiveModel>();
             InitializeComponent();
 
-            if (DeviceInfo.IsMobileDevice)
+            if (EnvironmentInfo.IsMobileDevice)
             {
                 PivotMain.Margin = new Thickness(0, 28, 0, 0);
                 CompressButton.Margin = new Thickness(0, 32, 0, 0);
@@ -165,7 +165,7 @@ namespace SimpleZIP_UI.Presentation.View
                 else if (pivot.SelectedIndex == 1) // Recent pivot
                 {
                     PopulateOrUpdateRecentArchivesList();
-                    CommandBar.ClosedDisplayMode = DeviceInfo.IsMobileDevice
+                    CommandBar.ClosedDisplayMode = EnvironmentInfo.IsMobileDevice
                         ? AppBarClosedDisplayMode.Minimal
                         : AppBarClosedDisplayMode.Compact;
                 }

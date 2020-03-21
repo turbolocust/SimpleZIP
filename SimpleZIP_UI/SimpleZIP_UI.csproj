@@ -181,7 +181,7 @@
     <Compile Include="Application\Util\WriterUtils.cs" />
     <Compile Include="Application\Util\CollectionUtils.cs" />
     <Compile Include="Application\ReadingArchiveException.cs" />
-    <Compile Include="DeviceInfo.cs" />
+    <Compile Include="EnvironmentInfo.cs" />
     <Compile Include="I18N\ExceptionMessages.cs" />
     <Compile Include="I18N\Resources.cs" />
     <Compile Include="ISerializable.cs" />

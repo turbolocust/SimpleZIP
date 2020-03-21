@@ -68,7 +68,7 @@ namespace SimpleZIP_UI
             InitializeTempDir();
             Suspending += OnSuspending;
 
-            if (!DeviceInfo.IsMobileDevice)
+            if (!EnvironmentInfo.IsMobileDevice)
             {
                 // set default launch size (has no effect on phones)
                 ApplicationView.PreferredLaunchViewSize
@@ -155,7 +155,7 @@ namespace SimpleZIP_UI
             }
             catch
             {
-                if (DeviceInfo.IsMinCreatorsUpdate)
+                if (EnvironmentInfo.IsMinCreatorsUpdate)
                 {
                     // does not seem to work properly, even though
                     // it is no longer deprecated since 1703
