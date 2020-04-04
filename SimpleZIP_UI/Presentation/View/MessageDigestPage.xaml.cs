@@ -88,7 +88,7 @@ namespace SimpleZIP_UI.Presentation.View
 
         private void InitHashAlgorithmComboBox()
         {
-            var algorithms = _controller.MdProvider.SupportedAlgorithms;
+            var algorithms = _controller.MessageDigestProvider.SupportedAlgorithms;
             foreach (string algorithm in algorithms)
             {
                 HashAlgorithmModels.Add(new HashAlgorithmModel(algorithm));
@@ -137,7 +137,7 @@ namespace SimpleZIP_UI.Presentation.View
         {
             var models = new List<MessageDigestModel>();
 
-            if (_controller.MdProvider.SupportedAlgorithms.Contains(algorithmName))
+            if (_controller.MessageDigestProvider.SupportedAlgorithms.Contains(algorithmName))
             {
                 // start computation of hash value for each file
                 foreach (var file in _selectedFiles)

@@ -43,7 +43,7 @@ namespace SimpleZIP_UI.Application.Hashing
         /// <returns>The hashed data in bytes and as hexadecimal string (in upper case).</returns>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if provided algorithm name is 
         /// either unknown or not supported.</exception>
-        Task<(byte[] HashedBytes, string HashedValue)> ComputeHashValue(StorageFile file, string algorithmName);
+        Task<(byte[] HashedBytes, string HashedValue)> ComputeAsync(StorageFile file, string algorithmName);
 
         /// <summary>
         /// Computes a hash value using the specified message digest algorithm.
@@ -54,6 +54,6 @@ namespace SimpleZIP_UI.Application.Hashing
         /// <returns>The hashed data in bytes and as hexadecimal string (in upper case).</returns>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if provided algorithm name is 
         /// either unknown or not supported.</exception>
-        Task<(byte[] HashedBytes, string HashedValue)> ComputeHashValue(string value, string algorithmName);
+        Task<(byte[] HashedBytes, string HashedValue)> ComputeAsync(string value, string algorithmName);
     }
 }

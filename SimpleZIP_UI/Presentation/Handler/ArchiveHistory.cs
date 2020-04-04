@@ -285,7 +285,7 @@ namespace SimpleZIP_UI.Presentation.Handler
 
             // project path to fixed length string to avoid
             // length limitation of MRU token
-            var (_, hash) = await _msgDigestProvider.ComputeHashValue(
+            var (_, hash) = await _msgDigestProvider.ComputeAsync(
                 sb.ToString(), "SHA256").ConfigureAwait(false);
 
             return hash;

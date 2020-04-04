@@ -30,16 +30,16 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// <summary>
         /// Instance used to compute hashes (message digest).
         /// </summary>
-        internal IMessageDigestProvider MdProvider { get; }
+        internal IMessageDigestProvider MessageDigestProvider { get; }
 
         internal MessageDigestController(INavigation navHandler,
             IMessageDigestProvider provider) : base(navHandler, null)
         {
-            MdProvider = provider;
+            MessageDigestProvider = provider;
         }
 
         /// <summary>
-        /// Tries to compute a hash value by using <see cref="MdProvider"/>. If the specified
+        /// Tries to compute a hash value by using <see cref="MessageDigestProvider"/>. If the specified
         /// file was not found, then a internationalized text is returned instead, indicating
         /// that the file could not be found.
         /// </summary>
@@ -54,8 +54,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             try
             {
                 // suppress hashed bytes (string is sufficient)
-                var (_, hashedValue) = await MdProvider
-                    .ComputeHashValue(file, algorithmName);
+                (_, string hashedValue) = await MessageDigestProvider.ComputeAsync(file, algorithmName);
                 hash = hashedValue;
             }
             catch (FileNotFoundException)

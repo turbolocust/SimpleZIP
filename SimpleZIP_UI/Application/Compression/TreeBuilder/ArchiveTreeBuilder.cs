@@ -190,8 +190,8 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
         {
             if (disposing)
             {
-                _disposed = true;
                 _reader.Dispose();
+                _disposed = true;
             }
         }
 

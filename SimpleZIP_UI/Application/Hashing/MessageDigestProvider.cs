@@ -52,7 +52,7 @@ namespace SimpleZIP_UI.Application.Hashing
 
         /// <inheritdoc />
         public Task<(byte[] HashedBytes, string HashedValue)>
-            ComputeHashValue(StorageFile file, string algorithmName)
+            ComputeAsync(StorageFile file, string algorithmName)
         {
             return Task.Run(async () =>
             {
@@ -65,7 +65,7 @@ namespace SimpleZIP_UI.Application.Hashing
 
         /// <inheritdoc />
         public Task<(byte[] HashedBytes, string HashedValue)>
-            ComputeHashValue(string value, string algorithmName)
+            ComputeAsync(string value, string algorithmName)
         {
             return Task.Run(() =>
             {
