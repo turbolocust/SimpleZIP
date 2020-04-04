@@ -183,7 +183,6 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         private void Dispose(bool disposing)

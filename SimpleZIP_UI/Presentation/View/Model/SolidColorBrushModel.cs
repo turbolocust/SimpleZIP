@@ -19,7 +19,6 @@
 
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Windows.UI;
 using Windows.UI.Xaml.Media;
 
 namespace SimpleZIP_UI.Presentation.View.Model
@@ -47,11 +46,6 @@ namespace SimpleZIP_UI.Presentation.View.Model
         public SolidColorBrushModel(SolidColorBrush brush)
         {
             _brush = brush;
-        }
-
-        public static SolidColorBrushModel FromColor(Color color)
-        {
-            return new SolidColorBrushModel(new SolidColorBrush(color));
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

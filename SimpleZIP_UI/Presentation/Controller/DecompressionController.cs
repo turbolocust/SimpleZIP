@@ -41,10 +41,11 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// <inheritdoc cref="SummaryPageController{T}.PerformOperation"/>
         protected override async Task<Result> PerformOperation(DecompressionInfo[] operationInfos)
         {
-            var job = new DecompressionJob(Operation, operationInfos)
-            {
-                PasswordRequest = PasswordRequest
-            };
+            IArchivingJob<DecompressionInfo> job =
+                new DecompressionJob(Operation, operationInfos)
+                {
+                    PasswordRequest = PasswordRequest
+                };
 
             return await job.Run(this);
         }

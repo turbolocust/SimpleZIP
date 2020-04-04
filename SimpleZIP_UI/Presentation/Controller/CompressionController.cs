@@ -42,7 +42,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         protected override async Task<Result> PerformOperation(CompressionInfo[] operationInfos)
         {
             var operationInfo = operationInfos[0]; // multiple archives not supported
-            var job = new CompressionJob(Operation, operationInfo);
+            IArchivingJob<CompressionInfo> job = new CompressionJob(Operation, operationInfo);
             return await job.Run(this);
         }
     }
