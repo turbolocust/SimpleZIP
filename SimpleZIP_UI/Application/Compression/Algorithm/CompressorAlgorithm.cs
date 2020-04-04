@@ -96,7 +96,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         }
 
         /// <inheritdoc />
-        public override async Task<Stream> Decompress(StorageFile archive,
+        public override async Task<Stream> DecompressAsync(StorageFile archive,
             StorageFolder location, IDecompressionOptions options = null)
         {
             return await DecompressArchive(archive, location,
@@ -106,7 +106,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <inheritdoc />
         /// <summary>Entries are not supported in non-archive formats,
         /// but will be used if file names are to be collected.</summary>
-        public override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
+        public override async Task<Stream> DecompressAsync(StorageFile archive, StorageFolder location,
             IReadOnlyList<IArchiveEntry> entries, bool collectFileNames, IDecompressionOptions options = null)
         {
             return await DecompressArchive(archive, location,
@@ -114,17 +114,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         }
 
         /// <inheritdoc />
-        /// <summary>Entries are not supported in non-archive formats,
-        /// and hence will be ignored.</summary>
-        public sealed override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
-            IReadOnlyList<IArchiveEntry> entries, IDecompressionOptions options = null)
-        {
-            return await DecompressArchive(archive, location,
-                entries, false, options).ConfigureAwait(false);
-        }
-
-        /// <inheritdoc />
-        public override async Task<Stream> Compress(IReadOnlyList<StorageFile> files,
+        public override async Task<Stream> CompressAsync(IReadOnlyList<StorageFile> files,
             StorageFile archive, StorageFolder location, ICompressionOptions options = null)
         {
             if (files.IsNullOrEmpty() || archive == null || location == null) return Stream.Null;

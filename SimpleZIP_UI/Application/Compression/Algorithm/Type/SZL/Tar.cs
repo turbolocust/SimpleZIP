@@ -61,7 +61,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
         }
 
         /// <inheritdoc />
-        public override async Task<Stream> Compress(IReadOnlyList<StorageFile> files,
+        public override async Task<Stream> CompressAsync(IReadOnlyList<StorageFile> files,
             StorageFile archive, StorageFolder location, ICompressionOptions options = null)
         {
             if (files.IsNullOrEmpty() | archive == null | location == null) return Stream.Null;
@@ -134,7 +134,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
         }
 
         /// <inheritdoc />
-        public override async Task<Stream> Decompress(StorageFile archive,
+        public override async Task<Stream> DecompressAsync(StorageFile archive,
             StorageFolder location, IDecompressionOptions options = null)
         {
             if (archive == null || location == null) return Stream.Null;
@@ -188,15 +188,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
         }
 
         /// <inheritdoc />
-        public override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
-            IReadOnlyList<IArchiveEntry> entries, IDecompressionOptions options = null)
-        {
-            return await DecompressEntries(archive, location,
-                entries, false, options).ConfigureAwait(false);
-        }
-
-        /// <inheritdoc />
-        public override async Task<Stream> Decompress(StorageFile archive, StorageFolder location,
+        public override async Task<Stream> DecompressAsync(StorageFile archive, StorageFolder location,
             IReadOnlyList<IArchiveEntry> entries, bool collectFileNames, IDecompressionOptions options = null)
         {
             return await DecompressEntries(archive, location,

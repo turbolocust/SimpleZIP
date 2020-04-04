@@ -55,7 +55,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                     try
                     {
                         Algorithm.Token = token;
-                        var stream = await Algorithm.Compress(files,
+                        var stream = await Algorithm.CompressAsync(files,
                             archive, location, options).ConfigureAwait(false);
                         isSuccess = stream != Stream.Null;
                     }

@@ -62,8 +62,8 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                 {
                     Algorithm.Token = token;
                     var stream = entries.IsNullOrEmpty()
-                        ? await Algorithm.Decompress(archiveFile, location, options).ConfigureAwait(false)
-                        : await Algorithm.Decompress(archiveFile, location, entries, collect, options).ConfigureAwait(false);
+                        ? await Algorithm.DecompressAsync(archiveFile, location, options).ConfigureAwait(false)
+                        : await Algorithm.DecompressAsync(archiveFile, location, entries, collect, options).ConfigureAwait(false);
                     isSuccess = stream != Stream.Null;
                 }
                 catch (Exception ex)
