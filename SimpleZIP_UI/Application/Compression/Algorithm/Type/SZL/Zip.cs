@@ -40,8 +40,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
     internal class Zip : AbstractAlgorithm
     {
         /// <inheritdoc />
-        public override async Task<Stream> CompressAsync(IReadOnlyList<StorageFile> files,
-            StorageFile archive, StorageFolder location, ICompressionOptions options = null)
+        public override async Task<Stream> CompressAsync(IReadOnlyList<StorageFile> files, StorageFile archive,
+            StorageFolder location, ICompressionOptions options = null)
         {
             if (files.IsNullOrEmpty() | archive == null | location == null) return Stream.Null;
 
@@ -51,12 +51,13 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
             }
 
             var progressStream = Stream.Null;
+            var archiveStream = Stream.Null;
             long totalBytesWritten = 0;
 
             try
             {
                 ZipStrings.CodePage = options.ArchiveEncoding.CodePage;
-                var archiveStream = await archive.OpenStreamForWriteAsync().ConfigureAwait(false);
+                archiveStream = await archive.OpenStreamForWriteAsync().ConfigureAwait(false);
                 progressStream = new ProgressObservableStream(this, archiveStream);
 
                 using (var zipStream = new ZipOutputStream(progressStream))
@@ -74,7 +75,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                         {
                             DateTime = properties.DateModified.DateTime,
                             CompressionMethod = CompressionMethod.Deflated,
-                            Size = (long)size
+                            Size = (long) size
                         };
 
                         zipStream.PutNextEntry(zipEntry);
@@ -83,8 +84,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                         using (var fileStream = await file.OpenStreamForReadAsync().ConfigureAwait(false))
                         {
                             int readBytes;
-                            while ((readBytes = await fileStream.ReadAsync(
-                                       buffer, 0, buffer.Length, Token).ConfigureAwait(false)) > 0)
+                            while ((readBytes = await fileStream.ReadAsync(buffer, 0, buffer.Length, Token)
+                                .ConfigureAwait(false)) > 0)
                             {
                                 await zipStream.WriteAsync(buffer, 0, readBytes, Token).ConfigureAwait(false);
                                 totalBytesWritten += readBytes;
@@ -102,6 +103,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
             {
                 if (!options.LeaveStreamOpen)
                 {
+                    archiveStream.Dispose();
                     progressStream.Dispose();
                 }
             }
@@ -110,8 +112,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
         }
 
         /// <inheritdoc />
-        public override async Task<Stream> DecompressAsync(StorageFile archive,
-            StorageFolder location, IDecompressionOptions options = null)
+        public override async Task<Stream> DecompressAsync(StorageFile archive, StorageFolder location,
+            IDecompressionOptions options = null)
         {
             if (archive == null || location == null) return Stream.Null;
 
@@ -128,11 +130,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                 ZipStrings.CodePage = options.ArchiveEncoding.CodePage;
                 archiveStream = await archive.OpenStreamForReadAsync().ConfigureAwait(false);
 
-                var writeInfo = new WriteEntryInfo
-                {
-                    Location = location,
-                    IgnoreDirectories = false
-                };
+                var writeInfo = new WriteEntryInfo {Location = location, IgnoreDirectories = false};
 
                 using (var zipFile = new ZipFile(archiveStream))
                 {
@@ -152,11 +150,12 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
             }
             catch (ICSharpCode.SharpZipLib.SharpZipBaseException ex)
             {
-                if (!ex.Message.StartsWith("No password available",
-                    StringComparison.OrdinalIgnoreCase))
+                const string noPasswordPrefix = "No password available"; // is unit tested
+                if (!ex.Message.StartsWith(noPasswordPrefix, StringComparison.OrdinalIgnoreCase))
                 {
                     throw;
                 }
+
                 throw new ArchiveEncryptedException(ex.Message, ex);
             }
             finally
@@ -174,11 +173,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
         public override async Task<Stream> DecompressAsync(StorageFile archive, StorageFolder location,
             IReadOnlyList<IArchiveEntry> entries, bool collectFileNames, IDecompressionOptions options = null)
         {
-            return await DecompressEntries(archive, location, 
-                entries, collectFileNames, options).ConfigureAwait(false);
+            return await DecompressEntries(archive, location, entries, collectFileNames, options).ConfigureAwait(false);
         }
 
         #region Private Members
+
         private async Task<Stream> DecompressEntries(IStorageFile archive, StorageFolder location,
             IReadOnlyCollection<IArchiveEntry> entries, bool collectFileNames, IDecompressionOptions options = null)
         {
@@ -197,11 +196,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                 ZipStrings.CodePage = options.ArchiveEncoding.CodePage;
                 archiveStream = await archive.OpenStreamForReadAsync().ConfigureAwait(false);
 
-                var writeInfo = new WriteEntryInfo
-                {
-                    Location = location,
-                    IgnoreDirectories = true
-                };
+                var writeInfo = new WriteEntryInfo {Location = location, IgnoreDirectories = true};
 
                 using (var zipFile = new ZipFile(archiveStream))
                 {
@@ -238,11 +233,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
             }
             catch (ICSharpCode.SharpZipLib.SharpZipBaseException ex)
             {
-                if (!ex.Message.StartsWith("No password available",
-                    StringComparison.OrdinalIgnoreCase))
+                if (!ex.Message.StartsWith("No password available", StringComparison.OrdinalIgnoreCase))
                 {
                     throw;
                 }
+
                 throw new ArchiveEncryptedException(ex.Message, ex);
             }
             finally
@@ -267,13 +262,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                 if (info.IgnoreDirectories)
                 {
                     string name = Path.GetFileName(info.Entry.Name);
-                    file = await info.Location.CreateFileAsync(
-                        name, CreationCollisionOption.GenerateUniqueName);
+                    file = await info.Location.CreateFileAsync(name, CreationCollisionOption.GenerateUniqueName);
                 }
                 else
                 {
-                    file = await FileUtils.CreateFileAsync(
-                        info.Location, info.Entry.Name).ConfigureAwait(false);
+                    file = await FileUtils.CreateFileAsync(info.Location, info.Entry.Name).ConfigureAwait(false);
                 }
 
                 if (file == null) return (null, totalBytesWritten); // file could not be created
@@ -305,6 +298,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
             internal bool IgnoreDirectories { get; set; }
             internal long TotalBytesWritten { get; set; }
         }
+
         #endregion
     }
 }

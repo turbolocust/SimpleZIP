@@ -44,36 +44,24 @@ namespace SimpleZIP_UI.Application.Compression
         /// </summary>
         public enum ArchiveType
         {
-            Unknown, Zip, GZip, BZip2, LZip, Tar, TarGz, TarBz2, TarLz, Rar
+            Unknown,
+            Zip,
+            GZip,
+            BZip2,
+            LZip,
+            Tar,
+            TarGz,
+            TarBz2,
+            TarLz,
+            Rar
         }
 
         /// <summary>
-        /// Maps file types for each archive. Consists only of 
+        /// Maps file types to archive types. Consists only of 
         /// file types with a single file name extension.
         /// </summary>
-        internal static readonly IDictionary<string, ArchiveType> ArchiveFileTypes;
-
-        /// <summary>
-        /// Maps file types for each archive. Consists only of 
-        /// file types with multiple file name extensions.
-        /// </summary>
-        internal static readonly IDictionary<string, ArchiveType> ArchiveExtendedFileTypes;
-
-        /// <summary>
-        /// Maps <see cref="SharpCompress.Common.ArchiveType"/> to <see cref="ArchiveType"/>.
-        /// </summary>
-        internal static readonly IDictionary<SharpCompress.Common.ArchiveType, ArchiveType> ArchiveTypes;
-
-        /// <summary>
-        /// Regular expression used to match drive letter in paths.
-        /// </summary>
-        private static readonly Regex RegexDriveLetter = new Regex(@"[A-Za-z]{1}:(\/|\\)");
-
-        static Archives()
-        {
-            // populate dictionary which maps file types to archive types
-            ArchiveFileTypes = new Dictionary<string, ArchiveType>(
-                Enum.GetNames(typeof(ArchiveType)).Length * 2)
+        internal static readonly IDictionary<string, ArchiveType> ArchiveFileTypes =
+            new Dictionary<string, ArchiveType>(Enum.GetNames(typeof(ArchiveType)).Length * 2)
             {
                 {".zip", ArchiveType.Zip},
                 {".tar", ArchiveType.Tar},
@@ -83,32 +71,45 @@ namespace SimpleZIP_UI.Application.Compression
                 {".bz2", ArchiveType.BZip2},
                 {".bzip2", ArchiveType.BZip2},
                 {".tbz2", ArchiveType.TarBz2},
-                {".lz", ArchiveType.LZip },
-                {".lzip", ArchiveType.LZip },
-                {".lzma", ArchiveType.LZip },
+                {".lz", ArchiveType.LZip},
+                {".lzip", ArchiveType.LZip},
+                {".lzma", ArchiveType.LZip},
                 {".tlz", ArchiveType.TarLz},
-                {".rar", ArchiveType.Rar }
+                {".rar", ArchiveType.Rar}
             };
-            // populate dictionary which maps extended file types to archive types
-            ArchiveExtendedFileTypes = new Dictionary<string, ArchiveType>
+
+        /// <summary>
+        /// Maps file types to extended archive types. Consists only of 
+        /// file types with multiple file name extensions.
+        /// </summary>
+        internal static readonly IDictionary<string, ArchiveType> ArchiveExtendedFileTypes =
+            new Dictionary<string, ArchiveType>
             {
-                { ".tar.gz", ArchiveType.TarGz },
-                { ".tar.gzip", ArchiveType.TarGz },
-                { ".tar.bz2", ArchiveType.TarBz2 },
-                { ".tar.bzip2", ArchiveType.TarBz2 },
-                { ".tar.lz", ArchiveType.TarLz },
-                { ".tar.lzip", ArchiveType.TarLz },
-                { ".tar.lzma", ArchiveType.TarLz }
+                {".tar.gz", ArchiveType.TarGz},
+                {".tar.gzip", ArchiveType.TarGz},
+                {".tar.bz2", ArchiveType.TarBz2},
+                {".tar.bzip2", ArchiveType.TarBz2},
+                {".tar.lz", ArchiveType.TarLz},
+                {".tar.lzip", ArchiveType.TarLz},
+                {".tar.lzma", ArchiveType.TarLz}
             };
-            // populate dictionary which maps third-party archive types to local ones
-            ArchiveTypes = new Dictionary<SharpCompress.Common.ArchiveType, ArchiveType>
+
+        /// <summary>
+        /// Maps <see cref="SharpCompress.Common.ArchiveType"/> to <see cref="ArchiveType"/>.
+        /// </summary>
+        private static readonly IDictionary<SharpCompress.Common.ArchiveType, ArchiveType> ArchiveTypes =
+            new Dictionary<SharpCompress.Common.ArchiveType, ArchiveType>
             {
-                { SharpCompress.Common.ArchiveType.Zip, ArchiveType.Zip },
-                { SharpCompress.Common.ArchiveType.Tar, ArchiveType.Tar },
-                { SharpCompress.Common.ArchiveType.Rar, ArchiveType.Rar },
-                { SharpCompress.Common.ArchiveType.GZip, ArchiveType.GZip }
+                {SharpCompress.Common.ArchiveType.Zip, ArchiveType.Zip},
+                {SharpCompress.Common.ArchiveType.Tar, ArchiveType.Tar},
+                {SharpCompress.Common.ArchiveType.Rar, ArchiveType.Rar},
+                {SharpCompress.Common.ArchiveType.GZip, ArchiveType.GZip}
             };
-        }
+
+        /// <summary>
+        /// Regular expression used to match drive letter in paths.
+        /// </summary>
+        private static readonly Regex RegexDriveLetter = new Regex(@"[A-Za-z]{1}:(\/|\\)");
 
         /// <summary>
         /// Removes drive letters in the specified name and
@@ -126,7 +127,7 @@ namespace SimpleZIP_UI.Application.Compression
 
             if (match.Success)
             {
-                normalized = normalized.Replace(match.Value, "", StringComparison.Ordinal);
+                normalized = normalized.Replace(match.Value, string.Empty, StringComparison.Ordinal);
             }
 
             return normalized;
@@ -200,8 +201,7 @@ namespace SimpleZIP_UI.Application.Compression
                 using (var reader = ReaderFactory.Open(stream))
                 {
                     seekableStream = stream.CanSeek;
-                    if (ArchiveTypes.TryGetValue(
-                        reader.ArchiveType, out var localType))
+                    if (ArchiveTypes.TryGetValue(reader.ArchiveType, out var localType))
                     {
                         archiveType = localType;
                     }
@@ -218,18 +218,21 @@ namespace SimpleZIP_UI.Application.Compression
                             determined = true;
                             archiveType = ArchiveType.TarGz;
                         }
+
                         if (!determined)
                         {
                             stream.Seek(0, SeekOrigin.Begin);
                             determined = BZip2Stream.IsBZip2(stream);
                             archiveType = ArchiveType.TarBz2;
                         }
+
                         if (!determined)
                         {
                             stream.Seek(0, SeekOrigin.Begin);
                             determined = LZipStream.IsLZipFile(stream);
                             archiveType = ArchiveType.TarLz;
                         }
+
                         if (!determined) // leave as TAR
                         {
                             archiveType = ArchiveType.Tar;
@@ -239,7 +242,8 @@ namespace SimpleZIP_UI.Application.Compression
             }
             catch (Exception ex) // due to missing documentation in SharpCompress
             {
-                throw new InvalidArchiveTypeException(@"Archive type is unknown or not supported.", ex);
+                const string errorMessage = @"Archive type is unknown or not supported.";
+                throw new InvalidArchiveTypeException(errorMessage, ex);
             }
 
             return archiveType;
@@ -274,8 +278,7 @@ namespace SimpleZIP_UI.Application.Compression
         /// <param name="password">The password of the file if encrypted.</param>
         /// <param name="rar5Only">True to only check for RAR5 format, false otherwise.</param>
         /// <returns>True if archive is RAR, false otherwise.</returns>
-        private static bool IsRarArchive(Stream stream,
-            string password = null, bool rar5Only = false)
+        private static bool IsRarArchive(Stream stream, string password = null, bool rar5Only = false)
         {
             const int rar5HeaderSize = 8; // bytes
             const string rar5HeaderSignature = "526172211A070100";
@@ -286,12 +289,9 @@ namespace SimpleZIP_UI.Application.Compression
                 if (!rar5Only)
                 {
                     isRarArchive = RarArchive.IsRarFile(stream,
-                        new ReaderOptions
-                        {
-                            Password = password,
-                            LeaveStreamOpen = true
-                        });
+                        new ReaderOptions {Password = password, LeaveStreamOpen = true});
                 }
+
                 // check if RAR5 format if not RAR4
                 if (rar5Only || !isRarArchive && stream.CanSeek)
                 {
@@ -299,11 +299,12 @@ namespace SimpleZIP_UI.Application.Compression
                     {
                         stream.Seek(0, SeekOrigin.Begin); // reset stream
                     }
+
                     var buffer = new byte[rar5HeaderSize];
                     var readBytes = stream.Read(buffer, 0, rar5HeaderSize);
                     if (readBytes > 0)
                     {
-                        string header = BitConverter.ToString(buffer).Replace("-", "", StringComparison.Ordinal);
+                        string header = BitConverter.ToString(buffer).Replace("-", string.Empty, StringComparison.Ordinal);
                         isRarArchive = header.Equals(rar5HeaderSignature, StringComparison.Ordinal);
                     }
                 }
@@ -312,6 +313,7 @@ namespace SimpleZIP_UI.Application.Compression
             {
                 isRarArchive = false;
             }
+
             return isRarArchive;
         }
 

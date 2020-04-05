@@ -52,7 +52,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// e.g. <c>bufferSize</c> times <c>x</c> (update rate) bytes are
         /// not reported to any observers.
         /// </summary>
-        protected const uint DefaultUpdateDelayRate = 32;
+        private const uint DefaultUpdateDelayRate = 32;
 
         /// <summary>
         /// See <see cref="DefaultUpdateDelayRate"/> for more details.
@@ -74,8 +74,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// </summary>
         /// <param name="entries">List of <see cref="IArchiveEntry"/> to be converted.</param>
         /// <returns>A dictionary consisting of <see cref="IArchiveEntry"/> instances.</returns>
-        protected static IDictionary<string, IArchiveEntry>
-            ConvertToMap(IReadOnlyCollection<IArchiveEntry> entries)
+        protected static IDictionary<string, IArchiveEntry> ConvertToMap(IReadOnlyCollection<IArchiveEntry> entries)
         {
             if (entries == null) throw new ArgumentNullException(nameof(entries));
 
@@ -95,13 +94,9 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// using the specified parameter.
         /// </summary>
         /// <param name="processedBytes">The bytes processed so far.</param>
-        protected void FireTotalBytesProcessed(long processedBytes)
+        private void FireTotalBytesProcessed(long processedBytes)
         {
-            var evtArgs = new TotalBytesProcessedEventArgs
-            {
-                TotalBytesProcessed = processedBytes
-            };
-
+            var evtArgs = new TotalBytesProcessedEventArgs {TotalBytesProcessed = processedBytes};
             TotalBytesProcessed?.Invoke(this, evtArgs);
         }
 
@@ -127,12 +122,12 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         #region Abstract methods
 
         /// <inheritdoc />
-        public abstract Task<Stream> CompressAsync(IReadOnlyList<StorageFile> files,
-            StorageFile archive, StorageFolder location, ICompressionOptions options = null);
+        public abstract Task<Stream> CompressAsync(IReadOnlyList<StorageFile> files, StorageFile archive,
+            StorageFolder location, ICompressionOptions options = null);
 
         /// <inheritdoc />
-        public abstract Task<Stream> DecompressAsync(StorageFile archive,
-            StorageFolder location, IDecompressionOptions options = null);
+        public abstract Task<Stream> DecompressAsync(StorageFile archive, StorageFolder location,
+            IDecompressionOptions options = null);
 
         /// <inheritdoc />
         public abstract Task<Stream> DecompressAsync(StorageFile archive, StorageFolder location,

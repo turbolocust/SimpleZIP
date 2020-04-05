@@ -74,7 +74,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                     {
                         if (token.IsCancellationRequested)
                         {
-                            FileUtils.DeleteSafe(archive);
+                            FileUtils.DeleteSafely(archive);
                         }
                     }
                 }

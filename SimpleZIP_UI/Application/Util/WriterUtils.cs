@@ -16,6 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
 using SharpCompress.Writers;
 using System;
 using System.IO;
@@ -37,8 +38,7 @@ namespace SimpleZIP_UI.Application.Util
         /// <param name="token">The token to be aggregated with the task.</param>
         /// <returns>A task which can be awaited.</returns>
         /// <exception cref="OperationCanceledException">Thrown if operation got canceled.</exception>
-        public static Task WriteAsync(this IWriter writer,
-            string entryName, Stream stream, CancellationToken token)
+        public static Task WriteAsync(this IWriter writer, string entryName, Stream stream, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -50,14 +50,14 @@ namespace SimpleZIP_UI.Application.Util
                     {
                         writer.Write(entryName, stream);
                     }
-                    catch (Exception)
+                    catch
                     {
                         // ignored because an exception on a cancellation request 
                         // cannot be avoided if the stream gets disposed afterwards 
                     }
                 }, token);
 
-                Task.WaitAll(new[] { childTask }, token);
+                Task.WaitAll(new[] {childTask}, token);
             }, token);
 
             return task;

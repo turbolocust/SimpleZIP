@@ -32,7 +32,7 @@ namespace SimpleZIP_UI.Application.Util
         /// <summary>
         /// Array that consists of characters which are not allowed in file names.
         /// </summary>
-        public static readonly char[] IllegalChars = { '<', '>', '/', '\\', '|', ':', '*', '\"', '?' };
+        public static readonly char[] IllegalChars = {'<', '>', '/', '\\', '|', ':', '*', '\"', '?'};
 
         /// <summary>
         /// Checks if the specified string contains illegal characters which are not allowed in file names.
@@ -49,7 +49,7 @@ namespace SimpleZIP_UI.Application.Util
         /// </summary>
         /// <param name="path">The file path.</param>
         /// <returns>True if the path has at least two file name extensions.</returns>
-        public static bool ContainsMultipleFileNameExtensions(string path)
+        private static bool ContainsMultipleFileNameExtensions(string path)
         {
             return !string.IsNullOrEmpty(path) && path.Split('.').Length - 1 > 1;
         }
@@ -92,7 +92,7 @@ namespace SimpleZIP_UI.Application.Util
         /// <param name="item">The item to be deleted.</param>
         /// <param name="permanent">True to delete the item permanently.</param>
         /// <exception cref="ArgumentNullException">Thrown if storage item is <c>null</c>.</exception>
-        public static async void DeleteSafe(IStorageItem item, bool permanent = true)
+        public static async void DeleteSafely(IStorageItem item, bool permanent = true)
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
 
@@ -149,8 +149,7 @@ namespace SimpleZIP_UI.Application.Util
         /// </summary>
         /// <param name="location">The temporary folder to be get.</param>
         /// <returns>The specified temporary folder.</returns>
-        internal static async Task<StorageFolder> GetTempFolderAsync(
-            TempFolder location = TempFolder.Default)
+        internal static async Task<StorageFolder> GetTempFolderAsync(TempFolder location = TempFolder.Default)
         {
             string path = Path.GetTempPath();
             var folder = await StorageFolder.GetFolderFromPathAsync(path);
@@ -158,9 +157,7 @@ namespace SimpleZIP_UI.Application.Util
             if (location == TempFolder.Archives)
             {
                 const string tempArchivesFolderName = "Archives";
-                folder = await folder.CreateFolderAsync(
-                    tempArchivesFolderName,
-                    CreationCollisionOption.OpenIfExists);
+                folder = await folder.CreateFolderAsync(tempArchivesFolderName, CreationCollisionOption.OpenIfExists);
             }
 
             return folder;
@@ -177,7 +174,7 @@ namespace SimpleZIP_UI.Application.Util
                 var files = await folder.GetFilesAsync();
                 foreach (var file in files)
                 {
-                    DeleteSafe(file);
+                    DeleteSafely(file);
                 }
             }
         }
@@ -236,29 +233,27 @@ namespace SimpleZIP_UI.Application.Util
         /// <returns>The created file or <c>null</c> if path is <see cref="string.Empty"/>.</returns>
         internal static async Task<StorageFile> CreateFileAsync(StorageFolder location, string filePath)
         {
-            var separatorChar = Path.DirectorySeparatorChar;
-            var dirPath = filePath.Replace('/', separatorChar);
+            char separatorChar = Path.DirectorySeparatorChar;
+            string dirPath = filePath.Replace('/', separatorChar);
             var pathMembers = dirPath.Split(separatorChar);
 
             StorageFile file = null;
             if (pathMembers.Length > 1) // at least one directory in path
             {
-                var lastPos = pathMembers.Length - 1;
+                int lastPos = pathMembers.Length - 1;
                 var folder = location;
                 // ignore last position because it's supposed be a file
-                for (var i = 0; i < lastPos; ++i)
+                for (int i = 0; i < lastPos; ++i)
                 {
-                    var folderName = pathMembers[i];
-                    folder = await folder.CreateFolderAsync(folderName,
-                        CreationCollisionOption.OpenIfExists);
+                    string folderName = pathMembers[i];
+                    folder = await folder.CreateFolderAsync(folderName, CreationCollisionOption.OpenIfExists);
                 }
-                file = await folder.CreateFileAsync(pathMembers[lastPos],
-                    CreationCollisionOption.GenerateUniqueName);
+
+                file = await folder.CreateFileAsync(pathMembers[lastPos], CreationCollisionOption.GenerateUniqueName);
             }
             else if (pathMembers.Length == 1)
             {
-                file = await location.CreateFileAsync(pathMembers[0],
-                    CreationCollisionOption.GenerateUniqueName);
+                file = await location.CreateFileAsync(pathMembers[0], CreationCollisionOption.GenerateUniqueName);
             }
 
             return file;

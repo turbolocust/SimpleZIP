@@ -46,7 +46,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             var progressStream = Stream.Null;
             var compressorStream = Stream.Null;
 
-            var compressorOptions = new CompressorOptions { IsCompression = false };
+            var compressorOptions = new CompressorOptions {IsCompression = false};
             options = options ?? new DecompressionOptions(false, GetDefaultEncoding());
 
             try
@@ -96,11 +96,10 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         }
 
         /// <inheritdoc />
-        public override async Task<Stream> DecompressAsync(StorageFile archive,
-            StorageFolder location, IDecompressionOptions options = null)
+        public override async Task<Stream> DecompressAsync(StorageFile archive, StorageFolder location,
+            IDecompressionOptions options = null)
         {
-            return await DecompressArchive(archive, location,
-                null, false, options).ConfigureAwait(false);
+            return await DecompressArchive(archive, location, null, false, options).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -109,13 +108,12 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         public override async Task<Stream> DecompressAsync(StorageFile archive, StorageFolder location,
             IReadOnlyList<IArchiveEntry> entries, bool collectFileNames, IDecompressionOptions options = null)
         {
-            return await DecompressArchive(archive, location,
-                entries, collectFileNames, options).ConfigureAwait(false);
+            return await DecompressArchive(archive, location, entries, collectFileNames, options).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        public override async Task<Stream> CompressAsync(IReadOnlyList<StorageFile> files,
-            StorageFile archive, StorageFolder location, ICompressionOptions options = null)
+        public override async Task<Stream> CompressAsync(IReadOnlyList<StorageFile> files, StorageFile archive,
+            StorageFolder location, ICompressionOptions options = null)
         {
             if (files.IsNullOrEmpty() || archive == null || location == null) return Stream.Null;
 
@@ -125,7 +123,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             var progressStream = Stream.Null;
             var compressorStream = Stream.Null;
 
-            var compressorOptions = new CompressorOptions { FileName = file.Name, IsCompression = true };
+            var compressorOptions = new CompressorOptions {FileName = file.Name, IsCompression = true};
             options = options ?? new CompressionOptions(false, GetDefaultEncoding());
 
             try
@@ -173,11 +171,9 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <returns>A task that can be awaited.</returns>
         private static async Task GZipOutputFileNameWorkaround(IStorageItem file, Stream stream)
         {
-            if (stream is GZipStream gzipStream
-                && !string.IsNullOrEmpty(gzipStream.FileName))
+            if (stream is GZipStream gzipStream && !string.IsNullOrEmpty(gzipStream.FileName))
             {
-                await file.RenameAsync(gzipStream.FileName,
-                    NameCollisionOption.GenerateUniqueName);
+                await file.RenameAsync(gzipStream.FileName, NameCollisionOption.GenerateUniqueName);
             }
         }
 
