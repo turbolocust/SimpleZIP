@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2019 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -53,10 +53,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         }
 
         /// <inheritdoc />
-        public override async Task<Stream> DecompressAsync(StorageFile archive,
+        public override async Task DecompressAsync(StorageFile archive,
             StorageFolder location, IDecompressionOptions options = null)
         {
-            if (archive == null || location == null) return Stream.Null;
+            if (archive == null) throw new ArgumentNullException(nameof(archive));
+            if (location == null) throw new ArgumentNullException(nameof(location));
 
             var readerOptions = options != null
                 ? ConvertDecompressionOptions(options)
@@ -66,19 +67,13 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                     ArchiveEncoding = ConvertEncoding(GetDefaultEncoding())
                 };
 
-            var archiveStream = Stream.Null;
             long totalBytesWritten = 0; // for accurate progress update
 
             try
             {
-                archiveStream = await archive.OpenStreamForReadAsync().ConfigureAwait(false);
+                var writeInfo = new WriteEntryInfo { Location = location, IgnoreDirectories = false };
 
-                var writeInfo = new WriteEntryInfo
-                {
-                    Location = location,
-                    IgnoreDirectories = false
-                };
-
+                using (var archiveStream = await archive.OpenStreamForReadAsync().ConfigureAwait(false))
                 using (var reader = ReaderFactory.Open(archiveStream, readerOptions))
                 {
                     writeInfo.Reader = reader;
@@ -97,74 +92,53 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             {
                 throw new ArchiveEncryptedException(ex.Message, ex);
             }
-            finally
-            {
-                if (!readerOptions.LeaveStreamOpen)
-                {
-                    archiveStream.Dispose();
-                }
-            }
-
-            return archiveStream;
         }
 
         /// <inheritdoc />
-        public override async Task<Stream> DecompressAsync(StorageFile archive, StorageFolder location,
+        public override async Task DecompressAsync(StorageFile archive, StorageFolder location,
             IReadOnlyList<IArchiveEntry> entries, bool collectFileNames, IDecompressionOptions options = null)
         {
-            return await DecompressEntries(archive, location,
-                entries, collectFileNames, options).ConfigureAwait(false);
+            await DecompressEntries(archive, location, entries, collectFileNames, options).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        public override async Task<Stream> CompressAsync(IReadOnlyList<StorageFile> files,
+        public override async Task CompressAsync(IReadOnlyList<StorageFile> files,
             StorageFile archive, StorageFolder location, ICompressionOptions options = null)
         {
-            if (files.IsNullOrEmpty() | archive == null | location == null) return Stream.Null;
+            if (archive == null) throw new ArgumentNullException(nameof(archive));
+            if (location == null) throw new ArgumentNullException(nameof(location));
+
+            if (files.IsNullOrEmpty()) return; // nothing to do
 
             var writerOptions = ConvertCompressionOptions(options);
-            var archiveStream = Stream.Null;
-            var progressStream = Stream.Null;
 
-            try
+            using (var archiveStream = await archive.OpenStreamForWriteAsync().ConfigureAwait(false))
+            using (var progressStream = new ProgressObservableStream(this, archiveStream))
+            using (var writer = WriterFactory.Open(progressStream, _type, writerOptions))
             {
-                archiveStream = await archive.OpenStreamForWriteAsync().ConfigureAwait(false);
-                progressStream = new ProgressObservableStream(this, archiveStream);
-
-                using (var writer = WriterFactory.Open(progressStream, _type, writerOptions))
+                foreach (var file in files)
                 {
-                    foreach (var file in files)
+                    Token.ThrowIfCancellationRequested();
+                    using (var inputStream = await file.OpenStreamForReadAsync().ConfigureAwait(false))
                     {
-                        Token.ThrowIfCancellationRequested();
-                        using (var inputStream = await file.OpenStreamForReadAsync().ConfigureAwait(false))
-                        {
-                            await writer.WriteAsync(file.Name, inputStream, Token).ConfigureAwait(false);
-                        }
+                        await writer.WriteAsync(file.Name, inputStream, Token).ConfigureAwait(false);
                     }
                 }
             }
-            finally
-            {
-                if (!writerOptions.LeaveStreamOpen)
-                {
-                    archiveStream.Dispose();
-                    progressStream.Dispose();
-                }
-            }
-
-            return progressStream;
         }
 
         #region Private Members
-        private async Task<Stream> DecompressEntries(IStorageFile archive, StorageFolder location,
+        private async Task DecompressEntries(IStorageFile archive, StorageFolder location,
             IReadOnlyCollection<IArchiveEntry> entries, bool collectFileNames, IDecompressionOptions options = null)
         {
-            if (archive == null || entries.IsNullOrEmpty() || location == null) return Stream.Null;
+            if (archive == null) throw new ArgumentNullException(nameof(archive));
+            if (location == null) throw new ArgumentNullException(nameof(location));
+
+            if (entries.IsNullOrEmpty()) return; // nothing to do
 
             int processedEntries = 0; // to count number of found entries
             var entriesMap = ConvertToMap(entries); // for faster access
             long totalBytesWritten = 0; // for accurate progress update
-            var archiveStream = Stream.Null;
 
             var readerOptions = options != null
                 ? ConvertDecompressionOptions(options)
@@ -174,16 +148,15 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                     ArchiveEncoding = ConvertEncoding(GetDefaultEncoding())
                 };
 
+            var writeInfo = new WriteEntryInfo
+            {
+                Location = location,
+                IgnoreDirectories = true
+            };
+
             try
             {
-                archiveStream = await archive.OpenStreamForReadAsync().ConfigureAwait(false);
-
-                var writeInfo = new WriteEntryInfo
-                {
-                    Location = location,
-                    IgnoreDirectories = true
-                };
-
+                using (var archiveStream = await archive.OpenStreamForReadAsync().ConfigureAwait(false))
                 using (var reader = ReaderFactory.Open(archiveStream, readerOptions))
                 {
                     writeInfo.Reader = reader;
@@ -219,18 +192,9 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             {
                 throw new ArchiveEncryptedException(ex.Message, ex);
             }
-            finally
-            {
-                if (!readerOptions.LeaveStreamOpen)
-                {
-                    archiveStream.Dispose();
-                }
-            }
-
-            return archiveStream;
         }
 
-        private async Task<(string, long)> WriteEntry(WriteEntryInfo info)
+        private async Task<(string fileName, long bytesWritten)> WriteEntry(WriteEntryInfo info)
         {
             string fileName;
             long totalBytesWritten = info.TotalBytesWritten;
@@ -251,7 +215,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                 }
 
 
-                if (file == null) return (null, totalBytesWritten); // file could not be created
+                if (file == null) return (null, totalBytesWritten); // could not be created
                 fileName = file.Path; // use path in case of sub-directories
 
                 using (var outputStream = await file.OpenStreamForWriteAsync().ConfigureAwait(false))
@@ -282,19 +246,14 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
 
         private ArchiveEncoding ConvertEncoding(Encoding encoding)
         {
-            var enc = encoding ?? GetDefaultEncoding();
-            return new ArchiveEncoding
-            {
-                Default = enc,
-                Password = enc
-            };
+            var defaultEncoding = encoding ?? GetDefaultEncoding();
+            return new ArchiveEncoding { Default = defaultEncoding, Password = defaultEncoding };
         }
 
         private ReaderOptions ConvertDecompressionOptions(IDecompressionOptions options)
         {
             return new ReaderOptions
             {
-                LeaveStreamOpen = options.LeaveStreamOpen,
                 ArchiveEncoding = ConvertEncoding(options.ArchiveEncoding),
                 Password = options.Password
             };
@@ -304,17 +263,10 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         private WriterOptions ConvertCompressionOptions(ICompressionOptions options)
         {
             var writerOptions = GetWriterOptions();
+            writerOptions.LeaveStreamOpen = false;
 
-            if (options != null)
-            {
-                writerOptions.LeaveStreamOpen = options.LeaveStreamOpen;
-                writerOptions.ArchiveEncoding = ConvertEncoding(options.ArchiveEncoding);
-            }
-            else
-            {
-                writerOptions.LeaveStreamOpen = false;
-                writerOptions.ArchiveEncoding = ConvertEncoding(GetDefaultEncoding());
-            }
+            var encoding = options != null ? options.ArchiveEncoding : GetDefaultEncoding();
+            writerOptions.ArchiveEncoding = ConvertEncoding(encoding);
 
             return writerOptions;
         }

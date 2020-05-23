@@ -16,6 +16,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
+using System;
 using SharpCompress.Compressors;
 using SharpCompress.Compressors.Deflate;
 using System.IO;
@@ -31,12 +33,14 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
         /// <inheritdoc />
         protected override Stream GetCompressorStream(Stream stream, CompressorOptions options)
         {
+            if (options == null) throw new ArgumentNullException(nameof(options));
+
             var compressorStream = options.IsCompression
                 ? new GZipStream(stream, CompressionMode.Compress, CompressionLevel.Default)
                 : new GZipStream(stream, CompressionMode.Decompress);
 
             // set file name to stream
-            var fileName = options.FileName;
+            string fileName = options.FileName;
             if (!string.IsNullOrEmpty(fileName))
             {
                 compressorStream.FileName = fileName;

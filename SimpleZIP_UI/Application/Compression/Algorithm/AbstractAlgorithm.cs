@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2019 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -22,7 +22,6 @@ using SimpleZIP_UI.Application.Compression.Algorithm.Options;
 using SimpleZIP_UI.Application.Compression.Reader;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -96,7 +95,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <param name="processedBytes">The bytes processed so far.</param>
         private void FireTotalBytesProcessed(long processedBytes)
         {
-            var evtArgs = new TotalBytesProcessedEventArgs {TotalBytesProcessed = processedBytes};
+            var evtArgs = new TotalBytesProcessedEventArgs { TotalBytesProcessed = processedBytes };
             TotalBytesProcessed?.Invoke(this, evtArgs);
         }
 
@@ -122,16 +121,25 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         #region Abstract methods
 
         /// <inheritdoc />
-        public abstract Task<Stream> CompressAsync(IReadOnlyList<StorageFile> files, StorageFile archive,
-            StorageFolder location, ICompressionOptions options = null);
+        public abstract Task CompressAsync(
+            IReadOnlyList<StorageFile> files,
+            StorageFile archive,
+            StorageFolder location,
+            ICompressionOptions options = null);
 
         /// <inheritdoc />
-        public abstract Task<Stream> DecompressAsync(StorageFile archive, StorageFolder location,
+        public abstract Task DecompressAsync(
+            StorageFile archive,
+            StorageFolder location,
             IDecompressionOptions options = null);
 
         /// <inheritdoc />
-        public abstract Task<Stream> DecompressAsync(StorageFile archive, StorageFolder location,
-            IReadOnlyList<IArchiveEntry> entries, bool collectFileNames, IDecompressionOptions options = null);
+        public abstract Task DecompressAsync(
+            StorageFile archive,
+            StorageFolder location,
+            IReadOnlyList<IArchiveEntry> entries,
+            bool collectFileNames,
+            IDecompressionOptions options = null);
 
         #endregion
     }

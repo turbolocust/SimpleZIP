@@ -50,12 +50,14 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <param name="archive">The archive to be extracted.</param>
         /// <param name="location">The location where to extract the archive to.</param>
         /// <param name="options">Options for the operation. Can be omitted.</param>
-        /// <returns>Task which returns a stream that has been used to read the archive. The stream will not be 
-        /// disposed if <see cref="IOptions.LeaveStreamOpen"/> in <c>options</c> is set to true.</returns>
+        /// <returns>An asynchronous operation that can be awaited.</returns>
         /// <exception cref="IOException">Thrown on any error when reading from or writing to streams.</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not permitted.</exception>
         /// <exception cref="ArchiveEncryptedException">Thrown if encrypted archive could not be handled.</exception>
-        Task<Stream> DecompressAsync(StorageFile archive, StorageFolder location, IDecompressionOptions options = null);
+        Task DecompressAsync(
+            StorageFile archive,
+            StorageFolder location,
+            IDecompressionOptions options = null);
 
         /// <summary>
         /// Decompresses (extracts) entries from the specified archive to the specified location.
@@ -66,13 +68,16 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <param name="collectFileNames">True to collect file names, false otherwise.
         /// If true, names of extracted files are saved to <see cref="ArchiveEntry.FileName"/>.</param>.
         /// <param name="options">Options for the operation. Can be omitted.</param>
-        /// <returns>Task which returns a stream that has been used to read the archive. The stream will not be 
-        /// disposed if <see cref="IOptions.LeaveStreamOpen"/> in <c>options</c> is set to true.</returns>
+        /// <returns>An asynchronous operation that can be awaited.</returns>
         /// <exception cref="IOException">Thrown on any error when reading from or writing to streams.</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not permitted.</exception>
         /// <exception cref="ArchiveEncryptedException">Thrown if encrypted archive could not be handled.</exception>
-        Task<Stream> DecompressAsync(StorageFile archive, StorageFolder location,
-            IReadOnlyList<IArchiveEntry> entries, bool collectFileNames, IDecompressionOptions options = null);
+        Task DecompressAsync(
+            StorageFile archive,
+            StorageFolder location,
+            IReadOnlyList<IArchiveEntry> entries,
+            bool collectFileNames,
+            IDecompressionOptions options = null);
 
         /// <summary>
         /// Compresses files to the specified location. If the writer options are omitted, the default
@@ -82,12 +87,14 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <param name="archive">The file to write compressed bytes to.</param>
         /// <param name="location">Where the archive is to be created.</param>
         /// <param name="options">Options for the operation. Can be omitted.</param>
-        /// <returns>Task which returns a stream that has been used to write the archive. The stream will not be 
-        /// disposed if <see cref="IOptions.LeaveStreamOpen"/> in <c>options</c> is set to true.</returns>
+        /// <returns>An asynchronous operation that can be awaited.</returns>
         /// <exception cref="IOException">Thrown on any error when reading from or writing to streams.</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown when access to file is not allowed.</exception>
         /// <exception cref="NotSupportedException">Thrown when archive type does not have a writer.</exception>
-        Task<Stream> CompressAsync(IReadOnlyList<StorageFile> files, StorageFile archive,
-            StorageFolder location, ICompressionOptions options = null);
+        Task CompressAsync(
+            IReadOnlyList<StorageFile> files,
+            StorageFile archive,
+            StorageFolder location,
+            ICompressionOptions options = null);
     }
 }

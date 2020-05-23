@@ -23,7 +23,6 @@ using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.I18N;
 using System;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace SimpleZIP_UI.Application.Compression.Operation
@@ -56,15 +55,18 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                 string verboseMsg = string.Empty;
                 bool isSuccess = false;
 
-                var options = new DecompressionOptions(false, info.Encoding, password);
+                var options = new DecompressionOptions(info.Encoding, password);
 
                 try
                 {
                     Algorithm.Token = token;
-                    var stream = entries.IsNullOrEmpty()
-                        ? await Algorithm.DecompressAsync(archiveFile, location, options).ConfigureAwait(false)
-                        : await Algorithm.DecompressAsync(archiveFile, location, entries, collect, options).ConfigureAwait(false);
-                    isSuccess = stream != Stream.Null;
+
+                    if (entries.IsNullOrEmpty())
+                        await Algorithm.DecompressAsync(archiveFile, location, options).ConfigureAwait(false);
+                    else
+                        await Algorithm.DecompressAsync(archiveFile, location, entries, collect, options).ConfigureAwait(false);
+
+                    isSuccess = true;
                 }
                 catch (Exception ex)
                 {
@@ -79,8 +81,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                         ? ExceptionMessages.OperationType.ReadingPasswordSet
                         : ExceptionMessages.OperationType.Reading;
 
-                    message = await ExceptionMessages.GetStringFor(
-                        ex, opType, archiveFile).ConfigureAwait(false);
+                    message = await ExceptionMessages.GetStringFor(ex, opType, archiveFile).ConfigureAwait(false);
                     verboseMsg = ex.Message;
                 }
 
@@ -91,7 +92,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         /// <inheritdoc cref="ArchivingOperation{T}.GetAlgorithmAsync"/>
         protected override async Task<ICompressionAlgorithm> GetAlgorithmAsync(DecompressionInfo info)
         {
-            var fileType = FileUtils.GetFileNameExtension(info.Item.Archive.Name);
+            string fileType = FileUtils.GetFileNameExtension(info.Item.Archive.Name);
             var value = Archives.DetermineArchiveTypeByFileExtension(fileType);
 
             if (value != Archives.ArchiveType.Unknown)

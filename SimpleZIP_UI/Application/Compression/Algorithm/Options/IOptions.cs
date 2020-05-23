@@ -27,12 +27,6 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Options
     public interface IOptions
     {
         /// <summary>
-        /// True to leave the stream to read or write
-        /// the archive open, false otherwise.
-        /// </summary>
-        bool LeaveStreamOpen { get; }
-
-        /// <summary>
         /// The encoding of the entry names to be written or extracted.
         /// </summary>
         Encoding ArchiveEncoding { get; }

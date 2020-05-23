@@ -23,7 +23,6 @@ using SimpleZIP_UI.Application.Compression.Model;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.I18N;
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
 
@@ -38,7 +37,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
             var location = info.OutputFolder;
             var token = TokenSource.Token;
 
-            var options = new CompressionOptions(false, info.Encoding);
+            var options = new CompressionOptions(info.Encoding);
 
             return await Task.Run(async () => // execute compression asynchronously
             {
@@ -52,19 +51,16 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                     var archive = await location.CreateFileAsync(archiveName,
                         CreationCollisionOption.GenerateUniqueName);
                     name = archive.Name; // might have changed because of creation collision option
+
                     try
                     {
                         Algorithm.Token = token;
-                        var stream = await Algorithm.CompressAsync(files,
-                            archive, location, options).ConfigureAwait(false);
-                        isSuccess = stream != Stream.Null;
+                        await Algorithm.CompressAsync(files, archive, location, options).ConfigureAwait(false);
+                        isSuccess = true;
                     }
                     catch (Exception ex)
                     {
-                        if (ex is OperationCanceledException)
-                        {
-                            throw;
-                        }
+                        if (ex is OperationCanceledException) throw;
 
                         const ExceptionMessages.OperationType opType = ExceptionMessages.OperationType.Writing;
                         message = await ExceptionMessages.GetStringFor(ex, opType, archive).ConfigureAwait(false);

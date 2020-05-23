@@ -16,6 +16,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
+using System;
 using SharpCompress.Compressors;
 using SharpCompress.Compressors.BZip2;
 using System.IO;
@@ -31,6 +33,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
         /// <inheritdoc />
         protected override Stream GetCompressorStream(Stream stream, CompressorOptions options)
         {
+            if (options == null) throw new ArgumentNullException(nameof(options));
+
             return options.IsCompression
                 ? new BZip2Stream(stream, CompressionMode.Compress, false)
                 : new BZip2Stream(stream, CompressionMode.Decompress, true);

@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2019 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -24,15 +24,12 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Options
     public class DecompressionOptions : IDecompressionOptions
     {
         /// <inheritdoc />
-        public bool LeaveStreamOpen { get; }
-
-        /// <inheritdoc />
         public Encoding ArchiveEncoding { get; }
 
         /// <inheritdoc />
         public string Password { get; set; }
 
-        public DecompressionOptions(bool leaveStreamOpen, Encoding encoding, string password = null) =>
-            (LeaveStreamOpen, ArchiveEncoding, Password) = (leaveStreamOpen, encoding, password);
+        public DecompressionOptions(Encoding encoding, string password = null) =>
+            (ArchiveEncoding, Password) = (encoding, password);
     }
 }

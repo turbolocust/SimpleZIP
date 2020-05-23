@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2019 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -61,203 +61,146 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
         }
 
         /// <inheritdoc />
-        public override async Task<Stream> CompressAsync(IReadOnlyList<StorageFile> files, StorageFile archive,
+        public override async Task CompressAsync(IReadOnlyList<StorageFile> files, StorageFile archive,
             StorageFolder location, ICompressionOptions options = null)
         {
-            if (files.IsNullOrEmpty() | archive == null | location == null) return Stream.Null;
+            if (archive == null) throw new ArgumentNullException(nameof(archive));
+            if (location == null) throw new ArgumentNullException(nameof(location));
 
-            if (options == null)
-            {
-                options = new CompressionOptions(false, GetDefaultEncoding());
-            }
+            if (files.IsNullOrEmpty()) return; // nothing to do
 
-            var archiveStream = Stream.Null;
-            var progressStream = Stream.Null;
-            var compressorStream = Stream.Null;
             long totalBytesWritten = 0;
 
-            try
+            using (var archiveStream = await archive.OpenStreamForWriteAsync().ConfigureAwait(false))
+            using (var progressStream = new ProgressObservableStream(this, archiveStream))
+            using (var compressorStream = GetCompressorOutputStream(progressStream))
+            using (var tarStream = new TarOutputStream(compressorStream))
             {
-                archiveStream = await archive.OpenStreamForWriteAsync().ConfigureAwait(false);
-                progressStream = new ProgressObservableStream(this, archiveStream);
-                compressorStream = GetCompressorOutputStream(progressStream);
-
-                using (var tarStream = new TarOutputStream(compressorStream))
+                foreach (var file in files)
                 {
-                    foreach (var file in files)
+                    Token.ThrowIfCancellationRequested();
+                    ulong size = await FileUtils.GetFileSizeAsync(file).ConfigureAwait(false);
+                    var properties = await file.GetBasicPropertiesAsync();
+
+                    var tarEntry = TarEntry.CreateTarEntry(file.Name);
+                    tarEntry.ModTime = properties.DateModified.DateTime;
+                    tarEntry.Size = (long)size;
+                    tarEntry.TarHeader.DevMajor = 0;
+                    tarEntry.TarHeader.DevMinor = 0;
+                    tarEntry.TarHeader.Mode = 33216; // magic number for UNIX security access
+                    tarEntry.TarHeader.LinkName = string.Empty;
+                    tarEntry.TarHeader.TypeFlag = TarHeader.LF_NORMAL;
+
+                    tarStream.PutNextEntry(tarEntry);
+                    var buffer = new byte[DefaultBufferSize];
+
+                    using (var fileStream = await file.OpenStreamForReadAsync().ConfigureAwait(false))
                     {
-                        Token.ThrowIfCancellationRequested();
-                        ulong size = await FileUtils.GetFileSizeAsync(file).ConfigureAwait(false);
-                        var properties = await file.GetBasicPropertiesAsync();
-
-                        var tarEntry = TarEntry.CreateTarEntry(file.Name);
-                        tarEntry.ModTime = properties.DateModified.DateTime;
-                        tarEntry.Size = (long) size;
-                        tarEntry.TarHeader.DevMajor = 0;
-                        tarEntry.TarHeader.DevMinor = 0;
-                        tarEntry.TarHeader.Mode = 33216; // magic number for UNIX security access
-                        tarEntry.TarHeader.LinkName = string.Empty;
-                        tarEntry.TarHeader.TypeFlag = TarHeader.LF_NORMAL;
-
-                        tarStream.PutNextEntry(tarEntry);
-                        var buffer = new byte[DefaultBufferSize];
-
-                        using (var fileStream = await file.OpenStreamForReadAsync().ConfigureAwait(false))
+                        int readBytes;
+                        while ((readBytes = await fileStream.ReadAsync(buffer, 0, buffer.Length, Token)
+                            .ConfigureAwait(false)) > 0)
                         {
-                            int readBytes;
-                            while ((readBytes = await fileStream.ReadAsync(buffer, 0, buffer.Length, Token)
-                                .ConfigureAwait(false)) > 0)
-                            {
-                                await tarStream.WriteAsync(buffer, 0, readBytes, Token).ConfigureAwait(false);
-                                totalBytesWritten += readBytes;
-                                Update(totalBytesWritten);
-                            }
-
-                            await tarStream.FlushAsync().ConfigureAwait(false);
+                            await tarStream.WriteAsync(buffer, 0, readBytes, Token).ConfigureAwait(false);
+                            totalBytesWritten += readBytes;
+                            Update(totalBytesWritten);
                         }
 
-                        tarStream.CloseEntry();
+                        await tarStream.FlushAsync().ConfigureAwait(false);
                     }
-                }
-            }
-            finally
-            {
-                if (!options.LeaveStreamOpen)
-                {
-                    archiveStream.Dispose();
-                    progressStream.Dispose();
-                    compressorStream.Dispose();
-                }
-            }
 
-            return compressorStream;
+                    tarStream.CloseEntry();
+                }
+            }
         }
 
         /// <inheritdoc />
-        public override async Task<Stream> DecompressAsync(StorageFile archive, StorageFolder location,
-            IDecompressionOptions options = null)
+        public override async Task DecompressAsync(StorageFile archive,
+            StorageFolder location, IDecompressionOptions options = null)
         {
-            if (archive == null || location == null) return Stream.Null;
+            if (archive == null) throw new ArgumentNullException(nameof(archive));
+            if (location == null) throw new ArgumentNullException(nameof(location));
 
-            if (options == null)
-            {
-                options = new DecompressionOptions(false, GetDefaultEncoding());
-            }
-
-            var archiveStream = Stream.Null;
-            var compressorStream = Stream.Null;
             long totalBytesWritten = 0; // for accurate progress update
+            var writeInfo = new WriteEntryInfo { Location = location, IgnoreDirectories = false };
 
-            try
+            using (var archiveStream = await archive.OpenStreamForReadAsync().ConfigureAwait(false))
+            using (var compressorStream = GetCompressorInputStream(archiveStream))
+            using (var tarStream = new TarInputStream(compressorStream))
             {
-                archiveStream = await archive.OpenStreamForReadAsync().ConfigureAwait(false);
-                compressorStream = GetCompressorInputStream(archiveStream);
-
-                var writeInfo = new WriteEntryInfo {Location = location, IgnoreDirectories = false};
-
-                using (var tarStream = new TarInputStream(compressorStream))
+                TarEntry entry;
+                writeInfo.TarStream = tarStream;
+                while ((entry = tarStream.GetNextEntry()) != null)
                 {
-                    TarEntry entry;
-                    writeInfo.TarStream = tarStream;
-                    while ((entry = tarStream.GetNextEntry()) != null)
+                    Token.ThrowIfCancellationRequested();
+                    if (!entry.IsDirectory)
                     {
-                        Token.ThrowIfCancellationRequested();
-                        if (!entry.IsDirectory)
-                        {
-                            writeInfo.Entry = entry;
-                            writeInfo.TotalBytesWritten = totalBytesWritten;
-                            (_, totalBytesWritten) = await WriteEntry(writeInfo).ConfigureAwait(false);
-                        }
+                        writeInfo.Entry = entry;
+                        writeInfo.TotalBytesWritten = totalBytesWritten;
+                        (_, totalBytesWritten) = await WriteEntry(writeInfo).ConfigureAwait(false);
                     }
                 }
             }
-            finally
-            {
-                if (!options.LeaveStreamOpen)
-                {
-                    archiveStream.Dispose();
-                    compressorStream.Dispose();
-                }
-            }
-
-            return compressorStream;
         }
 
         /// <inheritdoc />
-        public override async Task<Stream> DecompressAsync(StorageFile archive, StorageFolder location,
+        public override async Task DecompressAsync(StorageFile archive, StorageFolder location,
             IReadOnlyList<IArchiveEntry> entries, bool collectFileNames, IDecompressionOptions options = null)
         {
-            return await DecompressEntries(archive, location, entries, collectFileNames, options).ConfigureAwait(false);
+            await DecompressEntries(archive, location, entries, collectFileNames).ConfigureAwait(false);
         }
 
         #region Private Members
 
-        private async Task<Stream> DecompressEntries(IStorageFile archive, StorageFolder location,
-            IReadOnlyCollection<IArchiveEntry> entries, bool collectFileNames, IDecompressionOptions options = null)
+        private async Task DecompressEntries(IStorageFile archive, StorageFolder location,
+            IReadOnlyCollection<IArchiveEntry> entries, bool collectFileNames)
         {
-            if (archive == null || entries.IsNullOrEmpty() || location == null) return Stream.Null;
+            if (archive == null) throw new ArgumentNullException(nameof(archive));
+            if (location == null) throw new ArgumentNullException(nameof(location));
+
+            if (entries.IsNullOrEmpty()) return; // nothing to do
 
             int processedEntries = 0; // to count number of found entries
             var entriesMap = ConvertToMap(entries); // for faster access
             long totalBytesWritten = 0; // for accurate progress update
-            var compressorStream = Stream.Null;
 
-            if (options == null)
+            var writeInfo = new WriteEntryInfo { Location = location, IgnoreDirectories = true };
+
+            using (var archiveStream = await archive.OpenStreamForReadAsync().ConfigureAwait(false))
+            using (var compressorStream = GetCompressorInputStream(archiveStream))
+            using (var tarStream = new TarInputStream(compressorStream))
             {
-                options = new DecompressionOptions(false, GetDefaultEncoding());
-            }
-
-            try
-            {
-                var archiveStream = await archive.OpenStreamForReadAsync().ConfigureAwait(false);
-                compressorStream = GetCompressorInputStream(archiveStream);
-
-                var writeInfo = new WriteEntryInfo {Location = location, IgnoreDirectories = true};
-
-                using (var tarStream = new TarInputStream(compressorStream))
+                TarEntry tarEntry;
+                writeInfo.TarStream = tarStream;
+                while ((tarEntry = tarStream.GetNextEntry()) != null)
                 {
-                    TarEntry tarEntry;
-                    writeInfo.TarStream = tarStream;
-                    while ((tarEntry = tarStream.GetNextEntry()) != null)
+                    Token.ThrowIfCancellationRequested();
+                    string key = Archives.NormalizeName(tarEntry.Name);
+                    if (entriesMap.ContainsKey(key))
                     {
-                        Token.ThrowIfCancellationRequested();
-                        string key = Archives.NormalizeName(tarEntry.Name);
-                        if (entriesMap.ContainsKey(key))
+                        writeInfo.Entry = tarEntry;
+                        writeInfo.TotalBytesWritten = totalBytesWritten;
+
+                        if (collectFileNames)
                         {
-                            writeInfo.Entry = tarEntry;
-                            writeInfo.TotalBytesWritten = totalBytesWritten;
-
-                            if (collectFileNames)
-                            {
-                                string fileName;
-                                (fileName, totalBytesWritten) = await WriteEntry(writeInfo).ConfigureAwait(false);
-                                var entry = entriesMap[key];
-                                entry.FileName = fileName; // save name
-                            }
-                            else
-                            {
-                                (_, totalBytesWritten) = await WriteEntry(writeInfo).ConfigureAwait(false);
-                            }
-
-                            ++processedEntries;
+                            string fileName;
+                            (fileName, totalBytesWritten) = await WriteEntry(writeInfo).ConfigureAwait(false);
+                            var entry = entriesMap[key];
+                            entry.FileName = fileName; // save name
+                        }
+                        else
+                        {
+                            (_, totalBytesWritten) = await WriteEntry(writeInfo).ConfigureAwait(false);
                         }
 
-                        if (processedEntries == entries.Count) break;
+                        ++processedEntries;
                     }
-                }
-            }
-            finally
-            {
-                if (!options.LeaveStreamOpen)
-                {
-                    compressorStream.Dispose();
-                }
-            }
 
-            return compressorStream;
+                    if (processedEntries == entries.Count) break;
+                }
+            }
         }
 
-        private async Task<(string, long)> WriteEntry(WriteEntryInfo info)
+        private async Task<(string fileName, long bytesWritten)> WriteEntry(WriteEntryInfo info)
         {
             StorageFile file;
             long totalBytesWritten = info.TotalBytesWritten;
