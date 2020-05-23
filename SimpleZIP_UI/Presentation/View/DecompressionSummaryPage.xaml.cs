@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2019 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
@@ -85,13 +86,23 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        private void AbortButton_OnTapped(object sender, TappedRoutedEventArgs args)
+        private void AbortButtonAction()
         {
             AbortButtonToolTip.IsOpen = true;
-            _controller.AbortButtonAction();
+            _controller.AbortAction();
         }
 
-        private async void StartButton_OnTapped(object sender, TappedRoutedEventArgs args)
+        private void AbortButton_OnTapped(object sender, TappedRoutedEventArgs args)
+        {
+            AbortButtonAction();
+        }
+
+        private void AbortButton_OnKeyDown(object sender, KeyRoutedEventArgs args)
+        {
+            if (args.Key == VirtualKey.Enter) AbortButtonAction();
+        }
+
+        private async Task StartButtonAction()
         {
             if (await _controller.CheckOutputFolder())
             {
@@ -115,6 +126,16 @@ namespace SimpleZIP_UI.Presentation.View
             {
                 PickOutputFolder();
             }
+        }
+
+        private async void StartButton_OnTapped(object sender, TappedRoutedEventArgs args)
+        {
+            await StartButtonAction();
+        }
+
+        private async void StartButton_OnKeyDown(object sender, KeyRoutedEventArgs args)
+        {
+            if (args.Key == VirtualKey.Enter) await StartButtonAction();
         }
 
         private void OutputPathButton_OnTapped(object sender, TappedRoutedEventArgs args)
@@ -150,7 +171,7 @@ namespace SimpleZIP_UI.Presentation.View
                     Encoding = Encoding.UTF8
                 }));
 
-            return await _controller.StartButtonAction(OnProgressUpdate, infos.ToArray());
+            return await _controller.StartAction(OnProgressUpdate, infos.ToArray());
         }
 
         /// <summary>

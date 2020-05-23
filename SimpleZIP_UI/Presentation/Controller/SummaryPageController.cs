@@ -141,13 +141,13 @@ namespace SimpleZIP_UI.Presentation.Controller
         #region Internal methods
 
         /// <summary>
-        /// Performs an action when the start button has been tapped.
+        /// Performs an action when e.g. the start button has been tapped.
         /// </summary>
         /// <param name="listener">Listener to be attached to the operation's 
         /// <see cref="ArchivingOperation{T}.ProgressUpdate"/> event.</param>
         /// <param name="operationInfos">The amount of operations to be performed.</param>
         /// <returns>True on success, false otherwise.</returns>
-        internal async Task<Result> StartButtonAction(EventHandler<ProgressUpdateEventArgs> listener, params T[] operationInfos)
+        internal async Task<Result> StartAction(EventHandler<ProgressUpdateEventArgs> listener, params T[] operationInfos)
         {
             using (Operation = GetArchivingOperation())
             {
@@ -181,9 +181,9 @@ namespace SimpleZIP_UI.Presentation.Controller
         }
 
         /// <summary>
-        /// Performs an action when the abort button has been pressed.
+        /// Performs an action when e.g. the abort button has been pressed.
         /// </summary>
-        internal void AbortButtonAction()
+        internal void AbortAction()
         {
             try
             {
