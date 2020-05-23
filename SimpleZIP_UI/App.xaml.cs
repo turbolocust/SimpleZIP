@@ -150,8 +150,7 @@ namespace SimpleZIP_UI
 
             try
             {
-                var handler = new ShareTargetHandler();
-                await handler.Handle(shareOperation);
+                await ShareTargetHandler.Handle(shareOperation);
             }
             catch
             {

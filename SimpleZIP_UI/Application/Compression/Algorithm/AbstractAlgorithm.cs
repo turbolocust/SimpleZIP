@@ -33,9 +33,9 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
     public abstract class AbstractAlgorithm : ICompressionAlgorithm, IProgressObserver<long>
     {
         /// <summary>
-        /// Delay rate to lessen <see cref="TotalBytesProcessed"/> events. As a result,
-        /// e.g. <c>bufferSize</c> times <c>x</c> (update rate) bytes are
-        /// not reported to any observers.
+        /// Delay rate to lessen <see cref="TotalBytesProcessed"/> events.
+        /// As a result, <c>bufferSize</c> times <c>x</c> (update rate) bytes
+        /// are not reported to any observers.
         /// </summary>
         private const uint DefaultUpdateDelayRate = 100;
 
@@ -53,12 +53,6 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// Counter used to respect <see cref="UpdateDelayRate"/>.
         /// </summary>
         internal uint DelayRateCounter { get; private set; }
-
-        /// <inheritdoc />
-        public event EventHandler<TotalBytesProcessedEventArgs> TotalBytesProcessed;
-
-        /// <inheritdoc cref="ICompressionAlgorithm.Token"/>
-        public CancellationToken Token { get; set; }
 
         /// <summary>
         /// Constructs a new instance of this class.
@@ -118,7 +112,13 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             }
         }
 
-        #region Abstract methods
+        #region ICompressionAlgorithm
+
+        /// <inheritdoc />
+        public event EventHandler<TotalBytesProcessedEventArgs> TotalBytesProcessed;
+
+        /// <inheritdoc cref="ICompressionAlgorithm.Token"/>
+        public CancellationToken Token { get; set; }
 
         /// <inheritdoc />
         public abstract Task CompressAsync(

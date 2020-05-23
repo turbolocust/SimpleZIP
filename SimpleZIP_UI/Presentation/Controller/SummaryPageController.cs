@@ -118,6 +118,7 @@ namespace SimpleZIP_UI.Presentation.Controller
                 const string format = @"hh\:mm\:ss";
                 durationText.Append(timeSpan.ToString(format,
                     CultureInfo.CurrentCulture)).Append(" ");
+
                 if (timeSpan.Minutes < 1)
                 {
                     durationText.Append(I18N.Resources.GetString("seconds/Text"));
@@ -210,6 +211,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         internal async Task<StorageFolder> OutputPathPanelAction()
         {
             if (_pickerTriggered) return null;
+
             StorageFolder folder;
             try
             {
@@ -226,17 +228,16 @@ namespace SimpleZIP_UI.Presentation.Controller
                 _pickerTriggered = false;
             }
 
-            if (folder != null) // system has now access to folder
-            {
+            if (folder != null)
                 OutputFolder = folder;
-            }
+
             return folder;
         }
 
         /// <summary>
-        /// Returns the name of a folder picked via folder picker.
+        /// Returns the name of a folder picked via a folder picker.
         /// </summary>
-        /// <returns>The name of the picked folder or <see cref="string.Empty"/> if no folder was picked.</returns>
+        /// <returns>The name of the picked folder or <see cref="string.Empty"/> if none was picked.</returns>
         internal async Task<string> PickOutputPath()
         {
             var folder = await OutputPathPanelAction();
@@ -366,11 +367,13 @@ namespace SimpleZIP_UI.Presentation.Controller
                 throw new NullReferenceException(
                     I18N.Resources.GetString("NoValidFolderSelected/Text"));
             }
+
             // set output folder to each operation info
             foreach (var operationInfo in operationInfos)
             {
                 operationInfo.OutputFolder = OutputFolder;
             }
+
             // keep display alive while operation is in progress
             DisplayRequest.RequestActive();
         }

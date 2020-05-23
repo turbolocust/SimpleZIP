@@ -247,6 +247,7 @@ namespace SimpleZIP_UI.Presentation.View
         private void CopyAllButton_OnTapped(object sender, TappedRoutedEventArgs args)
         {
             var stringBuilder = new StringBuilder();
+
             foreach (var model in MessageDigestModels)
             {
                 stringBuilder.AppendLine(model.FileName);
@@ -254,10 +255,11 @@ namespace SimpleZIP_UI.Presentation.View
                 stringBuilder.AppendLine(model.HashValue);
                 stringBuilder.AppendLine();
             }
+
             CopyToClipboard(stringBuilder.ToString());
-            // show toast (without audio) and hide it after 4 seconds
-            _controller.ShowToastNotification("SimpleZIP",
-                I18N.Resources.GetString("CopiedToClipboard/Text"), 4, true);
+
+            string message = I18N.Resources.GetString("CopiedToClipboard/Text");
+            _controller.ShowToastNotification("SimpleZIP", message, seconds: 4);
         }
 
         private void LowercaseHashToggleSwitch_OnToggled(object sender, RoutedEventArgs args)

@@ -174,11 +174,10 @@ namespace SimpleZIP_UI_TEST
             var tempFile = await _workingDir.CreateFileAsync(
                 name, CreationCollisionOption.GenerateUniqueName);
 
-            using (var streamWriter = new StreamWriter(
-                await tempFile.OpenStreamForWriteAsync()))
+            using (var streamWriter = new StreamWriter(await tempFile.OpenStreamForWriteAsync()))
             {
-                streamWriter.Write(FileText);
-                streamWriter.Flush();
+                await streamWriter.WriteAsync(FileText);
+                await streamWriter.FlushAsync();
             }
 
             return tempFile;

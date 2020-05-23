@@ -24,7 +24,7 @@ namespace SimpleZIP_UI.Application.Progress
     /// <summary>
     /// Stores values for progress calculation.
     /// </summary>
-    public struct Progress : IEquatable<Progress>
+    public readonly struct Progress : IEquatable<Progress>
     {
         private readonly long _totalBytesToProcess;
         private readonly long _totalBytesProcessed;

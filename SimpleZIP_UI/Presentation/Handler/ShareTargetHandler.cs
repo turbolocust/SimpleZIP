@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -32,14 +32,14 @@ using Windows.UI.Xaml.Controls;
 
 namespace SimpleZIP_UI.Presentation.Handler
 {
-    internal sealed class ShareTargetHandler
+    internal static class ShareTargetHandler
     {
         /// <summary>
         /// Handles the specified <see cref="ShareOperation"/>.
         /// </summary>
         /// <param name="shareOp">The share operation to be handled.</param>
         /// <returns>An awaitable task.</returns>
-        internal async Task Handle(ShareOperation shareOp)
+        internal static async Task Handle(ShareOperation shareOp)
         {
             shareOp.ReportStarted();
 
