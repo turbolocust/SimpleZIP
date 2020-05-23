@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -30,6 +30,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
     /// </summary>
     public class GZip : CompressorAlgorithm
     {
+        /// <inheritdoc />
+        public GZip(uint initialDelayRateCounter = 0) : base(initialDelayRateCounter)
+        {
+        }
+
         /// <inheritdoc />
         protected override Stream GetCompressorStream(Stream stream, CompressorOptions options)
         {

@@ -69,7 +69,7 @@ namespace SimpleZIP_UI_TEST
         {
             try
             {
-                var options = new CompressionOptions(false, Encoding.UTF8);
+                var options = new CompressionOptions(Encoding.UTF8);
                 var algorithm = Archives.DetermineAlgorithm(archiveType);
                 Assert.IsTrue(await PerformArchiveOperations(algorithm, fileNameExtension, options));
             }
@@ -197,8 +197,7 @@ namespace SimpleZIP_UI_TEST
                 var archive = await _workingDir.CreateFileAsync(
                     archiveName, CreationCollisionOption.GenerateUniqueName);
 
-                Assert.AreNotEqual(Stream.Null, await compressionAlgorithm
-                    .CompressAsync(_files, archive, _workingDir, options));
+                await compressionAlgorithm.CompressAsync(_files, archive, _workingDir, options);
 
                 // extract archive after creation
                 return await ExtractArchive(compressionAlgorithm, archive.Name);
@@ -214,13 +213,12 @@ namespace SimpleZIP_UI_TEST
                 "simpleZipUiTempOutput", CreationCollisionOption.OpenIfExists);
 
             // extract archive
-            Assert.AreNotEqual(Stream.Null, await compressionAlgorithm
-                .DecompressAsync(archive, outputFolder));
+            await compressionAlgorithm.DecompressAsync(archive, outputFolder);
 
             var file = _files[0];
             using (var streamReader = new StreamReader(await file.OpenStreamForReadAsync()))
             {
-                var line = streamReader.ReadLine();
+                string line = await streamReader.ReadLineAsync();
                 if (line != null && !line.Equals(FileText))
                 {
                     Assert.Fail("Files do not match.");

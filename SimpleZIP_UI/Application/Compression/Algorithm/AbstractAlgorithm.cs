@@ -32,20 +32,6 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
     /// <inheritdoc cref="ICompressionAlgorithm" />
     public abstract class AbstractAlgorithm : ICompressionAlgorithm, IProgressObserver<long>
     {
-        /// <inheritdoc />
-        /// <summary>
-        /// Event handler for total bytes processed.
-        /// </summary>
-        public event EventHandler<TotalBytesProcessedEventArgs> TotalBytesProcessed;
-
-        /// <inheritdoc cref="ICompressionAlgorithm.Token"/>
-        public CancellationToken Token { get; set; }
-
-        /// <summary>
-        /// Default buffer size for streams.
-        /// </summary>
-        protected const int DefaultBufferSize = 8192;
-
         /// <summary>
         /// Delay rate to lessen <see cref="TotalBytesProcessed"/> events. As a result,
         /// e.g. <c>bufferSize</c> times <c>x</c> (update rate) bytes are
@@ -54,38 +40,36 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         private const uint DefaultUpdateDelayRate = 100;
 
         /// <summary>
+        /// Default buffer size for streams.
+        /// </summary>
+        protected const int DefaultBufferSize = 8192;
+
+        /// <summary>
         /// See <see cref="DefaultUpdateDelayRate"/> for more details.
         /// </summary>
-        private readonly uint _updateDelayRate;
+        internal readonly uint UpdateDelayRate;
 
         /// <summary>
-        /// Counter used to respect <see cref="_updateDelayRate"/>.
+        /// Counter used to respect <see cref="UpdateDelayRate"/>.
         /// </summary>
-        private uint _delayRateCounter;
+        internal uint DelayRateCounter { get; private set; }
 
-        protected AbstractAlgorithm(uint updateDelayRate = DefaultUpdateDelayRate)
-        {
-            _updateDelayRate = updateDelayRate;
-        }
+        /// <inheritdoc />
+        public event EventHandler<TotalBytesProcessedEventArgs> TotalBytesProcessed;
+
+        /// <inheritdoc cref="ICompressionAlgorithm.Token"/>
+        public CancellationToken Token { get; set; }
 
         /// <summary>
-        /// Converts the specified list of <see cref="IArchiveEntry"/> to a dictionary.
+        /// Constructs a new instance of this class.
         /// </summary>
-        /// <param name="entries">List of <see cref="IArchiveEntry"/> to be converted.</param>
-        /// <returns>A dictionary consisting of <see cref="IArchiveEntry"/> instances.</returns>
-        protected static IDictionary<string, IArchiveEntry> ConvertToMap(IReadOnlyCollection<IArchiveEntry> entries)
+        /// <param name="updateDelayRate">The default update delay rate.</param>
+        /// <param name="initialDelayRateCounter">The initial delay rate counter.
+        /// Is set to zero if greater than <paramref name="updateDelayRate"/>.</param>
+        protected AbstractAlgorithm(uint updateDelayRate = DefaultUpdateDelayRate, uint initialDelayRateCounter = 0)
         {
-            if (entries == null) throw new ArgumentNullException(nameof(entries));
-
-            int mapSize = entries.Count * 2;
-            var map = new Dictionary<string, IArchiveEntry>(mapSize);
-
-            foreach (var entry in entries)
-            {
-                map.Add(entry.Key, entry);
-            }
-
-            return map;
+            UpdateDelayRate = updateDelayRate;
+            DelayRateCounter = initialDelayRateCounter <= updateDelayRate ? initialDelayRateCounter : 0;
         }
 
         /// <summary>
@@ -100,6 +84,22 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         }
 
         /// <summary>
+        /// Converts the specified list of <see cref="IArchiveEntry"/> to a dictionary.
+        /// </summary>
+        /// <param name="entries">List of <see cref="IArchiveEntry"/> to be converted.</param>
+        /// <returns>A dictionary consisting of <see cref="IArchiveEntry"/> instances.</returns>
+        protected static IDictionary<string, IArchiveEntry> ConvertToMap(IReadOnlyCollection<IArchiveEntry> entries)
+        {
+            if (entries == null) throw new ArgumentNullException(nameof(entries));
+
+            int mapSize = entries.Count * 2;
+            var map = new Dictionary<string, IArchiveEntry>(mapSize);
+            foreach (var entry in entries) map.Add(entry.Key, entry);
+
+            return map;
+        }
+
+        /// <summary>
         /// Returns an instance of <see cref="Encoding"/> for UTF-8.
         /// </summary>
         /// <returns>An instance of <see cref="Encoding"/>.</returns>
@@ -111,10 +111,10 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <inheritdoc cref="IProgressObserver{T}.Update"/>
         public void Update(long value)
         {
-            if (_delayRateCounter++ == _updateDelayRate)
+            if (DelayRateCounter++ == UpdateDelayRate)
             {
                 FireTotalBytesProcessed(value);
-                _delayRateCounter = 0;
+                DelayRateCounter = 0;
             }
         }
 

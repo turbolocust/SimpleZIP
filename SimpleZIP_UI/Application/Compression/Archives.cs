@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2019 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -134,55 +134,6 @@ namespace SimpleZIP_UI.Application.Compression
         }
 
         /// <summary>
-        /// Returns the algorithm instance that is mapped to the specified archive type.
-        /// </summary>
-        /// <param name="value">The enum value of the archive type to be determined.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown when archive type matched no algorithm.</exception>
-        /// <returns>An instance of the compressor algorithm that is mapped to the specified value.</returns>
-        public static ICompressionAlgorithm DetermineAlgorithm(ArchiveType value)
-        {
-            ICompressionAlgorithm algorithm;
-
-            switch (value)
-            {
-                case ArchiveType.Zip: // use SharpZipLib
-                    algorithm = new Algorithm.Type.SZL.Zip();
-                    break;
-                case ArchiveType.GZip:
-                    algorithm = new Algorithm.Type.GZip();
-                    break;
-                case ArchiveType.BZip2:
-                    algorithm = new Algorithm.Type.BZip2();
-                    break;
-                case ArchiveType.LZip:
-                    algorithm = new Algorithm.Type.LZip();
-                    break;
-                case ArchiveType.Tar:
-                    algorithm = new Algorithm.Type.Tar();
-                    break;
-                case ArchiveType.TarGz:
-                    algorithm = new Algorithm.Type.TarGzip();
-                    break;
-                case ArchiveType.TarBz2:
-                    algorithm = new Algorithm.Type.TarBzip2();
-                    break;
-                case ArchiveType.TarLz:
-                    algorithm = new Algorithm.Type.TarLzip();
-                    break;
-                case ArchiveType.Rar:
-                    algorithm = new Algorithm.Type.Rar();
-                    break;
-                // ReSharper disable once RedundantCaseLabel
-                case ArchiveType.Unknown:
-                // fall-through
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(value), value, null);
-            }
-
-            return algorithm;
-        }
-
-        /// <summary>
         /// Determines the <see cref="ArchiveType"/> of the specified file.
         /// </summary>
         /// <param name="file">The archive to be checked.</param>
@@ -265,6 +216,57 @@ namespace SimpleZIP_UI.Application.Compression
             }
 
             return isArchive ? archiveType : ArchiveType.Unknown;
+        }
+
+        /// <summary>
+        /// Returns the algorithm instance that is mapped to the specified archive type.
+        /// </summary>
+        /// <param name="value">The enum value of the archive type to be determined.</param>
+        /// <param name="previousDelayRateCounter">The previous value of the delay rate counter to be used.
+        /// This is currently only considered for <see cref="CompressorAlgorithm"/> implementations.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when archive type matched no algorithm.</exception>
+        /// <returns>An instance of the compressor algorithm that is mapped to the specified value.</returns>
+        internal static ICompressionAlgorithm DetermineAlgorithm(ArchiveType value, uint previousDelayRateCounter = 0)
+        {
+            ICompressionAlgorithm algorithm;
+
+            switch (value)
+            {
+                case ArchiveType.Zip:
+                    algorithm = new Algorithm.Type.SZL.Zip(); // use SharpZipLib
+                    break;
+                case ArchiveType.GZip:
+                    algorithm = new Algorithm.Type.GZip(previousDelayRateCounter);
+                    break;
+                case ArchiveType.BZip2:
+                    algorithm = new Algorithm.Type.BZip2(previousDelayRateCounter);
+                    break;
+                case ArchiveType.LZip:
+                    algorithm = new Algorithm.Type.LZip(previousDelayRateCounter);
+                    break;
+                case ArchiveType.Tar:
+                    algorithm = new Algorithm.Type.Tar();
+                    break;
+                case ArchiveType.TarGz:
+                    algorithm = new Algorithm.Type.TarGzip();
+                    break;
+                case ArchiveType.TarBz2:
+                    algorithm = new Algorithm.Type.TarBzip2();
+                    break;
+                case ArchiveType.TarLz:
+                    algorithm = new Algorithm.Type.TarLzip();
+                    break;
+                case ArchiveType.Rar:
+                    algorithm = new Algorithm.Type.Rar();
+                    break;
+                // ReSharper disable once RedundantCaseLabel
+                case ArchiveType.Unknown:
+                // fall-through
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(value), value, null);
+            }
+
+            return algorithm;
         }
 
         /// <summary>

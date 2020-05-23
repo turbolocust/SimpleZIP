@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -31,21 +31,6 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         IDisposable, ICancellable where T : OperationInfo
     {
         /// <summary>
-        /// Event handler for progress updates.
-        /// </summary>
-        public event EventHandler<ProgressUpdateEventArgs> ProgressUpdate;
-
-        /// <summary>
-        /// Source for cancellation token.
-        /// </summary>
-        protected readonly CancellationTokenSource TokenSource;
-
-        /// <summary>
-        /// Associated algorithm instance.
-        /// </summary>
-        protected ICompressionAlgorithm Algorithm;
-
-        /// <summary>
         /// Total amount of bytes to be processed.
         /// </summary>
         private long _totalBytesToProcess;
@@ -57,9 +42,31 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         private long _previousBytesProcessed;
 
         /// <summary>
+        /// The value of the previous delay rate counter, so that updates
+        /// will not be missed if progress is not to be reset and <see cref="Perform"/>
+        /// is called multiple times (e.g. when creating multiple archives).
+        /// </summary>
+        private uint _previousDelayRateCounter;
+
+        /// <summary>
         /// True if an operation is running, false otherwise.
         /// </summary>
         private volatile bool _isRunning;
+
+        /// <summary>
+        /// Source for cancellation token.
+        /// </summary>
+        protected readonly CancellationTokenSource TokenSource;
+
+        /// <summary>
+        /// Associated algorithm instance.
+        /// </summary>
+        protected ICompressionAlgorithm Algorithm { get; private set; }
+
+        /// <summary>
+        /// Event handler for progress updates.
+        /// </summary>
+        public event EventHandler<ProgressUpdateEventArgs> ProgressUpdate;
 
         /// <summary>
         /// Checks whether this operation is currently running or not.
@@ -76,9 +83,37 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         /// </summary>
         public long TotalBytesProcessed { get; private set; }
 
+        /// <summary>
+        /// Constructs a new instance of this class and initializes <see cref="TokenSource"/>.
+        /// </summary>
         protected ArchivingOperation()
         {
             TokenSource = new CancellationTokenSource();
+        }
+
+        /// <summary>
+        /// Updates the operation state based on whether to reset the memory of processed bytes or not.
+        /// </summary>
+        /// <remarks>
+        /// This is required so that this instance may be re-used multiple times, while still considering
+        /// the total amount of bytes to be processed, e.g. if multiple archives are to be processed as
+        /// part of a bigger operation (the job).
+        /// </remarks>
+        /// <param name="resetBytesProcessed">True if to forget about processed bytes.</param>
+        private void UpdateOperationState(bool resetBytesProcessed)
+        {
+            _previousBytesProcessed = 0L; // difference is only needed during current run
+
+            if (resetBytesProcessed)
+            {
+                TotalBytesProcessed = 0L;
+                _previousDelayRateCounter = 0;
+            }
+            else
+            {
+                // we know about the intrinsics and are responsible for them, so let's use that knowledge
+                _previousDelayRateCounter = ((AbstractAlgorithm)Algorithm).DelayRateCounter;
+            }
         }
 
         /// <inheritdoc />
@@ -97,8 +132,9 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         public async Task<Result> Perform(T operationInfo, bool resetBytesProcessed = true)
         {
             IsRunning = true;
-            Algorithm = await GetAlgorithmAsync(operationInfo).ConfigureAwait(false);
+            Algorithm = await GetAlgorithmAsync(operationInfo, _previousDelayRateCounter);
             _totalBytesToProcess = (long)operationInfo.TotalFileSize;
+
             try
             {
                 Algorithm.TotalBytesProcessed += OnTotalBytesProcessed;
@@ -108,8 +144,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
             {
                 IsRunning = false;
                 Algorithm.TotalBytesProcessed -= OnTotalBytesProcessed;
-                if (resetBytesProcessed) TotalBytesProcessed = 0L;
-                _previousBytesProcessed = 0L;
+                UpdateOperationState(resetBytesProcessed);
             }
         }
 
@@ -117,8 +152,9 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         /// Sets the algorithm to be used based on the information in <see cref="OperationInfo"/>.
         /// </summary>
         /// <param name="info">Info about the operation.</param>
+        /// <param name="previousDelayRateCounter">The previous value of the delay rate counter.</param>
         /// <returns>A task which returns <see cref="ICompressionAlgorithm"/>.</returns>
-        protected abstract Task<ICompressionAlgorithm> GetAlgorithmAsync(T info);
+        protected abstract Task<ICompressionAlgorithm> GetAlgorithmAsync(T info, uint previousDelayRateCounter);
 
         /// <summary>
         /// Actually starts this operation.

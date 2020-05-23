@@ -78,6 +78,54 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             }
         }
 
+        /// <summary>
+        /// This method only exists to provide a workaround for renaming a file to its
+        /// filename as it should be defined in the GZip header.
+        /// </summary>
+        /// <remarks>
+        /// The SharpCompress library sets the filename after the first call of
+        /// <see cref="Stream.Read"/> and not when the stream instance is constructed.
+        /// </remarks>
+        /// <param name="file">The file to be renamed.</param>
+        /// <param name="stream">The possible <see cref="GZipStream"/> which holds the filename.</param>
+        /// <returns>A task that can be awaited.</returns>
+        private static async Task GZipOutputFileNameWorkaround(IStorageItem file, Stream stream)
+        {
+            if (stream is GZipStream gzipStream && !string.IsNullOrEmpty(gzipStream.FileName))
+            {
+                await file.RenameAsync(gzipStream.FileName, NameCollisionOption.GenerateUniqueName);
+            }
+        }
+
+        /// <summary>
+        /// Gets the concrete compressor stream from the derived class.
+        /// </summary>
+        /// <param name="stream">The stream to be decorated.</param>
+        /// <param name="options">Options to be applied.</param>
+        /// <returns>Compressor stream which can be used for compression.</returns>
+        protected abstract Stream GetCompressorStream(Stream stream, CompressorOptions options);
+
+        /// <summary>
+        /// Options for compressor streams.
+        /// </summary>
+        protected class CompressorOptions
+        {
+            /// <summary>
+            /// File name to be set for compression stream.
+            /// </summary>
+            internal string FileName;
+
+            /// <summary>
+            /// True indicates a stream for compression, false for decompression.
+            /// </summary>
+            internal bool IsCompression;
+        }
+
+        /// <inheritdoc />
+        protected CompressorAlgorithm(uint initialDelayRateCounter = 0) : base(initialDelayRateCounter)
+        {
+        }
+
         /// <inheritdoc />
         public override async Task DecompressAsync(StorageFile archive,
             StorageFolder location, IDecompressionOptions options = null)
@@ -121,49 +169,6 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
 
                 await compressorStream.FlushAsync().ConfigureAwait(false);
             }
-        }
-
-        /// <summary>
-        /// This method only exists to provide a workaround for renaming a file to its
-        /// filename as it should be defined in the GZip header.
-        /// </summary>
-        /// <remarks>
-        /// The SharpCompress library sets the filename after the first call of
-        /// <see cref="Stream.Read"/> and not when the stream instance is constructed.
-        /// </remarks>
-        /// <param name="file">The file to be renamed.</param>
-        /// <param name="stream">The possible <see cref="GZipStream"/> which holds the filename.</param>
-        /// <returns>A task that can be awaited.</returns>
-        private static async Task GZipOutputFileNameWorkaround(IStorageItem file, Stream stream)
-        {
-            if (stream is GZipStream gzipStream && !string.IsNullOrEmpty(gzipStream.FileName))
-            {
-                await file.RenameAsync(gzipStream.FileName, NameCollisionOption.GenerateUniqueName);
-            }
-        }
-
-        /// <summary>
-        /// Gets the concrete compressor stream from the derived class.
-        /// </summary>
-        /// <param name="stream">The stream to be decorated.</param>
-        /// <param name="options">Options to be applied.</param>
-        /// <returns>Compressor stream which can be used for compression.</returns>
-        protected abstract Stream GetCompressorStream(Stream stream, CompressorOptions options);
-
-        /// <summary>
-        /// Options for compressor streams.
-        /// </summary>
-        protected class CompressorOptions
-        {
-            /// <summary>
-            /// File name to be set for compression stream.
-            /// </summary>
-            internal string FileName;
-
-            /// <summary>
-            /// True indicates a stream for compression, false for decompression.
-            /// </summary>
-            internal bool IsCompression;
         }
     }
 }

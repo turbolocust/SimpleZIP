@@ -47,14 +47,22 @@ namespace SimpleZIP_UI.Application.Compression.Operation.Job
             foreach (var operationInfo in OperationInfos)
             {
                 if (cancelReq.IsCancelRequest) break;
+                var key = operationInfo.ArchiveType;
 
                 try
                 {
-                    var key = operationInfo.ArchiveType;
-                    var subResult = key.Equals(Archives.ArchiveType.GZip)
-                                 || key.Equals(Archives.ArchiveType.BZip2)
-                        ? await CompressSeparately(operationInfo, cancelReq).ConfigureAwait(false)
-                        : await Operation.Perform(operationInfo).ConfigureAwait(false);
+                    Result subResult;
+                    if (key.Equals(Archives.ArchiveType.GZip)
+                        || key.Equals(Archives.ArchiveType.BZip2)
+                        || key.Equals(Archives.ArchiveType.LZip))
+                    {
+                        subResult = await CompressSeparately(operationInfo, cancelReq).ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        subResult = await Operation.Perform(operationInfo).ConfigureAwait(false);
+                    }
+
                     archiveNames.AddRange(subResult.ArchiveNames);
 
                     if (subResult.StatusCode != Result.Status.Success)

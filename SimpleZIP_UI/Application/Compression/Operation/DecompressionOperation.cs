@@ -90,14 +90,14 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         }
 
         /// <inheritdoc cref="ArchivingOperation{T}.GetAlgorithmAsync"/>
-        protected override async Task<ICompressionAlgorithm> GetAlgorithmAsync(DecompressionInfo info)
+        protected override async Task<ICompressionAlgorithm> GetAlgorithmAsync(DecompressionInfo info, uint previousDelayRateCounter)
         {
             string fileType = FileUtils.GetFileNameExtension(info.Item.Archive.Name);
             var value = Archives.DetermineArchiveTypeByFileExtension(fileType);
 
             if (value != Archives.ArchiveType.Unknown)
             {
-                return Archives.DetermineAlgorithm(value);
+                return Archives.DetermineAlgorithm(value, previousDelayRateCounter);
             }
 
             try
@@ -107,7 +107,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
 
                 if (result != Archives.ArchiveType.Unknown)
                 {
-                    return Archives.DetermineAlgorithm(result);
+                    return Archives.DetermineAlgorithm(result, previousDelayRateCounter);
                 }
 
                 throw new InvalidArchiveTypeException(Resources.GetString("UnknownArchiveType/Text"));

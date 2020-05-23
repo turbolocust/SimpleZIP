@@ -80,9 +80,9 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         }
 
         /// <inheritdoc cref="ArchivingOperation{T}.GetAlgorithmAsync"/>
-        protected override Task<ICompressionAlgorithm> GetAlgorithmAsync(CompressionInfo info)
+        protected override Task<ICompressionAlgorithm> GetAlgorithmAsync(CompressionInfo info, uint previousDelayRateCounter)
         {
-            return Task.FromResult(Archives.DetermineAlgorithm(info.ArchiveType));
+            return Task.FromResult(Archives.DetermineAlgorithm(info.ArchiveType, previousDelayRateCounter));
         }
 
         /// <inheritdoc cref="ArchivingOperation{T}.StartOperation"/>
