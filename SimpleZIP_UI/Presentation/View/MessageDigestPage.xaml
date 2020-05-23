@@ -64,8 +64,9 @@
                      IsEnabled="{x:Bind HashAlgorithmComboBox.IsEnabled, Mode=OneWay, Converter={StaticResource FlipBooleanConverter}}" 
                      Visibility="{x:Bind HashAlgorithmComboBox.IsEnabled, Mode=OneWay, Converter={StaticResource InverseBoolToVisibilityConverter}}" />
         <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-            <ListBox ItemsSource="{Binding MessageDigestModels}" Margin="0,16,0,0" SelectionMode="Single" x:Name="MessageDigestModelsListBox"
-                     CanDrag="False" HorizontalContentAlignment="Stretch" Background="Transparent" Height="Auto">
+            <ListBox x:Name="MessageDigestModelsListBox" ItemsSource="{Binding MessageDigestModels}" Margin="0,16,0,0" 
+                     SelectionMode="Single" CanDrag="False" HorizontalContentAlignment="Stretch" Background="Transparent" Height="Auto"
+                     AllowDrop="True" DragOver="MessageDigestModelsListBox_OnDragOver" Drop="MessageDigestModelsListBox_OnDrop">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid Background="Transparent" RightTapped="MessageDigestModelsGrid_OnRightTapped">

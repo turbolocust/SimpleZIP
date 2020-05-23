@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2019 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -319,6 +319,25 @@ namespace SimpleZIP_UI.Presentation.View
                 var model = (MessageDigestModel)flyoutItem.DataContext;
                 var dialog = new CompareHashDialog(model.HashValue);
                 await dialog.ShowAsync();
+            }
+        }
+
+        private void MessageDigestModelsListBox_OnDragOver(object sender, DragEventArgs args)
+        {
+            args.AcceptedOperation = DataPackageOperation.Copy;
+        }
+
+        private async void MessageDigestModelsListBox_OnDrop(object sender, DragEventArgs args)
+        {
+            if (args.DataView.Contains(StandardDataFormats.StorageItems))
+            {
+                var items = await args.DataView.GetStorageItemsAsync();
+                if (items.Count > 0)
+                {
+                    var files = items.Select(item => item as StorageFile).Where(file => file != null);
+                    _selectedFiles = files.ToList();
+                    await PopulateListBox();
+                }
             }
         }
 
