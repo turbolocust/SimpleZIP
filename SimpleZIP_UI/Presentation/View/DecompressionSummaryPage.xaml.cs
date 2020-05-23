@@ -97,7 +97,7 @@ namespace SimpleZIP_UI.Presentation.View
             AbortButtonAction();
         }
 
-        private void AbortButton_OnKeyDown(object sender, KeyRoutedEventArgs args)
+        private void AbortButton_OnPreviewKeyDown(object sender, KeyRoutedEventArgs args)
         {
             if (args.Key == VirtualKey.Enter) AbortButtonAction();
         }
@@ -133,7 +133,7 @@ namespace SimpleZIP_UI.Presentation.View
             await StartButtonAction();
         }
 
-        private async void StartButton_OnKeyDown(object sender, KeyRoutedEventArgs args)
+        private async void StartButton_OnPreviewKeyDown(object sender, KeyRoutedEventArgs args)
         {
             if (args.Key == VirtualKey.Enter) await StartButtonAction();
         }

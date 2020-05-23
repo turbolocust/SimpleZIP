@@ -58,12 +58,12 @@
         </ScrollViewer>
         <ProgressBar x:Name="ProgressBar" Grid.Row="4" HorizontalAlignment="Stretch" IsIndeterminate="False" IsEnabled="False" Visibility="Collapsed" />
         <StackPanel Grid.Row="5" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,8,16,0">
-            <Button x:Name="StartButton" Tapped="StartButton_OnTapped" IsEnabled="True" Width="120" MinHeight="44" Height="50" MaxHeight="60" Margin="0,0,16,0" KeyDown="StartButton_OnKeyDown"
+            <Button x:Name="StartButton" Tapped="StartButton_OnTapped" IsEnabled="True" Width="120" MinHeight="44" Height="50" MaxHeight="60" Margin="0,0,16,0" PreviewKeyDown="StartButton_OnPreviewKeyDown"
                     Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                 <TextBlock x:Uid="Start" Text="" TextWrapping="Wrap" />
             </Button>
             <Button Tapped="AbortButton_Tap" Width="120" MinHeight="44" Height="50" MaxHeight="60" Foreground="{ThemeResource ButtonForegroundThemeBrush}"
-                    Background="IndianRed" BorderBrush="{ThemeResource ButtonBorderThemeBrush}" KeyDown="AbortButton_OnKeyDown">
+                    Background="IndianRed" BorderBrush="{ThemeResource ButtonBorderThemeBrush}" PreviewKeyDown="AbortButton_OnPreviewKeyDown">
                 <TextBlock x:Uid="Abort" Text="" TextWrapping="Wrap" />
                 <ToolTipService.ToolTip>
                     <ToolTip x:Name="AbortButtonToolTip" FontSize="13" HorizontalOffset="20" VerticalOffset="20">
