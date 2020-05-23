@@ -45,7 +45,7 @@ namespace SimpleZIP_UI.I18N
         /// <returns>String value of a resource.</returns>
         internal static string GetString(string name, params object[] objects)
         {
-            var value = Loader.GetString(name);
+            string value = Loader.GetString(name);
             return string.Format(CultureInfo.CurrentCulture, value, objects);
         }
     }

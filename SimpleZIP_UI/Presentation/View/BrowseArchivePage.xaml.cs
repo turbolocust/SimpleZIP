@@ -317,12 +317,12 @@ namespace SimpleZIP_UI.Presentation.View
 
             if (archive == null)
             {
-                throw new NullReferenceException(nameof(archive));
+                throw new NullReferenceException(I18N.Resources
+                    .GetString("NullReferenceMessage/Text", nameof(archive)));
             }
 
             await LoadArchive(archive); // load initial archive
-            ExtractWholeArchiveButton.IsEnabled
-                = !BrowseArchiveController.IsEmptyArchive(_curRootNode);
+            ExtractWholeArchiveButton.IsEnabled = !BrowseArchiveController.IsEmptyArchive(_curRootNode);
         }
 
         /// <inheritdoc />
@@ -396,9 +396,9 @@ namespace SimpleZIP_UI.Presentation.View
             var file = await _controller.ExtractSubEntry(
                 _curRootNode, curNode.Node, model);
 
-            if (file == null) // something went wrong
+            if (file == null)
             {
-                throw new FileNotFoundException(@"File not found. Extraction of sub-entry failed.");
+                throw new FileNotFoundException(I18N.Resources.GetString("SubEntryExtractionFailed/Text"));
             }
 
             var options = new LauncherOptions { DisplayApplicationPicker = true };
@@ -413,9 +413,9 @@ namespace SimpleZIP_UI.Presentation.View
             var curNode = GetNodesForCurrentRoot().Peek();
             var file = await _controller.ExtractSubEntry(_curRootNode, curNode.Node, model);
 
-            if (file == null) // something went wrong
+            if (file == null)
             {
-                throw new FileNotFoundException(@"File not found. Extraction of sub-archive failed.");
+                throw new FileNotFoundException(I18N.Resources.GetString("SubArchiveExtractionFailed/Text"));
             }
 
             await LoadArchive(file); // pushes first node onto nodeStack and disables progress bar

@@ -533,4 +533,24 @@
     <value>Grund</value>
     <comment>Cause of an event or situation.</comment>
   </data>
+  <data name="SubEntryExtractionFailed.Text" xml:space="preserve">
+    <value>Entpacken von Untereintrag fehlgeschlagen (Datei nicht gefunden).</value>
+    <comment>Occurs when a sub-entry within an archive could not be extracted.</comment>
+  </data>
+  <data name="SubArchiveExtractionFailed.Text" xml:space="preserve">
+    <value>Entpacken von Unterarchiv fehlgeschlagen (Datei nicht gefunden).</value>
+    <comment>Occurs when a sub-archive within an archive could not be extracted.</comment>
+  </data>
+  <data name="WritingNotSupported.Text" xml:space="preserve">
+    <value>Schreiben nicht unterstützt für {0}.</value>
+    <comment>Informs that writing is not supported for a specific archive type.</comment>
+  </data>
+  <data name="NullReferenceMessage.Text" xml:space="preserve">
+    <value>Variable {0} ist null (initial).</value>
+    <comment>Informs that a specific variable is null, i.e. not set.</comment>
+  </data>
+  <data name="UnknownArchiveType.Text" xml:space="preserve">
+    <value>Archivtyp ist unbekannt oder wird nicht unterstützt.</value>
+    <comment>Informs that an archive type is unknown or not supported.</comment>
+  </data>
 </root>

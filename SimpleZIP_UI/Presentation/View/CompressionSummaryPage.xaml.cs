@@ -148,7 +148,8 @@ namespace SimpleZIP_UI.Presentation.View
                 {
                     // set the algorithm by archive file type
                     FileTypesComboBoxItems.TryGetValue(selectedItem, out var archiveType);
-                    if (archiveType == null) throw new NullReferenceException(nameof(archiveType));
+                    if (archiveType == null) throw new NullReferenceException(I18N.Resources
+                        .GetString("NullReferenceMessage/Text", nameof(archiveType)));
 
                     Archives.ArchiveFileTypes.TryGetValue(archiveType, out var value);
 

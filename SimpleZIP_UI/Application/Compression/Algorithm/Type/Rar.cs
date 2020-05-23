@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -37,7 +37,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
         /// <inheritdoc />
         protected override WriterOptions GetWriterOptions()
         {
-            throw new NotSupportedException($"Writing not supported for {nameof(Rar)}.");
+            throw new NotSupportedException(I18N.Resources
+                .GetString("WritingNotSupported/Text", nameof(Rar)));
         }
     }
 }

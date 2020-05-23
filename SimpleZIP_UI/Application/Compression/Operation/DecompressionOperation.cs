@@ -109,12 +109,11 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                     return Archives.DetermineAlgorithm(result);
                 }
 
-                throw new InvalidArchiveTypeException("Archive type is unknown.");
+                throw new InvalidArchiveTypeException(Resources.GetString("UnknownArchiveType/Text"));
             }
             catch (InvalidArchiveTypeException ex)
             {
-                string friendlyErrMsg = I18N.Resources
-                    .GetString("FileFormatNotSupported/Text");
+                string friendlyErrMsg = Resources.GetString("FileFormatNotSupported/Text");
                 throw new InvalidArchiveTypeException(friendlyErrMsg, ex);
             }
         }

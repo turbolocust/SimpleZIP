@@ -533,4 +533,24 @@
     <value>Reason</value>
     <comment>Cause of an event or situation.</comment>
   </data>
+  <data name="SubEntryExtractionFailed.Text" xml:space="preserve">
+    <value>Extraction of sub-entry failed (File not found).</value>
+    <comment>Occurs when a sub-entry within an archive could not be extracted.</comment>
+  </data>
+  <data name="SubArchiveExtractionFailed.Text" xml:space="preserve">
+    <value>Extraction of sub-archive failed (File not found).</value>
+    <comment>Occurs when a sub-archive within an archive could not be extracted.</comment>
+  </data>
+  <data name="WritingNotSupported.Text" xml:space="preserve">
+    <value>Writing not supported for {0}.</value>
+    <comment>Informs that writing is not supported for a specific archive type.</comment>
+  </data>
+  <data name="NullReferenceMessage.Text" xml:space="preserve">
+    <value>Variable {0} is null (initial).</value>
+    <comment>Informs that a specific variable is null, i.e. not set.</comment>
+  </data>
+  <data name="UnknownArchiveType.Text" xml:space="preserve">
+    <value>Archive type is unknown or not supported.</value>
+    <comment>Informs that an archive type is unknown or not supported.</comment>
+  </data>
 </root>

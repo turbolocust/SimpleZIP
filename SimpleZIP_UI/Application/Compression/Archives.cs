@@ -242,8 +242,8 @@ namespace SimpleZIP_UI.Application.Compression
             }
             catch (Exception ex) // due to missing documentation in SharpCompress
             {
-                const string errorMessage = @"Archive type is unknown or not supported.";
-                throw new InvalidArchiveTypeException(errorMessage, ex);
+                throw new InvalidArchiveTypeException(I18N
+                    .Resources.GetString("UnknownArchiveType/Text"), ex);
             }
 
             return archiveType;
@@ -289,7 +289,7 @@ namespace SimpleZIP_UI.Application.Compression
                 if (!rar5Only)
                 {
                     isRarArchive = RarArchive.IsRarFile(stream,
-                        new ReaderOptions {Password = password, LeaveStreamOpen = true});
+                        new ReaderOptions { Password = password, LeaveStreamOpen = true });
                 }
 
                 // check if RAR5 format if not RAR4

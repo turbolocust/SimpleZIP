@@ -46,7 +46,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             var progressStream = Stream.Null;
             var compressorStream = Stream.Null;
 
-            var compressorOptions = new CompressorOptions {IsCompression = false};
+            var compressorOptions = new CompressorOptions { IsCompression = false };
             options = options ?? new DecompressionOptions(false, GetDefaultEncoding());
 
             try
@@ -123,7 +123,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             var progressStream = Stream.Null;
             var compressorStream = Stream.Null;
 
-            var compressorOptions = new CompressorOptions {FileName = file.Name, IsCompression = true};
+            var compressorOptions = new CompressorOptions { FileName = file.Name, IsCompression = true };
             options = options ?? new CompressionOptions(false, GetDefaultEncoding());
 
             try
