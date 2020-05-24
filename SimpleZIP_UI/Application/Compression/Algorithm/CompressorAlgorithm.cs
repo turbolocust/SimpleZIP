@@ -82,6 +82,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                     entry.FileName = file.Name;
                 }
             }
+
+            FlushBytesProcessedBuffer();
         }
 
         /// <summary>
@@ -188,6 +190,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
 
                 await compressorStream.FlushAsync().ConfigureAwait(false);
             }
+
+            FlushBytesProcessedBuffer();
         }
     }
 }

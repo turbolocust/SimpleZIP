@@ -87,6 +87,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                         }
                     }
                 }
+
+                FlushBytesProcessedBuffer();
             }
             catch (CryptographicException ex)
             {
@@ -132,6 +134,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                     }
                 }
             }
+
+            FlushBytesProcessedBuffer();
         }
 
         #region Private Members
@@ -194,6 +198,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                         if (processedEntries == entries.Count) break;
                     }
                 }
+
+                FlushBytesProcessedBuffer();
             }
             catch (CryptographicException ex)
             {

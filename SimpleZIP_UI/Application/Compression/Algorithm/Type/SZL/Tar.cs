@@ -118,6 +118,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                     tarStream.CloseEntry();
                 }
             }
+
+            FlushBytesProcessedBuffer();
         }
 
         /// <inheritdoc />
@@ -147,6 +149,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                     }
                 }
             }
+
+            FlushBytesProcessedBuffer();
         }
 
         /// <inheritdoc />
@@ -205,6 +209,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                     if (processedEntries == entries.Count) break;
                 }
             }
+
+            FlushBytesProcessedBuffer();
         }
 
         private async Task<string> WriteEntry(WriteEntryInfo info)

@@ -33,14 +33,6 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Factory
         public uint UpdateDelayRate { get; }
 
         /// <summary>
-        /// The previous value of the delay rate counter that counts up to
-        /// <see cref="UpdateDelayRate"/>. This is useful if multiple small
-        /// archives are processed, because it ensures consistent reporting
-        /// of the already processed bytes.
-        /// </summary>
-        public uint PreviousDelayRateCounter { get; }
-
-        /// <summary>
         /// The buffer size to be used by archive or compressor streams.
         /// </summary>
         public int BufferSize { get; }
@@ -52,15 +44,12 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Factory
         /// is below or equal zero, then the <see cref="BufferSize"/> is set
         /// to <see cref="DefaultBufferSize"/>.
         /// </summary>
-        /// <param name="updateDelayRate">The update delay rate to be set.</param>
-        /// <param name="previousDelayRateCounter">The initial value of the counter
-        /// that counts up to <paramref name="updateDelayRate"/>.</param>
+        /// <param name="updateDelayRate">The update-delay-rate to be set.</param>
         /// <param name="bufferSize">The buffer size to be used by algorithms
         /// for archive or compressor streams.</param>
-        internal AlgorithmOptions(uint updateDelayRate, uint previousDelayRateCounter, int bufferSize)
+        internal AlgorithmOptions(uint updateDelayRate, int bufferSize)
         {
             UpdateDelayRate = updateDelayRate;
-            PreviousDelayRateCounter = previousDelayRateCounter;
             BufferSize = bufferSize > 0 ? bufferSize : DefaultBufferSize;
         }
 
@@ -69,10 +58,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Factory
         /// set to <see cref="DefaultBufferSize"/>.
         /// </summary>
         /// <param name="updateDelayRate">The update delay rate to be set.</param>
-        /// <param name="previousDelayRateCounter">The initial value of the counter
-        /// that counts up to <paramref name="updateDelayRate"/>.</param>
-        internal AlgorithmOptions(uint updateDelayRate, uint previousDelayRateCounter)
-            : this(updateDelayRate, previousDelayRateCounter, DefaultBufferSize)
+        internal AlgorithmOptions(uint updateDelayRate) : this(updateDelayRate, DefaultBufferSize)
         {
         }
 

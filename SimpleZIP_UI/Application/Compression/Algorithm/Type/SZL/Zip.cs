@@ -100,6 +100,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                     zipStream.CloseEntry();
                 }
             }
+
+            FlushBytesProcessedBuffer();
         }
 
         /// <inheritdoc />
@@ -110,9 +112,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
         {
             if (archive == null) throw new ArgumentNullException(nameof(archive));
             if (location == null) throw new ArgumentNullException(nameof(location));
-
             if (options == null) options = new DecompressionOptions(GetDefaultEncoding());
-            long totalBytesWritten = 0; // for accurate progress update
 
             try
             {
@@ -130,11 +130,12 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                         if (!zipEntry.IsDirectory)
                         {
                             writeInfo.Entry = zipEntry;
-                            writeInfo.TotalBytesWritten = totalBytesWritten;
-                            (_, totalBytesWritten) = await WriteEntry(writeInfo).ConfigureAwait(false);
+                            await WriteEntry(writeInfo).ConfigureAwait(false);
                         }
                     }
                 }
+
+                FlushBytesProcessedBuffer();
             }
             catch (ICSharpCode.SharpZipLib.SharpZipBaseException ex)
             {
@@ -170,8 +171,6 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
             if (entries.IsNullOrEmpty()) return; // nothing to do
             if (options == null) options = new DecompressionOptions(GetDefaultEncoding());
 
-            long totalBytesWritten = 0; // for accurate progress update
-
             try
             {
                 ZipStrings.CodePage = options.ArchiveEncoding.CodePage;
@@ -196,20 +195,20 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                         }
 
                         writeInfo.Entry = zipEntry;
-                        writeInfo.TotalBytesWritten = totalBytesWritten;
 
                         if (collectFileNames)
                         {
-                            string fileName;
-                            (fileName, totalBytesWritten) = await WriteEntry(writeInfo).ConfigureAwait(false);
+                            string fileName = await WriteEntry(writeInfo).ConfigureAwait(false);
                             entry.FileName = fileName; // save name
                         }
                         else
                         {
-                            (_, totalBytesWritten) = await WriteEntry(writeInfo).ConfigureAwait(false);
+                            await WriteEntry(writeInfo).ConfigureAwait(false);
                         }
                     }
                 }
+
+                FlushBytesProcessedBuffer();
             }
             catch (ICSharpCode.SharpZipLib.SharpZipBaseException ex)
             {
@@ -222,10 +221,9 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
             }
         }
 
-        private async Task<(string fileName, long bytesWritten)> WriteEntry(WriteEntryInfo info)
+        private async Task<string> WriteEntry(WriteEntryInfo info)
         {
             string fileName;
-            long totalBytesWritten = info.TotalBytesWritten;
 
             using (var entryStream = info.Zip.GetInputStream(info.Entry))
             {
@@ -240,7 +238,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                     file = await FileUtils.CreateFileAsync(info.Location, info.Entry.Name).ConfigureAwait(false);
                 }
 
-                if (file == null) return (null, totalBytesWritten); // file could not be created
+                if (file == null) return null; // file could not be created
                 fileName = file.Path; // use path in case of sub-directories
 
                 using (var outputStream = await file.OpenStreamForWriteAsync().ConfigureAwait(false))
@@ -252,15 +250,14 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                         .ConfigureAwait(false)) > 0)
                     {
                         await outputStream.WriteAsync(buffer, 0, readBytes, Token).ConfigureAwait(false);
-                        totalBytesWritten += readBytes;
-                        Update(totalBytesWritten);
+                        Update(readBytes);
                     }
 
                     await outputStream.FlushAsync(Token).ConfigureAwait(false);
                 }
             }
 
-            return (fileName, totalBytesWritten);
+            return fileName;
         }
 
         private struct WriteEntryInfo
@@ -269,7 +266,6 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
             internal ZipEntry Entry { get; set; }
             internal StorageFolder Location { get; set; }
             internal bool IgnoreDirectories { get; set; }
-            internal long TotalBytesWritten { get; set; }
         }
 
         #endregion

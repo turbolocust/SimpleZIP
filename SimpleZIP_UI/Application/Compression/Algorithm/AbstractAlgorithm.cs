@@ -56,15 +56,13 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <summary>
         /// Constructs a new instance of this class.
         /// </summary>
-        /// <param name="options">Options to be considered for this instance.</param>
+        /// <param name="options">Options to be considered by this instance.</param>
         protected AbstractAlgorithm(AlgorithmOptions options)
         {
             if (options == null) throw new ArgumentNullException(nameof(options));
 
             BufferSize = options.BufferSize;
             UpdateDelayRate = options.UpdateDelayRate;
-            uint initialDelayRateCounter = options.PreviousDelayRateCounter;
-            DelayRateCounter = initialDelayRateCounter <= UpdateDelayRate ? initialDelayRateCounter : 0;
         }
 
         /// <summary>
@@ -100,6 +98,16 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         protected virtual Encoding GetDefaultEncoding()
         {
             return Encoding.UTF8;
+        }
+
+        /// <summary>
+        /// Flushes the buffer of processed bytes, which holds buffered
+        /// bytes due to <see cref="UpdateDelayRate"/>.
+        /// </summary>
+        protected void FlushBytesProcessedBuffer()
+        {
+            FireBytesProcessed(_bytesProcessedBuffer);
+            _bytesProcessedBuffer = 0;
         }
 
         /// <inheritdoc cref="IProgressObserver{T}.Update"/>

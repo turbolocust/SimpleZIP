@@ -37,13 +37,6 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         private long _totalBytesToProcess;
 
         /// <summary>
-        /// The value of the previous delay rate counter, so that updates
-        /// will not be missed if progress is not to be reset and <see cref="Perform"/>
-        /// is called multiple times (e.g. when creating multiple archives).
-        /// </summary>
-        private uint _previousDelayRateCounter;
-
-        /// <summary>
         /// True if an operation is running, false otherwise.
         /// </summary>
         private volatile bool _isRunning;
@@ -94,19 +87,10 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         /// the total amount of bytes to be processed, e.g. if multiple archives are to be processed as
         /// part of a bigger operation (the job).
         /// </remarks>
-        /// <param name="resetBytesProcessed">True if to forget about processed bytes.</param>
+        /// <param name="resetBytesProcessed">True if to forget about processed bytes, false otherwise.</param>
         private void UpdateOperationState(bool resetBytesProcessed)
         {
-            if (resetBytesProcessed)
-            {
-                TotalBytesProcessed = 0L;
-                _previousDelayRateCounter = 0;
-            }
-            else
-            {
-                // we know about the intrinsics and are responsible for them, so let's use that knowledge
-                _previousDelayRateCounter = ((AbstractAlgorithm)Algorithm).DelayRateCounter;
-            }
+            if (resetBytesProcessed) TotalBytesProcessed = 0L;
         }
 
         /// <inheritdoc />
@@ -128,7 +112,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
 
             IsRunning = true;
 
-            var options = new AlgorithmOptions(defaultUpdateDelayRate, _previousDelayRateCounter);
+            var options = new AlgorithmOptions(defaultUpdateDelayRate);
             Algorithm = await GetAlgorithmAsync(operationInfo, options);
             _totalBytesToProcess = (long)operationInfo.TotalFileSize;
 
