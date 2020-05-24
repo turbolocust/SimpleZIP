@@ -106,7 +106,9 @@
         </ScrollViewer>
         <StackPanel Grid.Row="3" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,8,16,8">
             <Button Tapped="CopyAllButton_OnTapped" Width="120" MinHeight="44" Height="50" MaxHeight="60"
-                    IsEnabled="{x:Bind IsPopulateListBox.IsTrue, Mode=TwoWay, Converter={StaticResource FlipBooleanConverter}}"
+                    IsEnabled="{x:Bind IsPopulateListBox.IsTrue, Mode=TwoWay,
+                    Converter={StaticResource FlipBooleanConverter}}"
+                    PreviewKeyDown="CopyAllButton_OnPreviewKeyDown"
                     Foreground="{ThemeResource ButtonForegroundThemeBrush}" 
                     Background="{ThemeResource ButtonBackgroundThemeBrush}" 
                     BorderBrush="{ThemeResource ButtonBorderThemeBrush}">

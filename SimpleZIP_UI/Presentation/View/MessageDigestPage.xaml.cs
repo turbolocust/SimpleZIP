@@ -30,6 +30,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Devices.Input;
 using Windows.Storage;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -207,14 +208,33 @@ namespace SimpleZIP_UI.Presentation.View
             MessageDigestModelsListBox.ItemsSource = MessageDigestModels;
         }
 
-        private static void CopyToClipboard(string text)
+        private void CopyToClipboard(string text)
         {
             var package = new DataPackage
             {
                 RequestedOperation = DataPackageOperation.Copy
             };
+
             package.SetText(text);
             Clipboard.SetContent(package);
+
+            string message = I18N.Resources.GetString("CopiedToClipboard/Text");
+            _controller.ShowToastNotification("SimpleZIP", message, seconds: 4);
+        }
+
+        private string BuildCopyToClipboardText()
+        {
+            var stringBuilder = new StringBuilder();
+
+            foreach (var model in MessageDigestModels)
+            {
+                stringBuilder.AppendLine(model.FileName);
+                stringBuilder.AppendLine(model.Location);
+                stringBuilder.AppendLine(model.HashValue);
+                stringBuilder.AppendLine();
+            }
+
+            return stringBuilder.ToString();
         }
 
         private async void HashAlgorithmComboBox_OnSelectionChanged(
@@ -246,20 +266,15 @@ namespace SimpleZIP_UI.Presentation.View
 
         private void CopyAllButton_OnTapped(object sender, TappedRoutedEventArgs args)
         {
-            var stringBuilder = new StringBuilder();
+            CopyToClipboard(BuildCopyToClipboardText());
+        }
 
-            foreach (var model in MessageDigestModels)
+        private void CopyAllButton_OnPreviewKeyDown(object sender, KeyRoutedEventArgs args)
+        {
+            if (args.Key == VirtualKey.Enter)
             {
-                stringBuilder.AppendLine(model.FileName);
-                stringBuilder.AppendLine(model.Location);
-                stringBuilder.AppendLine(model.HashValue);
-                stringBuilder.AppendLine();
+                CopyToClipboard(BuildCopyToClipboardText());
             }
-
-            CopyToClipboard(stringBuilder.ToString());
-
-            string message = I18N.Resources.GetString("CopiedToClipboard/Text");
-            _controller.ShowToastNotification("SimpleZIP", message, seconds: 4);
         }
 
         private void LowercaseHashToggleSwitch_OnToggled(object sender, RoutedEventArgs args)
