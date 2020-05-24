@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2019 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 
 using ICSharpCode.SharpZipLib.GZip;
 using System.IO;
+using SimpleZIP_UI.Application.Compression.Algorithm.Factory;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
 {
@@ -30,6 +31,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
     /// </summary>
     internal sealed class TarGzip : Tar
     {
+        /// <inheritdoc />
+        public TarGzip(AlgorithmOptions options) : base(options)
+        {
+        }
+
         /// <inheritdoc />
         protected override Stream GetCompressorInputStream(Stream stream)
         {

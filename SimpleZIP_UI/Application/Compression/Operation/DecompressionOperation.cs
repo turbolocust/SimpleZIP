@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2019 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@ using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.I18N;
 using System;
 using System.Threading.Tasks;
+using SimpleZIP_UI.Application.Compression.Algorithm.Factory;
 
 namespace SimpleZIP_UI.Application.Compression.Operation
 {
@@ -90,14 +91,14 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         }
 
         /// <inheritdoc cref="ArchivingOperation{T}.GetAlgorithmAsync"/>
-        protected override async Task<ICompressionAlgorithm> GetAlgorithmAsync(DecompressionInfo info, uint previousDelayRateCounter)
+        protected override async Task<ICompressionAlgorithm> GetAlgorithmAsync(DecompressionInfo info, AlgorithmOptions options)
         {
             string fileType = FileUtils.GetFileNameExtension(info.Item.Archive.Name);
             var value = Archives.DetermineArchiveTypeByFileExtension(fileType);
 
             if (value != Archives.ArchiveType.Unknown)
             {
-                return Archives.DetermineAlgorithm(value, previousDelayRateCounter);
+                return AlgorithmFactory.DetermineAlgorithm(value, options);
             }
 
             try
@@ -107,7 +108,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
 
                 if (result != Archives.ArchiveType.Unknown)
                 {
-                    return Archives.DetermineAlgorithm(result, previousDelayRateCounter);
+                    return AlgorithmFactory.DetermineAlgorithm(value, options);
                 }
 
                 throw new InvalidArchiveTypeException(Resources.GetString("UnknownArchiveType/Text"));

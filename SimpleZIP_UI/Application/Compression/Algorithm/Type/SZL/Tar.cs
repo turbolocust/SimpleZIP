@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
+using SimpleZIP_UI.Application.Compression.Algorithm.Factory;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
 {
@@ -38,6 +39,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
     /// </summary>
     internal class Tar : AbstractAlgorithm
     {
+        /// <inheritdoc />
+        public Tar(AlgorithmOptions options) : base(options)
+        {
+        }
+
         /// <summary>
         /// May be overridden by subclasses to provide an additional
         /// compressor input stream if entries are compressed.
@@ -61,8 +67,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
         }
 
         /// <inheritdoc />
-        public override async Task CompressAsync(IReadOnlyList<StorageFile> files, StorageFile archive,
-            StorageFolder location, ICompressionOptions options = null)
+        public override async Task CompressAsync(
+            IReadOnlyList<StorageFile> files,
+            StorageFile archive,
+            StorageFolder location,
+            ICompressionOptions options = null)
         {
             if (archive == null) throw new ArgumentNullException(nameof(archive));
             if (location == null) throw new ArgumentNullException(nameof(location));
@@ -92,7 +101,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                     tarEntry.TarHeader.TypeFlag = TarHeader.LF_NORMAL;
 
                     tarStream.PutNextEntry(tarEntry);
-                    var buffer = new byte[DefaultBufferSize];
+                    var buffer = new byte[BufferSize];
 
                     using (var fileStream = await file.OpenStreamForReadAsync().ConfigureAwait(false))
                     {
@@ -114,8 +123,10 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
         }
 
         /// <inheritdoc />
-        public override async Task DecompressAsync(StorageFile archive,
-            StorageFolder location, IDecompressionOptions options = null)
+        public override async Task DecompressAsync(
+            StorageFile archive,
+            StorageFolder location,
+            IDecompressionOptions options = null)
         {
             if (archive == null) throw new ArgumentNullException(nameof(archive));
             if (location == null) throw new ArgumentNullException(nameof(location));
@@ -143,8 +154,12 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
         }
 
         /// <inheritdoc />
-        public override async Task DecompressAsync(StorageFile archive, StorageFolder location,
-            IReadOnlyList<IArchiveEntry> entries, bool collectFileNames, IDecompressionOptions options = null)
+        public override async Task DecompressAsync(
+            StorageFile archive,
+            StorageFolder location,
+            IReadOnlyList<IArchiveEntry> entries,
+            bool collectFileNames,
+            IDecompressionOptions options = null)
         {
             await DecompressEntries(archive, location, entries, collectFileNames).ConfigureAwait(false);
         }
@@ -221,7 +236,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
 
             using (var outputStream = await file.OpenStreamForWriteAsync().ConfigureAwait(false))
             {
-                var buffer = new byte[DefaultBufferSize];
+                var buffer = new byte[BufferSize];
                 int readBytes;
                 while ((readBytes =
                     await info.TarStream.ReadAsync(buffer, 0, buffer.Length, Token).ConfigureAwait(false)) > 0)

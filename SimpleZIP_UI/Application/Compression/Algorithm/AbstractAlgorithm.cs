@@ -26,6 +26,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
+using SimpleZIP_UI.Application.Compression.Algorithm.Factory;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm
 {
@@ -33,19 +34,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
     public abstract class AbstractAlgorithm : ICompressionAlgorithm, IProgressObserver<long>
     {
         /// <summary>
-        /// Delay rate to lessen <see cref="TotalBytesProcessed"/> events.
-        /// As a result, <c>bufferSize</c> times <c>x</c> (update rate) bytes
-        /// are not reported to any observers.
-        /// </summary>
-        private const uint DefaultUpdateDelayRate = 100;
-
-        /// <summary>
-        /// Default buffer size for streams.
-        /// </summary>
-        protected const int DefaultBufferSize = 8192;
-
-        /// <summary>
-        /// See <see cref="DefaultUpdateDelayRate"/> for more details.
+        /// It is counted up to this delay before progress updates are fired.
         /// </summary>
         internal readonly uint UpdateDelayRate;
 
@@ -55,15 +44,22 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         internal uint DelayRateCounter { get; private set; }
 
         /// <summary>
+        /// The buffer size to be used by streams.
+        /// </summary>
+        protected int BufferSize { get; }
+
+        /// <summary>
         /// Constructs a new instance of this class.
         /// </summary>
-        /// <param name="updateDelayRate">The default update delay rate.</param>
-        /// <param name="initialDelayRateCounter">The initial delay rate counter.
-        /// Is set to zero if greater than <paramref name="updateDelayRate"/>.</param>
-        protected AbstractAlgorithm(uint updateDelayRate = DefaultUpdateDelayRate, uint initialDelayRateCounter = 0)
+        /// <param name="options">Options to be considered for this instance.</param>
+        protected AbstractAlgorithm(AlgorithmOptions options)
         {
-            UpdateDelayRate = updateDelayRate;
-            DelayRateCounter = initialDelayRateCounter <= updateDelayRate ? initialDelayRateCounter : 0;
+            if (options == null) throw new ArgumentNullException(nameof(options));
+
+            BufferSize = options.BufferSize;
+            UpdateDelayRate = options.UpdateDelayRate;
+            uint initialDelayRateCounter = options.PreviousDelayRateCounter;
+            DelayRateCounter = initialDelayRateCounter <= UpdateDelayRate ? initialDelayRateCounter : 0;
         }
 
         /// <summary>

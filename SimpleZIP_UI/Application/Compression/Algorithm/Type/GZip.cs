@@ -21,6 +21,7 @@ using System;
 using SharpCompress.Compressors;
 using SharpCompress.Compressors.Deflate;
 using System.IO;
+using SimpleZIP_UI.Application.Compression.Algorithm.Factory;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
 {
@@ -31,7 +32,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
     public class GZip : CompressorAlgorithm
     {
         /// <inheritdoc />
-        public GZip(uint initialDelayRateCounter = 0) : base(initialDelayRateCounter)
+        public GZip(AlgorithmOptions options) : base(options)
         {
         }
 

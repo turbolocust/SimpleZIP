@@ -117,6 +117,8 @@
     <Compile Include="Application\Compression\Algorithm\AbstractAlgorithm.cs" />
     <Compile Include="Application\Compression\Algorithm\CompressorAlgorithm.cs" />
     <Compile Include="Application\Compression\Algorithm\Event\TotalBytesProcessedEventArgs.cs" />
+    <Compile Include="Application\Compression\Algorithm\Factory\AlgorithmOptions.cs" />
+    <Compile Include="Application\Compression\Algorithm\Factory\AlgorithmFactory.cs" />
     <Compile Include="Application\Compression\Algorithm\Options\IOptions.cs" />
     <Compile Include="Application\Compression\Algorithm\Options\IDecompressionOptions.cs" />
     <Compile Include="Application\Compression\Algorithm\Options\ICompressionOptions.cs" />

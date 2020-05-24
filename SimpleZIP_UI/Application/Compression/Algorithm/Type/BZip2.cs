@@ -21,6 +21,7 @@ using System;
 using SharpCompress.Compressors;
 using SharpCompress.Compressors.BZip2;
 using System.IO;
+using SimpleZIP_UI.Application.Compression.Algorithm.Factory;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
 {
@@ -31,7 +32,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
     public class BZip2 : CompressorAlgorithm
     {
         /// <inheritdoc />
-        public BZip2(uint initialDelayRateCounter = 0) : base(initialDelayRateCounter)
+        public BZip2(AlgorithmOptions options) : base(options)
         {
         }
 

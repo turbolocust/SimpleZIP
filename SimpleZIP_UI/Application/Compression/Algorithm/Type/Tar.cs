@@ -19,6 +19,7 @@
 
 using SharpCompress.Common;
 using SharpCompress.Writers;
+using SimpleZIP_UI.Application.Compression.Algorithm.Factory;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
 {
@@ -29,7 +30,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
     public class Tar : ArchivingAlgorithm
     {
         /// <inheritdoc />
-        public Tar() : base(ArchiveType.Tar)
+        public Tar(AlgorithmOptions options) : base(ArchiveType.Tar, options)
         {
         }
 

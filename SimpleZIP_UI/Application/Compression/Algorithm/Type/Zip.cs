@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@ using SharpCompress.Common;
 using SharpCompress.Compressors.Deflate;
 using SharpCompress.Writers;
 using SharpCompress.Writers.Zip;
+using SimpleZIP_UI.Application.Compression.Algorithm.Factory;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
 {
@@ -31,7 +32,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
     public sealed class Zip : ArchivingAlgorithm
     {
         /// <inheritdoc />
-        public Zip() : base(ArchiveType.Zip)
+        public Zip(AlgorithmOptions options) : base(ArchiveType.Zip, options)
         {
         }
 

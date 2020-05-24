@@ -24,6 +24,7 @@ using SimpleZIP_UI.Application.Compression.Operation.Event;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using SimpleZIP_UI.Application.Compression.Algorithm.Factory;
 
 namespace SimpleZIP_UI.Application.Compression.Operation
 {
@@ -131,8 +132,12 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         /// <returns>A result object consisting of further details.</returns>
         public async Task<Result> Perform(T operationInfo, bool resetBytesProcessed = true)
         {
+            const uint defaultUpdateDelayRate = 100;
+
             IsRunning = true;
-            Algorithm = await GetAlgorithmAsync(operationInfo, _previousDelayRateCounter);
+
+            var options = new AlgorithmOptions(defaultUpdateDelayRate, _previousDelayRateCounter);
+            Algorithm = await GetAlgorithmAsync(operationInfo, options);
             _totalBytesToProcess = (long)operationInfo.TotalFileSize;
 
             try
@@ -152,9 +157,9 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         /// Sets the algorithm to be used based on the information in <see cref="OperationInfo"/>.
         /// </summary>
         /// <param name="info">Info about the operation.</param>
-        /// <param name="previousDelayRateCounter">The previous value of the delay rate counter.</param>
+        /// <param name="options">Options to be considered by the algorithm.</param>
         /// <returns>A task which returns <see cref="ICompressionAlgorithm"/>.</returns>
-        protected abstract Task<ICompressionAlgorithm> GetAlgorithmAsync(T info, uint previousDelayRateCounter);
+        protected abstract Task<ICompressionAlgorithm> GetAlgorithmAsync(T info, AlgorithmOptions options);
 
         /// <summary>
         /// Actually starts this operation.

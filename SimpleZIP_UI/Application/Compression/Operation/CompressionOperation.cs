@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2019 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ using SimpleZIP_UI.I18N;
 using System;
 using System.Threading.Tasks;
 using Windows.Storage;
+using SimpleZIP_UI.Application.Compression.Algorithm.Factory;
 
 namespace SimpleZIP_UI.Application.Compression.Operation
 {
@@ -80,9 +81,9 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         }
 
         /// <inheritdoc cref="ArchivingOperation{T}.GetAlgorithmAsync"/>
-        protected override Task<ICompressionAlgorithm> GetAlgorithmAsync(CompressionInfo info, uint previousDelayRateCounter)
+        protected override Task<ICompressionAlgorithm> GetAlgorithmAsync(CompressionInfo info, AlgorithmOptions options)
         {
-            return Task.FromResult(Archives.DetermineAlgorithm(info.ArchiveType, previousDelayRateCounter));
+            return Task.FromResult(AlgorithmFactory.DetermineAlgorithm(info.ArchiveType, options));
         }
 
         /// <inheritdoc cref="ArchivingOperation{T}.StartOperation"/>

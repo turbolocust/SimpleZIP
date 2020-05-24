@@ -31,6 +31,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
+using SimpleZIP_UI.Application.Compression.Algorithm.Factory;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm
 {
@@ -41,20 +42,22 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
     public abstract class ArchivingAlgorithm : AbstractAlgorithm
     {
         /// <summary>
-        /// The concrete algorithm to be used.
+        /// The concrete archive type to be used.
         /// </summary>
         private readonly ArchiveType _type;
 
         /// <inheritdoc />
-        protected ArchivingAlgorithm(ArchiveType type)
+        protected ArchivingAlgorithm(ArchiveType type, AlgorithmOptions options) : base(options)
         {
             _type = type;
             Token = CancellationToken.None;
         }
 
         /// <inheritdoc />
-        public override async Task DecompressAsync(StorageFile archive,
-            StorageFolder location, IDecompressionOptions options = null)
+        public override async Task DecompressAsync(
+            StorageFile archive,
+            StorageFolder location,
+            IDecompressionOptions options = null)
         {
             if (archive == null) throw new ArgumentNullException(nameof(archive));
             if (location == null) throw new ArgumentNullException(nameof(location));
@@ -95,15 +98,22 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         }
 
         /// <inheritdoc />
-        public override async Task DecompressAsync(StorageFile archive, StorageFolder location,
-            IReadOnlyList<IArchiveEntry> entries, bool collectFileNames, IDecompressionOptions options = null)
+        public override async Task DecompressAsync(
+            StorageFile archive,
+            StorageFolder location,
+            IReadOnlyList<IArchiveEntry> entries,
+            bool collectFileNames,
+            IDecompressionOptions options = null)
         {
             await DecompressEntries(archive, location, entries, collectFileNames, options).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        public override async Task CompressAsync(IReadOnlyList<StorageFile> files,
-            StorageFile archive, StorageFolder location, ICompressionOptions options = null)
+        public override async Task CompressAsync(
+            IReadOnlyList<StorageFile> files,
+            StorageFile archive,
+            StorageFolder location,
+            ICompressionOptions options = null)
         {
             if (archive == null) throw new ArgumentNullException(nameof(archive));
             if (location == null) throw new ArgumentNullException(nameof(location));
@@ -128,8 +138,13 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         }
 
         #region Private Members
-        private async Task DecompressEntries(IStorageFile archive, StorageFolder location,
-            IReadOnlyCollection<IArchiveEntry> entries, bool collectFileNames, IDecompressionOptions options = null)
+
+        private async Task DecompressEntries(
+            IStorageFile archive,
+            StorageFolder location,
+            IReadOnlyCollection<IArchiveEntry> entries,
+            bool collectFileNames,
+            IDecompressionOptions options = null)
         {
             if (archive == null) throw new ArgumentNullException(nameof(archive));
             if (location == null) throw new ArgumentNullException(nameof(location));
@@ -220,7 +235,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
 
                 using (var outputStream = await file.OpenStreamForWriteAsync().ConfigureAwait(false))
                 {
-                    var buffer = new byte[DefaultBufferSize];
+                    var buffer = new byte[BufferSize];
                     int readBytes;
                     while ((readBytes = entryStream.Read(buffer, 0, buffer.Length)) > 0)
                     {
@@ -270,6 +285,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
 
             return writerOptions;
         }
+
         #endregion
 
         /// <summary>

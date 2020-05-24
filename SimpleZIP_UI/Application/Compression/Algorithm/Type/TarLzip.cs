@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 
 using SharpCompress.Common;
 using SharpCompress.Writers;
+using SimpleZIP_UI.Application.Compression.Algorithm.Factory;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
 {
@@ -28,6 +29,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type
     /// </summary>
     public sealed class TarLzip : Tar
     {
+        /// <inheritdoc />
+        public TarLzip(AlgorithmOptions options) : base(options)
+        {
+        }
+
         /// <inheritdoc />
         protected override WriterOptions GetWriterOptions()
         {
