@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,16 +16,20 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
 using System;
 
 namespace SimpleZIP_UI.Application.Compression.Operation.Event
 {
     /// <inheritdoc />
-    public class ProgressUpdateEventArgs : EventArgs
+    public sealed class ProgressUpdateEventArgs : EventArgs
     {
         /// <summary>
         /// The updated progress.
         /// </summary>
-        public Progress.Progress Progress { get; set; }
+        public Progress.Progress CurrentProgress { get; }
+
+        /// <inheritdoc />
+        public ProgressUpdateEventArgs(Progress.Progress progress) => CurrentProgress = progress;
     }
 }

@@ -58,7 +58,6 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
             if (files.IsNullOrEmpty()) return; // nothing to do
             if (options == null) options = new CompressionOptions(GetDefaultEncoding());
 
-            long totalBytesWritten = 0;
             ZipStrings.CodePage = options.ArchiveEncoding.CodePage;
 
             using (var archiveStream = await archive.OpenStreamForWriteAsync().ConfigureAwait(false))
@@ -87,12 +86,12 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                     using (var fileStream = await file.OpenStreamForReadAsync().ConfigureAwait(false))
                     {
                         int readBytes;
-                        while ((readBytes = await fileStream.ReadAsync(buffer, 0, buffer.Length, Token)
+                        while ((readBytes = await fileStream
+                            .ReadAsync(buffer, 0, buffer.Length, Token)
                             .ConfigureAwait(false)) > 0)
                         {
                             await zipStream.WriteAsync(buffer, 0, readBytes, Token).ConfigureAwait(false);
-                            totalBytesWritten += readBytes;
-                            Update(totalBytesWritten);
+                            Update(readBytes);
                         }
 
                         await zipStream.FlushAsync(Token).ConfigureAwait(false);
@@ -248,7 +247,9 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                 {
                     var buffer = new byte[BufferSize];
                     int readBytes;
-                    while ((readBytes = await entryStream.ReadAsync(buffer, 0, buffer.Length)) > 0)
+                    while ((readBytes = await entryStream
+                        .ReadAsync(buffer, 0, buffer.Length)
+                        .ConfigureAwait(false)) > 0)
                     {
                         await outputStream.WriteAsync(buffer, 0, readBytes, Token).ConfigureAwait(false);
                         totalBytesWritten += readBytes;

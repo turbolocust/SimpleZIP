@@ -179,7 +179,9 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                 var bytes = new byte[BufferSize];
                 int readBytes;
 
-                while ((readBytes = await inputStream.ReadAsync(bytes, 0, bytes.Length)) > 0)
+                while ((readBytes = await inputStream
+                    .ReadAsync(bytes, 0, bytes.Length)
+                    .ConfigureAwait(false)) > 0)
                 {
                     await compressorStream.WriteAsync(bytes, 0, readBytes, Token).ConfigureAwait(false);
                 }

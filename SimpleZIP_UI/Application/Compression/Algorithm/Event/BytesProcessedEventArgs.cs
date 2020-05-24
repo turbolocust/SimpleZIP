@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2017 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,11 +21,17 @@ using System;
 namespace SimpleZIP_UI.Application.Compression.Algorithm.Event
 {
     /// <inheritdoc />
-    public class TotalBytesProcessedEventArgs : EventArgs
+    public sealed class BytesProcessedEventArgs : EventArgs
     {
         /// <summary>
-        /// Event arguments for total bytes processed.
+        /// The number of bytes that have been processed.
         /// </summary>
-        public long TotalBytesProcessed { get; set; }
+        public long BytesProcessed { get; }
+
+        /// <inheritdoc />
+        public BytesProcessedEventArgs(long bytesProcessed)
+        {
+            BytesProcessed = bytesProcessed;
+        }
     }
 }

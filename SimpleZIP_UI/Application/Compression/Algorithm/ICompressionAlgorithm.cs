@@ -35,9 +35,9 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
     public interface ICompressionAlgorithm
     {
         /// <summary>
-        /// Event handler for total bytes processed.
+        /// Event handler to keep track of processed bytes.
         /// </summary>
-        event EventHandler<TotalBytesProcessedEventArgs> TotalBytesProcessed;
+        event EventHandler<BytesProcessedEventArgs> BytesProcessed;
 
         /// <summary>
         /// The token which can be used to interrupt the operation.

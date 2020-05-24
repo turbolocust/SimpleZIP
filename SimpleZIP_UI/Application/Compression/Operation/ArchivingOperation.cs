@@ -37,12 +37,6 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         private long _totalBytesToProcess;
 
         /// <summary>
-        /// Current progress in bytes. Used to calculate difference
-        /// between previous amount of processed bytes and updated one.
-        /// </summary>
-        private long _previousBytesProcessed;
-
-        /// <summary>
         /// The value of the previous delay rate counter, so that updates
         /// will not be missed if progress is not to be reset and <see cref="Perform"/>
         /// is called multiple times (e.g. when creating multiple archives).
@@ -93,7 +87,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         }
 
         /// <summary>
-        /// Updates the operation state based on whether to reset the memory of processed bytes or not.
+        /// Updates the operation state based on whether to reset the state of processed bytes or not.
         /// </summary>
         /// <remarks>
         /// This is required so that this instance may be re-used multiple times, while still considering
@@ -103,8 +97,6 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         /// <param name="resetBytesProcessed">True if to forget about processed bytes.</param>
         private void UpdateOperationState(bool resetBytesProcessed)
         {
-            _previousBytesProcessed = 0L; // difference is only needed during current run
-
             if (resetBytesProcessed)
             {
                 TotalBytesProcessed = 0L;
@@ -142,13 +134,13 @@ namespace SimpleZIP_UI.Application.Compression.Operation
 
             try
             {
-                Algorithm.TotalBytesProcessed += OnTotalBytesProcessed;
+                Algorithm.BytesProcessed += OnBytesProcessed;
                 return await StartOperation(operationInfo).ConfigureAwait(false);
             }
             finally
             {
                 IsRunning = false;
-                Algorithm.TotalBytesProcessed -= OnTotalBytesProcessed;
+                Algorithm.BytesProcessed -= OnBytesProcessed;
                 UpdateOperationState(resetBytesProcessed);
             }
         }
@@ -169,23 +161,17 @@ namespace SimpleZIP_UI.Application.Compression.Operation
         protected abstract Task<Result> StartOperation(T operationInfo);
 
         /// <summary>
-        /// Calculates the total progress by using the specified amount of bytes that 
-        /// have already been processed and then delegates the progress to all listeners.
+        /// Calculates the total progress and informs all listeners about the progress.
         /// </summary>
         /// <param name="sender">The sender of the event.</param>
         /// <param name="args">Consists of event parameters.</param>
-        protected virtual void OnTotalBytesProcessed(object sender, TotalBytesProcessedEventArgs args)
+        protected virtual void OnBytesProcessed(object sender, BytesProcessedEventArgs args)
         {
-            // calculate difference to update total amount of bytes
-            // that have already been processed by this instance
-            TotalBytesProcessed += args.TotalBytesProcessed - _previousBytesProcessed;
-            _previousBytesProcessed = args.TotalBytesProcessed;
+            TotalBytesProcessed += args.BytesProcessed;
 
             // fire event to inform listeners about progress update
-            var evtArgs = new ProgressUpdateEventArgs
-            {
-                Progress = new Progress.Progress(_totalBytesToProcess, TotalBytesProcessed)
-            };
+            var progress = new Progress.Progress(_totalBytesToProcess, TotalBytesProcessed);
+            var evtArgs = new ProgressUpdateEventArgs(progress);
 
             ProgressUpdate?.Invoke(this, evtArgs);
         }

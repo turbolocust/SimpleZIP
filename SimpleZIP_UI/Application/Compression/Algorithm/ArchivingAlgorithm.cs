@@ -70,8 +70,6 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                     ArchiveEncoding = ConvertEncoding(GetDefaultEncoding())
                 };
 
-            long totalBytesWritten = 0; // for accurate progress update
-
             try
             {
                 var writeInfo = new WriteEntryInfo { Location = location, IgnoreDirectories = false };
@@ -85,8 +83,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                         Token.ThrowIfCancellationRequested();
                         if (!reader.Entry.IsDirectory)
                         {
-                            writeInfo.TotalBytesWritten = totalBytesWritten;
-                            (_, totalBytesWritten) = await WriteEntry(writeInfo).ConfigureAwait(false);
+                            await WriteEntry(writeInfo).ConfigureAwait(false);
                         }
                     }
                 }
@@ -153,7 +150,6 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
 
             int processedEntries = 0; // to count number of found entries
             var entriesMap = ConvertToMap(entries); // for faster access
-            long totalBytesWritten = 0; // for accurate progress update
 
             var readerOptions = options != null
                 ? ConvertDecompressionOptions(options)
@@ -181,19 +177,15 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                         string key = Archives.NormalizeName(reader.Entry.Key);
                         if (entriesMap.ContainsKey(key))
                         {
-                            writeInfo.TotalBytesWritten = totalBytesWritten;
                             if (collectFileNames)
                             {
-                                string fileName;
-                                (fileName, totalBytesWritten) = await
-                                    WriteEntry(writeInfo).ConfigureAwait(false);
+                                string fileName = await WriteEntry(writeInfo).ConfigureAwait(false);
                                 var entry = entriesMap[key];
                                 entry.FileName = fileName; // save name
                             }
                             else
                             {
-                                (_, totalBytesWritten) = await
-                                    WriteEntry(writeInfo).ConfigureAwait(false);
+                                await WriteEntry(writeInfo).ConfigureAwait(false);
                             }
 
                             ++processedEntries;
@@ -209,10 +201,9 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             }
         }
 
-        private async Task<(string fileName, long bytesWritten)> WriteEntry(WriteEntryInfo info)
+        private async Task<string> WriteEntry(WriteEntryInfo info)
         {
             string fileName;
-            long totalBytesWritten = info.TotalBytesWritten;
 
             using (var entryStream = info.Reader.OpenEntryStream())
             {
@@ -230,7 +221,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                 }
 
 
-                if (file == null) return (null, totalBytesWritten); // could not be created
+                if (file == null) return null; // could not be created
                 fileName = file.Path; // use path in case of sub-directories
 
                 using (var outputStream = await file.OpenStreamForWriteAsync().ConfigureAwait(false))
@@ -240,15 +231,14 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
                     while ((readBytes = entryStream.Read(buffer, 0, buffer.Length)) > 0)
                     {
                         await outputStream.WriteAsync(buffer, 0, readBytes, Token).ConfigureAwait(false);
-                        totalBytesWritten += readBytes;
-                        Update(totalBytesWritten);
+                        Update(readBytes);
                     }
 
                     await outputStream.FlushAsync(Token).ConfigureAwait(false);
                 }
             }
 
-            return (fileName, totalBytesWritten);
+            return fileName;
         }
 
         private struct WriteEntryInfo
@@ -256,7 +246,6 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             internal IReader Reader { get; set; }
             internal StorageFolder Location { get; set; }
             internal bool IgnoreDirectories { get; set; }
-            internal long TotalBytesWritten { get; set; }
         }
 
         private ArchiveEncoding ConvertEncoding(Encoding encoding)

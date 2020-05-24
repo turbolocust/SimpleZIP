@@ -48,20 +48,6 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Factory
         #region Constructors
 
         /// <summary>
-        /// Constructs a new instance of this class with the <see cref="BufferSize"/>
-        /// set to <see cref="DefaultBufferSize"/>.
-        /// </summary>
-        /// <param name="updateDelayRate">The update delay rate to be set.</param>
-        /// <param name="previousDelayRateCounter">The initial value of the counter
-        /// that counts up to <paramref name="updateDelayRate"/>.</param>
-        internal AlgorithmOptions(uint updateDelayRate, uint previousDelayRateCounter)
-        {
-            UpdateDelayRate = updateDelayRate;
-            PreviousDelayRateCounter = previousDelayRateCounter;
-            BufferSize = DefaultBufferSize;
-        }
-
-        /// <summary>
         /// Constructs a new instance of this class. If <paramref name="bufferSize"/>
         /// is below or equal zero, then the <see cref="BufferSize"/> is set
         /// to <see cref="DefaultBufferSize"/>.
@@ -76,6 +62,18 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Factory
             UpdateDelayRate = updateDelayRate;
             PreviousDelayRateCounter = previousDelayRateCounter;
             BufferSize = bufferSize > 0 ? bufferSize : DefaultBufferSize;
+        }
+
+        /// <summary>
+        /// Constructs a new instance of this class with the <see cref="BufferSize"/>
+        /// set to <see cref="DefaultBufferSize"/>.
+        /// </summary>
+        /// <param name="updateDelayRate">The update delay rate to be set.</param>
+        /// <param name="previousDelayRateCounter">The initial value of the counter
+        /// that counts up to <paramref name="updateDelayRate"/>.</param>
+        internal AlgorithmOptions(uint updateDelayRate, uint previousDelayRateCounter)
+            : this(updateDelayRate, previousDelayRateCounter, DefaultBufferSize)
+        {
         }
 
         #endregion

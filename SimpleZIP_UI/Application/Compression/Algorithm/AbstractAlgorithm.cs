@@ -49,6 +49,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         protected int BufferSize { get; }
 
         /// <summary>
+        /// Buffers any non-reported bytes between zero and <see cref="UpdateDelayRate"/>.
+        /// </summary>
+        private long _bytesProcessedBuffer;
+
+        /// <summary>
         /// Constructs a new instance of this class.
         /// </summary>
         /// <param name="options">Options to be considered for this instance.</param>
@@ -63,14 +68,13 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         }
 
         /// <summary>
-        /// Fires <see cref="ICompressionAlgorithm.TotalBytesProcessed"/>
-        /// using the specified parameter.
+        /// Fires <see cref="ICompressionAlgorithm.BytesProcessed"/>.
         /// </summary>
         /// <param name="processedBytes">The bytes processed so far.</param>
-        private void FireTotalBytesProcessed(long processedBytes)
+        private void FireBytesProcessed(long processedBytes)
         {
-            var evtArgs = new TotalBytesProcessedEventArgs { TotalBytesProcessed = processedBytes };
-            TotalBytesProcessed?.Invoke(this, evtArgs);
+            var evtArgs = new BytesProcessedEventArgs(processedBytes);
+            BytesProcessed?.Invoke(this, evtArgs);
         }
 
         /// <summary>
@@ -101,17 +105,20 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
         /// <inheritdoc cref="IProgressObserver{T}.Update"/>
         public void Update(long value)
         {
+            _bytesProcessedBuffer += value;
+
             if (DelayRateCounter++ == UpdateDelayRate)
             {
-                FireTotalBytesProcessed(value);
+                FireBytesProcessed(_bytesProcessedBuffer);
                 DelayRateCounter = 0;
+                _bytesProcessedBuffer = 0;
             }
         }
 
         #region ICompressionAlgorithm
 
         /// <inheritdoc />
-        public event EventHandler<TotalBytesProcessedEventArgs> TotalBytesProcessed;
+        public event EventHandler<BytesProcessedEventArgs> BytesProcessed;
 
         /// <inheritdoc cref="ICompressionAlgorithm.Token"/>
         public CancellationToken Token { get; set; }

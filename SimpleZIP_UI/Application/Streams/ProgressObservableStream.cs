@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -27,52 +27,42 @@ namespace SimpleZIP_UI.Application.Streams
         /// </summary>
         private readonly IProgressObserver<long> _observer;
 
-        /// <summary>
-        /// Total amount of bytes which have already been processed.
-        /// </summary>
-        private long _totalBytesProcessed;
-
         public ProgressObservableStream(IProgressObserver<long> observer,
             Stream decoratedStream) : base(decoratedStream)
         {
             _observer = observer;
         }
 
+        /// <inheritdoc />
         public override int Read(byte[] buffer, int offset, int count)
         {
-            var readBytes = base.Read(buffer, offset, count);
-
-            _totalBytesProcessed += readBytes;
-            NotifyObserver();
-
+            int readBytes = base.Read(buffer, offset, count);
+            NotifyObserver(readBytes);
             return readBytes;
         }
 
+        /// <inheritdoc />
         public override void Write(byte[] buffer, int offset, int count)
         {
             base.Write(buffer, offset, count);
-
-            _totalBytesProcessed += count;
-            NotifyObserver();
+            NotifyObserver(count);
         }
 
+        /// <inheritdoc />
         public override long Seek(long offset, SeekOrigin origin)
         {
-            var previousPosition = Position;
-            var currentPosition = base.Seek(offset, origin);
+            long previousPosition = Position;
+            long currentPosition = base.Seek(offset, origin);
+            long processed = currentPosition - previousPosition;
 
-            _totalBytesProcessed += currentPosition - previousPosition;
-            NotifyObserver();
+            NotifyObserver(processed);
 
             return currentPosition;
         }
 
-        /// <summary>
-        /// Notifies the aggregated observer.
-        /// </summary>
-        private void NotifyObserver()
+        private void NotifyObserver(long readBytes)
         {
-            _observer.Update(_totalBytesProcessed);
+            _observer.Update(readBytes);
         }
     }
 }
