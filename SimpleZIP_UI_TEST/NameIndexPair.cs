@@ -21,7 +21,7 @@ using System;
 
 namespace SimpleZIP_UI_TEST
 {
-    internal struct NameIndexPair : IEquatable<NameIndexPair>
+    internal readonly struct NameIndexPair : IEquatable<NameIndexPair>
     {
         /// <summary>
         /// The index that is associated with <see cref="Name"/>.
@@ -38,8 +38,7 @@ namespace SimpleZIP_UI_TEST
         /// </summary>
         /// <param name="index">The index to be associated with <paramref name="name"/>.</param>
         /// <param name="name">The name to be associated with <paramref name="index"/>.</param>
-        internal NameIndexPair(int index, string name)
-            => (Index, Name) = (index, name);
+        internal NameIndexPair(int index, string name) => (Index, Name) = (index, name);
 
         /// <inheritdoc />
         public bool Equals(NameIndexPair other)

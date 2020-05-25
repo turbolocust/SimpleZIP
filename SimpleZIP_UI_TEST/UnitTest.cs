@@ -31,6 +31,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
+using SimpleZIP_UI.Application.Compression.Algorithm.Factory;
 using SimpleZIP_UI.Application.Hashing;
 
 namespace SimpleZIP_UI_TEST
@@ -69,9 +70,10 @@ namespace SimpleZIP_UI_TEST
         {
             try
             {
-                var options = new CompressionOptions(Encoding.UTF8);
-                var algorithm = Archives.DetermineAlgorithm(archiveType);
-                Assert.IsTrue(await PerformArchiveOperations(algorithm, fileNameExtension, options));
+                var compressionOptions = new CompressionOptions(Encoding.UTF8);
+                var algorithmOptions = new AlgorithmOptions(updateDelayRate: 100);
+                var algorithm = AlgorithmFactory.DetermineAlgorithm(archiveType, algorithmOptions);
+                Assert.IsTrue(await PerformArchiveOperations(algorithm, fileNameExtension, compressionOptions));
             }
             catch (Exception ex)
             {
@@ -209,7 +211,8 @@ namespace SimpleZIP_UI_TEST
             Assert.IsNotNull(archive);
 
             var outputFolder = await _workingDir.CreateFolderAsync(
-                "simpleZipUiTempOutput", CreationCollisionOption.OpenIfExists);
+                "simpleZipUiTempOutput", 
+                CreationCollisionOption.OpenIfExists);
 
             // extract archive
             await compressionAlgorithm.DecompressAsync(archive, outputFolder);
@@ -227,6 +230,7 @@ namespace SimpleZIP_UI_TEST
             // clean up once done
             await outputFolder.DeleteAsync();
             await file.DeleteAsync();
+
             return true;
         }
     }
