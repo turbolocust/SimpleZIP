@@ -321,13 +321,12 @@ namespace SimpleZIP_UI.Presentation.View
         /// <inheritdoc />
         public async Task<string> RequestPassword(string fileName)
         {
-            var dialog = DialogFactory.CreateRequestPasswordDialog(fileName);
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            return await Dispatcher.RunTaskAsync(async () =>
             {
+                var dialog = DialogFactory.CreateRequestPasswordDialog(fileName);
                 await dialog.ShowAsync();
+                return dialog.Password;
             });
-
-            return dialog.Password;
         }
 
         /// <inheritdoc />
