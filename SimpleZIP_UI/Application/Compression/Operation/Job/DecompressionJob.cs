@@ -68,8 +68,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation.Job
 
                     if (subResult == null)
                     {
-                        operationInfo.Item.Password = await PasswordRequest
-                            .RequestPassword(operationInfo.Item.Name).ConfigureAwait(false);
+                        operationInfo.Item.Password = await PasswordRequest.RequestPassword(operationInfo.Item.Name);
                         subResult = await Operation.Perform(operationInfo, false).ConfigureAwait(false);
                     }
 

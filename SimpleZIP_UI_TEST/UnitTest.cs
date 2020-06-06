@@ -131,7 +131,7 @@ namespace SimpleZIP_UI_TEST
             }
             catch (Exception ex)
             {
-                Assert.IsTrue(ex.Message.StartsWith("No password available"));
+                Assert.IsTrue(ex.Message.Contains("No password available"));
             }
         }
 
@@ -211,7 +211,7 @@ namespace SimpleZIP_UI_TEST
             Assert.IsNotNull(archive);
 
             var outputFolder = await _workingDir.CreateFolderAsync(
-                "simpleZipUiTempOutput", 
+                "simpleZipUiTempOutput",
                 CreationCollisionOption.OpenIfExists);
 
             // extract archive

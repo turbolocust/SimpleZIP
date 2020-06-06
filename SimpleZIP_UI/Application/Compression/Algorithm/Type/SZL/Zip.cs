@@ -145,7 +145,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                 _logger.Error(ex, "Decompression of {ArchiveName} failed.", archive.Name);
 
                 const string noPasswordPrefix = "No password available"; // is unit tested
-                if (!ex.Message.StartsWith(noPasswordPrefix, StringComparison.OrdinalIgnoreCase))
+                if (!ex.Message.Contains(noPasswordPrefix, StringComparison.OrdinalIgnoreCase))
                 {
                     throw; // non-security related exception (likely)
                 }
@@ -220,7 +220,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
                 _logger.Error(ex, "Decompression of {ArchiveName} failed.", archive.Name);
 
                 const string noPasswordPrefix = "No password available"; // is unit tested
-                if (!ex.Message.StartsWith(noPasswordPrefix, StringComparison.OrdinalIgnoreCase))
+                if (!ex.Message.Contains(noPasswordPrefix, StringComparison.OrdinalIgnoreCase))
                 {
                     throw; // non-security related exception (likely)
                 }

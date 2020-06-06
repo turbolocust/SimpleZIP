@@ -188,16 +188,15 @@ namespace SimpleZIP_UI
 
             var loggerConfiguration = new LoggerConfiguration()
                 .MinimumLevel.Debug()
-                .Enrich.FromLogContext()
 #if DEBUG
                 .WriteTo.Debug()
 #endif
-                .WriteTo.Console();
+                .Enrich.FromLogContext();
 
             try
             {
-                var tempFolder = FileUtils.GetTempFolderAsync().GetAwaiter().GetResult();
-                string logFilePath = Path.Combine(tempFolder.Path, "app.log");
+                string tempFolderPath = Path.GetTempPath();
+                string logFilePath = Path.Combine(tempFolderPath, "app.log");
 
                 loggerConfiguration.WriteTo.Async(asyncConfig =>
                     asyncConfig.File(logFilePath, rollingInterval: RollingInterval.Day));
