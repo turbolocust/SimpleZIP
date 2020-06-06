@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2019 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -35,12 +35,15 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Serilog;
 using SimpleZIP_UI.Presentation.Cache;
 
 namespace SimpleZIP_UI.Presentation.Controller
 {
     internal sealed class BrowseArchiveController : BaseController, ICancelRequest, IDisposable
     {
+        private readonly ILogger _logger = Log.ForContext<BrowseArchiveController>();
+
         /// <inheritdoc />
         public bool IsCancelRequest { get; private set; }
 
@@ -76,6 +79,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             string key = !string.IsNullOrEmpty(archive.Path)
                 ? archive.Path : archive.FolderRelativeId;
             var node = RootNodeCache.Instance[key];
+
             if (node != null) // return immediately if cached
             {
                 return node;
@@ -87,6 +91,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             {
                 try
                 {
+                    _logger.Information("Trying to read {ArchiveName}", archive.Name);
                     using (var treeBuilder = new ArchiveTreeBuilder(_tokenSource.Token))
                     {
                         node = await treeBuilder.Build(archive);
@@ -94,6 +99,7 @@ namespace SimpleZIP_UI.Presentation.Controller
                 }
                 catch (ArchiveEncryptedException)
                 {
+                    _logger.Warning("Archive {ArchiveName} is encrypted. Will request password and try again.", archive.Name);
                     // archive is encrypted, ask for password and try again
                     password = await PasswordRequest.RequestPassword(archive.DisplayName);
                     using (var treeBuilder = new ArchiveTreeBuilder(_tokenSource.Token))
@@ -104,12 +110,15 @@ namespace SimpleZIP_UI.Presentation.Controller
             }
             catch (OperationCanceledException)
             {
+                _logger.Warning("Operation got canceled.");
                 // ignore, because we're navigating back
                 // to previous archive or calling page
                 // after cancelling the operation
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, "Error reading archive {ArchiveName}", archive.Name);
+
                 var opType = password != null
                     ? ExceptionMessages.OperationType.ReadingPasswordSet
                     : ExceptionMessages.OperationType.Reading;
@@ -149,23 +158,27 @@ namespace SimpleZIP_UI.Presentation.Controller
             if (entry != null)
             {
                 var folder = await FileUtils.GetTempFolderAsync(TempFolder.Archives);
+
                 if (!string.IsNullOrEmpty(entry.FileName))
                 {
                     try
                     {
                         return await FileUtils.GetFileAsync(folder, entry.FileName);
                     }
-                    catch (FileNotFoundException)
+                    catch (FileNotFoundException ex)
                     {
+                        _logger.Warning("File {FileName} not found.", ex.FileName);
                         // continue, as file most likely got deleted
                     }
                 }
+
                 // doesn't exist, hence extract and read again
                 var item = new ExtractableItem(
                     root.Archive.Name,
                     root.Archive,
                     new[] { entry.ToArchiveEntry() });
-                var size = await FileUtils.GetFileSizeAsync(item.Archive);
+
+                ulong size = await FileUtils.GetFileSizeAsync(item.Archive);
                 // create operation and job for execution
                 var operationInfo = new DecompressionInfo(item, size)
                 {
@@ -173,11 +186,13 @@ namespace SimpleZIP_UI.Presentation.Controller
                     IsCollectFileNames = true,
                     Encoding = Encoding.UTF8
                 };
+
                 var operation = Operations.ForDecompression();
                 var job = new DecompressionJob(operation, operationInfo)
                 {
                     PasswordRequest = PasswordRequest
                 };
+
                 var result = await job.Run(this); // extraction happens here
                 if (result.StatusCode == Result.Status.Success)
                 {
@@ -270,6 +285,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             if (entries.Count > 0)
             {
                 IsNavigating = true;
+
                 var item = new ExtractableItem(
                     root.Archive.Name,
                     root.Archive,
@@ -277,6 +293,7 @@ namespace SimpleZIP_UI.Presentation.Controller
                 {
                     Password = root.Password
                 };
+
                 Navigation.Navigate(typeof(DecompressionSummaryPage), item);
             }
         }

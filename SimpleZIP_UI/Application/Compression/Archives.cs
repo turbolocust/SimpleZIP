@@ -28,11 +28,14 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Serilog;
 
 namespace SimpleZIP_UI.Application.Compression
 {
     public static class Archives
     {
+        private static readonly ILogger Logger = Log.ForContext(typeof(Archives));
+
         /// <summary>
         /// Default separator for entry names.
         /// </summary>
@@ -192,6 +195,7 @@ namespace SimpleZIP_UI.Application.Compression
             }
             catch (Exception ex) // due to missing documentation in SharpCompress
             {
+                Logger.Error(ex, "Archive type of {FileName} is unknown.", file?.Name);
                 throw new InvalidArchiveTypeException(I18N
                     .Resources.GetString("UnknownArchiveType/Text"), ex);
             }
@@ -259,8 +263,9 @@ namespace SimpleZIP_UI.Application.Compression
                     }
                 }
             }
-            catch (IOException)
+            catch (IOException ex)
             {
+                Logger.Error(ex, "Rar archive could not be determined.");
                 isRarArchive = false;
             }
 

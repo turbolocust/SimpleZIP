@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2019 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -37,12 +37,15 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using Serilog;
 
 namespace SimpleZIP_UI.Presentation.View
 {
     /// <inheritdoc cref="Page" />
     public sealed partial class BrowseArchivePage : INavigation, IPasswordRequest, IDisposable
     {
+        private readonly ILogger _logger = Log.ForContext<BrowseArchivePage>();
+
         /// <summary>
         /// Models bound to the list box in view.
         /// </summary>
@@ -279,6 +282,8 @@ namespace SimpleZIP_UI.Presentation.View
                 }
                 catch (Exception ex)
                 {
+                    _logger.Error(ex, "Archive or file {ModelName} could not be read.", model.DisplayName);
+
                     IsProgressBarEnabled.IsTrue = false;
                     string errMsg = !string.IsNullOrEmpty(errResource)
                         ? I18N.Resources.GetString(errResource) : ex.Message;
@@ -355,12 +360,11 @@ namespace SimpleZIP_UI.Presentation.View
         public async Task<string> RequestPassword(string fileName)
         {
             var dialog = DialogFactory.CreateRequestPasswordDialog(fileName);
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            return await Dispatcher.RunTaskAsync(async () =>
             {
                 await dialog.ShowAsync();
+                return dialog.Password;
             });
-
-            return dialog.Password;
         }
 
         /// <inheritdoc />

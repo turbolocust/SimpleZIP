@@ -34,7 +34,7 @@ namespace SimpleZIP_UI.Application.Compression.Model
         internal string Name { get; }
 
         /// <summary>
-        /// The archive which can be extracted.
+        /// The archive which is to be extracted.
         /// </summary>
         internal StorageFile Archive { get; }
 

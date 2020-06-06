@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2019 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -22,11 +22,14 @@ using SimpleZIP_UI.Application.Hashing;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Serilog;
 
 namespace SimpleZIP_UI.Presentation.Controller
 {
     internal class MessageDigestController : BaseController
     {
+        private readonly ILogger _logger = Log.ForContext<MessageDigestController>();
+
         /// <summary>
         /// Instance used to compute hashes (message digest).
         /// </summary>
@@ -59,10 +62,12 @@ namespace SimpleZIP_UI.Presentation.Controller
             }
             catch (FileNotFoundException)
             {
+                _logger.Error("File {FileName} not found.", file.Path);
                 hash = $"<<{I18N.Resources.GetString("FileNotFound/Text")}>>";
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.Error(ex, "Error computing hash value of {FileName}", file.Name);
                 hash = $"<<{I18N.Resources.GetString("Error/Text")}>>";
             }
 

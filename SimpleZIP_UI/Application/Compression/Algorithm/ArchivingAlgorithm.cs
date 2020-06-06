@@ -31,6 +31,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Serilog;
 using SimpleZIP_UI.Application.Compression.Algorithm.Factory;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm
@@ -41,6 +42,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
     /// </summary>
     public abstract class ArchivingAlgorithm : AbstractAlgorithm
     {
+        private readonly ILogger _logger = Log.ForContext<ArchivingAlgorithm>();
+
         /// <summary>
         /// The concrete archive type to be used.
         /// </summary>
@@ -92,6 +95,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             }
             catch (CryptographicException ex)
             {
+                _logger.Error(ex, "Decompression of archive {ArchiveName} failed.", archive.Name);
                 throw new ArchiveEncryptedException(ex.Message, ex);
             }
         }
@@ -203,6 +207,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             }
             catch (CryptographicException ex)
             {
+                _logger.Error(ex, "Decompression of archive {ArchiveName} failed.", archive.Name);
                 throw new ArchiveEncryptedException(ex.Message, ex);
             }
         }

@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2019 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -36,6 +36,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Serilog;
 using SimpleZIP_UI.Presentation.Util;
 
 namespace SimpleZIP_UI.Presentation.View
@@ -43,6 +44,8 @@ namespace SimpleZIP_UI.Presentation.View
     /// <inheritdoc cref="Page" />
     public sealed partial class HomePage : INavigation
     {
+        private readonly ILogger _logger = Log.ForContext<HomePage>();
+
         /// <summary>
         /// Models bound to the list view.
         /// </summary>
@@ -81,8 +84,9 @@ namespace SimpleZIP_UI.Presentation.View
                         .GlobalizationPreferences.Languages[0];
                     cultureInfo = new CultureInfo(culture);
                 }
-                catch (IndexOutOfRangeException)
+                catch (IndexOutOfRangeException ex)
                 {
+                    _logger.Error(ex, "No language detected.");
                     // fall-back, although assertion error
                     cultureInfo = new CultureInfo("en-US");
                 }
@@ -100,8 +104,9 @@ namespace SimpleZIP_UI.Presentation.View
                             CultureInfo.InvariantCulture);
                         model.WhenUsed = dateTime.ToString(cultureInfo);
                     }
-                    catch (FormatException)
+                    catch (FormatException ex)
                     {
+                        _logger.Error(ex, "Date formatting failed for {ModelName} ({FileName})", model.MruToken, model.FileName);
                         // use date string unformatted
                     }
 
@@ -112,7 +117,7 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        private static async Task RevealInExplorer(RecentArchiveModel model)
+        private async Task RevealInExplorer(RecentArchiveModel model)
         {
             var historyManager = ArchiveHistory.Instance;
             if (!historyManager.ContainsItem(model.MruToken)) return;
@@ -136,8 +141,9 @@ namespace SimpleZIP_UI.Presentation.View
                 Launcher.LaunchFolderAsync(folder, options);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             }
-            catch (FileNotFoundException)
+            catch (FileNotFoundException ex)
             {
+                _logger.Error(ex, "File {FileName} could not be revealed.", model.FileName);
                 string errMsg = I18N.Resources.GetString("FolderMissing/Text");
                 await DialogFactory.CreateErrorDialog(errMsg).ShowAsync();
             }

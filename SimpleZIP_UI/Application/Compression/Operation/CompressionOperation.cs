@@ -25,12 +25,15 @@ using SimpleZIP_UI.I18N;
 using System;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Serilog;
 using SimpleZIP_UI.Application.Compression.Algorithm.Factory;
 
 namespace SimpleZIP_UI.Application.Compression.Operation
 {
     internal class CompressionOperation : ArchivingOperation<CompressionInfo>
     {
+        private readonly ILogger _logger = Log.ForContext<CompressionOperation>();
+
         private async Task<Result> CreateArchive(CompressionInfo info)
         {
             string archiveName = info.ArchiveName;
@@ -63,6 +66,8 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                     {
                         if (ex is OperationCanceledException) throw;
 
+                        _logger.Error(ex, "Compressing to {ArchiveName} failed.", archive.Name);
+
                         const ExceptionMessages.OperationType opType = ExceptionMessages.OperationType.Writing;
                         message = await ExceptionMessages.GetStringFor(ex, opType, archive).ConfigureAwait(false);
                         verboseMsg = ex.Message;
@@ -77,6 +82,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                 }
 
                 return EvaluateResult(name, message, verboseMsg, isSuccess);
+
             }, token).ConfigureAwait(false);
         }
 

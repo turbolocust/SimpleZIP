@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2019 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,7 +18,9 @@
 // ==--==
 
 using System;
+using System.IO;
 using System.Runtime.CompilerServices;
+using System.Security;
 #if DEBUG
 using System.Diagnostics;
 #endif
@@ -31,6 +33,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Serilog;
 using SimpleZIP_UI.Application;
 using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.Presentation.Handler;
@@ -67,6 +70,7 @@ namespace SimpleZIP_UI
             InitializeComponent();
             InitializeTempDir();
             Suspending += OnSuspending;
+            SetUpApplicationLogging();
 
             if (!EnvironmentInfo.IsMobileDevice)
             {
@@ -93,6 +97,7 @@ namespace SimpleZIP_UI
 
             //Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = "de";
 #endif
+
             // do not repeat app initialization when the Window already has content
             if (!(Window.Current.Content is Frame rootFrame))
             {
@@ -100,11 +105,6 @@ namespace SimpleZIP_UI
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
                 rootFrame.Navigated += OnNavigated;
-
-                if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
-                {
-                    // nothing to load
-                }
 
                 // handler for back request
                 SystemNavigationManager.GetForCurrentView().BackRequested += OnBackRequested;
@@ -143,6 +143,8 @@ namespace SimpleZIP_UI
         /// <inheritdoc />
         protected override async void OnShareTargetActivated(ShareTargetActivatedEventArgs args)
         {
+            if (args == null) return;
+
             base.OnShareTargetActivated(args);
             var shareOperation = args.ShareOperation;
             // only StorageItems are supported, hence return if none are present
@@ -152,12 +154,14 @@ namespace SimpleZIP_UI
             {
                 await ShareTargetHandler.Handle(shareOperation);
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Logger.Error(ex, "Error handling shared file(s).");
+
                 if (EnvironmentInfo.IsMinCreatorsUpdate)
                 {
-                    // does not seem to work properly, even though
-                    // it is no longer deprecated since 1703
+                    /* does not seem to work properly, even though
+                       it is no longer deprecated since 1703 */
                     //shareOperation.ReportError(ex.Message);
                     shareOperation.ReportCompleted();
                 }
@@ -168,16 +172,42 @@ namespace SimpleZIP_UI
             }
         }
 
-        /// <summary>
-        /// Requests the application theme based on the user setting. If the
-        /// system's default theme is set, then no theme will be requested.
-        /// </summary>
+        #region Private methods
+
         private void RequestApplicationTheme()
         {
             if (Settings.TryGetTheme(out var theme))
             {
                 RequestedTheme = theme;
             }
+        }
+
+        private static void SetUpApplicationLogging()
+        {
+            if (EnvironmentInfo.IsMobileDevice) return;
+
+            var loggerConfiguration = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .Enrich.FromLogContext()
+#if DEBUG
+                .WriteTo.Debug()
+#endif
+                .WriteTo.Console();
+
+            try
+            {
+                var tempFolder = FileUtils.GetTempFolderAsync().GetAwaiter().GetResult();
+                string logFilePath = Path.Combine(tempFolder.Path, "app.log");
+
+                loggerConfiguration.WriteTo.Async(asyncConfig =>
+                    asyncConfig.File(logFilePath, rollingInterval: RollingInterval.Day));
+            }
+            catch (SecurityException)
+            {
+                // ignore, logging to file is disabled as a result
+            }
+
+            Log.Logger = loggerConfiguration.CreateLogger();
         }
 
         private static async void InitializeTempDir()
@@ -232,8 +262,11 @@ namespace SimpleZIP_UI
         /// <param name="args">Consists of event parameters.</param>
         private static void OnSuspending(object sender, SuspendingEventArgs args)
         {
+            Log.CloseAndFlush();
             var deferral = args.SuspendingOperation.GetDeferral();
             deferral.Complete();
         }
+
+        #endregion
     }
 }

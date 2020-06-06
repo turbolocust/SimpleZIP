@@ -29,7 +29,7 @@ namespace SimpleZIP_UI.I18N
         /// <summary>
         /// Gets the string with the specified name.
         /// </summary>
-        /// <param name="name">The name of the string to be get.</param>
+        /// <param name="name">The name of the string to be returned.</param>
         /// <returns>String value of a resource.</returns>
         internal static string GetString(string name)
         {

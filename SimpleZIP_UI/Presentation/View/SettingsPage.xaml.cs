@@ -42,6 +42,7 @@ namespace SimpleZIP_UI.Presentation.View
             {
                 curValue = (int)ArchiveHistory.MaxHistoryItems;
             }
+
             return curValue;
         }
 

@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -24,11 +24,14 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Serilog;
 
 namespace SimpleZIP_UI.Application.Compression.Operation.Job
 {
     internal class CompressionJob : ArchivingJob<CompressionInfo>
     {
+        private readonly ILogger _logger = Log.ForContext<CompressionJob>();
+
         /// <inheritdoc />
         public CompressionJob(ArchivingOperation<CompressionInfo> operation,
             params CompressionInfo[] infos) : base(operation, infos)
@@ -68,9 +71,8 @@ namespace SimpleZIP_UI.Application.Compression.Operation.Job
                     if (subResult.StatusCode != Result.Status.Success)
                     {
                         statusCode = Result.Status.PartialFail;
-                        resultMessage.AppendLine(I18N.Resources
-                            .GetString("ArchiveNotCreated/Text",
-                                operationInfo.ArchiveName));
+                        resultMessage.AppendLine(I18N.Resources.GetString(
+                            "ArchiveNotCreated/Text", operationInfo.ArchiveName));
                     }
                     else
                     {
@@ -82,6 +84,8 @@ namespace SimpleZIP_UI.Application.Compression.Operation.Job
                 }
                 catch (Exception ex)
                 {
+                    _logger.Error(ex, "Compressing to {ArchiveName} failed.", operationInfo.ArchiveName);
+
                     if (ex is OperationCanceledException && cancelReq.IsCancelRequest)
                     {
                         statusCode = Result.Status.Interrupt;

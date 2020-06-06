@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2019 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -22,11 +22,14 @@ using SimpleZIP_UI.Application.Util;
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace SimpleZIP_UI.Application.Compression.Operation.Job
 {
     internal class DecompressionJob : ArchivingJob<DecompressionInfo>
     {
+        private readonly ILogger _logger = Log.ForContext<DecompressionJob>();
+
         /// <summary>
         /// Used to request password if archive is protected.
         /// </summary>
@@ -59,6 +62,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation.Job
                     }
                     catch (ArchiveEncryptedException)
                     {
+                        _logger.Warning("Archive {ArchiveName} is encrypted", operationInfo.Item.Name);
                         // archive is encrypted, will request password and try again
                     }
 
@@ -85,6 +89,8 @@ namespace SimpleZIP_UI.Application.Compression.Operation.Job
                 }
                 catch (Exception ex)
                 {
+                    _logger.Error(ex, "Decompressing {ArchiveName} failed.", operationInfo.Item.Name);
+
                     if (ex is OperationCanceledException && cancelReq.IsCancelRequest)
                     {
                         statusCode = Result.Status.Interrupt;

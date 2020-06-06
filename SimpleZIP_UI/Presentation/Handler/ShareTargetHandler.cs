@@ -16,6 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 // ==--==
+
 using SimpleZIP_UI.Application;
 using SimpleZIP_UI.Application.Compression;
 using SimpleZIP_UI.Application.Util;
@@ -29,11 +30,14 @@ using Windows.ApplicationModel.DataTransfer.ShareTarget;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Serilog;
 
 namespace SimpleZIP_UI.Presentation.Handler
 {
     internal static class ShareTargetHandler
     {
+        private static readonly ILogger Logger = Log.ForContext(typeof(ShareTargetHandler));
+
         /// <summary>
         /// Handles the specified <see cref="ShareOperation"/>.
         /// </summary>
@@ -86,12 +90,14 @@ namespace SimpleZIP_UI.Presentation.Handler
         private static async Task<bool> IsArchiveFile(StorageFile file)
         {
             var type = Archives.ArchiveType.Unknown;
+
             try
             {
                 type = await Archives.DetermineArchiveType(file).ConfigureAwait(false);
             }
             catch (InvalidArchiveTypeException)
             {
+                Logger.Error("Archive type of {FileName} is unknown.", file.Name);
                 // type is already set to ArchiveType.Unknown
             }
 

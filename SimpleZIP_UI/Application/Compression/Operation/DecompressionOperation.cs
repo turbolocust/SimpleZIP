@@ -24,12 +24,15 @@ using SimpleZIP_UI.Application.Util;
 using SimpleZIP_UI.I18N;
 using System;
 using System.Threading.Tasks;
+using Serilog;
 using SimpleZIP_UI.Application.Compression.Algorithm.Factory;
 
 namespace SimpleZIP_UI.Application.Compression.Operation
 {
     internal class DecompressionOperation : ArchivingOperation<DecompressionInfo>
     {
+        private readonly ILogger _logger = Log.ForContext<DecompressionOperation>();
+
         /// <summary>
         /// Extracts files from an archive to the specified location.
         /// </summary>
@@ -78,6 +81,8 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                         throw; // simply re-throw, but only if password not set
                     }
 
+                    _logger.Error(ex, "Decompressing {ArchiveName} failed.", archiveFile.Name);
+
                     var opType = passwordSet
                         ? ExceptionMessages.OperationType.ReadingPasswordSet
                         : ExceptionMessages.OperationType.Reading;
@@ -87,6 +92,7 @@ namespace SimpleZIP_UI.Application.Compression.Operation
                 }
 
                 return EvaluateResult(archiveFile.Name, message, verboseMsg, isSuccess);
+
             }, token).ConfigureAwait(false);
         }
 

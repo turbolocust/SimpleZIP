@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2019 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -22,8 +22,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Serilog;
 
 namespace SimpleZIP_UI.Application.Util
 {
@@ -32,7 +34,7 @@ namespace SimpleZIP_UI.Application.Util
         /// <summary>
         /// Array that consists of characters which are not allowed in file names.
         /// </summary>
-        public static readonly char[] IllegalChars = {'<', '>', '/', '\\', '|', ':', '*', '\"', '?'};
+        public static readonly char[] IllegalChars = { '<', '>', '/', '\\', '|', ':', '*', '\"', '?' };
 
         /// <summary>
         /// Checks if the specified string contains illegal characters which are not allowed in file names.
@@ -63,12 +65,12 @@ namespace SimpleZIP_UI.Application.Util
         /// or <c>String.Empty</c> if path does not have an extension.</returns>
         public static string GetFileNameExtension(string path)
         {
-            var fileNameExtension = string.Empty;
+            string fileNameExtension = string.Empty;
             if (ContainsMultipleFileNameExtensions(path))
             {
                 foreach (var extendedFileType in Archives.ArchiveExtendedFileTypes)
                 {
-                    var key = extendedFileType.Key;
+                    string key = extendedFileType.Key;
                     if (path.EndsWith(key, StringComparison.OrdinalIgnoreCase))
                     {
                         fileNameExtension = key;
@@ -107,9 +109,9 @@ namespace SimpleZIP_UI.Application.Util
                     await item.DeleteAsync(StorageDeleteOption.Default);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // swallow exception
+                Log.Error(ex, "Deleting file {FileName} failed.", item.Path);
             }
         }
 
@@ -147,8 +149,9 @@ namespace SimpleZIP_UI.Application.Util
         /// <summary>
         /// Returns the specified temporary folder.
         /// </summary>
-        /// <param name="location">The temporary folder to be get.</param>
+        /// <param name="location">The temporary folder to be returned.</param>
         /// <returns>The specified temporary folder.</returns>
+        /// <exception cref="SecurityException">Thrown if access to temp path is forbidden.</exception>
         internal static async Task<StorageFolder> GetTempFolderAsync(TempFolder location = TempFolder.Default)
         {
             string path = Path.GetTempPath();

@@ -33,12 +33,15 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.System.Display;
 using Windows.UI.Popups;
+using Serilog;
 
 namespace SimpleZIP_UI.Presentation.Controller
 {
     internal abstract class SummaryPageController<T> : BaseController,
         ICancelRequest, IDisposable where T : OperationInfo
     {
+        private readonly ILogger _logger = Log.ForContext<SummaryPageController<T>>();
+
         /// <summary>
         /// Specifies the threshold for the total file size 
         /// after which a notification will be displayed.
@@ -163,6 +166,8 @@ namespace SimpleZIP_UI.Presentation.Controller
                 }
                 catch (Exception ex)
                 {
+                    _logger.Error(ex, "Operation failed.");
+
                     result = new Result
                     {
                         Message = ex.Message,
@@ -200,6 +205,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             }
             catch (ObjectDisposedException)
             {
+                _logger.Warning("Operation already disposed.");
                 NavigateBackHome();
             }
         }
@@ -221,6 +227,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             }
             catch (Exception)
             {
+                _logger.Warning("No folder selected.");
                 folder = null;
             }
             finally

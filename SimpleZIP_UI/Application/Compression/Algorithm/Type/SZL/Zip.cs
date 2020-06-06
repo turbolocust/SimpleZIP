@@ -28,6 +28,7 @@ using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Serilog;
 using SimpleZIP_UI.Application.Compression.Algorithm.Factory;
 
 namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
@@ -40,6 +41,8 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
     /// </summary>
     internal class Zip : AbstractAlgorithm
     {
+        private readonly ILogger _logger = Log.ForContext<Zip>();
+
         /// <inheritdoc />
         public Zip(AlgorithmOptions options) : base(options)
         {
@@ -139,10 +142,12 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
             }
             catch (ICSharpCode.SharpZipLib.SharpZipBaseException ex)
             {
+                _logger.Error(ex, "Decompression of {ArchiveName} failed.", archive.Name);
+
                 const string noPasswordPrefix = "No password available"; // is unit tested
                 if (!ex.Message.StartsWith(noPasswordPrefix, StringComparison.OrdinalIgnoreCase))
                 {
-                    throw;
+                    throw; // non-security related exception (likely)
                 }
 
                 throw new ArchiveEncryptedException(ex.Message, ex);
@@ -212,9 +217,12 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
             }
             catch (ICSharpCode.SharpZipLib.SharpZipBaseException ex)
             {
-                if (!ex.Message.StartsWith("No password available", StringComparison.OrdinalIgnoreCase))
+                _logger.Error(ex, "Decompression of {ArchiveName} failed.", archive.Name);
+
+                const string noPasswordPrefix = "No password available"; // is unit tested
+                if (!ex.Message.StartsWith(noPasswordPrefix, StringComparison.OrdinalIgnoreCase))
                 {
-                    throw;
+                    throw; // non-security related exception (likely)
                 }
 
                 throw new ArchiveEncryptedException(ex.Message, ex);
