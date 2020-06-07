@@ -80,7 +80,8 @@ namespace SimpleZIP_UI.Application.Compression.Reader
             };
 
             var stream = await _archive.OpenStreamForReadAsync().ConfigureAwait(false);
-            _reader = ReaderFactory.Open(stream, options);
+            var reader = ReaderFactory.Open(stream, options);
+            _reader = new DecoratorReader(reader);
         }
 
         /// <inheritdoc />

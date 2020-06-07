@@ -148,6 +148,7 @@
     <Compile Include="Application\Compression\Operation\Job\DecompressionJob.cs" />
     <Compile Include="Application\Compression\Operation\Job\IArchivingJob.cs" />
     <Compile Include="Application\Compression\Operation\Operations.cs" />
+    <Compile Include="Application\Compression\Reader\DecoratorReader.cs" />
     <Compile Include="Application\Compression\Reader\SZL\ArchiveReaderTar.cs" />
     <Compile Include="Application\Compression\Reader\SZL\ArchiveReaderTarBz2.cs" />
     <Compile Include="Application\Compression\Reader\SZL\ArchiveReaderTarGz.cs" />
