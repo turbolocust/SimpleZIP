@@ -1,16 +1,16 @@
-version: '2.4.{build}'
+version: 3.3.{build}
 branches:
   only:
   - master
 skip_tags: true
 skip_commits:
   files:
-    - SimpleZIP_UI/Assets/*
-    - .gitattributes
-    - .gitignore
-    - LICENSE.md
-    - README.md
-image: Visual Studio 2017
+  - SimpleZIP_UI/Assets/*
+  - .gitattributes
+  - .gitignore
+  - LICENSE.md
+  - README.md
+image: Visual Studio 2019
 environment:
   secret_storeKey:
     secure: iGyhcOxgR6HeJ2sNLrgqSdF5u0ux+m2K+fb4pWF8xgE=
@@ -19,7 +19,7 @@ environment:
   secret_testTempKey:
     secure: MwhPsHlpRf0zVmlCt1V+RRBbzg2h0j+cqHvz3jYXQsA=
   secret_testCertKey:
-    secure: 3g30mH5Oqk650+oKPN4ECNVf5E5dHTSWozbn8THkgQU=
+    secure: 9zhloNvLfpwrL+X3Z/surgvJ2WtGGBq64jpS0394FpE=
 install:
 - cmd: >-
     nuget install secure-file -ExcludeVersion
