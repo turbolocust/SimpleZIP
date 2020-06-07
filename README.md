@@ -33,9 +33,9 @@ Supported message digest algorithms:
   - SHA512
 
 <br />
-At the current state, this application supports encrypted archives of type ZIP (legacy encryption) and RAR4 (fully encrypted).
+As of the current state, this application supports encrypted archives of type ZIP and RAR4 (fully encrypted).
 <br /><br />
-This application uses the <a href="https://github.com/adamhathcock/sharpcompress">SharpCompress</a> library and depends on its quality when it comes to reading and writing archives. Unit tests exist to test some algorithms of this library (see project SimpleZIP_UI_TEST). In addition, starting from version 3.0 the <a href="https://github.com/icsharpcode/SharpZipLib">SharpZipLib</a> library is used as a fallback because of some issues with SharpCompress.
+This application uses the <a href="https://github.com/adamhathcock/sharpcompress">SharpCompress</a> library and depends on its quality when it comes to reading and writing archives. Unit tests exist to test the used algorithms of this library (see project SimpleZIP_UI_TEST). In addition, starting from version 3.0 the <a href="https://github.com/icsharpcode/SharpZipLib">SharpZipLib</a> library is used as a fallback because of some issues I experienced with SharpCompress.
 <br />
 
 # Development requirements
