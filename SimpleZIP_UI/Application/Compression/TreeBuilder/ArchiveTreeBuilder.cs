@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2019 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -108,7 +108,8 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
                 var keyBuilder = new StringBuilder();
                 var nameBuilder = new StringBuilder();
                 var rootNode = new ArchiveTreeRoot(RootNodeName, archive, password);
-                var tuple = new ArchiveEntryTuple();
+                var archiveEntryTuple = new ArchiveEntryTuple();
+
                 _nodes.Add(rootNode.Id, rootNode);
 
                 foreach (var entry in _reader.ReadArchive())
@@ -117,15 +118,19 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
                     if (entry.IsDirectory || entry.Key == null) continue;
 
                     string key = Archives.NormalizeName(entry.Key);
-                    UpdateEntryKeyPair(tuple, key);
+                    UpdateEntryKeyPair(archiveEntryTuple, key);
                     ArchiveTreeNode parentNode = rootNode;
 
-                    for (int i = 0; i <= tuple.SeparatorPos; ++i)
+                    for (int i = 0; i <= archiveEntryTuple.SeparatorPos; ++i)
                     {
-                        var c = key[i];
+                        char c = key[i];
                         keyBuilder.Append(c);
 
-                        if (c == Archives.NameSeparatorChar) // next parent found
+                        if (c != Archives.NameSeparatorChar)
+                        {
+                            nameBuilder.Append(c);
+                        }
+                        else // next parent found
                         {
                             var node = GetNode(keyBuilder.ToString());
                             if (parentNode.Children.Add(node))
@@ -136,21 +141,18 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
                             parentNode = node;
                             nameBuilder.Clear();
                         }
-                        else
-                        {
-                            nameBuilder.Append(c);
-                        }
                     }
 
-                    if (!parentNode.Id.Equals(tuple.ParentKey, StringComparison.Ordinal))
+                    if (!parentNode.Id.Equals(archiveEntryTuple.ParentKey, StringComparison.Ordinal))
                         throw new ReadingArchiveException(@"Error reading archive.");
 
-                    var fileEntry = ArchiveTreeFile.CreateFileEntry(key, tuple.EntryName, entry.Size);
+                    var fileEntry = ArchiveTreeFile.CreateFileEntry(key, archiveEntryTuple.EntryName, entry.Size);
                     parentNode.Children.Add(fileEntry);
                     keyBuilder.Clear();
                 }
 
                 return rootNode; // return first element in tree, which is the root node
+
             }, _cancellationToken);
 
             return await task.ConfigureAwait(false);

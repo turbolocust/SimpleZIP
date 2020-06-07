@@ -59,6 +59,11 @@ namespace SimpleZIP_UI
         /// </summary>
         private const double PreferredLaunchSizeHeight = 780d;
 
+        /// <summary>
+        /// The log message template to be used by Serilog, which adds <c>Properties</c>.
+        /// </summary>
+        private const string LogMessageTemplate = @"{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] |{Properties}| {Message:lj}{NewLine}{Exception}";
+
         /// <inheritdoc />
         /// <summary>
         /// Initializes the singleton application object. This is the first line of authored code
@@ -117,15 +122,15 @@ namespace SimpleZIP_UI
                 Window.Current.Content = rootFrame; // place the frame in the current Window
             }
 
-            if (args.PrelaunchActivated == false)
+            if (args != null && args.PrelaunchActivated == false)
             {
                 if (rootFrame.Content == null)
                 {
                     // navigate to the first page, if the navigation stack isn't restored
                     rootFrame.Navigate(typeof(NavigationViewRootPage), args.Arguments);
                 }
-                // ensure the current window is active
-                Window.Current.Activate();
+
+                Window.Current.Activate(); // ensure the current window is active
             }
         }
 
@@ -199,7 +204,7 @@ namespace SimpleZIP_UI
                 string logFilePath = Path.Combine(tempFolderPath, "app.log");
 
                 loggerConfiguration.WriteTo.Async(asyncConfig =>
-                    asyncConfig.File(logFilePath, rollingInterval: RollingInterval.Day));
+                    asyncConfig.File(logFilePath, rollingInterval: RollingInterval.Day, outputTemplate: LogMessageTemplate));
             }
             catch (SecurityException)
             {
@@ -223,9 +228,7 @@ namespace SimpleZIP_UI
         private static void OnNavigated(object sender, NavigationEventArgs args)
         {
             SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
-                ((Frame)sender).CanGoBack ?
-                AppViewBackButtonVisibility.Visible :
-                AppViewBackButtonVisibility.Collapsed;
+                ((Frame)sender).CanGoBack ? AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
         }
 
         /// <summary>
@@ -235,7 +238,8 @@ namespace SimpleZIP_UI
         /// <param name="args">Consists of event parameters.</param>
         private static void OnNavigationFailed(object sender, NavigationFailedEventArgs args)
         {
-            throw new Exception("Failed to load Page " + args.SourcePageType.FullName);
+            Log.Logger.Error(args.Exception, "Failed to load Page {PageName}", args.SourcePageType.FullName);
+            throw new Exception($"Failed to load Page {args.SourcePageType.FullName}");
         }
 
         /// <summary>
