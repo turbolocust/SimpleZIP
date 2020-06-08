@@ -1,10 +1,15 @@
-# SimpleZIP
+<p align="center">
+  <img alt="szip logo" src="./SimpleZIP_UI/Assets/Square44x44Logo.altform-unplated_targetsize-256.png" width="100px" />
+  <h1 align="center">SimpleZIP</h1>
+</p>
 
-[![Build status](https://ci.appveyor.com/api/projects/status/ofso840eiw7woaq2?svg=true)](https://ci.appveyor.com/project/turbolocust/simplezip)
+[![Build status](https://ci.appveyor.com/api/projects/status/ofso840eiw7woaq2?svg=true&style=flat-square)](https://ci.appveyor.com/project/turbolocust/simplezip)
+[![Store link](https://img.shields.io/badge/Microsoft%20Store-Download-orange.svg?style=flat-square)](https://www.microsoft.com/store/productId/9nz7l8c54zln)
+[![Release](https://img.shields.io/github/release/turbolocust/SimpleZIP.svg?style=flat-square)](https://github.com/turbolocust/SimpleZIP/releases)
+[![Stars](https://img.shields.io/github/stars/turbolocust/SimpleZIP.svg?style=flat-square)](https://github.com/turbolocust/SimpleZIP/stargazers)
+[![Contributors](https://img.shields.io/github/contributors/turbolocust/SimpleZIP?style=flat-square)](https://github.com/turbolocust/SimpleZIP/graphs/contributors)
 
 <b>A very simple archiving application and hash tool for the Universal Windows Platform</b>.
-
-This app can be found in the Windows Store: https://www.microsoft.com/en-us/store/p/simplezip/9nz7l8c54zln
 
 <br />Supported formats for compression:
   - ZIP (Deflate)
