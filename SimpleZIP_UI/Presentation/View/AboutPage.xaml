@@ -24,6 +24,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="1.0*" />
         </Grid.RowDefinitions>
@@ -37,12 +38,15 @@
             </Paragraph>
         </RichTextBlock>
         <StackPanel Grid.Row="1" Orientation="Vertical">
+            <Image x:Name="LogoImage" Stretch="Uniform" Height="200" Width="160" HorizontalAlignment="Left" />
+        </StackPanel>
+        <StackPanel Grid.Row="2" Orientation="Vertical">
             <TextBlock x:Uid="Feedback" Text="" Margin="0,32,0,0" IsTextSelectionEnabled="False" TextAlignment="Left" />
             <HyperlinkButton NavigateUri="mailto:simplezip@outlook.com?subject=Feedback">
                 <TextBlock x:Uid="SendEmail" Text="" />
             </HyperlinkButton>
         </StackPanel>
-        <Button Grid.Row="2" Margin="0,32,0,0" HorizontalContentAlignment="Stretch"
+        <Button Grid.Row="3" Margin="0,32,0,0" HorizontalContentAlignment="Stretch"
                 Tapped="GetSourceButton_OnTapped" Foreground="{ThemeResource ButtonForegroundThemeBrush}" 
                 Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
             <StackPanel Orientation="Horizontal">
@@ -51,7 +55,7 @@
                            VerticalAlignment="Center" HorizontalAlignment="Left" />
             </StackPanel>
         </Button>
-        <RichTextBlock Grid.Row="3" Margin="0,64,0,0" TextWrapping="Wrap" IsTextSelectionEnabled="False" TextAlignment="Left">
+        <RichTextBlock Grid.Row="4" Margin="0,64,0,0" TextWrapping="Wrap" IsTextSelectionEnabled="False" TextAlignment="Left">
             <Paragraph FontStretch="Normal">
                 <Run x:Uid="HintColon" Text="" FontWeight="Bold" />
                 <!-- following Run acts as a space -->
@@ -60,7 +64,7 @@
                 <LineBreak />
             </Paragraph>
         </RichTextBlock>
-        <StackPanel Grid.Row="4" Orientation="Vertical" VerticalAlignment="Bottom">
+        <StackPanel Grid.Row="5" Orientation="Vertical" VerticalAlignment="Bottom">
             <HyperlinkButton x:Name="LibraryScHyperlinkButton">SharpCompress</HyperlinkButton>
             <HyperlinkButton x:Name="LibrarySzlHyperlinkButton">SharpZipLib</HyperlinkButton>
             <HyperlinkButton x:Name="LicenseHyperlinkButton">GNU General Public License 3</HyperlinkButton>

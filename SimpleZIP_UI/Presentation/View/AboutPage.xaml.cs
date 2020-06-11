@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2019 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@ using System;
 using Windows.System;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace SimpleZIP_UI.Presentation.View
 {
@@ -35,6 +36,9 @@ namespace SimpleZIP_UI.Presentation.View
         private const string LibraryScUri = @"https://github.com/adamhathcock/sharpcompress";
         private const string LibrarySzlUri = @"https://github.com/icsharpcode/SharpZipLib";
 
+        private const string LogoUriString = @"ms-appx:///Assets/Logo/simplezip_logo.png";
+        private const string LogoInvertedUriString = @"ms-appx:///Assets/Logo/simplezip_logo_inverted.png";
+
         public AboutPage()
         {
             InitializeComponent();
@@ -45,6 +49,10 @@ namespace SimpleZIP_UI.Presentation.View
             LibraryScHyperlinkButton.NavigateUri = new Uri(LibraryScUri);
             LibrarySzlHyperlinkButton.NavigateUri = new Uri(LibrarySzlUri);
             LicenseHyperlinkButton.NavigateUri = new Uri(LicenseUri);
+
+            LogoImage.Source = EnvironmentInfo.IsDarkThemeEnabled
+                ? new BitmapImage(new Uri(LogoInvertedUriString)) { DecodePixelHeight = 200 }
+                : new BitmapImage(new Uri(LogoUriString)) { DecodePixelHeight = 200 };
         }
 
         private static async void NavigateToProjectHome()
