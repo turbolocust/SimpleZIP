@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="szip logo" src="./SimpleZIP_UI/Assets/Square44x44Logo.altform-unplated_targetsize-256.png" width="100px" />
+  <img alt="szip logo" src="./SimpleZIP_UI/Assets/Square44x44Logo.altform-lightunplated_targetsize-256.png" width="100px" />
   <h1 align="center">SimpleZIP</h1>
 </p>
 
