@@ -4,8 +4,8 @@
 </p>
 
 [![Build status](https://ci.appveyor.com/api/projects/status/ofso840eiw7woaq2?svg=true&style=flat-square)](https://ci.appveyor.com/project/turbolocust/simplezip)
-[![Store link](https://img.shields.io/badge/Microsoft%20Store-Download-orange.svg?style=flat-square)](https://www.microsoft.com/store/productId/9nz7l8c54zln)
-[![Release](https://img.shields.io/github/release/turbolocust/SimpleZIP.svg?style=flat-square)](https://github.com/turbolocust/SimpleZIP/releases)
+[![Win](https://badgen.net/badge/icon/Microsoft%20Store?icon=windows&label&color=blue&style=flat-square)](https://www.microsoft.com/store/productId/9nz7l8c54zln)
+[![Release](https://img.shields.io/github/release/turbolocust/SimpleZIP.svg?style=flat-square&color=green)](https://github.com/turbolocust/SimpleZIP/releases)
 [![Stars](https://img.shields.io/github/stars/turbolocust/SimpleZIP.svg?style=flat-square)](https://github.com/turbolocust/SimpleZIP/stargazers)
 [![Contributors](https://img.shields.io/github/contributors/turbolocust/SimpleZIP?style=flat-square)](https://github.com/turbolocust/SimpleZIP/graphs/contributors)
 
