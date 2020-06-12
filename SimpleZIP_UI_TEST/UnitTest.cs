@@ -39,12 +39,9 @@ namespace SimpleZIP_UI_TEST
     [TestClass]
     public class AlgorithmsTest
     {
-        private IReadOnlyList<StorageFile> _files;
-
-        private readonly StorageFolder _workingDir = ApplicationData.Current.TemporaryFolder;
+        #region Static members
 
         private const string ArchiveName = "simpleZipUiTestArchive";
-
         private static readonly string FileText = GenerateRandomString(256);
 
         private static string GenerateRandomString(int length)
@@ -60,6 +57,11 @@ namespace SimpleZIP_UI_TEST
             return sb.ToString();
         }
 
+        #endregion
+
+        private readonly StorageFolder _workingDir = ApplicationData.Current.TemporaryFolder;
+        private IReadOnlyList<StorageFile> _files;
+
         [DataRow(Archives.ArchiveType.Zip, ".zip")]
         [DataRow(Archives.ArchiveType.Tar, ".tar")]
         [DataRow(Archives.ArchiveType.TarGz, ".tgz")]
@@ -68,12 +70,16 @@ namespace SimpleZIP_UI_TEST
         [DataTestMethod]
         public async Task CompressionExtractionTest(Archives.ArchiveType archiveType, string fileNameExtension)
         {
+            const int updateDelayRate = 100;
+
             try
             {
                 var compressionOptions = new CompressionOptions(Encoding.UTF8);
-                var algorithmOptions = new AlgorithmOptions(updateDelayRate: 100);
+                var algorithmOptions = new AlgorithmOptions(updateDelayRate);
                 var algorithm = AlgorithmFactory.DetermineAlgorithm(archiveType, algorithmOptions);
-                Assert.IsTrue(await PerformArchiveOperations(algorithm, fileNameExtension, compressionOptions));
+
+                Assert.IsTrue(await PerformArchiveOperations(
+                    algorithm, fileNameExtension, compressionOptions).ConfigureAwait(false));
             }
             catch (Exception ex)
             {
@@ -90,12 +96,13 @@ namespace SimpleZIP_UI_TEST
         {
             const string archiveName = ArchiveName + "_enc.zip";
             // create test file to be archived first...
-            var tempFile = await CreateTestFile("SimpleZIP_testFile_enc");
+            var tempFile = await CreateTestFile("SimpleZIP_testFile_enc").ConfigureAwait(false);
             // ...then create test archive file
             var archive = await _workingDir.CreateFileAsync(
                 archiveName, CreationCollisionOption.GenerateUniqueName);
 
-            var zipStream = new ZipOutputStream(await archive.OpenStreamForWriteAsync())
+            var zipStream = new ZipOutputStream(await archive
+                .OpenStreamForWriteAsync().ConfigureAwait(false))
             {
                 Password = "test"
             };
@@ -106,12 +113,13 @@ namespace SimpleZIP_UI_TEST
             var entry = new ZipEntry(entryName)
             {
                 DateTime = DateTime.Now,
-                Size = (long)await FileUtils.GetFileSizeAsync(tempFile)
+                Size = (long)await FileUtils.GetFileSizeAsync(tempFile).ConfigureAwait(false)
             };
 
             zipStream.PutNextEntry(entry);
             var buffer = new byte[1 << 12];
-            using (var srcStream = await tempFile.OpenStreamForReadAsync())
+            using (var srcStream = await tempFile
+                .OpenStreamForReadAsync().ConfigureAwait(false))
             {
                 StreamUtils.Copy(srcStream, zipStream, buffer);
             }
@@ -122,7 +130,8 @@ namespace SimpleZIP_UI_TEST
 
             try
             {
-                using (var zipFile = new ZipFile(await archive.OpenStreamForReadAsync()))
+                using (var zipFile = new ZipFile(await archive
+                    .OpenStreamForReadAsync().ConfigureAwait(false)))
                 {
                     zipFile.GetInputStream(0); // password required here
                     Assert.Fail("Correct password provided. " +
@@ -131,7 +140,8 @@ namespace SimpleZIP_UI_TEST
             }
             catch (Exception ex)
             {
-                Assert.IsTrue(ex.Message.Contains("No password available"));
+                Assert.IsTrue(ex.Message.Contains(
+                    "No password available", StringComparison.Ordinal));
             }
         }
 
@@ -165,21 +175,25 @@ namespace SimpleZIP_UI_TEST
                 string value = values[nameIndexPair.Index];
                 // check if algorithm is actually supported (exists)
                 Assert.IsTrue(supportedAlgorithms.Contains(algorithmName));
-                (_, string hashedValue) = await messageDigestProvider.ComputeAsync(value, algorithmName);
+                (_, string hashedValue) = await messageDigestProvider
+                    .ComputeAsync(value, algorithmName).ConfigureAwait(false);
                 // check if computed hash value equals expected hash value
                 Assert.AreEqual(expectedHashedValue, hashedValue);
             }
         }
+
+        #region Private methods
 
         private async Task<StorageFile> CreateTestFile(string name)
         {
             var tempFile = await _workingDir.CreateFileAsync(
                 name, CreationCollisionOption.GenerateUniqueName);
 
-            using (var streamWriter = new StreamWriter(await tempFile.OpenStreamForWriteAsync()))
+            using (var streamWriter = new StreamWriter(await tempFile
+                .OpenStreamForWriteAsync().ConfigureAwait(false)))
             {
-                await streamWriter.WriteAsync(FileText);
-                await streamWriter.FlushAsync();
+                await streamWriter.WriteAsync(FileText).ConfigureAwait(false);
+                await streamWriter.FlushAsync().ConfigureAwait(false);
             }
 
             return tempFile;
@@ -191,18 +205,19 @@ namespace SimpleZIP_UI_TEST
         {
             return await Task.Run(async () =>
             {
-                var tempFile = await CreateTestFile("SimpleZIP_testFile");
+                var tempFile = await CreateTestFile("SimpleZIP_testFile").ConfigureAwait(false);
 
                 _files = new[] { tempFile };
                 string archiveName = ArchiveName + fileType;
                 var archive = await _workingDir.CreateFileAsync(
                     archiveName, CreationCollisionOption.GenerateUniqueName);
 
-                await compressionAlgorithm.CompressAsync(_files, archive, _workingDir, options);
+                await compressionAlgorithm.CompressAsync(_files, archive, _workingDir, options).ConfigureAwait(false);
 
                 // extract archive after creation
-                return await ExtractArchive(compressionAlgorithm, archive.Name);
-            });
+                return await ExtractArchive(compressionAlgorithm, archive.Name).ConfigureAwait(false);
+
+            }).ConfigureAwait(false);
         }
 
         private async Task<bool> ExtractArchive(ICompressionAlgorithm compressionAlgorithm, string archiveName)
@@ -215,13 +230,14 @@ namespace SimpleZIP_UI_TEST
                 CreationCollisionOption.OpenIfExists);
 
             // extract archive
-            await compressionAlgorithm.DecompressAsync(archive, outputFolder);
+            await compressionAlgorithm.DecompressAsync(archive, outputFolder).ConfigureAwait(false);
 
             var file = _files[0];
-            using (var streamReader = new StreamReader(await file.OpenStreamForReadAsync()))
+            using (var streamReader = new StreamReader(
+                await file.OpenStreamForReadAsync().ConfigureAwait(false)))
             {
-                string line = await streamReader.ReadLineAsync();
-                if (line != null && !line.Equals(FileText))
+                string line = await streamReader.ReadLineAsync().ConfigureAwait(false);
+                if (line != null && !line.Equals(FileText, StringComparison.Ordinal))
                 {
                     Assert.Fail("Files do not match.");
                 }
@@ -233,5 +249,7 @@ namespace SimpleZIP_UI_TEST
 
             return true;
         }
+
+        #endregion
     }
 }
