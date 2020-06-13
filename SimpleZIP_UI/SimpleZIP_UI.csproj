@@ -283,7 +283,7 @@
     <Content Include="Assets\Logo\simplezip_logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\Logo\simplezip_logo_inverted.png">
+    <Content Include="Assets\Logo\simplezip_logo_alt.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\SmallTile.scale-100.png" />
