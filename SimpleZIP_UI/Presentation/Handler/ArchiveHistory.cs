@@ -56,12 +56,6 @@ namespace SimpleZIP_UI.Presentation.Handler
             => StorageApplicationPermissions.MostRecentlyUsedList;
 
         /// <summary>
-        /// Lock object which is used for double-checked locking
-        /// when retrieving the singleton instance of this class.
-        /// </summary>
-        private static readonly object LockObj = new object();
-
-        /// <summary>
         /// Instance used for hashing the MRU token.
         /// </summary>
         private readonly IMessageDigestProvider _msgDigestProvider;
@@ -74,12 +68,18 @@ namespace SimpleZIP_UI.Presentation.Handler
         #region Singleton members
 
         /// <summary>
-        /// Singleton instance of this class.
+        /// Lock object which is used for double-checked locking
+        /// when retrieving the singleton instance of this class.
         /// </summary>
-        private static ArchiveHistory _instance;
+        private static readonly object LockObj = new object();
 
         /// <summary>
-        /// The singleton instance of this class. This property is thread-safe.
+        /// Singleton instance of this class.
+        /// </summary>
+        private static volatile ArchiveHistory _instance;
+
+        /// <summary>
+        /// Returns the singleton instance of this class. This property is thread-safe.
         /// </summary>
         public static ArchiveHistory Instance
         {
@@ -89,7 +89,10 @@ namespace SimpleZIP_UI.Presentation.Handler
                 {
                     lock (LockObj)
                     {
-                        _instance = new ArchiveHistory();
+                        if (_instance == null) // double-check
+                        {
+                            _instance = new ArchiveHistory();
+                        }
                     }
                 }
 

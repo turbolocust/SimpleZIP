@@ -18,6 +18,7 @@
 // ==--==
 
 using System.Collections.Generic;
+using Serilog;
 using SimpleZIP_UI.Application;
 using SimpleZIP_UI.Application.Compression.TreeBuilder;
 using SimpleZIP_UI.Application.Util;
@@ -26,7 +27,8 @@ namespace SimpleZIP_UI.Presentation.Cache
 {
     internal sealed class RootNodeCache : ICache<string, ArchiveTreeRoot>
     {
-        private readonly Dictionary<string, ArchiveTreeRoot> _nodesCache;
+        private readonly ILogger _logger = Log.ForContext<RootNodeCache>();
+        private readonly IDictionary<string, ArchiveTreeRoot> _nodesCache;
 
         /// <inheritdoc />
         public void WriteTo(string key, ArchiveTreeRoot node)
@@ -37,6 +39,7 @@ namespace SimpleZIP_UI.Presentation.Cache
         /// <inheritdoc />
         public ArchiveTreeRoot ReadFrom(string key)
         {
+            _logger.Debug("Trying to read key '{Key}' from cache", key);
             _nodesCache.TryGetValue(key, out var rootNode);
             return rootNode; // can be null
         }
@@ -44,6 +47,7 @@ namespace SimpleZIP_UI.Presentation.Cache
         /// <inheritdoc />
         public void ClearCache()
         {
+            _logger.Debug("Clearing cache");
             _nodesCache.Clear();
         }
 
@@ -67,10 +71,11 @@ namespace SimpleZIP_UI.Presentation.Cache
             if (force || Instance._nodesCache.Count > 10)
             {
                 Instance.ClearCache();
+
                 try
                 {
-                    var tempFolder = await FileUtils.GetTempFolderAsync(
-                        TempFolder.Archives).ConfigureAwait(false);
+                    Instance._logger.Debug("Purging temporary files in {TempFolder} folder", TempFolder.Archives);
+                    var tempFolder = await FileUtils.GetTempFolderAsync(TempFolder.Archives).ConfigureAwait(false);
                     await FileUtils.CleanFolderAsync(tempFolder).ConfigureAwait(false);
                 }
                 catch
@@ -82,9 +87,20 @@ namespace SimpleZIP_UI.Presentation.Cache
 
         #region Singleton members
 
+        /// <summary>
+        /// Lock object which is used for double-checked locking
+        /// when retrieving the singleton instance of this class.
+        /// </summary>
         private static readonly object LockObject = new object();
-        private static RootNodeCache _instance;
 
+        /// <summary>
+        /// Singleton instance of this class.
+        /// </summary>
+        private static volatile RootNodeCache _instance;
+
+        /// <summary>
+        /// Returns the singleton instance of this class. This property is thread-safe.
+        /// </summary>
         public static RootNodeCache Instance
         {
             get
@@ -93,7 +109,10 @@ namespace SimpleZIP_UI.Presentation.Cache
                 {
                     lock (LockObject)
                     {
-                        _instance = new RootNodeCache();
+                        if (_instance == null) // double-check
+                        {
+                            _instance = new RootNodeCache();
+                        }
                     }
                 }
 
