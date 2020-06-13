@@ -29,7 +29,10 @@ namespace SimpleZIP_UI.Presentation.View
     /// <inheritdoc cref="Page" />
     public sealed partial class AboutPage
     {
+        #region Constants
+
         private const string Author = "Matthias Fussenegger";
+        private const string LogoCreator = "François-Joseph du Fou";
         private const string License = "GNU General Public License 3";
 
         private const string LicenseUri = @"https://www.gnu.org/licenses/gpl-3.0";
@@ -37,22 +40,29 @@ namespace SimpleZIP_UI.Presentation.View
         private const string LibrarySzlUri = @"https://github.com/icsharpcode/SharpZipLib";
 
         private const string LogoUriString = @"ms-appx:///Assets/Logo/simplezip_logo.png";
-        private const string LogoInvertedUriString = @"ms-appx:///Assets/Logo/simplezip_logo_inverted.png";
+        private const string LogoAltUriString = @"ms-appx:///Assets/Logo/simplezip_logo_alt.png";
+
+        private const int LogoImageHeight = 260;
+
+        #endregion
 
         public AboutPage()
         {
             InitializeComponent();
 
             DevelopedByRun.Text = I18N.Resources.GetString("DevelopedBy/Text", Author);
+            LogoCreatedByTextBlock.Text = I18N.Resources.GetString("LogoCreatedBy/Text", LogoCreator);
             LicenseRun.Text = I18N.Resources.GetString("License/Text", License);
 
             LibraryScHyperlinkButton.NavigateUri = new Uri(LibraryScUri);
             LibrarySzlHyperlinkButton.NavigateUri = new Uri(LibrarySzlUri);
             LicenseHyperlinkButton.NavigateUri = new Uri(LicenseUri);
 
+            LogoImage.Height = LogoImageHeight;
+
             LogoImage.Source = EnvironmentInfo.IsDarkThemeEnabled
-                ? new BitmapImage(new Uri(LogoInvertedUriString)) { DecodePixelHeight = 200 }
-                : new BitmapImage(new Uri(LogoUriString)) { DecodePixelHeight = 200 };
+                ? new BitmapImage(new Uri(LogoAltUriString)) { DecodePixelHeight = LogoImageHeight }
+                : new BitmapImage(new Uri(LogoUriString)) { DecodePixelHeight = LogoImageHeight };
         }
 
         private static async void NavigateToProjectHome()

@@ -147,7 +147,7 @@
   </data>
   <data name="DevelopedBy.Text" xml:space="preserve">
     <value>Entwickelt von {0}</value>
-    <comment>Software was made by...</comment>
+    <comment>Tells who wrote the software.</comment>
   </data>
   <data name="Error.Text" xml:space="preserve">
     <value>Fehler</value>
@@ -552,5 +552,9 @@
   <data name="UnknownArchiveType.Text" xml:space="preserve">
     <value>Archivtyp ist unbekannt oder wird nicht unterstützt.</value>
     <comment>Informs that an archive type is unknown or not supported.</comment>
+  </data>
+  <data name="LogoCreatedBy.Text" xml:space="preserve">
+    <value>Logo erstellt von {0}</value>
+    <comment>Tells who created the logo.</comment>
   </data>
 </root>
