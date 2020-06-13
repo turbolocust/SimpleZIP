@@ -86,7 +86,7 @@ namespace SimpleZIP_UI.Presentation.View
                 }
                 catch (IndexOutOfRangeException ex)
                 {
-                    _logger.Error(ex, "No language detected.");
+                    _logger.Error(ex, "No language detected");
                     // fall-back, although assertion error
                     cultureInfo = new CultureInfo("en-US");
                 }

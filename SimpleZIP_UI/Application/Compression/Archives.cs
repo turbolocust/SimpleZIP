@@ -265,7 +265,7 @@ namespace SimpleZIP_UI.Application.Compression
             }
             catch (IOException ex)
             {
-                Logger.Error(ex, "Rar archive could not be determined.");
+                Logger.Error(ex, "Rar archive could not be determined");
                 isRarArchive = false;
             }
 

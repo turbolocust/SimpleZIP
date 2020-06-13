@@ -161,7 +161,7 @@ namespace SimpleZIP_UI
             }
             catch (Exception ex)
             {
-                Log.Logger.Error(ex, "Error handling shared file(s).");
+                Log.Logger.Error(ex, "Error handling shared file(s)");
 
                 if (EnvironmentInfo.IsMinCreatorsUpdate)
                 {
@@ -192,9 +192,11 @@ namespace SimpleZIP_UI
             if (EnvironmentInfo.IsMobileDevice) return;
 
             var loggerConfiguration = new LoggerConfiguration()
-                .MinimumLevel.Debug()
 #if DEBUG
+                .MinimumLevel.Debug()
                 .WriteTo.Debug()
+#else
+                .MinimumLevel.Information()
 #endif
                 .Enrich.FromLogContext();
 
@@ -203,8 +205,8 @@ namespace SimpleZIP_UI
                 string tempFolderPath = Path.GetTempPath();
                 string logFilePath = Path.Combine(tempFolderPath, "app.log");
 
-                loggerConfiguration.WriteTo.Async(asyncConfig =>
-                    asyncConfig.File(logFilePath, rollingInterval: RollingInterval.Day, outputTemplate: LogMessageTemplate));
+                loggerConfiguration.WriteTo.Async(asyncConfig => asyncConfig
+                    .File(logFilePath, rollingInterval: RollingInterval.Day, outputTemplate: LogMessageTemplate));
             }
             catch (SecurityException)
             {

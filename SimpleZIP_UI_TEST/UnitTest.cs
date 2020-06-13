@@ -134,14 +134,12 @@ namespace SimpleZIP_UI_TEST
                     .OpenStreamForReadAsync().ConfigureAwait(false)))
                 {
                     zipFile.GetInputStream(0); // password required here
-                    Assert.Fail("Correct password provided. " +
-                                "This is not the purpose of this test.");
+                    Assert.Fail("Correct password provided. This is not the purpose of this test.");
                 }
             }
             catch (Exception ex)
             {
-                Assert.IsTrue(ex.Message.Contains(
-                    "No password available", StringComparison.Ordinal));
+                Assert.IsTrue(ex.Message.Contains("No password available", StringComparison.Ordinal));
             }
         }
 
@@ -239,7 +237,7 @@ namespace SimpleZIP_UI_TEST
                 string line = await streamReader.ReadLineAsync().ConfigureAwait(false);
                 if (line != null && !line.Equals(FileText, StringComparison.Ordinal))
                 {
-                    Assert.Fail("Files do not match.");
+                    Assert.Fail("Files do not match");
                 }
             }
 

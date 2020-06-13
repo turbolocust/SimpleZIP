@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2019 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Navigation;
+using Serilog;
 using SimpleZIP_UI.Presentation.Cache;
 using SimpleZIP_UI.Presentation.View.Model;
 
@@ -36,13 +37,25 @@ namespace SimpleZIP_UI.Presentation.View
     /// <inheritdoc cref="Page" />
     public sealed partial class NavigationViewRootPage
     {
-        // tag names for each NavigationViewItem in NavigationView
+        #region Tag names for each NavigationViewItem in NavigationView
+
         private const string TagHome = "Home";
         private const string TagOpenArchive = "OpenArchive";
         private const string TagHashCalculation = "HashCalculation";
         private const string TagAbout = "About";
 
+        #endregion
+
+        #region Message templates
+
+        private const string NavigateToPageMessageTemplate = "Navigating to {DestinationPageType}";
+        private const string NavigationFailedMessageTemplate = "Navigation to {DestinationPageType} failed";
+
+        #endregion
+
         private const int DefaultControlsFontSize = 16;
+
+        private readonly ILogger _logger = Log.ForContext<NavigationViewRootPage>();
 
         /// <summary>
         /// Consists of value tuples for defined pages in <see cref="NavView"/>.
@@ -98,7 +111,13 @@ namespace SimpleZIP_UI.Presentation.View
             var curPage = ContentFrame.CurrentSourcePageType;
             if (destPageType != null && curPage != destPageType)
             {
-                ContentFrame.Navigate(destPageType, param);
+                _logger.Debug("Navigating from {SourcePageType}", curPage);
+                _logger.Debug(NavigateToPageMessageTemplate, destPageType);
+
+                if (!ContentFrame.Navigate(destPageType, param))
+                {
+                    _logger.Debug(NavigationFailedMessageTemplate, destPageType);
+                }
             }
         }
 
@@ -110,7 +129,12 @@ namespace SimpleZIP_UI.Presentation.View
             if (file != null)
             {
                 var destPage = typeof(BrowseArchivePage);
-                ContentFrame.Navigate(destPage, file);
+                _logger.Debug(NavigateToPageMessageTemplate, destPage);
+
+                if (!ContentFrame.Navigate(destPage, file))
+                {
+                    _logger.Debug(NavigationFailedMessageTemplate, destPage);
+                }
             }
         }
 
@@ -123,7 +147,12 @@ namespace SimpleZIP_UI.Presentation.View
             {
                 var args = new FilesNavigationArgs(files);
                 var destPage = typeof(MessageDigestPage);
-                ContentFrame.Navigate(destPage, args);
+                _logger.Debug(NavigateToPageMessageTemplate, destPage);
+
+                if (!ContentFrame.Navigate(destPage, args))
+                {
+                    _logger.Debug(NavigationFailedMessageTemplate, destPage);
+                }
             }
         }
 
@@ -147,14 +176,11 @@ namespace SimpleZIP_UI.Presentation.View
                             ContentFrameNavigate(typeof(HomePage));
                             break;
                         case TagOpenArchive:
-                            await OpenArchiveAction().ConfigureAwait(false);
+                            await OpenArchiveAction();
                             break;
                         case TagHashCalculation:
-                            await CalculateHashAction().ConfigureAwait(false);
+                            await CalculateHashAction();
                             break;
-                        //case TagProjectHome:
-                        //    NavigateToProjectHome();
-                        //    break;
                         case TagAbout:
                             ContentFrameNavigate(typeof(AboutPage));
                             break;

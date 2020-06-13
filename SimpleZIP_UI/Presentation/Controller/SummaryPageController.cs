@@ -166,7 +166,7 @@ namespace SimpleZIP_UI.Presentation.Controller
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error(ex, "Operation failed.");
+                    _logger.Error(ex, "Operation failed");
 
                     result = new Result
                     {
@@ -205,7 +205,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             }
             catch (ObjectDisposedException)
             {
-                _logger.Warning("Operation already disposed.");
+                _logger.Warning("Operation already disposed");
                 NavigateBackHome();
             }
         }
@@ -225,9 +225,9 @@ namespace SimpleZIP_UI.Presentation.Controller
                 var picker = PickerFactory.FolderPicker;
                 folder = await picker.PickSingleFolderAsync();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                _logger.Warning("No folder selected.");
+                _logger.Warning(ex, "No folder selected");
                 folder = null;
             }
             finally

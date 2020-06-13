@@ -91,7 +91,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             {
                 try
                 {
-                    _logger.Information("Trying to read {ArchiveName}", archive.Name);
+                    _logger.Debug("Trying to read {ArchiveName}", archive.Name);
                     using (var treeBuilder = new ArchiveTreeBuilder(_tokenSource.Token))
                     {
                         node = await treeBuilder.Build(archive);
@@ -110,7 +110,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             }
             catch (OperationCanceledException)
             {
-                _logger.Warning("Operation got canceled.");
+                _logger.Warning("Operation got canceled");
                 // ignore, because we're navigating back
                 // to previous archive or calling page
                 // after cancelling the operation
