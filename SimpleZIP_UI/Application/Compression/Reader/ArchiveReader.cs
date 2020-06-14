@@ -95,7 +95,8 @@ namespace SimpleZIP_UI.Application.Compression.Reader
                 yield return new ArchiveEntry(
                     _reader.Entry.Key,
                     _reader.Entry.IsDirectory,
-                    (ulong)_reader.Entry.Size);
+                    (ulong)_reader.Entry.Size,
+                    _reader.Entry.LastModifiedTime);
             }
         }
 

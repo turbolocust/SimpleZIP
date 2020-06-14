@@ -100,7 +100,8 @@ namespace SimpleZIP_UI.Application.Compression.Reader.SZL
                 yield return new ArchiveEntry(
                     entry.Name,
                     entry.IsDirectory,
-                    (ulong)entry.Size);
+                    (ulong)entry.Size,
+                    entry.ModTime);
             }
         }
 

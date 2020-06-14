@@ -17,6 +17,8 @@
 // 
 // ==--==
 
+using System;
+
 namespace SimpleZIP_UI.Application.Compression.Reader
 {
     /// <summary>
@@ -38,6 +40,12 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         /// The size of the entry in bytes.
         /// </summary>
         ulong Size { get; }
+
+        /// <summary>
+        /// The last modification time of this entry.
+        /// This might be <c>null</c>.
+        /// </summary>
+        DateTime? Modified { get; }
 
         /// <summary>
         /// Name of the file if already extracted. This may

@@ -20,9 +20,7 @@
 using SimpleZIP_UI.Application;
 using SimpleZIP_UI.Presentation.View;
 using System;
-using System.Threading;
 using Windows.ApplicationModel.DataTransfer.ShareTarget;
-using Windows.ApplicationModel.Store;
 using Windows.System.Display;
 using Windows.UI.Notifications;
 

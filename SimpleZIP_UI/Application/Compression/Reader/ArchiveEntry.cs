@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2019 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,8 +17,14 @@
 // 
 // ==--==
 
+using System;
+
 namespace SimpleZIP_UI.Application.Compression.Reader
 {
+    /// <summary>
+    /// Represents an entry of an archive that can either be a file
+    /// or directory, which is indicated by <see cref="IsDirectory"/>.
+    /// </summary>
     internal class ArchiveEntry : IArchiveEntry
     {
         /// <inheritdoc />
@@ -31,6 +37,9 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         public ulong Size { get; }
 
         /// <inheritdoc />
+        public DateTime? Modified { get; }
+
+        /// <inheritdoc />
         public string FileName { get; set; }
 
         /// <summary>
@@ -40,11 +49,13 @@ namespace SimpleZIP_UI.Application.Compression.Reader
         /// <param name="isDirectory">True if entry is
         /// a directory, false otherwise.</param>
         /// <param name="size">The size of this entry in bytes.</param>
-        public ArchiveEntry(string key, bool isDirectory, ulong size)
+        /// <param name="modified">The last modification time of the entry.</param>
+        public ArchiveEntry(string key, bool isDirectory, ulong size, DateTime? modified)
         {
             Key = key;
             IsDirectory = isDirectory;
             Size = size;
+            Modified = modified;
         }
     }
 }
