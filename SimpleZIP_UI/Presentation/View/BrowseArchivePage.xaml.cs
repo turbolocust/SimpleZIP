@@ -259,8 +259,7 @@ namespace SimpleZIP_UI.Presentation.View
                 _selectedModels.Count > 0 && !BrowseArchiveController.IsSingleFileEntryArchive(_curRootNode);
         }
 
-        private async void ItemsListBox_OnDoubleTapped(
-            object sender, DoubleTappedRoutedEventArgs args)
+        private async void ItemsListBox_OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs args)
         {
             if (args.OriginalSource is FrameworkElement elem &&
                 elem.DataContext is ArchiveEntryModel model)

@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2019 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -42,6 +42,12 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
         {
             Archive = archive;
             Password = password;
+        }
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            return Archive.ToString();
         }
     }
 }

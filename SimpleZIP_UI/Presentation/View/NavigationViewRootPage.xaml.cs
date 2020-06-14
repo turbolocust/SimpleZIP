@@ -111,7 +111,6 @@ namespace SimpleZIP_UI.Presentation.View
             var curPage = ContentFrame.CurrentSourcePageType;
             if (destPageType != null && curPage != destPageType)
             {
-                _logger.Debug("Navigating from {SourcePageType}", curPage);
                 _logger.Debug(NavigateToPageMessageTemplate, destPageType);
 
                 if (!ContentFrame.Navigate(destPageType, param))

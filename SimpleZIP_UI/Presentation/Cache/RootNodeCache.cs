@@ -17,7 +17,7 @@
 // 
 // ==--==
 
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using Serilog;
 using SimpleZIP_UI.Application;
 using SimpleZIP_UI.Application.Compression.TreeBuilder;
@@ -28,12 +28,17 @@ namespace SimpleZIP_UI.Presentation.Cache
     internal sealed class RootNodeCache : ICache<string, ArchiveTreeRoot>
     {
         private readonly ILogger _logger = Log.ForContext<RootNodeCache>();
-        private readonly IDictionary<string, ArchiveTreeRoot> _nodesCache;
+        private readonly ConcurrentDictionary<string, ArchiveTreeRoot> _nodesCache;
 
         /// <inheritdoc />
         public void WriteTo(string key, ArchiveTreeRoot node)
         {
-            _nodesCache.Add(key, node);
+            _logger.Debug("Writing node '{NodeName}' with key '{Key}' to cache", node, key);
+            _nodesCache.AddOrUpdate(key, node, (k, oldValue) =>
+            {
+                _logger.Debug("Old value '{NodeName}'", oldValue);
+                return node; // always use newer value
+            });
         }
 
         /// <inheritdoc />
@@ -122,7 +127,7 @@ namespace SimpleZIP_UI.Presentation.Cache
 
         private RootNodeCache()
         {
-            _nodesCache = new Dictionary<string, ArchiveTreeRoot>();
+            _nodesCache = new ConcurrentDictionary<string, ArchiveTreeRoot>();
         }
 
         #endregion

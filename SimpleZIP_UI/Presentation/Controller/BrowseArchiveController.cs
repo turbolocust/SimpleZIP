@@ -80,10 +80,7 @@ namespace SimpleZIP_UI.Presentation.Controller
                 ? archive.Path : archive.FolderRelativeId;
             var node = RootNodeCache.Instance[key];
 
-            if (node != null) // return immediately if cached
-            {
-                return node;
-            }
+            if (node != null) return node; // return immediately if cached
 
             string password = string.Empty;
 
