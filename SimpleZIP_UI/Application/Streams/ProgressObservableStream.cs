@@ -20,7 +20,7 @@ using System.IO;
 
 namespace SimpleZIP_UI.Application.Streams
 {
-    internal class ProgressObservableStream : DecoratorStream
+    internal sealed class ProgressObservableStream : DecoratorStream
     {
         /// <summary>
         /// Observer to be notified when the amount of processed bytes changes.

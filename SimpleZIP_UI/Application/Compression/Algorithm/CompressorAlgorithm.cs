@@ -175,16 +175,14 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             var compressorOptions = new CompressorOptions { FileName = file.Name, IsCompression = true };
 
             using (var archiveStream = await archive.OpenStreamForWriteAsync().ConfigureAwait(false))
-            using (var progressStream = new ProgressObservableStream(this, archiveStream))
-            using (var compressorStream = GetCompressorStream(progressStream, compressorOptions))
+            using (var compressorStream = GetCompressorStream(archiveStream, compressorOptions))
             using (var inputStream = await file.OpenStreamForReadAsync().ConfigureAwait(false))
+            using (var progressStream = new ProgressObservableStream(this, inputStream))
             {
                 var bytes = new byte[BufferSize];
                 int readBytes;
 
-                while ((readBytes = await inputStream
-                    .ReadAsync(bytes, 0, bytes.Length)
-                    .ConfigureAwait(false)) > 0)
+                while ((readBytes = await progressStream.ReadAsync(bytes, 0, bytes.Length).ConfigureAwait(false)) > 0)
                 {
                     await compressorStream.WriteAsync(bytes, 0, readBytes, Token).ConfigureAwait(false);
                 }

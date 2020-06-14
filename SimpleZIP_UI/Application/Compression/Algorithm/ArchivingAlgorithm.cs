@@ -126,15 +126,15 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm
             var writerOptions = ConvertCompressionOptions(options);
 
             using (var archiveStream = await archive.OpenStreamForWriteAsync().ConfigureAwait(false))
-            using (var progressStream = new ProgressObservableStream(this, archiveStream))
-            using (var writer = WriterFactory.Open(progressStream, _type, writerOptions))
+            using (var writer = WriterFactory.Open(archiveStream, _type, writerOptions))
             {
                 foreach (var file in files)
                 {
                     Token.ThrowIfCancellationRequested();
                     using (var inputStream = await file.OpenStreamForReadAsync().ConfigureAwait(false))
+                    using (var progressStream = new ProgressObservableStream(this, inputStream))
                     {
-                        await writer.WriteAsync(file.Name, inputStream, Token).ConfigureAwait(false);
+                        await writer.WriteAsync(file.Name, progressStream, Token).ConfigureAwait(false);
                     }
                 }
             }
