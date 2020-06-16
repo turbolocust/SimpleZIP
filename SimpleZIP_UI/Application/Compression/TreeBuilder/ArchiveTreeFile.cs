@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2019 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -28,6 +28,8 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
     /// </summary>
     public class ArchiveTreeFile : IArchiveTreeElement
     {
+        #region Properties
+
         /// <inheritdoc />
         public string Id { get; }
 
@@ -52,13 +54,25 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
         public ulong Size { get; }
 
         /// <summary>
+        /// The last modification time of the entry. Can be <c>null</c>.
+        /// </summary>
+        public DateTime? LastModified { get; }
+
+        /// <summary>
         /// Name of the file if already extracted. This may
         /// be <c>null</c> if not yet extracted.
         /// </summary>
         internal string FileName { get; set; }
 
-        internal ArchiveTreeFile(string id, string name,
-            ulong size, bool isArchive = false)
+        #endregion
+
+        #region Constructors
+
+        internal ArchiveTreeFile(
+            string id,
+            string name,
+            ulong size,
+            bool isArchive = false)
         {
             Id = id;
             Name = name;
@@ -66,16 +80,20 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
             IsArchive = isArchive;
         }
 
-        /// <summary>
-        /// Converts this object to an instance of <see cref="IArchiveEntry"/>.
-        /// Any other information than <see cref="Id"/>, <see cref="IsBrowsable"/>
-        /// or <see cref="Size"/> is not supported by <see cref="IArchiveEntry"/>.
-        /// </summary>
-        /// <returns>An instance of <see cref="IArchiveEntry"/>.</returns>
-        internal IArchiveEntry ToArchiveEntry()
+        internal ArchiveTreeFile(
+            string id,
+            string name,
+            ulong size,
+            DateTime? lastModified,
+            bool isArchive = false)
+            : this(id, name, size, isArchive)
         {
-            return new ArchiveEntry(Id, IsBrowsable, Size);
+            LastModified = lastModified;
         }
+
+        #endregion
+
+        #region Equals and HashCode
 
         protected bool Equals(ArchiveTreeFile other)
         {
@@ -97,6 +115,17 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
             return Id != null ? Id.GetHashCode(StringComparison.Ordinal) : 0;
         }
 
+        #endregion
+
+        /// <summary>
+        /// Converts this object to an instance of <see cref="IArchiveEntry"/>.
+        /// </summary>
+        /// <returns>An instance of <see cref="IArchiveEntry"/>.</returns>
+        internal IArchiveEntry ToArchiveEntry()
+        {
+            return new ArchiveEntry(Id, IsBrowsable, Size, LastModified);
+        }
+
         /// <summary>
         /// Factory method which creates a new instance of <see cref="ArchiveTreeFile"/>.
         /// This method also checks if the specified name consists of a filename
@@ -106,13 +135,14 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
         /// <param name="id">The identifier of the file entry.</param>
         /// <param name="name">The name of the entry.</param>
         /// <param name="size">The size of the entry.</param>
-        /// <returns></returns>
-        public static ArchiveTreeFile CreateFileEntry(string id, string name, ulong size)
+        /// <param name="lastModified">The time of the last modification of the entry.</param>
+        /// <returns>A new instance of <see cref="ArchiveTreeFile"/>.</returns>
+        public static ArchiveTreeFile CreateFileEntry(string id, string name, ulong size, DateTime? lastModified)
         {
             string ext = FileUtils.GetFileNameExtension(name);
             var archiveType = Archives.DetermineArchiveTypeByFileExtension(ext);
             bool isArchive = archiveType != Archives.ArchiveType.Unknown;
-            return new ArchiveTreeFile(id, name, size, isArchive);
+            return new ArchiveTreeFile(id, name, size, lastModified, isArchive);
         }
     }
 }

@@ -148,7 +148,9 @@ namespace SimpleZIP_UI.Application.Compression.TreeBuilder
                         throw new ReadingArchiveException($"Key {parentNode.Id} does not equal {archiveEntryTuple.ParentKey}");
                     }
 
-                    var fileEntry = ArchiveTreeFile.CreateFileEntry(key, archiveEntryTuple.EntryName, entry.Size);
+                    var fileEntry = ArchiveTreeFile.CreateFileEntry(key,
+                        archiveEntryTuple.EntryName, entry.Size, entry.Modified);
+
                     parentNode.Children.Add(fileEntry);
                     keyBuilder.Clear();
                 }
