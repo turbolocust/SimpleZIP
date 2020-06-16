@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2019 Matthias Fussenegger
+// Copyright (C) 2020 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,7 +20,9 @@
 using SimpleZIP_UI.Application;
 using SimpleZIP_UI.Presentation.View;
 using System;
+using System.Threading;
 using Windows.ApplicationModel.DataTransfer.ShareTarget;
+using Windows.ApplicationModel.Store;
 using Windows.System.Display;
 using Windows.UI.Notifications;
 
@@ -100,7 +102,14 @@ namespace SimpleZIP_UI.Presentation.Controller
 
             var toast = new ToastNotification(toastXml)
             {
-                ExpirationTime = DateTime.Now.AddSeconds(seconds)
+                ExpirationTime = DateTime.Now.AddSeconds(seconds),
+                ExpiresOnReboot = true,
+                Tag = Guid.NewGuid().ToString()
+            };
+
+            toast.Dismissed += (sender, args) =>
+            {
+                ToastNotificationManager.History.Remove(toast.Tag);
             };
 
             notifier.Show(toast);
