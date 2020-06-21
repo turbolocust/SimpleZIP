@@ -31,7 +31,7 @@ namespace SimpleZIP_UI.Presentation.Cache
         private readonly ConcurrentDictionary<string, ArchiveTreeRoot> _nodesCache;
 
         /// <inheritdoc />
-        public void WriteTo(string key, ArchiveTreeRoot node)
+        public void Write(string key, ArchiveTreeRoot node)
         {
             _logger.Debug("Writing node '{NodeName}' with key '{Key}' to cache", node, key);
             _nodesCache.AddOrUpdate(key, node, (k, oldValue) =>
@@ -42,29 +42,18 @@ namespace SimpleZIP_UI.Presentation.Cache
         }
 
         /// <inheritdoc />
-        public ArchiveTreeRoot ReadFrom(string key)
+        public ArchiveTreeRoot Read(string key)
         {
             _logger.Debug("Trying to read key '{Key}' from cache", key);
             _nodesCache.TryGetValue(key, out var rootNode);
             return rootNode; // can be null
         }
 
-        /// <inheritdoc />
-        public void ClearCache()
+        private void Clear()
         {
             _logger.Debug("Clearing cache");
             _nodesCache.Clear();
         }
-
-        #region Overloaded operators
-
-        public ArchiveTreeRoot this[string key]
-        {
-            get => ReadFrom(key);
-            set => WriteTo(key, value);
-        }
-
-        #endregion
 
         /// <summary>
         /// Performs an initialization of e.g. cached files created in some use cases.
@@ -75,7 +64,7 @@ namespace SimpleZIP_UI.Presentation.Cache
             // only clear cache if forced or threshold is exceeded
             if (force || Instance._nodesCache.Count > 10)
             {
-                Instance.ClearCache();
+                Instance.Clear();
 
                 try
                 {
@@ -106,7 +95,7 @@ namespace SimpleZIP_UI.Presentation.Cache
         /// <summary>
         /// Returns the singleton instance of this class. This property is thread-safe.
         /// </summary>
-        public static RootNodeCache Instance
+        internal static RootNodeCache Instance
         {
             get
             {

@@ -28,8 +28,7 @@ using SimpleZIP_UI.Application.Compression.Algorithm.Factory;
 
 namespace SimpleZIP_UI.Application.Compression.Operation
 {
-    internal abstract class ArchivingOperation<T> :
-        IDisposable, ICancellable where T : OperationInfo
+    internal abstract class ArchivingOperation<T> : IDisposable, ICancellable where T : OperationInfo
     {
         /// <summary>
         /// Total amount of bytes to be processed.

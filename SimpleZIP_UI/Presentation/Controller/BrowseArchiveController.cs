@@ -78,7 +78,9 @@ namespace SimpleZIP_UI.Presentation.Controller
         {
             string key = !string.IsNullOrEmpty(archive.Path)
                 ? archive.Path : archive.FolderRelativeId;
-            var node = RootNodeCache.Instance[key];
+
+            var nodeCache = Caches.ForRootNode();
+            var node = nodeCache.Read(key);
 
             if (node != null) return node; // return immediately if cached
 
@@ -128,7 +130,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             {
                 if (node != null)
                 {
-                    RootNodeCache.Instance[key] = node;
+                    nodeCache.Write(key, node);
                 }
             }
 

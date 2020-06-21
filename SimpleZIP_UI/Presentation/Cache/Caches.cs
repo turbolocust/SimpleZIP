@@ -17,23 +17,20 @@
 // 
 // ==--==
 
+using SimpleZIP_UI.Application.Compression.TreeBuilder;
+
 namespace SimpleZIP_UI.Presentation.Cache
 {
-    public interface ICache<in TKey, TValue>
+    internal static class Caches
     {
         /// <summary>
-        /// Writes a new value to the cache using the specified key.
+        /// Returns the cache instance used to store <see cref="ArchiveTreeRoot"/>
+        /// instances, of which each is identified by a string.
         /// </summary>
-        /// <param name="key">The key to be associated with the value.</param>
-        /// <param name="value">The value to be cached.</param>
-        void Write(TKey key, TValue value);
-
-        /// <summary>
-        /// Reads a value from the cache. If the value with the specified
-        /// key is not found, then <c>null</c> is returned.
-        /// </summary>
-        /// <param name="key">The key of the cached value.</param>
-        /// <returns>The cached value or <c>null</c>.</returns>
-        TValue Read(TKey key);
+        /// <returns>Cache instance used to store <see cref="ArchiveTreeRoot"/>.</returns>
+        public static ICache<string, ArchiveTreeRoot> ForRootNode()
+        {
+            return RootNodeCache.Instance;
+        }
     }
 }

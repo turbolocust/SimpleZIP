@@ -188,7 +188,7 @@
     <Compile Include="EnvironmentInfo.cs" />
     <Compile Include="I18N\ExceptionMessages.cs" />
     <Compile Include="I18N\Resources.cs" />
-    <Compile Include="ISerializable.cs" />
+    <Compile Include="Presentation\Cache\Caches.cs" />
     <Compile Include="Presentation\Util\PageUtils.cs" />
     <Compile Include="Presentation\NavigationLock.cs" />
     <Compile Include="Presentation\Controller\BrowseArchiveController.cs" />
