@@ -24,7 +24,7 @@ using System.Xml.Serialization;
 
 namespace SimpleZIP_UI.Presentation.View.Model
 {
-    public class RecentArchiveModel
+    public sealed class RecentArchiveModel
     {
         /// <summary>
         /// The last time the archive was used as date/time.
@@ -79,7 +79,7 @@ namespace SimpleZIP_UI.Presentation.View.Model
         }
 
         [XmlRoot("RecentArchivesCollection")]
-        public class RecentArchiveModelCollection : ISerializable
+        public class RecentArchiveModelCollection
         {
             [XmlArray("RecentArchives")]
             [XmlArrayItem("RecentArchive", typeof(RecentArchiveModel))]
@@ -108,7 +108,10 @@ namespace SimpleZIP_UI.Presentation.View.Model
                 return new RecentArchiveModelCollection();
             }
 
-            /// <inheritdoc />
+            /// <summary>
+            /// Returns a serialized version (XML) of this object's current state.
+            /// </summary>
+            /// <returns>A serialized version (XML) of this object's current state.</returns>
             public string Serialize()
             {
                 string xml; // may be empty at return
