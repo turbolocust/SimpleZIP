@@ -79,7 +79,10 @@ namespace SimpleZIP_UI.Presentation.View
         {
             InitializeComponent();
             NavigationLock.Instance.IsLocked = false;
-            // initialize list consisting of value tuples for pages
+            RestoreStateOfNavigationViewPane();
+
+            // initialize list consisting of tuples for pages
+            // each tuple holds the tag and type of a page
             _pages = new List<(string Tag, Type Page)>
             {
                 (TagHome, typeof(HomePage)),
@@ -87,6 +90,15 @@ namespace SimpleZIP_UI.Presentation.View
                 (TagHashCalculation, typeof(MessageDigestPage)),
                 (TagAbout, typeof(AboutPage))
             };
+        }
+
+        private void RestoreStateOfNavigationViewPane()
+        {
+            const string settingsKey = Settings.Keys.IsNavigationViewPaneOpen;
+            if (Settings.TryGet(settingsKey, out bool isNavigationViewPaneOpen))
+            {
+                NavView.IsPaneOpen = isNavigationViewPaneOpen;
+            }
         }
 
         private void UpdateSelectedMenuItem(Type destPageType)
@@ -155,7 +167,28 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        private async void NavView_OnItemInvoked(NavigationView sender,
+        #region Events
+
+        private void ContentFrame_OnNavigated(object sender, NavigationEventArgs args)
+        {
+            if (_isNavigateBack)
+            {
+                _isNavigateBack = false;
+                UpdateSelectedMenuItem(args.SourcePageType);
+            }
+            // try initialize cache if back stack is empty
+            if (ContentFrame.BackStack.IsNullOrEmpty())
+            {
+                RootNodeCache.CheckInitialize();
+            }
+        }
+
+        private void ContentFrame_OnNavigationStopped(object sender, NavigationEventArgs args)
+        {
+            _isNavigateBack = false;
+        }
+
+        private async void NavigationView_OnItemInvoked(NavigationView sender,
             NavigationViewItemInvokedEventArgs args)
         {
             if (!NavigationLock.Instance.IsLocked)
@@ -188,25 +221,6 @@ namespace SimpleZIP_UI.Presentation.View
             }
         }
 
-        private void ContentFrame_OnNavigated(object sender, NavigationEventArgs args)
-        {
-            if (_isNavigateBack)
-            {
-                _isNavigateBack = false;
-                UpdateSelectedMenuItem(args.SourcePageType);
-            }
-            // try initialize cache if back stack is empty
-            if (ContentFrame.BackStack.IsNullOrEmpty())
-            {
-                RootNodeCache.CheckInitialize();
-            }
-        }
-
-        private void ContentFrame_OnNavigationStopped(object sender, NavigationEventArgs args)
-        {
-            _isNavigateBack = false;
-        }
-
         private void NavigationView_OnBackRequested(NavigationView sender,
             NavigationViewBackRequestedEventArgs args)
         {
@@ -231,6 +245,18 @@ namespace SimpleZIP_UI.Presentation.View
 
                 navViewItem.SetBinding(FontSizeProperty, binding);
             }
+        }
+
+        private void NavigationView_OnPaneOpened(NavigationView sender, object args)
+        {
+            if (!sender.Equals(NavView)) return;
+            Settings.PushOrUpdate(Settings.Keys.IsNavigationViewPaneOpen, true);
+        }
+
+        private void NavigationView_OnPaneClosed(NavigationView sender, object args)
+        {
+            if (!sender.Equals(NavView)) return;
+            Settings.PushOrUpdate(Settings.Keys.IsNavigationViewPaneOpen, false);
         }
 
         /// <inheritdoc />
@@ -265,5 +291,7 @@ namespace SimpleZIP_UI.Presentation.View
                 ContentFrameNavigate(typeof(HomePage));
             }
         }
+
+        #endregion
     }
 }

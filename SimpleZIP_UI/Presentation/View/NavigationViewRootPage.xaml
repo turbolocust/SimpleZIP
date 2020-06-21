@@ -14,8 +14,9 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <NavigationView x:Name="NavView" Grid.Row="0" Background="Transparent" IsPaneToggleButtonVisible="True" FontSize="{Binding FontSizeViewItem.Value}"
-                        AlwaysShowHeader="False" IsSettingsVisible="True" ItemInvoked="NavView_OnItemInvoked" Loaded="NavigationView_OnLoaded"
-                        IsPaneOpen="True" IsBackButtonVisible="Auto" IsBackEnabled="True" BackRequested="NavigationView_OnBackRequested">
+                        AlwaysShowHeader="False" IsSettingsVisible="True" ItemInvoked="NavigationView_OnItemInvoked" Loaded="NavigationView_OnLoaded"
+                        IsBackButtonVisible="Auto" IsBackEnabled="True" BackRequested="NavigationView_OnBackRequested" PaneOpened="NavigationView_OnPaneOpened"
+                        PaneClosed="NavigationView_OnPaneClosed" IsDoubleTapEnabled="False">
             <NavigationView.MenuItems>
                 <NavigationViewItem Icon="Home" Tag="Home">
                     <TextBlock x:Uid="Home" Text="" FontSize="{Binding FontSizeViewItem.Value}" VerticalAlignment="Center" HorizontalAlignment="Left" />

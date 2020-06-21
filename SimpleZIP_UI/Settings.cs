@@ -123,6 +123,7 @@ namespace SimpleZIP_UI
             internal const string RecentHashAlgorithmKey = "RecentHashAlgorithm";
             internal const string LowerCaseHashToggledKey = "LowerCaseHashToggled";
             internal const string DisplayLocationToggledKey = "DisplayLocationToggled";
+            internal const string IsNavigationViewPaneOpen = "IsNavigationViewPaneOpen";
         }
     }
 }

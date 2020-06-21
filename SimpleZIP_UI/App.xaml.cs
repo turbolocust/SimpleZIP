@@ -27,9 +27,7 @@ using System.Diagnostics;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Foundation;
 using Windows.UI.Core;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -50,19 +48,9 @@ namespace SimpleZIP_UI
     public sealed partial class App
     {
         /// <summary>
-        /// Constant which defines the preferred width of the view.
-        /// </summary>
-        private const double PreferredLaunchSizeWidth = 1024d;
-
-        /// <summary>
-        /// Constant which defines the preferred height of the view.
-        /// </summary>
-        private const double PreferredLaunchSizeHeight = 780d;
-
-        /// <summary>
         /// The log message template to be used by Serilog, which adds <c>Properties</c>.
         /// </summary>
-        private const string LogMessageTemplate = @"{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] |{Properties}| {Message:lj}{NewLine}{Exception}";
+        private const string LogMessageTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj} {Properties}{NewLine}{Exception}";
 
         /// <inheritdoc />
         /// <summary>
@@ -76,15 +64,6 @@ namespace SimpleZIP_UI
             InitializeTempDir();
             Suspending += OnSuspending;
             SetUpApplicationLogging();
-
-            if (!EnvironmentInfo.IsMobileDevice)
-            {
-                // set default launch size (has no effect on phones)
-                ApplicationView.PreferredLaunchViewSize
-                    = new Size(PreferredLaunchSizeWidth, PreferredLaunchSizeHeight);
-                ApplicationView.PreferredLaunchWindowingMode
-                    = ApplicationViewWindowingMode.PreferredLaunchViewSize;
-            }
         }
 
         /// <summary>
