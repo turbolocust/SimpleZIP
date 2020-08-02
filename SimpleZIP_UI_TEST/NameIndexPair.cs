@@ -57,7 +57,8 @@ namespace SimpleZIP_UI_TEST
         {
             unchecked
             {
-                return (Index * 397) ^ (Name != null ? Name.GetHashCode() : 0);
+                return (Index * 397) ^ (Name != null ? Name
+                    .GetHashCode(StringComparison.Ordinal) : 0);
             }
         }
 
