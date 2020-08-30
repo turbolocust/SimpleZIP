@@ -51,7 +51,8 @@ namespace SimpleZIP_UI.I18N
         /// <param name="file">File that was processed when exception occurred.</param>
         /// <returns>Internationalized error message.</returns>
         internal static async Task<string> GetStringFor(Exception ex,
-            OperationType operationType = OperationType.None, StorageFile file = null)
+            OperationType operationType = OperationType.None,
+            StorageFile file = null)
         {
             string message;
             bool resolved = false;
@@ -104,19 +105,9 @@ namespace SimpleZIP_UI.I18N
                     }
                 case IOException _:
                     {
-                        if (operationType == OperationType.Writing && IsDiskFull(ex))
-                        {
-                            message = "ErrorDiskFull/Text";
-                        }
-                        else if (operationType == OperationType.Writing)
-                        {
-                            message = "ErrorWritingFile/Text";
-                        }
-                        else if (operationType.IsReadOperation())
-                        {
-                            message = "ErrorReadingArchive/Text";
-                        }
-                        else
+                        message = GetStringForWhenIoException(ex, operationType);
+
+                        if (string.IsNullOrEmpty(message))
                         {
                             goto default;
                         }
@@ -131,6 +122,26 @@ namespace SimpleZIP_UI.I18N
             }
 
             return PostProcessMessage(message, !resolved, prependReason);
+        }
+
+        private static string GetStringForWhenIoException(Exception ex, OperationType operationType)
+        {
+            string message = string.Empty;
+
+            if (operationType == OperationType.Writing && IsDiskFull(ex))
+            {
+                message = "ErrorDiskFull/Text";
+            }
+            else if (operationType == OperationType.Writing)
+            {
+                message = "ErrorWritingFile/Text";
+            }
+            else if (operationType.IsReadOperation())
+            {
+                message = "ErrorReadingArchive/Text";
+            }
+
+            return message;
         }
 
         private static string PostProcessMessage(string message, bool resolve, bool prependReasonString)
@@ -155,8 +166,7 @@ namespace SimpleZIP_UI.I18N
             const int hResultErrHandleDiskFull = unchecked((int)0x80070027);
             const int hResultErrDiskFull = unchecked((int)0x80070070);
 
-            return ex.HResult == hResultErrHandleDiskFull
-                   || ex.HResult == hResultErrDiskFull;
+            return ex.HResult == hResultErrHandleDiskFull || ex.HResult == hResultErrDiskFull;
         }
     }
 }

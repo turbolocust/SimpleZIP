@@ -80,9 +80,9 @@ namespace SimpleZIP_UI.Presentation.Controller
                 ? archive.Path : archive.FolderRelativeId;
 
             var nodeCache = Caches.ForRootNode();
-            var node = nodeCache.Read(key);
+            var treeRoot = nodeCache.Read(key);
 
-            if (node != null) return node; // return immediately if cached
+            if (treeRoot != null) return treeRoot; // return immediately if cached
 
             string password = string.Empty;
 
@@ -93,7 +93,7 @@ namespace SimpleZIP_UI.Presentation.Controller
                     _logger.Debug("Trying to read {ArchiveName}", archive.Name);
                     using (var treeBuilder = new ArchiveTreeBuilder(_tokenSource.Token))
                     {
-                        node = await treeBuilder.Build(archive);
+                        treeRoot = await treeBuilder.Build(archive);
                     }
                 }
                 catch (ArchiveEncryptedException)
@@ -103,7 +103,7 @@ namespace SimpleZIP_UI.Presentation.Controller
                     password = await PasswordRequest.RequestPassword(archive.DisplayName);
                     using (var treeBuilder = new ArchiveTreeBuilder(_tokenSource.Token))
                     {
-                        node = await treeBuilder.Build(archive, password);
+                        treeRoot = await treeBuilder.Build(archive, password);
                     }
                 }
             }
@@ -128,17 +128,17 @@ namespace SimpleZIP_UI.Presentation.Controller
             }
             finally
             {
-                if (node != null)
+                if (treeRoot != null)
                 {
-                    nodeCache.Write(key, node);
+                    nodeCache.Write(key, treeRoot);
                 }
             }
 
-            return node;
+            return treeRoot;
         }
 
         /// <summary>
-        /// Extracts a sub-entry within the current archive.
+        /// Extracts a sub-entry (compressed or archive) from the current archive.
         /// </summary>
         /// <param name="root">The root node of the sub-entry.</param>
         /// <param name="node">The currently active node that
@@ -154,7 +154,7 @@ namespace SimpleZIP_UI.Presentation.Controller
                          where child.Name.Equals(model.DisplayName, StringComparison.Ordinal)
                          select child as ArchiveTreeFile).FirstOrDefault();
 
-            if (entry != null)
+            if (entry != null) // exists
             {
                 var folder = await FileUtils.GetTempFolderAsync(TempFolder.Archives);
 
@@ -171,33 +171,38 @@ namespace SimpleZIP_UI.Presentation.Controller
                     }
                 }
 
-                // doesn't exist, hence extract and read again
-                var item = new ExtractableItem(
-                    root.Archive.Name,
-                    root.Archive,
-                    new[] { entry.ToArchiveEntry() });
+                subFile = await PerformSubEntryExtraction(root, entry, folder);
+            }
 
-                ulong size = await FileUtils.GetFileSizeAsync(item.Archive);
-                // create operation and job for execution
-                var operationInfo = new DecompressionInfo(item, size)
-                {
-                    OutputFolder = folder,
-                    IsCollectFileNames = true,
-                    Encoding = Encoding.UTF8
-                };
+            return subFile;
+        }
 
-                var operation = Operations.ForDecompression();
-                var job = new DecompressionJob(operation, operationInfo)
-                {
-                    PasswordRequest = PasswordRequest
-                };
+        private async Task<StorageFile> PerformSubEntryExtraction(ArchiveTreeRoot root,
+            ArchiveTreeFile fileNode, StorageFolder outputFolder)
+        {
+            StorageFile subFile = null;
+            // doesn't exist, hence extract and read again
+            var item = new ExtractableItem(root.Archive.Name, root.Archive, new[] { fileNode.ToArchiveEntry() });
 
-                var result = await job.Run(this); // extraction happens here
-                if (result.StatusCode == Result.Status.Success)
-                {
-                    entry.FileName = item.Entries[0].FileName;
-                    subFile = await FileUtils.GetFileAsync(folder, entry.FileName);
-                }
+            ulong size = await FileUtils.GetFileSizeAsync(item.Archive);
+            // create operation and job for execution
+            var operationInfo = new DecompressionInfo(item, size)
+            {
+                OutputFolder = outputFolder,
+                IsCollectFileNames = true,
+                Encoding = Encoding.UTF8
+            };
+
+            var operation = Operations.ForDecompression();
+            var job = new DecompressionJob(operation, operationInfo) { PasswordRequest = PasswordRequest };
+
+            var cancelRequest = this;
+            var result = await job.Run(cancelRequest); // extraction happens here
+
+            if (result.StatusCode == Result.Status.Success)
+            {
+                fileNode.FileName = item.Entries[0].FileName;
+                subFile = await FileUtils.GetFileAsync(outputFolder, fileNode.FileName);
             }
 
             return subFile;
@@ -285,10 +290,8 @@ namespace SimpleZIP_UI.Presentation.Controller
             {
                 IsNavigating = true;
 
-                var item = new ExtractableItem(
-                    root.Archive.Name,
-                    root.Archive,
-                    entries.ConvertAll(e => e.ToArchiveEntry()))
+                var archiveEntries = entries.ConvertAll(e => e.ToArchiveEntry());
+                var item = new ExtractableItem(root.Archive.Name, root.Archive, archiveEntries)
                 {
                     Password = root.Password
                 };
