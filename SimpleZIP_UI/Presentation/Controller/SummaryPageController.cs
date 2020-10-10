@@ -120,7 +120,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             {
                 const string format = @"hh\:mm\:ss";
                 durationText.Append(timeSpan.ToString(format,
-                    CultureInfo.CurrentCulture)).Append(" ");
+                    CultureInfo.CurrentCulture)).Append(' ');
 
                 if (timeSpan.Minutes < 1)
                 {
@@ -134,7 +134,8 @@ namespace SimpleZIP_UI.Presentation.Controller
                 {
                     durationText.Append(I18N.Resources.GetString("hours/Text"));
                 }
-                durationText.Append(".");
+
+                durationText.Append('.');
             }
 
             return durationText.ToString();

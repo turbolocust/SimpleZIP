@@ -281,7 +281,7 @@ namespace SimpleZIP_UI.Presentation.Handler
 
             if (!loc.EndsWith("\\", StringComparison.Ordinal))
             {
-                sb.Append("\\");
+                sb.Append('\\');
             }
 
             sb.Append(name);

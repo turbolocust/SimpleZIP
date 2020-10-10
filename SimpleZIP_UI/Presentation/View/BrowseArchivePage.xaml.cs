@@ -332,6 +332,8 @@ namespace SimpleZIP_UI.Presentation.View
         /// <inheritdoc />
         protected override async void OnNavigatingFrom(NavigatingCancelEventArgs args)
         {
+            if (args == null) throw new ArgumentNullException(nameof(args));
+
             if (GetNodesForCurrentRoot().Count > 1 && !_controller.IsNavigating ||
                 _rootNodeStack.Count > 1 && !_controller.IsNavigating)
             {

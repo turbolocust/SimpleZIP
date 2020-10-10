@@ -66,7 +66,10 @@ namespace SimpleZIP_UI.Presentation.View
         /// <inheritdoc />
         protected override void OnNavigatedTo(NavigationEventArgs args)
         {
+            if (args == null) throw new ArgumentNullException(nameof(args));
+
             _filesNavigationArgs = args.Parameter as FilesNavigationArgs;
+
             if (_filesNavigationArgs != null && _filesNavigationArgs.IsArchivesOnly)
             {
                 ExtractButton.Visibility = Visibility.Visible;

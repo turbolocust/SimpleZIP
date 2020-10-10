@@ -224,6 +224,8 @@ namespace SimpleZIP_UI.Presentation.View
         /// <inheritdoc />
         protected override void OnNavigatedTo(NavigationEventArgs args)
         {
+            if (args == null) throw new ArgumentNullException(nameof(args));
+
             // check if file has been opened via file explorer
             var eventArgs = args.Parameter as Windows.ApplicationModel.Activation.IActivatedEventArgs;
             if (eventArgs?.Kind == Windows.ApplicationModel.Activation.ActivationKind.File)
@@ -273,6 +275,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// <inheritdoc />
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs args)
         {
+            if (args == null) throw new ArgumentNullException(nameof(args));
             args.Cancel = _controller.Operation?.IsRunning ?? false;
         }
 
