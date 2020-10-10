@@ -25,6 +25,7 @@ using SimpleZIP_UI.Application.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using SimpleZIP_UI.Application.Compression.Algorithm.Factory;
@@ -77,11 +78,12 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
             if (location == null) throw new ArgumentNullException(nameof(location));
 
             if (files.IsNullOrEmpty()) return; // nothing to do
+            if (options == null) options = new CompressionOptions(Encoding.UTF8);
 
             using (var archiveStream = await archive.OpenStreamForWriteAsync().ConfigureAwait(false))
             using (var progressStream = new ProgressObservableStream(this, archiveStream))
             using (var compressorStream = GetCompressorOutputStream(progressStream))
-            using (var tarStream = new TarOutputStream(compressorStream))
+            using (var tarStream = new TarOutputStream(compressorStream, options.ArchiveEncoding))
             {
                 foreach (var file in files)
                 {
@@ -132,10 +134,11 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
             if (location == null) throw new ArgumentNullException(nameof(location));
 
             var writeInfo = new WriteEntryInfo { Location = location, IgnoreDirectories = false };
+            if (options == null) options = new DecompressionOptions(Encoding.UTF8);
 
             using (var archiveStream = await archive.OpenStreamForReadAsync().ConfigureAwait(false))
             using (var compressorStream = GetCompressorInputStream(archiveStream))
-            using (var tarStream = new TarInputStream(compressorStream))
+            using (var tarStream = new TarInputStream(compressorStream, options.ArchiveEncoding))
             {
                 TarEntry entry;
                 writeInfo.TarStream = tarStream;
@@ -161,13 +164,14 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
             bool collectFileNames,
             IDecompressionOptions options = null)
         {
-            await DecompressEntries(archive, location, entries, collectFileNames).ConfigureAwait(false);
+            if (options == null) options = new DecompressionOptions(Encoding.UTF8);
+            await DecompressEntries(archive, location, entries, collectFileNames, options).ConfigureAwait(false);
         }
 
         #region Private Members
 
         private async Task DecompressEntries(IStorageFile archive, StorageFolder location,
-            IReadOnlyCollection<IArchiveEntry> entries, bool collectFileNames)
+            IReadOnlyCollection<IArchiveEntry> entries, bool collectFileNames, IOptions options)
         {
             if (archive == null) throw new ArgumentNullException(nameof(archive));
             if (location == null) throw new ArgumentNullException(nameof(location));
@@ -180,7 +184,7 @@ namespace SimpleZIP_UI.Application.Compression.Algorithm.Type.SZL
 
             using (var archiveStream = await archive.OpenStreamForReadAsync().ConfigureAwait(false))
             using (var compressorStream = GetCompressorInputStream(archiveStream))
-            using (var tarStream = new TarInputStream(compressorStream))
+            using (var tarStream = new TarInputStream(compressorStream, options.ArchiveEncoding))
             {
                 TarEntry tarEntry;
                 writeInfo.TarStream = tarStream;

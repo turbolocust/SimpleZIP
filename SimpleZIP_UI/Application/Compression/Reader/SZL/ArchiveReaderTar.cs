@@ -21,6 +21,7 @@ using ICSharpCode.SharpZipLib.Tar;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -82,7 +83,8 @@ namespace SimpleZIP_UI.Application.Compression.Reader.SZL
 
             var fileStream = await _archive.OpenStreamForReadAsync().ConfigureAwait(false);
             var stream = GetCompressorStream(fileStream);
-            _tarInputStream = new TarInputStream(stream)
+
+            _tarInputStream = new TarInputStream(stream, Encoding.UTF8)
             {
                 IsStreamOwner = true
             };
