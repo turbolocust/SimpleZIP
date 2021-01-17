@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2018 Matthias Fussenegger
+// Copyright (C) 2021 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@
 // ==--==
 
 using System;
-using Windows.Foundation.Metadata;
 using Windows.System.Profile;
 using Windows.UI.Xaml;
 
@@ -37,19 +36,8 @@ namespace SimpleZIP_UI
         internal static bool IsMobileDevice => DeviceFamily.Equals("Windows.Mobile", StringComparison.Ordinal);
 
         /// <summary>
-        /// Returns true, if the minimum API contract is that of the Creators Update.
-        /// </summary>
-        internal static bool IsMinCreatorsUpdate => CheckApiContract(4);
-
-        /// <summary>
         /// Returns true, if the requested theme equals the dark theme.
         /// </summary>
         internal static bool IsDarkThemeEnabled => Windows.UI.Xaml.Application.Current.RequestedTheme == ApplicationTheme.Dark;
-
-        private static bool CheckApiContract(ushort majorVersion)
-        {
-            const string contractName = "Windows.Foundation.UniversalApiContract";
-            return ApiInformation.IsApiContractPresent(contractName, majorVersion);
-        }
     }
 }

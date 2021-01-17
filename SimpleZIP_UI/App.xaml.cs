@@ -141,18 +141,7 @@ namespace SimpleZIP_UI
             catch (Exception ex)
             {
                 Log.Logger.Error(ex, "Error handling shared file(s)");
-
-                if (EnvironmentInfo.IsMinCreatorsUpdate)
-                {
-                    /* does not seem to work properly, even though
-                       it is no longer deprecated since 1703 */
-                    //shareOperation.ReportError(ex.Message);
-                    shareOperation.ReportCompleted();
-                }
-                else
-                {
-                    shareOperation.ReportCompleted();
-                }
+                shareOperation.ReportCompleted();
             }
         }
 
