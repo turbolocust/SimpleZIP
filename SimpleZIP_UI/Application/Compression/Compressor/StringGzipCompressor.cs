@@ -52,7 +52,6 @@ namespace SimpleZIP_UI.Application.Compression.Compressor
         /// <exception cref="IOException">Thrown by streams if something went wrong.</exception>
         /// <exception cref="ArgumentNullException">Thrown if specified argument is <c>null</c>.</exception>
         /// <exception cref="EncoderFallbackException">Thrown if a fallback occurred.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public string Compress(string value)
         {
             string base64;

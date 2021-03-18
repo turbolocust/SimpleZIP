@@ -98,7 +98,7 @@ namespace SimpleZIP_UI.Presentation.Controller
                 }
                 catch (ArchiveEncryptedException)
                 {
-                    _logger.Warning("Archive {ArchiveName} is encrypted. Will request password and try again.", archive.Name);
+                    _logger.Warning("Archive {ArchiveName} is encrypted. Will request password and try again", archive.Name);
                     // archive is encrypted, ask for password and try again
                     password = await PasswordRequest.RequestPassword(archive.DisplayName);
                     using (var treeBuilder = new ArchiveTreeBuilder(_tokenSource.Token))
@@ -166,7 +166,7 @@ namespace SimpleZIP_UI.Presentation.Controller
                     }
                     catch (FileNotFoundException ex)
                     {
-                        _logger.Warning("File {FileName} not found.", ex.FileName);
+                        _logger.Warning("File {FileName} not found", ex.FileName);
                         // continue, as file most likely got deleted
                     }
                 }

@@ -93,12 +93,6 @@ namespace SimpleZIP_UI.Application.Hashing
             return BitConverter.ToString(hashedBytes).Replace("-", "", StringComparison.Ordinal);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security",
-            "CA5351:Do Not Use Broken Cryptographic Algorithms",
-            Justification = "Only for the purpose of visualization.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security",
-            "CA5350:Do Not Use Weak Cryptographic Algorithms",
-            Justification = "Only for the purpose of visualization.")]
         private static HashAlgorithm GetHashAlgorithm(string algorithmName)
         {
             HashAlgorithm algorithm;
