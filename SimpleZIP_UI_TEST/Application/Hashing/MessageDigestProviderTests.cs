@@ -23,10 +23,10 @@ using SimpleZIP_UI.Application.Hashing;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SimpleZIP_UI_TEST.Tests
+namespace SimpleZIP_UI_TEST.Application.Hashing
 {
     [TestClass]
-    public sealed class HashingTests
+    public sealed class MessageDigestProviderTests
     {
         [TestMethod]
         public async Task MessageDigestAlgorithmsTest()

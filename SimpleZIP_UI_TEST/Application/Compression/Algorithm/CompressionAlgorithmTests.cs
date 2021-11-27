@@ -33,10 +33,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 
-namespace SimpleZIP_UI_TEST.Tests
+namespace SimpleZIP_UI_TEST.Application.Compression.Algorithm
 {
     [TestClass]
-    public sealed class CompressionTests
+    public sealed class CompressionAlgorithmTests
     {
         #region Static members
 
