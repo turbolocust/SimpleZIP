@@ -124,6 +124,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application\Compression\Algorithm\CompressionAlgorithmTests.cs" />
+    <Compile Include="Application\Compression\Algorithm\StringGzipCompressorTests.cs" />
     <Compile Include="Application\Hashing\MessageDigestProviderTests.cs" />
     <Compile Include="NameIndexPair.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -156,6 +157,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Application\Compression\Compressor\" />
     <Folder Include="Assets\" />
   </ItemGroup>
   <ItemGroup>

@@ -29,7 +29,7 @@ namespace SimpleZIP_UI_TEST.Application.Hashing
     public sealed class MessageDigestProviderTests
     {
         [TestMethod]
-        public async Task MessageDigestAlgorithmsTest()
+        public async Task ComputeAsync_ShouldCorrectlyComputeMessageDigest()
         {
             // create an array of values to be tested (hashed and compared)
             var values = new[] { @"34t5rj3490f80e9fj2", @"lk9t99fk3k4nmrkfsö" };

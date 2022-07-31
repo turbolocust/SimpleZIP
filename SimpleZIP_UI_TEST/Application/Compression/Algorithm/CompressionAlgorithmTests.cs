@@ -67,7 +67,7 @@ namespace SimpleZIP_UI_TEST.Application.Compression.Algorithm
         [DataRow(Archives.ArchiveType.TarBz2, ".tbz2")]
         [DataRow(Archives.ArchiveType.TarLz, ".tlz")]
         [DataTestMethod]
-        public async Task CompressionExtractionTest(Archives.ArchiveType archiveType, string fileNameExtension)
+        public async Task CompressAsync_ShouldCreateProperArchive(Archives.ArchiveType archiveType, string fileNameExtension)
         {
             const int updateDelayRate = 100;
 
@@ -87,7 +87,7 @@ namespace SimpleZIP_UI_TEST.Application.Compression.Algorithm
         /// equals the one indicating that no password is set.
         /// </summary>
         [TestMethod]
-        public async Task EncryptedZipArchiveExceptionTest()
+        public async Task ZipFile_GetInputStream_ShouldThrowExceptionWithSpecificMessage_WhenPasswordIsMissing()
         {
             const string archiveName = ArchiveName + "_enc.zip";
             // create test file to be archived first...
