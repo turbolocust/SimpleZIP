@@ -108,6 +108,7 @@
             <Button Tapped="CopyAllButton_OnTapped" Width="120" MinHeight="44" Height="50" MaxHeight="60"
                     IsEnabled="{x:Bind IsPopulateListBox.IsTrue, Mode=TwoWay,
                     Converter={StaticResource FlipBooleanConverter}}"
+                    Style="{StaticResource RoundedEdges}"
                     PreviewKeyDown="CopyAllButton_OnPreviewKeyDown"
                     Foreground="{ThemeResource ButtonForegroundThemeBrush}" 
                     Background="{ThemeResource ButtonBackgroundThemeBrush}" 

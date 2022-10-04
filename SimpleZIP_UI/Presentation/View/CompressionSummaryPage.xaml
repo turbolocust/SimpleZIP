@@ -46,7 +46,7 @@
         </StackPanel>
         <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center" Background="Transparent" Margin="12,0,0,16">
             <TextBlock x:Uid="OutputFolder" Text="" IsTapEnabled="False" FontSize="16" FontWeight="Medium" Margin="0,0,0,8" FocusVisualPrimaryBrush="Transparent" FocusVisualSecondaryBrush="Transparent" />
-            <Button x:Name="OutputPathButton" AllowFocusWhenDisabled="False" Width="Auto" Height="40" FontWeight="Normal" BorderBrush="{ThemeResource SystemControlBackgroundAccentBrush}"
+            <Button x:Name="OutputPathButton" Style="{StaticResource RoundedEdges}" AllowFocusWhenDisabled="False" Width="Auto" Height="40" FontWeight="Normal" BorderBrush="{ThemeResource SystemControlBackgroundAccentBrush}"
                     BorderThickness="2" IsTapEnabled="True" Background="Transparent" IsHoldingEnabled="False" IsDoubleTapEnabled="False" Tapped="OutputPathButton_OnTapped">
                 <TextBlock x:Uid="TapToChoose" Text="" TextWrapping="NoWrap" />
             </Button>
@@ -58,11 +58,11 @@
         </ScrollViewer>
         <ProgressBar x:Name="ProgressBar" Grid.Row="4" HorizontalAlignment="Stretch" IsIndeterminate="False" IsEnabled="False" Visibility="Collapsed" />
         <StackPanel Grid.Row="5" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,8,16,0">
-            <Button x:Name="StartButton" Tapped="StartButton_OnTapped" IsEnabled="True" Width="120" MinHeight="44" Height="50" MaxHeight="60" Margin="0,0,16,0" PreviewKeyDown="StartButton_OnPreviewKeyDown"
+            <Button x:Name="StartButton" Style="{StaticResource RoundedEdges}" Tapped="StartButton_OnTapped" IsEnabled="True" Width="120" MinHeight="44" Height="50" MaxHeight="60" Margin="0,0,16,0" PreviewKeyDown="StartButton_OnPreviewKeyDown"
                     Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                 <TextBlock x:Uid="Start" Text="" TextWrapping="Wrap" />
             </Button>
-            <Button Tapped="AbortButton_Tap" Width="120" MinHeight="44" Height="50" MaxHeight="60" Foreground="{ThemeResource ButtonForegroundThemeBrush}"
+            <Button Tapped="AbortButton_Tap" Style="{StaticResource RoundedEdges}" Width="120" MinHeight="44" Height="50" MaxHeight="60" Foreground="{ThemeResource ButtonForegroundThemeBrush}"
                     Background="IndianRed" BorderBrush="{ThemeResource ButtonBorderThemeBrush}" PreviewKeyDown="AbortButton_OnPreviewKeyDown">
                 <TextBlock x:Uid="Abort" Text="" TextWrapping="Wrap" />
                 <ToolTipService.ToolTip>

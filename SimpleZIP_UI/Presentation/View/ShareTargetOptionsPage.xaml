@@ -16,7 +16,8 @@
         </Grid.RowDefinitions>
         <TextBlock x:Name="TitleText" Grid.Row="0" x:Uid="WhatWouldYouLikeToDo" Text="" TextWrapping="NoWrap" FontSize="20px" 
                    FontWeight="Bold" Foreground="{ThemeResource SystemControlForegroundAccentBrush}"/>
-        <Button Grid.Row="1" Width="280" Height="64" MaxHeight="75" Margin="0,32,32,0" 
+        <Button Grid.Row="1" Width="280" Height="64" MaxHeight="75" Margin="0,32,32,0"
+                Style="{StaticResource RoundedEdges}"
                 VerticalContentAlignment="Center" Tapped="CompressFilesButton_OnTapped"
                 Foreground="{ThemeResource ButtonForegroundThemeBrush}" 
                 Background="{ThemeResource ButtonBackgroundThemeBrush}" 
@@ -28,8 +29,9 @@
         </Button>
         <Button x:Name="ExtractButton" Grid.Row="2" Width="280" Height="64" MaxHeight="75" Margin="0,32,0,0" 
                 VerticalContentAlignment="Center" Tapped="ExtractButton_OnTapped" Visibility="Collapsed"
-                Foreground="{ThemeResource ButtonForegroundThemeBrush}" Background="{ThemeResource ButtonBackgroundThemeBrush}" 
-                BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
+                Style="{StaticResource RoundedEdges}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}"
+                Foreground="{ThemeResource ButtonForegroundThemeBrush}"
+                Background="{ThemeResource ButtonBackgroundThemeBrush}">
             <StackPanel Orientation="Horizontal">
                 <TextBlock FontSize="20" FontFamily="Segoe MDL2 Assets" Text="&#xEE71;" Margin="0,0,32,0" />
                 <TextBlock x:Uid="ExtractArchive" FontWeight="Normal" FontSize="16" CharacterSpacing="32" Text="" TextWrapping="Wrap" />
@@ -37,6 +39,7 @@
         </Button>
         <Button Grid.Row="3" Width="280" Height="64" MaxHeight="75" Margin="0,32,0,0" 
                 VerticalContentAlignment="Center" Tapped="ComputeHashes_OnTapped"
+                Style="{StaticResource RoundedEdges}"
                 Foreground="{ThemeResource ButtonForegroundThemeBrush}" 
                 Background="{ThemeResource ButtonBackgroundThemeBrush}" 
                 BorderBrush="{ThemeResource ButtonBorderThemeBrush}">

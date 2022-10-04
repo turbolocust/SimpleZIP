@@ -48,7 +48,7 @@
                     <TextBlock x:Uid="SendEmail" Text="" />
                 </HyperlinkButton>
             </StackPanel>
-            <Button Grid.Row="3" Margin="0,32,0,0" HorizontalContentAlignment="Stretch"
+            <Button Grid.Row="3" Margin="0,32,0,0" HorizontalContentAlignment="Stretch" Style="{StaticResource RoundedEdges}"
                 Tapped="GetSourceButton_OnTapped" Foreground="{ThemeResource ButtonForegroundThemeBrush}" 
                 Background="{ThemeResource ButtonBackgroundThemeBrush}" BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                 <StackPanel Orientation="Horizontal">

@@ -5,7 +5,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     DataContext="{Binding RelativeSource={RelativeSource Self}}"
-    Background="{ThemeResource SystemControlAcrylicElementBrush}" 
     VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
     mc:Ignorable="d">
 
@@ -17,6 +16,9 @@
                         AlwaysShowHeader="False" IsSettingsVisible="True" ItemInvoked="NavigationView_OnItemInvoked" Loaded="NavigationView_OnLoaded"
                         IsBackButtonVisible="Auto" IsBackEnabled="True" BackRequested="NavigationView_OnBackRequested" PaneOpened="NavigationView_OnPaneOpened"
                         PaneClosed="NavigationView_OnPaneClosed" IsDoubleTapEnabled="False">
+            <NavigationView.Resources>
+                <SolidColorBrush x:Key="NavigationViewDefaultPaneBackground" Color="Transparent" />
+            </NavigationView.Resources>
             <NavigationView.MenuItems>
                 <NavigationViewItem Icon="Home" Tag="Home">
                     <TextBlock x:Uid="Home" Text="" FontSize="{Binding FontSizeViewItem.Value}" VerticalAlignment="Center" HorizontalAlignment="Left" />
@@ -32,7 +34,7 @@
                 </NavigationViewItem>
             </NavigationView.MenuItems>
             <!-- Pages for each use-case are loaded within the following frame -->
-            <Frame x:Name="ContentFrame" IsTabStop="True" Navigated="ContentFrame_OnNavigated" NavigationStopped="ContentFrame_OnNavigationStopped" />
+            <Frame x:Name="ContentFrame" Background="Transparent" IsTabStop="True" Navigated="ContentFrame_OnNavigated" NavigationStopped="ContentFrame_OnNavigationStopped" />
         </NavigationView>
     </Grid>
 </Page>

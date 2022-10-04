@@ -91,13 +91,14 @@
         <StackPanel Grid.Row="3" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,8,16,0">
             <Button x:Name="ExtractSelectedEntriesButton" Tapped="ExtractSelectedEntriesButton_OnTapped" IsEnabled="False" 
                     MinHeight="44" Height="50" MaxHeight="60" Margin="0,0,16,0"
+                    Style="{StaticResource RoundedEdges}"
                     Foreground="{ThemeResource ButtonForegroundThemeBrush}" 
                     Background="{ThemeResource ButtonBackgroundThemeBrush}" 
                     BorderBrush="{ThemeResource ButtonBorderThemeBrush}">
                 <TextBlock x:Uid="ExtractSelected" Text="" TextWrapping="Wrap" />
             </Button>
             <Button x:Name="ExtractWholeArchiveButton" Tapped="ExtractWholeArchiveButton_OnTapped" 
-                    MinHeight="44" Height="50" MaxHeight="60"
+                    MinHeight="44" Height="50" MaxHeight="60" Style="{StaticResource RoundedEdges}"
                     IsEnabled="{x:Bind IsProgressBarEnabled.IsTrue, Converter={StaticResource FlipBooleanConverter}, Mode=OneWay}" 
                     Foreground="{ThemeResource ButtonForegroundThemeBrush}" 
                     Background="{ThemeResource ButtonBackgroundThemeBrush}" 
