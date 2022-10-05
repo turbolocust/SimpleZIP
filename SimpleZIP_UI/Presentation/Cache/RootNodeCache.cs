@@ -56,10 +56,10 @@ namespace SimpleZIP_UI.Presentation.Cache
         }
 
         /// <summary>
-        /// Performs an initialization of e.g. cached files created in some use cases.
+        /// Performs an initialization of cached files, created and used in some use cases.
         /// </summary>
         /// <param name="force">True to force initialization, false to respect threshold.</param>
-        internal static async void CheckInitialize(bool force = false)
+        internal static async void InitializeIfNeededOrForced(bool force = false)
         {
             // only clear cache if forced or threshold is exceeded
             if (force || Instance._nodesCache.Count > 10)

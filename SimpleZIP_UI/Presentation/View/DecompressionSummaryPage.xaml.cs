@@ -107,7 +107,7 @@ namespace SimpleZIP_UI.Presentation.View
             if (await _controller.CheckOutputFolder())
             {
                 var result = await InitOperation();
-                RootNodeCache.CheckInitialize();
+                RootNodeCache.InitializeIfNeededOrForced();
 
                 if (_controller.IsShareTargetActivated() &&
                     result.StatusCode != Result.Status.Success)

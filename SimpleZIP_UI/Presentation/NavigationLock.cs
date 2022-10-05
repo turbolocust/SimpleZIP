@@ -22,11 +22,10 @@ using SimpleZIP_UI.Presentation.View;
 namespace SimpleZIP_UI.Presentation
 {
     /// <summary>
-    /// Singleton class which allows global locking
-    /// of user navigation in NavigationView
-    /// (see <see cref="NavigationViewRootPage"/>).
+    /// Singleton class which allows global locking of user navigation
+    /// in NavigationView (see <see cref="NavigationViewRootPage"/>).
     /// </summary>
-    internal class NavigationLock
+    internal sealed class NavigationLock
     {
         private volatile bool _isLocked;
 

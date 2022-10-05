@@ -173,7 +173,7 @@ namespace SimpleZIP_UI.Presentation.View
                             _controller.OutputFolder, result.ArchiveNames);
                     }
 
-                    RootNodeCache.CheckInitialize();
+                    RootNodeCache.InitializeIfNeededOrForced();
 
                     if (_controller.IsShareTargetActivated() &&
                         result.StatusCode != Result.Status.Success)

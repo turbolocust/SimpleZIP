@@ -109,7 +109,7 @@ namespace SimpleZIP_UI.Presentation.View
         private void UpdateSelectedMenuItem(Type destPageType)
         {
             var (tag, _) = _pages.FirstOrDefault(t => t.Page == destPageType);
-            if (!string.IsNullOrEmpty(tag)) // page might not be in list
+            if (!string.IsNullOrEmpty(tag))
             {
                 // page was found, now find the item with matching tag
                 var menuItem = NavView.MenuItems.OfType<NavigationViewItem>()
@@ -200,13 +200,14 @@ namespace SimpleZIP_UI.Presentation.View
         {
             if (_isNavigateBack)
             {
-                _isNavigateBack = false;
                 UpdateSelectedMenuItem(args.SourcePageType);
             }
-            // try initialize cache if back stack is empty
+
+            _isNavigateBack = false;
+
             if (ContentFrame.BackStack.IsNullOrEmpty())
             {
-                RootNodeCache.CheckInitialize();
+                RootNodeCache.InitializeIfNeededOrForced();
             }
         }
 
