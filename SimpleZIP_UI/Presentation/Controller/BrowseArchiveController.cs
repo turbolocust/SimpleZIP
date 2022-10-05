@@ -57,7 +57,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// </summary>
         private readonly CancellationTokenSource _tokenSource;
 
-        internal BrowseArchiveController(INavigation navHandler,
+        internal BrowseArchiveController(INavigable navHandler,
             IPasswordRequest pwRequest) : base(navHandler, pwRequest)
         {
             _tokenSource = new CancellationTokenSource();

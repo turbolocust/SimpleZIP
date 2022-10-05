@@ -20,7 +20,7 @@ using System;
 
 namespace SimpleZIP_UI.Presentation
 {
-    internal interface INavigation
+    internal interface INavigable
     {
         /// <summary>
         /// Navigates to the specified destination.

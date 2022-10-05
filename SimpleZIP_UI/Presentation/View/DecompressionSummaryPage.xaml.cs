@@ -41,7 +41,7 @@ using SimpleZIP_UI.Presentation.Cache;
 namespace SimpleZIP_UI.Presentation.View
 {
     /// <inheritdoc cref="Page" />
-    public sealed partial class DecompressionSummaryPage : INavigation, IPasswordRequest, IDisposable
+    public sealed partial class DecompressionSummaryPage : INavigable, IPasswordRequest, IDisposable
     {
         /// <summary>
         /// The aggregated controller instance.

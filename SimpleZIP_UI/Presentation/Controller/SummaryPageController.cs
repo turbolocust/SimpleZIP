@@ -72,7 +72,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         public bool IsCancelRequest { get; protected set; }
 
         /// <inheritdoc />
-        internal SummaryPageController(INavigation navHandler,
+        internal SummaryPageController(INavigable navHandler,
             IPasswordRequest pwRequest) : base(navHandler, pwRequest)
         {
             DisplayRequest = new DisplayRequest();

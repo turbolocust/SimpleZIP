@@ -29,7 +29,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// <summary>
         /// Aggregated navigation handler for navigation between pages.
         /// </summary>
-        INavigation Navigation { get; }
+        INavigable Navigation { get; }
 
         /// <summary>
         /// Aggregated object for password requests. Can be <c>null</c>.

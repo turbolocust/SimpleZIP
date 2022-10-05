@@ -44,7 +44,7 @@ namespace SimpleZIP_UI.Presentation.View
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MessageDigestPage : INavigation
+    public sealed partial class MessageDigestPage : INavigable
     {
         /// <summary>
         /// Models bound to the combo box in view.

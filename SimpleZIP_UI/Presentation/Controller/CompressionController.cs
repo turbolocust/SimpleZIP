@@ -27,7 +27,7 @@ namespace SimpleZIP_UI.Presentation.Controller
 {
     internal class CompressionController : SummaryPageController<CompressionInfo>
     {
-        internal CompressionController(INavigation navHandler,
+        internal CompressionController(INavigable navHandler,
             IPasswordRequest pwRequest) : base(navHandler, pwRequest)
         {
         }

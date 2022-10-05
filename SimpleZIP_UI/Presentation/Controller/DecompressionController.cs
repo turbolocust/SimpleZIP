@@ -27,7 +27,7 @@ namespace SimpleZIP_UI.Presentation.Controller
 {
     internal class DecompressionController : SummaryPageController<DecompressionInfo>
     {
-        internal DecompressionController(INavigation navHandler,
+        internal DecompressionController(INavigable navHandler,
             IPasswordRequest pwRequest) : base(navHandler, pwRequest)
         {
         }

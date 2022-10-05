@@ -42,7 +42,7 @@ using Serilog;
 namespace SimpleZIP_UI.Presentation.View
 {
     /// <inheritdoc cref="Page" />
-    public sealed partial class BrowseArchivePage : INavigation, IPasswordRequest, IDisposable
+    public sealed partial class BrowseArchivePage : INavigable, IPasswordRequest, IDisposable
     {
         private readonly ILogger _logger = Log.ForContext<BrowseArchivePage>();
 

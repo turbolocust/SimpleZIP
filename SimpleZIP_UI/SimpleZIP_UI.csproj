@@ -199,7 +199,7 @@
     <Compile Include="Presentation\Handler\ArchiveHistory.cs" />
     <Compile Include="Presentation\Cache\ICache.cs" />
     <Compile Include="Presentation\Cache\RootNodeCache.cs" />
-    <Compile Include="Presentation\INavigation.cs" />
+    <Compile Include="Presentation\INavigable.cs" />
     <Compile Include="Presentation\Handler\ShareTargetHandler.cs" />
     <Compile Include="Presentation\FilesNavigationArgs.cs" />
     <Compile Include="Presentation\PageNavigationArgs.cs" />

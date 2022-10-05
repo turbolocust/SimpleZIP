@@ -33,7 +33,7 @@ namespace SimpleZIP_UI.Presentation.Controller
     internal abstract class BaseController : IGuiController
     {
         /// <inheritdoc />
-        public INavigation Navigation { get; }
+        public INavigable Navigation { get; }
 
         /// <inheritdoc />
         public IPasswordRequest PasswordRequest { get; }
@@ -53,7 +53,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// </summary>
         /// <param name="navHandler">Instance used for navigation.</param>
         /// <param name="pwRequest">Instance used to request passwords.</param>
-        protected BaseController(INavigation navHandler, IPasswordRequest pwRequest)
+        protected BaseController(INavigable navHandler, IPasswordRequest pwRequest)
         {
             Navigation = navHandler;
             PasswordRequest = pwRequest;

@@ -42,7 +42,7 @@ using SimpleZIP_UI.Presentation.Util;
 namespace SimpleZIP_UI.Presentation.View
 {
     /// <inheritdoc cref="Page" />
-    public sealed partial class HomePage : INavigation
+    public sealed partial class HomePage : INavigable
     {
         private readonly ILogger _logger = Log.ForContext<HomePage>();
 

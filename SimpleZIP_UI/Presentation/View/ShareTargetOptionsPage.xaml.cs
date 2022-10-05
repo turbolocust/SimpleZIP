@@ -31,7 +31,7 @@ namespace SimpleZIP_UI.Presentation.View
     /// <summary>
     /// Page which exists to let user choose the operation on a share event.
     /// </summary>
-    public sealed partial class ShareTargetOptionsPage : INavigation
+    public sealed partial class ShareTargetOptionsPage : INavigable
     {
         private FilesNavigationArgs _filesNavigationArgs;
 

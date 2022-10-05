@@ -35,7 +35,7 @@ namespace SimpleZIP_UI.Presentation.Controller
         /// </summary>
         internal IMessageDigestProvider MessageDigestProvider { get; }
 
-        internal MessageDigestController(INavigation navHandler,
+        internal MessageDigestController(INavigable navHandler,
             IMessageDigestProvider provider) : base(navHandler, null)
         {
             MessageDigestProvider = provider;
