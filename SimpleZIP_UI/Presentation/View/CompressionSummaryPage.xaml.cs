@@ -29,6 +29,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.System;
@@ -50,6 +51,11 @@ namespace SimpleZIP_UI.Presentation.View
         private readonly CompressionController _controller;
 
         /// <summary>
+        /// Used to synchronize the use of a timer to close tool tips.
+        /// </summary>
+        private readonly SemaphoreSlim _toolTipOpenedSemaphore;
+
+        /// <summary>
         /// A list of selected files for compression.
         /// </summary>
         private IReadOnlyList<StorageFile> _selectedFiles;
@@ -64,7 +70,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// True if tooltip timer is active. The timer is used to automatically
         /// close a tooltip after a certain number of seconds.
         /// </summary>
-        private volatile bool _isTooltipTimerActive;
+        private volatile bool _isToolTipTimerActive;
 
         /// <inheritdoc />
         public CompressionSummaryPage()
@@ -77,7 +83,6 @@ namespace SimpleZIP_UI.Presentation.View
 
             Settings.TryGet(Settings.Keys.HideSomeArchiveTypesKey, out bool isHideSome);
 
-            // ReSharper disable once PossibleNullReferenceException
             ArchiveTypeComboBox.Items.Add(CreateItemForComboBox("ZIP (.zip)", ".zip"));
 
             string tarText = "TAR (.tar) [" + uncompressedText + "]";
@@ -94,8 +99,9 @@ namespace SimpleZIP_UI.Presentation.View
                 ArchiveTypeComboBox.Items.Add(CreateItemForComboBox(tlzText, ".tlz"));
             }
 
-            ArchiveTypeComboBox.SelectedIndex = 0; // selected index on page launch
+            ArchiveTypeComboBox.SelectedIndex = 0;
             _controller = new CompressionController(this, this);
+            _toolTipOpenedSemaphore = new SemaphoreSlim(1);
         }
 
         private static ComboBoxItem CreateItemForComboBox(string content, string fileType)
@@ -221,6 +227,7 @@ namespace SimpleZIP_UI.Presentation.View
             {
                 ArchiveTypeToolTip.Content = I18N.Resources.GetString("OnlySingleFileCompression/Text")
                     + "\r\n" + I18N.Resources.GetString("SeparateArchive/Text");
+                ArchiveTypeToolTip.IsEnabled = true;
                 ArchiveTypeToolTip.IsOpen = true;
             }
         }
@@ -238,31 +245,29 @@ namespace SimpleZIP_UI.Presentation.View
                 var content = I18N.Resources.GetString("IllegalCharacters/Text")
                     + "\n" + string.Join(" ", FileUtils.IllegalChars);
                 ArchiveNameToolTip.Content = content;
+                ArchiveNameToolTip.IsEnabled = true;
                 ArchiveNameToolTip.IsOpen = true;
             }
             else
             {
                 ArchiveNameToolTip.IsOpen = false;
+                ArchiveNameToolTip.IsEnabled = false;
             }
         }
 
         private void ArchiveTypeToolTip_OnOpened(object sender, RoutedEventArgs args)
         {
             var toolTip = (ToolTip)sender;
-            if (toolTip.IsOpen && !_isTooltipTimerActive)
+            if (toolTip.IsOpen && !_isToolTipTimerActive)
             {
-                _isTooltipTimerActive = true;
-                var timer = new DispatcherTimer
+                try
                 {
-                    Interval = new TimeSpan(0, 0, 10)
-                };
-                timer.Tick += (s, evt) => // close tooltip after 10 seconds
+                    StartTimerForClosingToolTip(toolTip);
+                }
+                catch (ObjectDisposedException)
                 {
-                    timer.Stop();
-                    toolTip.IsOpen = false;
-                    _isTooltipTimerActive = false;
-                };
-                timer.Start();
+                    // ignore
+                }
             }
         }
 
@@ -288,7 +293,7 @@ namespace SimpleZIP_UI.Presentation.View
         }
 
         /// <summary>
-        /// Sets the archiving operation as active. This results in the UI being busy.
+        /// Sets the archiving operation as active. This results in the UI being busy when set to <c>true</c>.
         /// </summary>
         /// <param name="isActive">True to set operation as active, false to set it as inactive.</param>
         private void SetOperationActive(bool isActive)
@@ -310,6 +315,36 @@ namespace SimpleZIP_UI.Presentation.View
                 OutputPathButton.IsEnabled = true;
                 ArchiveNameTextBox.IsEnabled = true;
                 ArchiveTypeComboBox.IsEnabled = true;
+            }
+        }
+
+        private void StartTimerForClosingToolTip(ToolTip toolTip)
+        {
+            try
+            {
+                _toolTipOpenedSemaphore.Wait();
+
+                if (_isToolTipTimerActive) return;
+
+                var timer = new DispatcherTimer
+                {
+                    Interval = new TimeSpan(0, 0, 10)
+                };
+
+                timer.Tick += (s, evt) => // close tooltip after 10 seconds
+                {
+                    timer.Stop();
+                    toolTip.IsOpen = false;
+                    toolTip.IsEnabled = false;
+                    _isToolTipTimerActive = false;
+                };
+
+                _isToolTipTimerActive = true;
+                timer.Start();
+            }
+            finally
+            {
+                _toolTipOpenedSemaphore.Release();
             }
         }
 
@@ -393,6 +428,7 @@ namespace SimpleZIP_UI.Presentation.View
         /// <inheritdoc />
         public void Dispose()
         {
+            _toolTipOpenedSemaphore.Dispose();
             _controller.Dispose();
         }
     }
