@@ -42,7 +42,7 @@ namespace SimpleZIP_UI.Presentation.View
 {
     /// <inheritdoc cref="Page" />
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// A page which presents the results of message digest computation(s).
     /// </summary>
     public sealed partial class MessageDigestPage : INavigable
     {

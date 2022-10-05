@@ -70,6 +70,11 @@ namespace SimpleZIP_UI.Presentation.View
         private volatile bool _isNavigateBack;
 
         /// <summary>
+        /// True if a file picker is in use, false otherwise.
+        /// </summary>
+        private volatile bool _isFilePickerInUse;
+
+        /// <summary>
         /// Specifies the default font size of texts of controls.
         /// </summary>
         public IntegerModel FontSizeViewItem { get; set; } = DefaultControlsFontSize;
@@ -134,36 +139,58 @@ namespace SimpleZIP_UI.Presentation.View
 
         private async Task OpenArchiveAction()
         {
-            var picker = PickerFactory.FileOpenPickerForArchives;
-            var file = await picker.PickSingleFileAsync();
+            if (_isFilePickerInUse) return;
 
-            if (file != null)
+            try
             {
-                var destPage = typeof(BrowseArchivePage);
-                _logger.Debug(NavigateToPageMessageTemplate, destPage);
+                _isFilePickerInUse = true;
 
-                if (!ContentFrame.Navigate(destPage, file))
+                var picker = PickerFactory.FileOpenPickerForArchives;
+                var file = await picker.PickSingleFileAsync();
+
+                if (file != null)
                 {
-                    _logger.Debug(NavigationFailedMessageTemplate, destPage);
+                    var destPage = typeof(BrowseArchivePage);
+                    _logger.Debug(NavigateToPageMessageTemplate, destPage);
+
+                    if (!ContentFrame.Navigate(destPage, file))
+                    {
+                        _logger.Debug(NavigationFailedMessageTemplate, destPage);
+                    }
                 }
+            }
+            finally
+            {
+                _isFilePickerInUse = false;
             }
         }
 
         private async Task CalculateHashAction()
         {
-            var picker = PickerFactory.FileOpenPickerForAnyFile;
-            var files = await picker.PickMultipleFilesAsync();
+            if (_isFilePickerInUse) return;
 
-            if (files?.Count > 0)
+            try
             {
-                var args = new FilesNavigationArgs(files);
-                var destPage = typeof(MessageDigestPage);
-                _logger.Debug(NavigateToPageMessageTemplate, destPage);
+                _isFilePickerInUse = true;
 
-                if (!ContentFrame.Navigate(destPage, args))
+                var picker = PickerFactory.FileOpenPickerForAnyFile;
+                var files = await picker.PickMultipleFilesAsync();
+
+                if (files?.Count > 0)
                 {
-                    _logger.Debug(NavigationFailedMessageTemplate, destPage);
+                    var args = new FilesNavigationArgs(files);
+                    var destPage = typeof(MessageDigestPage);
+                    _logger.Debug(NavigateToPageMessageTemplate, destPage);
+
+                    if (!ContentFrame.Navigate(destPage, args))
+                    {
+                        _logger.Debug(NavigationFailedMessageTemplate, destPage);
+                    }
                 }
+            }
+            finally
+            {
+                _isFilePickerInUse = false;
             }
         }
 
