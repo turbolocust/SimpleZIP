@@ -16,9 +16,6 @@
                         AlwaysShowHeader="False" IsSettingsVisible="True" ItemInvoked="NavigationView_OnItemInvoked" Loaded="NavigationView_OnLoaded"
                         IsBackButtonVisible="Auto" IsBackEnabled="True" BackRequested="NavigationView_OnBackRequested" PaneOpened="NavigationView_OnPaneOpened"
                         PaneClosed="NavigationView_OnPaneClosed" IsDoubleTapEnabled="False">
-            <NavigationView.Resources>
-                <SolidColorBrush x:Key="NavigationViewDefaultPaneBackground" Color="Transparent" />
-            </NavigationView.Resources>
             <NavigationView.MenuItems>
                 <NavigationViewItem Icon="Home" Tag="Home">
                     <TextBlock x:Uid="Home" Text="" FontSize="{Binding FontSizeViewItem.Value}" VerticalAlignment="Center" HorizontalAlignment="Left" />
