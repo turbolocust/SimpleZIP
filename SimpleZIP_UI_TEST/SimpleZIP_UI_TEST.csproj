@@ -123,8 +123,10 @@
     <SDKReference Include="TestPlatform.Universal, Version=$(UnitTestPlatformVersion)" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Business\Compression\Algorithm\CompressionAlgorithmTests.cs" />
+    <Compile Include="Business\Compression\Algorithm\ArchivingAlgorithmTests.cs" />
+    <Compile Include="Business\Compression\Algorithm\CompressorAlgorithmTests.cs" />
     <Compile Include="Business\Compression\Compressor\StringGzipCompressorTests.cs" />
+    <Compile Include="Business\Compression\Utils.cs" />
     <Compile Include="Business\Hashing\MessageDigestProviderTests.cs" />
     <Compile Include="NameIndexPair.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

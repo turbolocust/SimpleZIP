@@ -1,6 +1,6 @@
 ﻿// ==++==
 // 
-// Copyright (C) 2020 Matthias Fussenegger
+// Copyright (C) 2022 Matthias Fussenegger
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -36,30 +36,10 @@ using Windows.Storage;
 namespace SimpleZIP_UI_TEST.Business.Compression.Algorithm
 {
     [TestClass]
-    public sealed class CompressionAlgorithmTests
+    public sealed class ArchivingAlgorithmTests
     {
-        #region Static members
-
         private const string ArchiveName = "simpleZipUiTestArchive";
-        private static readonly string FileText = GenerateRandomString(256);
-
-        private static string GenerateRandomString(int length)
-        {
-            var sb = new StringBuilder(length);
-            var rand = new Random();
-
-            for (int i = 0; i < length; ++i)
-            {
-                sb.Append((char)rand.Next(65, 122));
-            }
-
-            return sb.ToString();
-        }
-
-        #endregion
-
         private readonly StorageFolder _workingDir = ApplicationData.Current.TemporaryFolder;
-        private IReadOnlyList<StorageFile> _files;
 
         [DataRow(Archives.ArchiveType.Zip, ".zip")]
         [DataRow(Archives.ArchiveType.Tar, ".tar")]
@@ -90,11 +70,9 @@ namespace SimpleZIP_UI_TEST.Business.Compression.Algorithm
         public async Task ZipFile_GetInputStream_ShouldThrowExceptionWithSpecificMessage_WhenPasswordIsMissing()
         {
             const string archiveName = ArchiveName + "_enc.zip";
-            // create test file to be archived first...
-            var tempFile = await CreateTestFile("SimpleZIP_testFile_enc").ConfigureAwait(false);
-            // ...then create test archive file
-            var archive = await _workingDir.CreateFileAsync(
-                archiveName, CreationCollisionOption.GenerateUniqueName);
+
+            var (_, tempFile) = await Utils.CreateTestFile(_workingDir, "SimpleZIP_testFile_enc").ConfigureAwait(false);
+            var archive = await _workingDir.CreateFileAsync(archiveName, CreationCollisionOption.GenerateUniqueName);
 
             var zipStream = new ZipOutputStream(await archive
                 .OpenStreamForWriteAsync().ConfigureAwait(false))
@@ -102,7 +80,7 @@ namespace SimpleZIP_UI_TEST.Business.Compression.Algorithm
                 Password = "test"
             };
 
-            zipStream.SetLevel(0); // no compression needed
+            zipStream.SetLevel(0); // no compression needed for this test
 
             string entryName = ZipEntry.CleanName(tempFile.Name);
             var entry = new ZipEntry(entryName)
@@ -116,8 +94,7 @@ namespace SimpleZIP_UI_TEST.Business.Compression.Algorithm
             zipStream.PutNextEntry(entry);
             var buffer = new byte[1 << 12];
 
-            using (var srcStream = await tempFile
-                .OpenStreamForReadAsync().ConfigureAwait(false))
+            using (var srcStream = await tempFile.OpenStreamForReadAsync().ConfigureAwait(false))
             {
                 StreamUtils.Copy(srcStream, zipStream, buffer);
             }
@@ -132,24 +109,11 @@ namespace SimpleZIP_UI_TEST.Business.Compression.Algorithm
                 zipFile.Invoking(f => f.GetInputStream(0)).Should()
                     .Throw<Exception>().WithMessage("No password available*");
             }
+
+            await tempFile.DeleteAsync();
         }
 
         #region Private methods
-
-        private async Task<StorageFile> CreateTestFile(string name)
-        {
-            var tempFile = await _workingDir.CreateFileAsync(
-                name, CreationCollisionOption.GenerateUniqueName);
-
-            using (var streamWriter = new StreamWriter(await tempFile
-                .OpenStreamForWriteAsync().ConfigureAwait(false)))
-            {
-                await streamWriter.WriteAsync(FileText).ConfigureAwait(false);
-                await streamWriter.FlushAsync().ConfigureAwait(false);
-            }
-
-            return tempFile;
-        }
 
         private async Task<bool> PerformArchiveOperations(
             ICompressionAlgorithm compressionAlgorithm,
@@ -157,45 +121,58 @@ namespace SimpleZIP_UI_TEST.Business.Compression.Algorithm
         {
             return await Task.Run(async () =>
             {
-                var tempFile = await CreateTestFile("SimpleZIP_testFile").ConfigureAwait(false);
+                var (content0, tempFile0) = await Utils.CreateTestFile(_workingDir, "SimpleZIP_testFile0").ConfigureAwait(false);
+                var (content1, tempFile1) = await Utils.CreateTestFile(_workingDir, "SimpleZIP_testFile1").ConfigureAwait(false);
 
-                _files = new[] { tempFile };
+                var files = new[] { tempFile0, tempFile1 };
+                var contents = new[] { content0, content1 };
                 string archiveName = ArchiveName + fileType;
-                var archive = await _workingDir.CreateFileAsync(
-                    archiveName, CreationCollisionOption.GenerateUniqueName);
 
-                await compressionAlgorithm.CompressAsync(_files, archive, _workingDir, options).ConfigureAwait(false);
+                var archive = await _workingDir.CreateFileAsync(archiveName, CreationCollisionOption.GenerateUniqueName);
+                await compressionAlgorithm.CompressAsync(files, archive, _workingDir, options).ConfigureAwait(false);
 
-                // extract archive after creation
-                return await ExtractArchive(compressionAlgorithm, archive.Name).ConfigureAwait(false);
+                bool success = await ExtractArchiveAndAssert(compressionAlgorithm, archive.Name, contents).ConfigureAwait(false);
+
+                await tempFile0.DeleteAsync();
+                await tempFile1.DeleteAsync();
+
+                return success;
 
             }).ConfigureAwait(false);
         }
 
-        private async Task<bool> ExtractArchive(ICompressionAlgorithm compressionAlgorithm, string archiveName)
+        private async Task<bool> ExtractArchiveAndAssert(
+            ICompressionAlgorithm compressionAlgorithm,
+            string archiveName, IList<string> expectedContents)
         {
             var archive = await _workingDir.GetFileAsync(archiveName);
             archive.Should().NotBeNull();
 
             var outputFolder = await _workingDir.CreateFolderAsync(
-                "simpleZipUiTempOutput",
-                CreationCollisionOption.OpenIfExists);
+                "simpleZipUiTempOutput", CreationCollisionOption.ReplaceExisting);
 
-            // extract archive
             await compressionAlgorithm.DecompressAsync(archive, outputFolder).ConfigureAwait(false);
+            var extractedFiles = await outputFolder.GetFilesAsync(Windows.Storage.Search.CommonFileQuery.DefaultQuery);
 
-            var file = _files[0];
-            using (var streamReader = new StreamReader(
-                await file.OpenStreamForReadAsync().ConfigureAwait(false)))
+            var fileContents = new List<string>();
+
+            foreach (var extractedFile in extractedFiles)
             {
-                string line = await streamReader.ReadLineAsync().ConfigureAwait(false);
-                line.Should().NotBeNullOrEmpty();
-                line.Should().Be(FileText);
+                using (var streamReader = new StreamReader(await extractedFile.OpenStreamForReadAsync().ConfigureAwait(false)))
+                {
+                    var content = await streamReader.ReadToEndAsync().ConfigureAwait(false);
+                    content.Should().NotBeEmpty();
+                    fileContents.Add(content);
+                }
             }
 
-            // clean up once done
+            foreach (var expectedContent in expectedContents)
+            {
+                expectedContent.Should().NotBeEmpty();
+                fileContents.Should().ContainMatch(expectedContent);
+            }
+
             await outputFolder.DeleteAsync();
-            await file.DeleteAsync();
 
             return true;
         }
