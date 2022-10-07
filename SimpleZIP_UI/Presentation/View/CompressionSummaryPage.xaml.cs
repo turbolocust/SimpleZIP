@@ -17,11 +17,11 @@
 // 
 // ==--==
 
-using SimpleZIP_UI.Application;
-using SimpleZIP_UI.Application.Compression;
-using SimpleZIP_UI.Application.Compression.Model;
-using SimpleZIP_UI.Application.Compression.Operation.Event;
-using SimpleZIP_UI.Application.Util;
+using SimpleZIP_UI.Business;
+using SimpleZIP_UI.Business.Compression;
+using SimpleZIP_UI.Business.Compression.Model;
+using SimpleZIP_UI.Business.Compression.Operation.Event;
+using SimpleZIP_UI.Business.Util;
 using SimpleZIP_UI.Presentation.Controller;
 using SimpleZIP_UI.Presentation.Factory;
 using SimpleZIP_UI.Presentation.Handler;

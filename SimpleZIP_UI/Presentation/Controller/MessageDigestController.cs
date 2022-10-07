@@ -18,7 +18,7 @@
 // ==--==
 
 using System;
-using SimpleZIP_UI.Application.Hashing;
+using SimpleZIP_UI.Business.Hashing;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;

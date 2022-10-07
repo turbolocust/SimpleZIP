@@ -17,9 +17,9 @@
 // 
 // ==--==
 
-using SimpleZIP_UI.Application.Compression.Compressor;
-using SimpleZIP_UI.Application.Hashing;
-using SimpleZIP_UI.Application.Util;
+using SimpleZIP_UI.Business.Compression.Compressor;
+using SimpleZIP_UI.Business.Hashing;
+using SimpleZIP_UI.Business.Util;
 using SimpleZIP_UI.Presentation.View.Model;
 using System;
 using System.Collections.Generic;

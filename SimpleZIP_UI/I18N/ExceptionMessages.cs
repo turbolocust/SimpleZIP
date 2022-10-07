@@ -17,8 +17,8 @@
 // 
 // ==--==
 
-using SimpleZIP_UI.Application;
-using SimpleZIP_UI.Application.Compression;
+using SimpleZIP_UI.Business;
+using SimpleZIP_UI.Business.Compression;
 using System;
 using System.IO;
 using System.Threading.Tasks;

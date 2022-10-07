@@ -32,8 +32,8 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Serilog;
-using SimpleZIP_UI.Application;
-using SimpleZIP_UI.Application.Util;
+using SimpleZIP_UI.Business;
+using SimpleZIP_UI.Business.Util;
 using SimpleZIP_UI.Presentation.Handler;
 using SimpleZIP_UI.Presentation.View;
 
@@ -41,7 +41,7 @@ using SimpleZIP_UI.Presentation.View;
 
 namespace SimpleZIP_UI
 {
-    /// <inheritdoc cref="Application" />
+    /// <inheritdoc cref="Business" />
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>

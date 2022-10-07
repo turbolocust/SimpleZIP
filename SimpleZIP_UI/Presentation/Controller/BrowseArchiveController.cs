@@ -17,12 +17,12 @@
 // 
 // ==--==
 
-using SimpleZIP_UI.Application;
-using SimpleZIP_UI.Application.Compression.Model;
-using SimpleZIP_UI.Application.Compression.Operation;
-using SimpleZIP_UI.Application.Compression.Operation.Job;
-using SimpleZIP_UI.Application.Compression.TreeBuilder;
-using SimpleZIP_UI.Application.Util;
+using SimpleZIP_UI.Business;
+using SimpleZIP_UI.Business.Compression.Model;
+using SimpleZIP_UI.Business.Compression.Operation;
+using SimpleZIP_UI.Business.Compression.Operation.Job;
+using SimpleZIP_UI.Business.Compression.TreeBuilder;
+using SimpleZIP_UI.Business.Util;
 using SimpleZIP_UI.I18N;
 using SimpleZIP_UI.Presentation.Factory;
 using SimpleZIP_UI.Presentation.View;

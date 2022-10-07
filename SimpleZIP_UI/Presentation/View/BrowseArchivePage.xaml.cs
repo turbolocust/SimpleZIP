@@ -17,9 +17,9 @@
 // 
 // ==--==
 
-using SimpleZIP_UI.Application;
-using SimpleZIP_UI.Application.Compression.TreeBuilder;
-using SimpleZIP_UI.Application.Util;
+using SimpleZIP_UI.Business;
+using SimpleZIP_UI.Business.Compression.TreeBuilder;
+using SimpleZIP_UI.Business.Util;
 using SimpleZIP_UI.Presentation.Controller;
 using SimpleZIP_UI.Presentation.Factory;
 using SimpleZIP_UI.Presentation.View.Model;

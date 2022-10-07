@@ -17,7 +17,7 @@
 // 
 // ==--==
 
-using SimpleZIP_UI.Application.Hashing;
+using SimpleZIP_UI.Business.Hashing;
 using SimpleZIP_UI.Presentation.Controller;
 using SimpleZIP_UI.Presentation.View.Dialog;
 using SimpleZIP_UI.Presentation.View.Model;

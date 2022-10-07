@@ -17,10 +17,10 @@
 // 
 // ==--==
 
-using SimpleZIP_UI.Application;
-using SimpleZIP_UI.Application.Compression.Model;
-using SimpleZIP_UI.Application.Compression.Operation;
-using SimpleZIP_UI.Application.Compression.Operation.Job;
+using SimpleZIP_UI.Business;
+using SimpleZIP_UI.Business.Compression.Model;
+using SimpleZIP_UI.Business.Compression.Operation;
+using SimpleZIP_UI.Business.Compression.Operation.Job;
 using System.Threading.Tasks;
 
 namespace SimpleZIP_UI.Presentation.Controller

@@ -123,9 +123,9 @@
     <SDKReference Include="TestPlatform.Universal, Version=$(UnitTestPlatformVersion)" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Application\Compression\Algorithm\CompressionAlgorithmTests.cs" />
-    <Compile Include="Application\Compression\Algorithm\StringGzipCompressorTests.cs" />
-    <Compile Include="Application\Hashing\MessageDigestProviderTests.cs" />
+    <Compile Include="Business\Compression\Algorithm\CompressionAlgorithmTests.cs" />
+    <Compile Include="Business\Compression\Compressor\StringGzipCompressorTests.cs" />
+    <Compile Include="Business\Hashing\MessageDigestProviderTests.cs" />
     <Compile Include="NameIndexPair.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitTestApp.xaml.cs">
@@ -157,7 +157,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Application\Compression\Compressor\" />
     <Folder Include="Assets\" />
   </ItemGroup>
   <ItemGroup>

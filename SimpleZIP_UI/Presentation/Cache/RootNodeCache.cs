@@ -19,9 +19,9 @@
 
 using System.Collections.Concurrent;
 using Serilog;
-using SimpleZIP_UI.Application;
-using SimpleZIP_UI.Application.Compression.TreeBuilder;
-using SimpleZIP_UI.Application.Util;
+using SimpleZIP_UI.Business;
+using SimpleZIP_UI.Business.Compression.TreeBuilder;
+using SimpleZIP_UI.Business.Util;
 
 namespace SimpleZIP_UI.Presentation.Cache
 {
