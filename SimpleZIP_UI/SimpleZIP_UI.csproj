@@ -337,7 +337,7 @@
       <Version>1.0.31</Version>
     </PackageReference>
     <PackageReference Include="SharpCompress">
-      <Version>0.24.0</Version>
+      <Version>0.25.1</Version>
     </PackageReference>
     <PackageReference Include="System.ValueTuple">
       <Version>4.5.0</Version>
