@@ -62,7 +62,7 @@ namespace SimpleZIP_UI.Presentation.Controller
             }
             catch (FileNotFoundException)
             {
-                _logger.Error("File {FileName} not found.", file.Path);
+                _logger.Error("File {FileName} not found", file.Path);
                 hash = $"<<{I18N.Resources.GetString("FileNotFound/Text")}>>";
             }
             catch (Exception ex)

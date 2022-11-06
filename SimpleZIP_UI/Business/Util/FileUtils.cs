@@ -111,7 +111,7 @@ namespace SimpleZIP_UI.Business.Util
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Deleting file {FileName} failed.", item.Path);
+                Log.Error(ex, "Deleting file {FileName} failed", item.Path);
             }
         }
 

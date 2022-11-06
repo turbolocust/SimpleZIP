@@ -281,7 +281,7 @@ namespace SimpleZIP_UI.Presentation.View
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error(ex, "Archive or file {ModelName} could not be read.", model.DisplayName);
+                    _logger.Error(ex, "Archive or file {ModelName} could not be read", model.DisplayName);
 
                     IsProgressBarEnabled.IsTrue = false;
                     string errMsg = !string.IsNullOrEmpty(errResource)

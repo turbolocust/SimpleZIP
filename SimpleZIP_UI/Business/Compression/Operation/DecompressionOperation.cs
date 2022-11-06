@@ -81,7 +81,7 @@ namespace SimpleZIP_UI.Business.Compression.Operation
                         throw; // simply re-throw, but only if password not set
                     }
 
-                    _logger.Error(ex, "Decompressing {ArchiveName} failed.", archiveFile.Name);
+                    _logger.Error(ex, "Decompressing {ArchiveName} failed", archiveFile.Name);
 
                     var opType = passwordSet
                         ? ExceptionMessages.OperationType.ReadingPasswordSet

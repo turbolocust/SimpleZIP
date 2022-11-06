@@ -66,7 +66,7 @@ namespace SimpleZIP_UI.Business.Compression.Operation
                     {
                         if (ex is OperationCanceledException) throw;
 
-                        _logger.Error(ex, "Compressing to {ArchiveName} failed.", archive.Name);
+                        _logger.Error(ex, "Compressing to {ArchiveName} failed", archive.Name);
 
                         const ExceptionMessages.OperationType opType = ExceptionMessages.OperationType.Writing;
                         message = await ExceptionMessages.GetStringFor(ex, opType, archive).ConfigureAwait(false);

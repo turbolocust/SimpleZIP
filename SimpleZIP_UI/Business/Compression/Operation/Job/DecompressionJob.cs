@@ -88,7 +88,7 @@ namespace SimpleZIP_UI.Business.Compression.Operation.Job
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error(ex, "Decompressing {ArchiveName} failed.", operationInfo.Item.Name);
+                    _logger.Error(ex, "Decompressing {ArchiveName} failed", operationInfo.Item.Name);
 
                     if (ex is OperationCanceledException && cancelReq.IsCancelRequest)
                     {

@@ -143,7 +143,7 @@ namespace SimpleZIP_UI.Presentation.View
             }
             catch (FileNotFoundException ex)
             {
-                _logger.Error(ex, "File {FileName} could not be revealed.", model.FileName);
+                _logger.Error(ex, "File {FileName} could not be revealed", model.FileName);
                 string errMsg = I18N.Resources.GetString("FolderMissing/Text");
                 await DialogFactory.CreateErrorDialog(errMsg).ShowAsync();
             }

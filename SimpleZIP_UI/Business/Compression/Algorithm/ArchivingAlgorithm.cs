@@ -95,7 +95,7 @@ namespace SimpleZIP_UI.Business.Compression.Algorithm
             }
             catch (CryptographicException ex)
             {
-                _logger.Error(ex, "Decompression of archive {ArchiveName} failed.", archive.Name);
+                _logger.Error(ex, "Decompression of archive {ArchiveName} failed", archive.Name);
                 throw new ArchiveEncryptedException(ex.Message, ex);
             }
         }
@@ -207,7 +207,7 @@ namespace SimpleZIP_UI.Business.Compression.Algorithm
             }
             catch (CryptographicException ex)
             {
-                _logger.Error(ex, "Decompression of archive {ArchiveName} failed.", archive.Name);
+                _logger.Error(ex, "Decompression of archive {ArchiveName} failed", archive.Name);
                 throw new ArchiveEncryptedException(ex.Message, ex);
             }
         }

@@ -75,7 +75,7 @@ namespace SimpleZIP_UI.Business.Compression.Reader
             }
             catch (CryptographicException ex)
             {
-                _logger.Error(ex, "Archive of type {ArchiveType} is encrypted.", ArchiveType);
+                _logger.Error(ex, "Archive of type {ArchiveType} is encrypted", ArchiveType);
                 throw new ArchiveEncryptedException(ex.Message, ex);
             }
         }

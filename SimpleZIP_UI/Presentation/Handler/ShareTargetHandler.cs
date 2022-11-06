@@ -97,7 +97,7 @@ namespace SimpleZIP_UI.Presentation.Handler
             }
             catch (InvalidArchiveTypeException)
             {
-                Logger.Error("Archive type of {FileName} is unknown.", file.Name);
+                Logger.Error("Archive type of {FileName} is unknown", file.Name);
                 // type is already set to ArchiveType.Unknown
             }
 

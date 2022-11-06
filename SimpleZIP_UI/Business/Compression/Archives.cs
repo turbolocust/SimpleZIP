@@ -195,7 +195,7 @@ namespace SimpleZIP_UI.Business.Compression
             }
             catch (Exception ex) // due to missing documentation in SharpCompress
             {
-                Logger.Error(ex, "Archive type of {FileName} is unknown.", file?.Name);
+                Logger.Error(ex, "Archive type of {FileName} is unknown", file?.Name);
                 throw new InvalidArchiveTypeException(I18N
                     .Resources.GetString("UnknownArchiveType/Text"), ex);
             }
