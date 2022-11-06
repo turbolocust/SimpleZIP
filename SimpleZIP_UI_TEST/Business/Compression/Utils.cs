@@ -27,7 +27,7 @@ namespace SimpleZIP_UI_TEST.Business.Compression
 {
     internal static class Utils
     {
-        internal static string GenerateRandomString(int length)
+        private static string GenerateRandomString(int length)
         {
             var sb = new StringBuilder(length);
             var rand = new Random();
@@ -44,6 +44,8 @@ namespace SimpleZIP_UI_TEST.Business.Compression
             CreateTestFile(StorageFolder directory, string name)
         {
             string randomString = GenerateRandomString(256);
+            randomString += "äöü";
+
             var tempFile = await directory.CreateFileAsync(name, CreationCollisionOption.GenerateUniqueName);
 
             using (var streamWriter = new StreamWriter(await tempFile
