@@ -75,12 +75,13 @@ namespace SimpleZIP_UI.Business.Compression.Reader.SZL
         {
             if (_closed) throw new ObjectDisposedException(ToString());
 
-            ZipStrings.CodePage = Encoding.UTF8.CodePage;
             var stream = await _archive.OpenStreamForReadAsync().ConfigureAwait(false);
+
             _zipFile = new ZipFile(stream)
             {
                 IsStreamOwner = true,
-                Password = password
+                Password = password,
+                StringCodec = StringCodec.FromCodePage(Encoding.UTF8.CodePage)
             };
         }
 

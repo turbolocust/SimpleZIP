@@ -30,6 +30,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Serilog;
 using SimpleZIP_UI.Business.Compression.Algorithm.Factory;
+using System.Text;
 
 namespace SimpleZIP_UI.Business.Compression.Algorithm.Type.SZL
 {
@@ -61,11 +62,11 @@ namespace SimpleZIP_UI.Business.Compression.Algorithm.Type.SZL
             if (files.IsNullOrEmpty()) return; // nothing to do
             if (options == null) options = new CompressionOptions(GetDefaultEncoding());
 
-            ZipStrings.CodePage = options.ArchiveEncoding.CodePage;
+            var stringCodec = StringCodec.FromCodePage(options.ArchiveEncoding.CodePage);
 
             using (var archiveStream = await archive.OpenStreamForWriteAsync().ConfigureAwait(false))
             using (var progressStream = new ProgressObservableStream(this, archiveStream))
-            using (var zipStream = new ZipOutputStream(progressStream))
+            using (var zipStream = new ZipOutputStream(progressStream, stringCodec))
             {
                 zipStream.UseZip64 = UseZip64.Dynamic;
                 zipStream.SetLevel(6); // default
@@ -119,7 +120,6 @@ namespace SimpleZIP_UI.Business.Compression.Algorithm.Type.SZL
 
             try
             {
-                ZipStrings.CodePage = options.ArchiveEncoding.CodePage;
                 var writeInfo = new WriteEntryInfo { Location = location, IgnoreDirectories = false };
 
                 using (var archiveStream = await archive.OpenStreamForReadAsync().ConfigureAwait(false))
@@ -127,6 +127,8 @@ namespace SimpleZIP_UI.Business.Compression.Algorithm.Type.SZL
                 {
                     writeInfo.Zip = zipFile;
                     zipFile.Password = options.Password;
+                    zipFile.StringCodec = StringCodec.FromCodePage(options.ArchiveEncoding.CodePage);
+
                     foreach (ZipEntry zipEntry in zipFile)
                     {
                         Token.ThrowIfCancellationRequested();
@@ -142,7 +144,7 @@ namespace SimpleZIP_UI.Business.Compression.Algorithm.Type.SZL
             }
             catch (ICSharpCode.SharpZipLib.SharpZipBaseException ex)
             {
-                _logger.Error(ex, "Decompression of {ArchiveName} failed.", archive.Name);
+                _logger.Error(ex, "Decompression of {ArchiveName} failed", archive.Name);
 
                 const string noPasswordPrefix = "No password available"; // is unit tested
                 if (!ex.Message.Contains(noPasswordPrefix, StringComparison.OrdinalIgnoreCase))
@@ -178,7 +180,6 @@ namespace SimpleZIP_UI.Business.Compression.Algorithm.Type.SZL
 
             try
             {
-                ZipStrings.CodePage = options.ArchiveEncoding.CodePage;
                 var writeInfo = new WriteEntryInfo { Location = location, IgnoreDirectories = true };
 
                 using (var archiveStream = await archive.OpenStreamForReadAsync().ConfigureAwait(false))
@@ -186,6 +187,7 @@ namespace SimpleZIP_UI.Business.Compression.Algorithm.Type.SZL
                 {
                     writeInfo.Zip = zipFile;
                     zipFile.Password = options.Password;
+                    zipFile.StringCodec = StringCodec.FromCodePage(options.ArchiveEncoding.CodePage);
 
                     foreach (var entry in entries)
                     {
@@ -195,7 +197,7 @@ namespace SimpleZIP_UI.Business.Compression.Algorithm.Type.SZL
 
                         if (zipEntry == null)
                         {
-                            const string msg = "Entry {0} does not exist in archive.";
+                            const string msg = "Entry {0} does not exist in archive";
                             throw new ReadingArchiveException(string.Format(CultureInfo.CurrentCulture, msg, key));
                         }
 
@@ -217,7 +219,7 @@ namespace SimpleZIP_UI.Business.Compression.Algorithm.Type.SZL
             }
             catch (ICSharpCode.SharpZipLib.SharpZipBaseException ex)
             {
-                _logger.Error(ex, "Decompression of {ArchiveName} failed.", archive.Name);
+                _logger.Error(ex, "Decompression of {ArchiveName} failed", archive.Name);
 
                 const string noPasswordPrefix = "No password available"; // is unit tested
                 if (!ex.Message.Contains(noPasswordPrefix, StringComparison.OrdinalIgnoreCase))
