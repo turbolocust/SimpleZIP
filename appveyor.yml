@@ -1,4 +1,4 @@
-version: 3.3.{build}
+version: 3.6.{build}
 branches:
   only:
   - master
@@ -10,7 +10,7 @@ skip_commits:
   - .gitignore
   - LICENSE.md
   - README.md
-image: Visual Studio 2019
+image: Visual Studio 2022
 environment:
   secret_storeKey:
     secure: iGyhcOxgR6HeJ2sNLrgqSdF5u0ux+m2K+fb4pWF8xgE=
